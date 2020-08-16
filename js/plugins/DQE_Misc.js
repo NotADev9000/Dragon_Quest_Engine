@@ -24,7 +24,25 @@ Imported.DQEng_Misc = true;
 var DQEng = DQEng || {};
 DQEng.Misc = DQEng.Misc || {};
 
-//DQEng.misc.params = PluginManager.parameters('DQE_Misc');
+//-----------------------------------------------------------------------------
+// Bitmap
+//-----------------------------------------------------------------------------
+
+/**
+ * Overwrite Victor Engine draw sprite font to properly adjust the Y position of text
+ * ty now just equals the y position of text
+ */
+Bitmap.prototype.drawSFontText = function (text, x, y, maxWidth, lineHeight, align) {
+    if (text !== undefined) {
+        var tx = x;
+        var ty = y;
+        var sx = this.sfontWidth(text.toString())
+        maxWidth = maxWidth || 0xffffffff;
+        if (align === 'center') tx += (maxWidth - sx) / 2;
+        if (align === 'right') tx += (maxWidth - sx);
+        this.drawSFontTextBody(text.toString(), Math.floor(tx), Math.floor(ty));
+    }
+};
 
 //-----------------------------------------------------------------------------
 // Game_CharacterBase
