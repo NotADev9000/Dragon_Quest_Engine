@@ -57,9 +57,8 @@ Window.prototype._refreshPauseSign = function () {
  * @gameMatch DQ1+2 SNES
  */
 Window_Message.prototype.updatePlacement = function () {
-    var tileHeight = $gameMap.tileHeight();
     this._positionType = $gameMessage.positionType();
-    var yOffset = this._positionType === 0 ? tileHeight : this._positionType === 2 ? -tileHeight : 0;
+    var yOffset = this._positionType === 0 ? 48 : this._positionType === 2 ? -48 : 0;
     this.y = (this._positionType * (Graphics.boxHeight - this.height) / 2) + yOffset; 
     this._goldWindow.y = this.y > 0 ? 0 : Graphics.boxHeight - this._goldWindow.height;
 };
@@ -104,4 +103,15 @@ Window_Message.prototype.fittingHeight = function (numLines) {
  */
 Window_Message.prototype.calcTextHeight = function (textState, all) {
     return this.lineHeight();
+};
+
+/**
+ * Change the default SFont for the message window.
+ * All other windows generally use the HUD font so set message window to Message font.
+ *
+ * @gameMatch DQ1+2 SNES
+ * @return the index of the SFont (as a plugin in VE_SFont)
+ */
+Window_Message.prototype.normalColor = function () {
+    return this.textColor(1);
 };
