@@ -12,5 +12,6 @@ var $plugins =
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Misc","status":true,"description":"Misc changes for Dragon Quest Engine - V0.1","parameters":{}},
 {"name":"DQE_Window_Message","status":true,"description":"Message window for Dragon Quest Engine - V0.1","parameters":{}},
-{"name":"DQE_Window_ChoiceList","status":true,"description":"Choice window for Dragon Quest Engine - V0.1","parameters":{"Choice Y Offset":""}}
+{"name":"DQE_Window_ChoiceList","status":true,"description":"Choice window for Dragon Quest Engine - V0.1","parameters":{"Choice Y Offset":""}},
+{"name":"DQE_Window_Cursor","status":true,"description":"uses an arrow cursor before text instead of highlighting for Dragon Quest Engine - V0.1","parameters":{}}
 ];
