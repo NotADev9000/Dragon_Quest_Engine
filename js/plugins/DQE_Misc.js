@@ -7,7 +7,7 @@
 *
 * @author NotADev
 * @plugindesc Misc changes for Dragon Quest Engine - V0.1
-*
+* TODO: Move changes here into a more suitable file
 *
 * @help
 * N/A
@@ -56,18 +56,4 @@ Bitmap.prototype.drawSFontText = function (text, x, y, maxWidth, lineHeight, ali
  */
 Game_CharacterBase.prototype.shiftY = function () {
     return this.isObjectCharacter() ? 0 : 3;
-};
-
-//-----------------------------------------------------------------------------
-// Window_Base
-//-----------------------------------------------------------------------------
-
-/**
- * No transparency for windows
- *
- * @gameMatch DQ1+2 SNES
- * @return {Number} opacity of windows
- */
-Window_Base.prototype.standardBackOpacity = function () {
-    return 255;
 };

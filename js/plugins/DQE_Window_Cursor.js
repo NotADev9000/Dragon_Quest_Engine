@@ -57,8 +57,8 @@ Window_Selectable.prototype.textPadding = function () {
 
 Window_Selectable.prototype.updateCursor = function () {
     if (this._cursorAll) {
-        var allRowsHeight = this.maxRows() * this.itemHeight();
-        this.setCursorRect(0, 0, this.contents.width, allRowsHeight);
+        // var allRowsHeight = this.maxRows() * this.itemHeight();
+        this.setCursorRect(0, 0, 18, 21);
         this.setTopRow(0);
     } else if (this.isCursorVisible()) {
         var rect = this.itemRect(this.index());
