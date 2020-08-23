@@ -110,7 +110,7 @@ Window_Message.prototype.calcTextHeight = function (textState, all) {
  * All other windows generally use the HUD font so set message window to Message font.
  *
  * @gameMatch DQ1+2 SNES
- * @return the index of the SFont (as a plugin in VE_SFont)
+ * @return the index of the SFont (as a plugin parameter in VE_SFont)
  */
 Window_Message.prototype.normalColor = function () {
     return this.textColor(1);
