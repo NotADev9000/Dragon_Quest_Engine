@@ -15,7 +15,7 @@
 * @default
 *
 * @param Choice Line Gap
-* @desc Choice Window - The height of the gap between each line of text. Default: 15.
+* @desc Choice Window - The height of the gap between each line of text. Default: 18.
 * @default
 *
 * @param Choice Y Offset
@@ -41,7 +41,7 @@ var parameters = PluginManager.parameters('DQE_Windows');
 DQEng.Parameters = DQEng.Parameters || {};
 DQEng.Parameters.Windows = {};
 DQEng.Parameters.Windows.Selectable_LineGap = Number(parameters["Selectable Line Gap"]) || 8;
-DQEng.Parameters.Windows.ChoiceList_LineGap = Number(parameters["Choice Line Gap"]) || 15;
+DQEng.Parameters.Windows.ChoiceList_LineGap = Number(parameters["Choice Line Gap"]) || 18;
 DQEng.Parameters.Windows.ChoiceList_ChoiceYOffset = Number(parameters["Choice Y Offset"]) || 48;
 
 //-----------------------------------------------------------------------------
@@ -56,6 +56,34 @@ DQEng.Parameters.Windows.ChoiceList_ChoiceYOffset = Number(parameters["Choice Y 
  */
 Window_Base.prototype.standardBackOpacity = function () {
     return 255;
+};
+
+/**
+ * Open windows immediately
+ *
+ * @gameMatch DQ1+2 SNES
+ */
+Window_Base.prototype.updateOpen = function () {
+    if (this._opening) {
+        this.openness = 255;
+        if (this.isOpen()) {
+            this._opening = false;
+        }
+    }
+};
+
+/**
+ * Close windows immediately
+ *
+ * @gameMatch DQ1+2 SNES
+ */
+Window_Base.prototype.updateClose = function () {
+    if (this._closing) {
+        this.openness = 0;
+        if (this.isClosed()) {
+            this._closing = false;
+        }
+    }
 };
 
 //-----------------------------------------------------------------------------
