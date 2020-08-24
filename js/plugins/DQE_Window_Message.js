@@ -51,7 +51,22 @@ Window.prototype._refreshPauseSign = function () {
 //-----------------------------------------------------------------------------
 
 /**
- * positions message window: adjusting the Y position to match DQ
+ * Creates all the subwindows so they're ready to open
+ * goldWindow has been moved to be in-line with the message box
+ * 
+ * @gameMatch Custom
+ */
+Window_Message.prototype.createSubWindows = function () {
+    this._goldWindow = new Window_Gold(0, 0);
+    this._goldWindow.x = (this.x + this.width) - this._goldWindow.width;
+    this._goldWindow.openness = 0;
+    this._choiceWindow = new Window_ChoiceList(this);
+    this._numberWindow = new Window_NumberInput(this);
+    this._itemWindow = new Window_EventItem(this);
+};
+
+/**
+ * Positions message window: adjusting the Y position to match DQ
  * top & bottom placed windows will be offset by +/-48
  *
  * @gameMatch DQ1+2 SNES
@@ -60,7 +75,7 @@ Window_Message.prototype.updatePlacement = function () {
     this._positionType = $gameMessage.positionType();
     var yOffset = this._positionType === 0 ? 48 : this._positionType === 2 ? -48 : 0;
     this.y = (this._positionType * (Graphics.boxHeight - this.height) / 2) + yOffset; 
-    this._goldWindow.y = this.y > 0 ? 0 : Graphics.boxHeight - this._goldWindow.height;
+    this._goldWindow.y = this.y > 48 ? 48 : Graphics.boxHeight - this._goldWindow.height - 48;
 };
 
 /**

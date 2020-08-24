@@ -57,3 +57,16 @@ Bitmap.prototype.drawSFontText = function (text, x, y, maxWidth, lineHeight, ali
 Game_CharacterBase.prototype.shiftY = function () {
     return this.isObjectCharacter() ? 0 : 3;
 };
+
+//-----------------------------------------------------------------------------
+// Game_Party
+//-----------------------------------------------------------------------------
+
+/**
+ * 10 million gold max
+ * 
+ * @gameMatch custom
+ */
+Game_Party.prototype.maxGold = function () {
+    return 10000000;
+};

@@ -1,4 +1,4 @@
 [
 null,
-{"id":1,"animationId":0,"consumable":true,"damage":{"critical":false,"elementId":0,"formula":"0","type":0,"variance":20},"description":"AAAAHHHHHH!!","effects":[{"code":11,"dataId":0,"value1":-0.5,"value2":0}],"hitType":0,"iconIndex":298,"itypeId":1,"name":"Potion","note":"","occasion":0,"price":0,"repeats":1,"scope":8,"speed":0,"successRate":100,"tpGain":0}
+{"id":1,"animationId":0,"consumable":true,"damage":{"critical":false,"elementId":0,"formula":"0","type":0,"variance":20},"description":"AAAAHHHHHH!!","effects":[{"code":11,"dataId":0,"value1":-0.5,"value2":0}],"hitType":0,"iconIndex":298,"itypeId":1,"name":"Potion","note":"","occasion":0,"price":0,"repeats":1,"scope":7,"speed":0,"successRate":100,"tpGain":0}
 ]
