@@ -40,7 +40,7 @@ Window_Base.prototype.drawCurrencyValue = function (value, unit, x, y, width) {
     if (value > 9999) value = value.toLocaleString();
     this.resetTextColor();
     this.drawText(value, x, y, currencyUnitX - 24, 'right');
-    this.changeTextColor(this.systemColor());
+    this.changeTextColor(this.goldColor());
     this.drawText(unit, currencyUnitX, y, unitWidth, 'right');
 };
 

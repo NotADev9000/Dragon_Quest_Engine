@@ -58,6 +58,10 @@ Window_Base.prototype.standardBackOpacity = function () {
     return 255;
 };
 
+Window_Base.prototype.goldColor = function () {
+    return this.textColor(6);
+}
+
 /**
  * Open windows immediately
  *
