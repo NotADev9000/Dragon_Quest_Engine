@@ -57,7 +57,7 @@ Window_Gold.prototype.windowWidth = function () {
 };
 
 Window_Gold.prototype.windowHeight = function () {
-    return 69;
+    return this.lineHeight() + (this.standardPadding() * 2);
 };
 
 Window_Gold.prototype.standardPadding = function () {
