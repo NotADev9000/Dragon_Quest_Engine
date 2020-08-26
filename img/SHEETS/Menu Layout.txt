@@ -1,4 +1,4 @@
 DQ Menu:
 Items Magic
 Equipment Quests
-Attributes Misc.
+Stats Misc.
