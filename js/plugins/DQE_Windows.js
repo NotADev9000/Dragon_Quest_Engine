@@ -90,6 +90,14 @@ Window_Base.prototype.updateClose = function () {
     }
 };
 
+Window_Base.prototype.drawActorHp = function (actor, x, y, width, align) {
+    this.drawText(actor.hp, x, y, width, align);
+};
+
+Window_Base.prototype.drawActorMp = function (actor, x, y, width, align) {
+    this.drawText(actor.mp, x, y, width, align);
+};
+
 //-----------------------------------------------------------------------------
 // Window_Selectable
 //-----------------------------------------------------------------------------

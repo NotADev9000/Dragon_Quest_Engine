@@ -85,7 +85,7 @@ Window_Message.prototype.updatePlacement = function () {
  * @return {Number} width of message window
  */
 Window_Message.prototype.windowWidth = function () {
-    return 980;
+    return 984;
 };
 
 /**
