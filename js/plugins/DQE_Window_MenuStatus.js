@@ -50,6 +50,10 @@ Window_MenuStatus.prototype.standardPadding = function () {
     return 9;
 };
 
+/**
+ * Extra padding added to correctly position text.
+ * The horizontal line ignores this padding
+ */
 Window_MenuStatus.prototype.extraPadding = function () {
     return 15;
 };
@@ -70,25 +74,33 @@ Window_MenuStatus.prototype.refresh = function () {
     this.contents.clear();
     this.drawName(this.extraPadding(), this.extraPadding());
     this.drawHorzLine(0, 51);
-    this.drawHPBlock(this.extraPadding(), 66, 72);
-    this.drawMPBlock(this.extraPadding(), 102, 72);
+    this.drawStatBlock(TextManager.hpA, this._actor.hp, this.extraPadding(), 66, 72);
+    this.drawStatBlock(TextManager.mpA, this._actor.mp,this.extraPadding(), 102, 72);
+    this.drawStatBlock(TextManager.levelA, this._actor.level,this.extraPadding(), 138, 72);
 };
 
 Window_MenuStatus.prototype.drawName = function (x, y) {
     this.drawActorName(this._actor, x, y);
 };
 
+/**
+ * Draws a horizontal line across the window
+ */
 Window_MenuStatus.prototype.drawHorzLine = function (x, y) {
     this.contents.fillRect(x, y, this.contentsWidth(), 3, this.normalColor());
-    this.contents.paintOpacity = 255;
 };
 
-Window_MenuStatus.prototype.drawHPBlock = function (x, y, curHpWidth) {
-    this.drawText(TextManager.hpA, x, y);
-    this.drawActorHp(this._actor, this.contentsWidth() - curHpWidth - this.extraPadding(), y, curHpWidth, 'right');
-};
-
-Window_MenuStatus.prototype.drawMPBlock = function (x, y, curMpWidth) {
-    this.drawText(TextManager.mpA, x, y);
-    this.drawActorMp(this._actor, this.contentsWidth() - curMpWidth - this.extraPadding(), y, curMpWidth, 'right');
+/**
+ * Draws the stat inside the status window
+ * e.g. HP:   120
+ * 
+ * @param {String} statProperty the name of the stat e.g. HP
+ * @param {Number} statValue the value of the stat e.g. 120
+ * @param {Number} x x position of stat block
+ * @param {Number} y y position of stat block
+ * @param {Number} statWidth width of stat text (just the value)
+ */
+Window_MenuStatus.prototype.drawStatBlock = function (statProperty, statValue, x, y, statWidth) {
+    this.drawText(statProperty, x, y);
+    this.drawActorStat(statValue, this.contentsWidth() - statWidth - this.extraPadding(), y, statWidth, 'right');
 };

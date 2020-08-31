@@ -90,12 +90,11 @@ Window_Base.prototype.updateClose = function () {
     }
 };
 
-Window_Base.prototype.drawActorHp = function (actor, x, y, width, align) {
-    this.drawText(actor.hp, x, y, width, align);
-};
-
-Window_Base.prototype.drawActorMp = function (actor, x, y, width, align) {
-    this.drawText(actor.mp, x, y, width, align);
+/**
+ * Stats are drawn the same so this method can be called to draw any of them
+ */
+Window_Base.prototype.drawActorStat = function (statValue, x, y, width, align) {
+    this.drawText(statValue, x, y, width, align);
 };
 
 //-----------------------------------------------------------------------------
