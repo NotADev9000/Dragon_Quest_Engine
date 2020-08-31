@@ -28,6 +28,8 @@ DQEng.Window_Cursor = DQEng.Window_Cursor || {};
 //-----------------------------------------------------------------------------
 
 /**
+ * Cursor is now one frame selected from windowskin
+ * 
  * @method _refreshCursor
  * @private
  */
@@ -40,6 +42,8 @@ Window.prototype._refreshCursor = function () {
 };
 
 /**
+ * Cursor now doesn't fade/blink
+ * 
  * @method _updateCursor
  * @private
  */
@@ -51,10 +55,18 @@ Window.prototype._updateCursor = function () {
 // Window_Selectable
 //-----------------------------------------------------------------------------
 
+/**
+ * How much the text is padded before drawing it
+ * The space is where the cursor sits
+ */
 Window_Selectable.prototype.textPadding = function () {
     return 18;
 };
 
+/**
+ * Updates where the cursor should be positioned
+ * Cursor is now always the same height/width
+ */
 Window_Selectable.prototype.updateCursor = function () {
     if (this._cursorAll) {
         // var allRowsHeight = this.maxRows() * this.itemHeight();
