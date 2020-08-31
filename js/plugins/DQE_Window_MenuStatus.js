@@ -80,10 +80,6 @@ Window_MenuStatus.prototype.refresh = function () {
     this.drawStatBlock(TextManager.levelA, this._actor.level,this.extraPadding(), 138, 72);
 };
 
-Window_MenuStatus.prototype.drawName = function (x, y) {
-    this.drawActorName(this._actor, x, y);
-};
-
 /**
  * Draws actor name limited to 10 characters
  */
