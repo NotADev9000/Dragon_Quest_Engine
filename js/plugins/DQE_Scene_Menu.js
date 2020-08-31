@@ -28,6 +28,13 @@ DQEng.Scene_Menu = DQEng.Scene_Menu || {};
 // Window_Scene_Menu
 //-----------------------------------------------------------------------------
 
+Scene_Menu.prototype.start = function () {
+    Scene_MenuBase.prototype.start.call(this);
+    this._statusWindow.forEach(statusWindow => {
+        statusWindow.refresh();
+    });
+};
+
 Scene_Menu.prototype.createCommandWindow = function () {
     this._commandWindow = new Window_MenuCommand(48, 48);
     this._commandWindow.setHandler('item', this.commandItem.bind(this));
@@ -49,7 +56,11 @@ Scene_Menu.prototype.createGoldWindow = function () {
 };
 
 Scene_Menu.prototype.createStatusWindow = function () {
-    this._statusWindow = new Window_MenuStatus(63, 480, $gameParty.members()[0]);
-    this._statusWindow.reserveFaceImages();
-    this.addWindow(this._statusWindow);
+    this._statusWindow = [];
+    var partyMembers = $gameParty.members();
+
+    for (let i = 0; i < Math.min(partyMembers.length, 4); i++) {
+        this._statusWindow[i] = new Window_MenuStatus(63 + (Window_MenuStatus.prototype.windowWidth() * i), 480, partyMembers[i]);
+        this.addWindow(this._statusWindow[i]);
+    }
 };

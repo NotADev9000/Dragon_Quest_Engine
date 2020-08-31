@@ -6,12 +6,13 @@
 /*:
 *
 * @author NotADev
-* @plugindesc The main menu command list - V0.1
+* @plugindesc The status window for each actor - V0.1
 *
 *
 * @help
-* N/A
-*
+* This window is displayed when the menu is opened. 
+* One window is displayed for each actor.
+* 
 */
 
 //------
@@ -72,7 +73,7 @@ Window_MenuStatus.prototype.windowHeight = function () {
 
 Window_MenuStatus.prototype.refresh = function () {
     this.contents.clear();
-    this.drawName(this.extraPadding(), this.extraPadding());
+    this.drawActorName(this._actor, this.extraPadding(), this.extraPadding());
     this.drawHorzLine(0, 51);
     this.drawStatBlock(TextManager.hpA, this._actor.hp, this.extraPadding(), 66, 72);
     this.drawStatBlock(TextManager.mpA, this._actor.mp,this.extraPadding(), 102, 72);
@@ -81,6 +82,15 @@ Window_MenuStatus.prototype.refresh = function () {
 
 Window_MenuStatus.prototype.drawName = function (x, y) {
     this.drawActorName(this._actor, x, y);
+};
+
+/**
+ * Draws actor name limited to 10 characters
+ */
+Window_MenuStatus.prototype.drawActorName = function (actor, x, y, width) {
+    width = width || 168;
+    this.changeTextColor(this.hpColor(this._actor));
+    this.drawText(actor.name().slice(0, 10), x, y, width);
 };
 
 /**
@@ -101,6 +111,7 @@ Window_MenuStatus.prototype.drawHorzLine = function (x, y) {
  * @param {Number} statWidth width of stat text (just the value)
  */
 Window_MenuStatus.prototype.drawStatBlock = function (statProperty, statValue, x, y, statWidth) {
+    this.changeTextColor(this.hpColor(this._actor));
     this.drawText(statProperty, x, y);
     this.drawActorStat(statValue, this.contentsWidth() - statWidth - this.extraPadding(), y, statWidth, 'right');
 };

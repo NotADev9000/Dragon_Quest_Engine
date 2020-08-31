@@ -62,6 +62,14 @@ Window_Base.prototype.goldColor = function () {
     return this.textColor(6);
 }
 
+Window_Base.prototype.crisisColor = function () {
+    return this.textColor(6);
+};
+
+Window_Base.prototype.deathColor = function () {
+    return this.textColor(2);
+};
+
 /**
  * Open windows immediately
  *
