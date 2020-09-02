@@ -105,6 +105,13 @@ Window_Base.prototype.drawActorStat = function (statValue, x, y, width, align) {
     this.drawText(statValue, x, y, width, align);
 };
 
+/**
+ * Draws a horizontal line across the window
+ */
+Window_Base.prototype.drawHorzLine = function (x, y) {
+    this.contents.fillRect(x, y, this.contentsWidth(), 3, this.normalColor());
+};
+
 //-----------------------------------------------------------------------------
 // Window_Selectable
 //-----------------------------------------------------------------------------
@@ -123,7 +130,7 @@ Window_Selectable.prototype.lineGap = function () {
 };
 
 Window_Selectable.prototype.fittingHeight = function (numLines) {
-    return numLines * this.lineHeight() + this.standardPadding() * 2 + (this.lineGap() * (numLines - 1));
+    return numLines * this.lineHeight() + this.standardPadding() * 2 + (this.lineGap() * Math.max(numLines - 1, 0));
 };
 
 Window_Selectable.prototype.itemRect = function (index) {

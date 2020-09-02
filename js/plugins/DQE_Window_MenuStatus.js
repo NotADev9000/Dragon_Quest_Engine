@@ -90,13 +90,6 @@ Window_MenuStatus.prototype.drawActorName = function (actor, x, y, width) {
 };
 
 /**
- * Draws a horizontal line across the window
- */
-Window_MenuStatus.prototype.drawHorzLine = function (x, y) {
-    this.contents.fillRect(x, y, this.contentsWidth(), 3, this.normalColor());
-};
-
-/**
  * Draws the stat inside the status window
  * e.g. HP:   120
  * 
