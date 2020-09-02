@@ -47,6 +47,9 @@ Scene_Menu.prototype.createCommandWindow = function () {
     this._commandWindow.setHandler('gameEnd', this.commandGameEnd.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
+
+    this._testPartyWin = new Window_MenuPartyCommand(48, 48, 'Stats', ['Everyone']);
+    this.addWindow(this._testPartyWin);
 };
 
 Scene_Menu.prototype.createGoldWindow = function () {

@@ -44,7 +44,7 @@ Window_MenuCommand.prototype.numVisibleRows = function () {
     return Math.ceil(this.maxItems()/2);
 };
 
-Window_Selectable.prototype.spacing = function () {
+Window_MenuCommand.prototype.spacing = function () {
     return 27;
 };
 
@@ -56,9 +56,7 @@ Window_MenuCommand.prototype.makeCommandList = function () {
     this.addMainCommands();
     this.addFormationCommand();
     this.addOriginalCommands();
-    // this.addOptionsCommand();
     this.addSaveCommand();
-    // this.addGameEndCommand();
 };
 
 Window_MenuCommand.prototype.addMainCommands = function () {

@@ -17,5 +17,6 @@ var $plugins =
 {"name":"DQE_Window_Gold","status":true,"description":"similar to default window but with different size/padding - V0.1","parameters":{}},
 {"name":"DQE_Window_MenuCommand","status":true,"description":"The main menu command list - V0.1","parameters":{}},
 {"name":"DQE_Window_MenuStatus","status":true,"description":"The status window for each actor - V0.1","parameters":{}},
-{"name":"DQE_Window_Message","status":true,"description":"Message window for Dragon Quest Engine - V0.1","parameters":{}}
+{"name":"DQE_Window_Message","status":true,"description":"Message window for Dragon Quest Engine - V0.1","parameters":{}},
+{"name":"DQE_Window_PartySelectBase","status":true,"description":"The party command base - V0.1","parameters":{}}
 ];
