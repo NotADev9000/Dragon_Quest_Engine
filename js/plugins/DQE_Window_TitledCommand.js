@@ -1,18 +1,18 @@
 //=============================================================================
-// Dragon Quest Engine - Party Select Base
-// DQE_Window_MenuPartyCommand.js                                                             
+// Dragon Quest Engine - Command list with a title
+// DQE_Window_TitledCommand.js                                                             
 //=============================================================================
 
 /*:
 *
 * @author NotADev
-* @plugindesc The party command base - V0.1
+* @plugindesc The command list window with a title - V0.1
 *
 *
 * @help
-* The window for selecting a party member from a list
-* the window will have a displayed title, the names of all active party members
-* and an optional command at the bottom of the window
+* The window for selecting a command from a list
+* the window will have a displayed title and any
+* passed in commands
 *
 */
 
@@ -21,29 +21,30 @@
 //------
 
 var Imported = Imported || {};
-Imported.DQEng_Window_MenuPartyCommand = true;
+Imported.DQEng_Window_TitledCommand = true;
 
 var DQEng = DQEng || {};
-DQEng.Window_MenuPartyCommand = DQEng.Window_MenuPartyCommand || {};
+DQEng.Window_TitledCommand = DQEng.Window_TitledCommand || {};
 
 //-----------------------------------------------------------------------------
-// Window_MenuPartyCommand
+// Window_TitledCommand
 //-----------------------------------------------------------------------------
 
-function Window_MenuPartyCommand() {
+function Window_TitledCommand() {
     this.initialize.apply(this, arguments);
 }
 
-Window_MenuPartyCommand.prototype = Object.create(Window_Command.prototype);
-Window_MenuPartyCommand.prototype.constructor = Window_MenuPartyCommand;
+Window_TitledCommand.prototype = Object.create(Window_Command.prototype);
+Window_TitledCommand.prototype.constructor = Window_TitledCommand;
 
 /**
  * @param {String} menuTitle the displayed title of the window
- * @param {Array} optionalCommands optional commands that will be displayed below the party list
+ * @param {Array} commands commands that will be displayed below the title
  */
-Window_MenuPartyCommand.prototype.initialize = function (x, y, menuTitle, optionalCommands) {
+Window_TitledCommand.prototype.initialize = function (x, y, windowWidth, menuTitle, commands) {
+    this._windowWidth = windowWidth;
     this._menuTitle = menuTitle || "???"
-    this._optionalCommands = optionalCommands;
+    this._commands = commands;
     Window_Command.prototype.initialize.call(this, x, y);
 };
 
@@ -51,11 +52,11 @@ Window_MenuPartyCommand.prototype.initialize = function (x, y, menuTitle, option
 // Functions - window sizing
 //////////////////////////////
 
-Window_MenuPartyCommand.prototype.windowWidth = function () {
-    return 354;
+Window_TitledCommand.prototype.windowWidth = function () {
+    return this._windowWidth;
 };
 
-Window_MenuPartyCommand.prototype.windowHeight = function () {
+Window_TitledCommand.prototype.windowHeight = function () {
     return this.fittingHeight(this.numVisibleRows());
 };
 
@@ -66,24 +67,24 @@ Window_MenuPartyCommand.prototype.windowHeight = function () {
  * 
  * @param {number} numLines the number of commands
  */
-Window_MenuPartyCommand.prototype.fittingHeight = function (numLines) {
-    return numLines * this.lineHeight() 
-    + (this.standardPadding() + this.extraPadding()) * 2 
-    + (this.lineGap() * Math.max(numLines - 1, 0))
-    + this.titleBlockHeight();
+Window_TitledCommand.prototype.fittingHeight = function (numLines) {
+    return numLines * this.lineHeight()
+        + (this.standardPadding() + this.extraPadding()) * 2
+        + (this.lineGap() * Math.max(numLines - 1, 0))
+        + this.titleBlockHeight();
 };
 
 /**
  * The height of the windows title block (from standard padding to horizontal line)
  */
-Window_MenuPartyCommand.prototype.titleBlockHeight = function () {
+Window_TitledCommand.prototype.titleBlockHeight = function () {
     return 51;
 };
 
 /**
  * Padding is 9 so horizontal rule covers the whole window
  */
-Window_MenuPartyCommand.prototype.standardPadding = function () {
+Window_TitledCommand.prototype.standardPadding = function () {
     return 9;
 };
 
@@ -91,11 +92,11 @@ Window_MenuPartyCommand.prototype.standardPadding = function () {
  * Extra padding added to correctly position text.
  * The horizontal line ignores this padding
  */
-Window_MenuPartyCommand.prototype.extraPadding = function () {
+Window_TitledCommand.prototype.extraPadding = function () {
     return 15;
 };
 
-Window_MenuPartyCommand.prototype.lineGap = function () {
+Window_TitledCommand.prototype.lineGap = function () {
     return 15;
 };
 
@@ -103,23 +104,12 @@ Window_MenuPartyCommand.prototype.lineGap = function () {
 // Functions - commands
 //////////////////////////////
 
-Window_MenuPartyCommand.prototype.makeCommandList = function () {
-    this.addPartyCommands();
-    if (this._optionalCommands != undefined) { this.addOptionalCommands(); }
+Window_TitledCommand.prototype.makeCommandList = function () {
+    if (this._commands != undefined) { this.addCommands(); }
 };
 
-/**
- * Add party member names as command
- */
-Window_MenuPartyCommand.prototype.addPartyCommands = function () {
-    var partyMembers = $gameParty.members();
-    partyMembers.forEach(member => {
-        this.addCommand(member._name, member._name, true);
-    });
-};
-
-Window_MenuPartyCommand.prototype.addOptionalCommands = function () {
-    this._optionalCommands.forEach(command => {
+Window_TitledCommand.prototype.addCommands = function () {
+    this._commands.forEach(command => {
         this.addCommand(command, command, true);
     });
 }
@@ -131,7 +121,7 @@ Window_MenuPartyCommand.prototype.addOptionalCommands = function () {
 /**
  * Draws window title and horizontal line
  */
-Window_MenuPartyCommand.prototype.drawTitleBlock = function () {
+Window_TitledCommand.prototype.drawTitleBlock = function () {
     var titleWidth = this.windowWidth() - (this.standardPadding() + this.extraPadding()) * 2;
 
     this.drawText(this._menuTitle, this.extraPadding(), this.extraPadding(), titleWidth, 'center');
@@ -142,7 +132,7 @@ Window_MenuPartyCommand.prototype.drawTitleBlock = function () {
  * extraPadding is added to properly adjust commands
  * titleblockHeight is added to y position to place commands below the title block
  */
-Window_MenuPartyCommand.prototype.itemRect = function (index) {
+Window_TitledCommand.prototype.itemRect = function (index) {
     var rect = Window_Selectable.prototype.itemRect.call(this, index);
     rect.x += this.extraPadding();
     rect.y += this.extraPadding() + this.titleBlockHeight();
@@ -153,7 +143,7 @@ Window_MenuPartyCommand.prototype.itemRect = function (index) {
 // Functions - refresh
 //////////////////////////////
 
-Window_MenuPartyCommand.prototype.refresh = function () {
+Window_TitledCommand.prototype.refresh = function () {
     // set up commands
     this.clearCommandList();
     this.makeCommandList();
