@@ -36,7 +36,7 @@ Scene_Menu.prototype.start = function () {
 };
 
 Scene_Menu.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_MenuCommand(48, 48);
+    this._commandWindow = new Window_MenuCommand(24, 48);
     this._commandWindow.setHandler('item', this.commandItem.bind(this));
     this._commandWindow.setHandler('skill', this.commandPersonal.bind(this));
     this._commandWindow.setHandler('equip', this.commandPersonal.bind(this));

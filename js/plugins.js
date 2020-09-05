@@ -12,6 +12,7 @@ var $plugins =
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Misc","status":true,"description":"Misc changes for Dragon Quest Engine - V0.1\r\nTODO: Move changes here into a more suitable file","parameters":{}},
 {"name":"DQE_Scene_Menu","status":true,"description":"The scene for the main menu - V0.1","parameters":{}},
+{"name":"DQE_Scene_Item","status":true,"description":"The scene for the item menu - V0.1","parameters":{}},
 {"name":"DQE_Windows","status":true,"description":"General changes to windows - Dragon Quest Engine V0.1","parameters":{"Selectable Line Gap":"","Choice Line Gap":"","Choice Y Offset":""}},
 {"name":"DQE_Window_Cursor","status":true,"description":"uses an arrow cursor before text instead of highlighting for Dragon Quest Engine - V0.1","parameters":{}},
 {"name":"DQE_Window_Gold","status":true,"description":"similar to default window but with different size/padding - V0.1","parameters":{}},
