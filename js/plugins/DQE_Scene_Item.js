@@ -31,6 +31,7 @@ DQEng.Scene_Item = DQEng.Scene_Item || {};
 Scene_Item.prototype.create = function () {
     Scene_ItemBase.prototype.create.call(this);
     this.createCommandWindow();
+    this.createItemWindow();
 };
 
 Scene_Item.prototype.createCommandWindow = function () {
@@ -38,3 +39,9 @@ Scene_Item.prototype.createCommandWindow = function () {
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
 }
+
+Scene_Item.prototype.createItemWindow = function () {
+    var wx = this._commandWindow.x + this._commandWindow.windowWidth();
+    this._itemWindow = new Window_ItemList(wx, 48, 570, 465);
+    this.addWindow(this._itemWindow);
+};
