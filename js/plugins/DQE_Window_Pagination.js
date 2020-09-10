@@ -36,14 +36,14 @@ Window_Pagination.prototype = Object.create(Window_Selectable.prototype);
 Window_Pagination.prototype.constructor = Window_Pagination;
 
 Window_Pagination.prototype.initialize = function (x, y, width, height) {
-    this._topIndex = 0;
+    this._topIndex = -1;
     this._numPages = 0;
-    this._page = 0;
+    this._page = -1;
     this._itemsOnPage = 0;
     this._numRows = 0;
+    this._maxRows = -1;
+    this._maxItemsOnPage = -1;
     Window_Selectable.prototype.initialize.call(this, x, y, width, height);
-    this._maxRows = this.setMaxRows();
-    this._maxItemsOnPage = this.setMaxItemsOnPage();
 };
 
 //////////////////////////////
@@ -110,17 +110,14 @@ Window_Pagination.prototype.itemsOnPage = function () {
     } else {
         return maxItemsOnPage;
     }
-};
-
-/**
- * Sets the maximum amount of items that can appear on a single page
- */
-Window_Pagination.prototype.setMaxItemsOnPage = function () {
-    return this.maxRows() * this.maxCols();
 }
 
+/**
+ * The maximum amount of items that can appear on a single page
+ */
 Window_Pagination.prototype.maxItemsOnPage = function () {
-    return this._maxItemsOnPage;
+    if (this._maxItemsOnPage != -1) return this._maxItemsOnPage;
+    return this.maxRows() * this.maxCols();
 }
 
 //////////////////////////////
@@ -135,6 +132,7 @@ Window_Pagination.prototype.maxItemsOnPage = function () {
  * Formula: row = floor((i-rcp+rc)/c)
  */
 Window_Pagination.prototype.row = function () {
+    if (this.index() < 0) return -1;
     var c = this.maxCols();
     var rc = this.maxRows() * c;
     var rcp = rc * this._page;
@@ -155,23 +153,20 @@ Window_Pagination.prototype.maxTopRow = function () {
     return 0;
 };
 
-Window_Selectable.prototype.bottomRow = function () {
+Window_Pagination.prototype.bottomRow = function () {
     return Math.max(0, this.maxRows() - 1);
 };
 
 /**
- * Sets the maximum number of rows per page
+ * The maximum number of rows per page
  * TODO: add page section to this calculation when it's done
  */
-Window_Pagination.prototype.setMaxRows = function () {
+Window_Pagination.prototype.maxRows = function () {
+    if (this._maxRows != -1) return this._maxRows;
+
     var pageHeight = this.height - (this.padding + this.extraPadding()) * 2;
     var itemHeight = this.lineHeight() + this.lineGap();
-
     return Math.floor((pageHeight / itemHeight) + 1);
-};
-
-Window_Pagination.prototype.maxRows = function () {
-    return this._maxRows;
 }
 Window_Pagination.prototype.maxPageRows = function () {
     return this.maxRows();
