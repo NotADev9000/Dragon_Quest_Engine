@@ -44,4 +44,5 @@ Scene_Item.prototype.createItemWindow = function () {
     var wx = this._commandWindow.x + this._commandWindow.windowWidth();
     this._itemWindow = new Window_ItemList(wx, 48, 570, 465);
     this.addWindow(this._itemWindow);
+    this._commandWindow.setAssociatedWindow(this._itemWindow);
 };

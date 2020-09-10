@@ -55,3 +55,14 @@ Window_TitledPartyCommand.prototype.addPartyCommands = function () {
         this.addCommand(member._name, member._name, true);
     });
 };
+
+Window_TitledPartyCommand.prototype.setAssociatedWindow = function (window) {
+    this._associatedWindow = window;
+};
+
+Window_TitledPartyCommand.prototype.update = function () {
+    Window_TitledCommand.prototype.update.call(this);
+    if (this._associatedWindow) {
+        this._associatedWindow.setCategory(this.currentSymbol());
+    }
+};
