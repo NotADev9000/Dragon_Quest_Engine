@@ -148,6 +148,16 @@ Window_Selectable.prototype.itemRect = function (index) {
     return rect;
 };
 
+/**
+ * width only subtracts textPadding once now
+ */
+Window_Selectable.prototype.itemRectForText = function (index) {
+    var rect = this.itemRect(index);
+    rect.x += this.textPadding();
+    rect.width -= this.textPadding();
+    return rect;
+};
+
 //-----------------------------------------------------------------------------
 // Window_ChoiceList
 //-----------------------------------------------------------------------------

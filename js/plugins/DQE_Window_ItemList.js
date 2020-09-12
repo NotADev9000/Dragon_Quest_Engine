@@ -76,7 +76,33 @@ Window_ItemList.prototype.makeItemList = function () {
     }, this);
 };
 
+Window_ItemList.prototype.isEnabled = function (item) {
+    return $gameParty.canUse(item);
+};
+
+Window_ItemList.prototype.drawItem = function (index) {
+    var item = this._data[index];
+    if (item) {
+        var rect = this.itemRectForText(index);
+        this.drawText(item.name, rect.x, rect.y, 432);
+        this.drawText($gameParty.numItems(item), rect.x, rect.y, rect.width, 'right');
+    }
+};
+
+/**
+ * extraPadding is added to properly adjust commands
+ */
+Window_ItemList.prototype.itemRect = function (index) {
+    var rect = Window_Selectable.prototype.itemRect.call(this, index);
+    rect.x += this.extraPadding();
+    rect.y += this.extraPadding();
+    rect.width -= this.extraPadding() * 2;
+    return rect;
+};
+
 Window_ItemList.prototype.refresh = function () {
     this.makeItemList();
     this.createContents();
+    Window_Pagination.prototype.refresh.call(this);
+    this.drawAllItems();
 };

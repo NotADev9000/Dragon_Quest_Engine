@@ -143,7 +143,7 @@ Window_Pagination.prototype.row = function () {
  * Returns the amount of rows being displayed on the current page
  */
 Window_Pagination.prototype.numRows = function () {
-    return numRows = Math.ceil(this._itemsOnPage / this.cols());
+    return numRows = Math.ceil(this._itemsOnPage / this.maxCols());
 };
 
 Window_Pagination.prototype.topRow = function () {
