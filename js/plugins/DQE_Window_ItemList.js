@@ -53,10 +53,20 @@ Window_ItemList.prototype.setCategory = function (category) {
     if (this._category !== category) {
         this._category = category;
         this.refresh();
-        console.log(this._data);
     }
 };
 
+/**
+ * returns true if the current category is an Actor
+ * Actor categories are stored as integers
+ */
+Window_ItemList.prototype.isCategoryActor = function () {
+    return Number.isInteger(this._category)
+};
+
+/**
+ * checks if an item is in the selected category
+ */
 Window_ItemList.prototype.includes = function (item) {
     switch (this._category) {
         case 'Items':
@@ -70,22 +80,32 @@ Window_ItemList.prototype.includes = function (item) {
     }
 };
 
+/**
+ * Creates the item list to be displayed in the window
+ * Retrieves items from party or actor inventory
+ */
 Window_ItemList.prototype.makeItemList = function () {
-    this._data = $gameParty.allItems().filter(function (item) {
-        return this.includes(item);
-    }, this);
+    if (this.isCategoryActor()) {
+        this._data = $gameParty.members()[this._category].items();
+    } else {
+        this._data = $gameParty.allItems().filter(function (item) {
+            return this.includes(item);
+        }, this);
+    }
 };
 
-Window_ItemList.prototype.isEnabled = function (item) {
-    return $gameParty.canUse(item);
-};
-
+/**
+ * Draws item to window
+ * Number of items is only drawn when viewing party inventory
+ */
 Window_ItemList.prototype.drawItem = function (index) {
     var item = this._data[index];
     if (item) {
         var rect = this.itemRectForText(index);
         this.drawText(item.name, rect.x, rect.y, 432);
-        this.drawText($gameParty.numItems(item), rect.x, rect.y, rect.width, 'right');
+        if (!this.isCategoryActor()) {
+            this.drawText($gameParty.numItems(item), rect.x, rect.y, rect.width, 'right');
+        }
     }
 };
 

@@ -51,8 +51,8 @@ Window_TitledPartyCommand.prototype.makeCommandList = function () {
  */
 Window_TitledPartyCommand.prototype.addPartyCommands = function () {
     var partyMembers = $gameParty.members();
-    partyMembers.forEach(member => {
-        this.addCommand(member._name, member._name, true);
+    partyMembers.forEach((member, index) => {
+        this.addCommand(member._name, index, true);
     });
 };
 
