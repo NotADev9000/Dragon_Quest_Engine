@@ -28,12 +28,7 @@ DQEng.Window_ItemList = DQEng.Window_ItemList || {};
 // Window_ItemList
 //-----------------------------------------------------------------------------
 
-function Window_ItemList() {
-    this.initialize.apply(this, arguments);
-}
-
 Window_ItemList.prototype = Object.create(Window_Pagination.prototype);
-Window_ItemList.prototype.constructor = Window_ItemList;
 
 Window_ItemList.prototype.initialize = function (x, y, width, height) {
     Window_Pagination.prototype.initialize.call(this, x, y, width, height);
@@ -92,6 +87,10 @@ Window_ItemList.prototype.makeItemList = function () {
             return this.includes(item);
         }, this);
     }
+};
+
+Window_ItemList.prototype.maxItems = function () {
+    return this._data ? this._data.length : 1;
 };
 
 /**

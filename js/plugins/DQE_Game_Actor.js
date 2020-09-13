@@ -47,7 +47,7 @@ Game_Actor.prototype.items = function () {
 };
 
 Game_Actor.prototype.maxItems = function () {
-    return 8;
+    return 24;
 };
 
 Game_Actor.prototype.numItems = function () {

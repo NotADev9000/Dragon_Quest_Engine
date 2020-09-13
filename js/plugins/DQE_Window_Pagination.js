@@ -6,7 +6,7 @@
 /*:
 *
 * @author NotADev
-* @plugindesc A window that display items with pages - V0.1
+* @plugindesc A window that displays items with pages - V0.1
 *
 *
 * @help
@@ -65,6 +65,10 @@ Window_Pagination.prototype.extraPadding = function () {
     return 15;
 };
 
+Window_Pagination.prototype.pageBlockHeight = function () {
+    return 54;
+}
+
 //////////////////////////////
 // Functions - index
 //////////////////////////////
@@ -90,7 +94,7 @@ Window_Pagination.prototype.page = function () {
  * The number of pages in the window
  */
 Window_Pagination.prototype.numPages = function () {
-    return Math.ceil((this.maxItems() / this.maxRows()) / this.maxCols());
+    return Math.max(1, Math.ceil((this.maxItems() / this.maxRows()) / this.maxCols()));
 }
 
 /**
@@ -159,12 +163,11 @@ Window_Pagination.prototype.bottomRow = function () {
 
 /**
  * The maximum number of rows per page
- * TODO: add page section to this calculation when it's done
  */
 Window_Pagination.prototype.maxRows = function () {
     if (this._maxRows != -1) return this._maxRows;
 
-    var pageHeight = this.height - (this.padding + this.extraPadding()) * 2;
+    var pageHeight = this.height - ((this.padding + this.extraPadding()) * 2) - this.pageBlockHeight();
     var itemHeight = this.lineHeight() + this.lineGap();
     return Math.floor((pageHeight / itemHeight) + 1);
 }
@@ -175,6 +178,19 @@ Window_Pagination.prototype.maxPageRows = function () {
 //////////////////////////////
 // Functions - draw items
 //////////////////////////////
+
+Window_Pagination.prototype.drawPageBlock = function () {
+    var blockY = this.height - this.pageBlockHeight() - (this.padding + this.extraPadding()) + 6;
+    var page = String(this._page).padStart(2, '0');
+    var totalPages = String(this._numPages).padStart(2, '0');
+    var display = `<  ${page}/${totalPages}  >`
+    var displayWidth = this.width - (this.standardPadding() + this.extraPadding()) * 2;
+
+    this.drawHorzLine(0, blockY);
+    blockY += 18;
+    this.drawText(display, this.extraPadding(), blockY, displayWidth, 'center');
+
+}
 
 /**
  * Draws the items for the current page
@@ -227,4 +243,5 @@ Window_Pagination.prototype.refresh = function () {
     this._topIndex = this.topIndex();
     this._itemsOnPage = this.itemsOnPage();
     this._numRows = this.numRows();
+    this.drawPageBlock();
 }
