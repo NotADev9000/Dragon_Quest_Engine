@@ -34,6 +34,7 @@ Window_ItemList.prototype.initialize = function (x, y, width, height) {
     Window_Pagination.prototype.initialize.call(this, x, y, width, height);
     this._category = 'none';
     this._data = [];
+    this._numActorEquips = 0; // How many items actor has equipped
 };
 
 Window_ItemList.prototype.lineGap = function () {
@@ -78,10 +79,15 @@ Window_ItemList.prototype.includes = function (item) {
 /**
  * Creates the item list to be displayed in the window
  * Retrieves items from party or actor inventory
+ * Retrieves equipment from actor equips
  */
 Window_ItemList.prototype.makeItemList = function () {
     if (this.isCategoryActor()) {
-        this._data = $gameParty.members()[this._category].items();
+        var actor = $gameParty.members()[this._category];
+        var actorEquips = this.getActorEquips(actor);
+        this._data = actorEquips;
+        this._numActorEquips = actorEquips.length;
+        this._data.push(...actor.items());
     } else {
         this._data = $gameParty.allItems().filter(function (item) {
             return this.includes(item);
@@ -94,17 +100,37 @@ Window_ItemList.prototype.maxItems = function () {
 };
 
 /**
+ * returns actors' equips while ignoring empty slots
+ * 
+ * @param {Game_Actor} actor 
+ */
+Window_ItemList.prototype.getActorEquips = function (actor) {
+    var equips = [];
+    actor.equips().forEach(equipment => {
+        if (equipment) { 
+            equips.push(equipment);
+        }
+    });
+    return equips;
+};
+
+/**
  * Draws item to window
  * Number of items is only drawn when viewing party inventory
  */
 Window_ItemList.prototype.drawItem = function (index) {
     var item = this._data[index];
     if (item) {
+        var isActorEquip = index < this._numActorEquips; // is the drawn item an actors' equipment
         var rect = this.itemRectForText(index);
-        this.drawText(item.name, rect.x, rect.y, 432);
+        this.resetTextColor();
         if (!this.isCategoryActor()) {
             this.drawText($gameParty.numItems(item), rect.x, rect.y, rect.width, 'right');
+        } else if(isActorEquip) {
+            this.changeTextColor(this.deathColor());
+            this.drawText('E', rect.x, rect.y, rect.width, 'right');
         }
+        this.drawText(item.name, rect.x, rect.y, 432);
     }
 };
 
