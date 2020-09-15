@@ -123,7 +123,6 @@ Window_ItemList.prototype.drawItem = function (index) {
     if (item) {
         var isActorEquip = index < this._numActorEquips; // is the drawn item an actors' equipment
         var rect = this.itemRectForText(index);
-        this.resetTextColor();
         if (!this.isCategoryActor()) {
             this.drawText($gameParty.numItems(item), rect.x, rect.y, rect.width, 'right');
         } else if(isActorEquip) {
@@ -131,6 +130,7 @@ Window_ItemList.prototype.drawItem = function (index) {
             this.drawText('E', rect.x, rect.y, rect.width, 'right');
         }
         this.drawText(item.name, rect.x, rect.y, 432);
+        this.resetTextColor();
     }
 };
 
