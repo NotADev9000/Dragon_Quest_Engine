@@ -23,5 +23,6 @@ var $plugins =
 {"name":"DQE_Window_Pagination","status":true,"description":"A window that display items with pages - V0.1","parameters":{}},
 {"name":"DQE_Window_TitledCommand","status":true,"description":"The command list window with a title - V0.1","parameters":{}},
 {"name":"DQE_Window_TitledPartyCommand","status":true,"description":"The party command base - V0.1","parameters":{}},
-{"name":"DQE_Window_ItemList","status":true,"description":"The window for displaying items - V0.1","parameters":{}}
+{"name":"DQE_Window_ItemList","status":true,"description":"The window for displaying items - V0.1","parameters":{}},
+{"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}}
 ];

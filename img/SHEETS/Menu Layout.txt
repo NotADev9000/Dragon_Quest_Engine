@@ -2,3 +2,13 @@ DQ Menu:
 Items Magic
 Equipment Quests
 Stats Misc.
+
+commands:
+GiveActorsItems
+- attempts to give items to an actor (starts with the first actor)
+  any leftover items will be given to actor next in line
+  if there are still leftover items after all actors then the
+  leftovers will be placed in the bag
+GiveActorsItemsSilent
+- same as above but without messages
+  
