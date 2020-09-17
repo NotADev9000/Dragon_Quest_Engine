@@ -138,7 +138,7 @@ Window_ItemList.prototype.drawItem = function (index) {
  * extraPadding is added to properly adjust commands
  */
 Window_ItemList.prototype.itemRect = function (index) {
-    var rect = Window_Selectable.prototype.itemRect.call(this, index);
+    var rect = Window_Pagination.prototype.itemRect.call(this, index);
     rect.x += this.extraPadding();
     rect.y += this.extraPadding();
     rect.width -= this.extraPadding() * 2;

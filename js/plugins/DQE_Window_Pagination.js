@@ -87,7 +87,7 @@ Window_Pagination.prototype.topIndex = function () {
 Window_Pagination.prototype.page = function () {
     var index = this.index();
     if (index < 0) return 1;
-    return Math.ceil(index / this.maxItemsOnPage());
+    return Math.floor((index / this.maxItemsOnPage()) + 1);
 };
 
 /**
@@ -139,7 +139,7 @@ Window_Pagination.prototype.row = function () {
     if (this.index() < 0) return -1;
     var c = this.maxCols();
     var rc = this.maxRows() * c;
-    var rcp = rc * this._page;
+    var rcp = rc * this.page();
     return Math.floor((this.index() - rcp + rc) / c);
 };
 
@@ -213,7 +213,7 @@ Window_Pagination.prototype.cursorDown = function () {
 
     if (maxCols === 1 || index < this._itemsOnPage - maxCols) {
         let select1 = (index + maxCols) % this._itemsOnPage;
-        let select2 = (this._page - 1) * this._itemsOnPage;
+        let select2 = (this._page - 1) * this.maxItemsOnPage();
         this.select(select1 + select2);
     }
 };
@@ -223,15 +223,57 @@ Window_Pagination.prototype.cursorUp = function () {
     var maxCols = this.maxCols();
 
     if (maxCols === 1 || index < this._itemsOnPage - maxCols) {
-        let select1 = (index - maxCols) % this._itemsOnPage;
-        let select2 = (this._page - 1) * this._itemsOnPage;
+        let select1 = (index - maxCols + this._itemsOnPage) % this._itemsOnPage;
+        let select2 = (this._page - 1) * this.maxItemsOnPage();
         this.select(select1 + select2);
+    }
+};
+
+Window_Pagination.prototype.cursorRight = function () {
+    var index = this.index();
+    var maxCols = this.maxCols();
+
+    if (this._numPages >= 2 && maxCols === 1) {
+        var maxItemsOnPage = this.maxItemsOnPage();
+        var notLastPage = this._page != this._numPages;
+        this.select(
+            Math.min(
+                this.maxItems() - 1, 
+                index % maxItemsOnPage + (maxItemsOnPage * (this._page * notLastPage))
+            )
+        );
+    }
+};
+
+Window_Pagination.prototype.cursorLeft = function () {
+    var index = this.index();
+    var maxCols = this.maxCols();
+
+    if (this._numPages >= 2 && maxCols === 1) {
+        var maxItemsOnPage = this.maxItemsOnPage();
+        var firstPage = this._page === 1;
+        this.select(
+            Math.min(
+                this.maxItems() - 1,
+                (index - maxItemsOnPage) + firstPage * (this._numPages * maxItemsOnPage)
+            )
+        );
     }
 };
 
 //////////////////////////////
 // Functions - refresh
 //////////////////////////////
+
+/**
+ * Refreshes if the page is changed
+ */
+Window_Pagination.prototype.select = function (index) {
+    this._index = index;
+    this._stayCount = 0;
+    if (this._page != this.page()) { this.refresh() };
+    this.updateCursor();
+};
 
 /**
  * List of items should be made before this method is called
@@ -245,3 +287,20 @@ Window_Pagination.prototype.refresh = function () {
     this._numRows = this.numRows();
     this.drawPageBlock();
 }
+
+Window_Pagination.prototype.itemRect = function (index) {
+    var rect = new Rectangle();
+    var maxCols = this.maxCols();
+    var row = this.row();
+    var isBottomRow = row === this.bottomRow();
+    var lineGap = this.lineGap();
+
+    rect.width = this.itemWidth();
+    rect.height = isBottomRow ? this.itemHeight() : this.itemHeight() + lineGap;
+
+    rect.x = index % maxCols * (rect.width + this.spacing()) - this._scrollX;
+    var rectHeightOffset = isBottomRow ? rect.height + lineGap : rect.height;
+    var trueIndex = index - (this.maxItemsOnPage() * (this._page - 1));
+    rect.y = Math.floor(trueIndex / maxCols) * rectHeightOffset - this._scrollY;
+    return rect;
+};

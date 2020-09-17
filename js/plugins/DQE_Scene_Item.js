@@ -36,6 +36,7 @@ Scene_Item.prototype.create = function () {
 
 Scene_Item.prototype.createCommandWindow = function () {
     this._commandWindow = new Window_TitledPartyCommand(24, 48, 354, 'Items', ['Items', 'Equipment', 'Important']);
+    this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
 }
@@ -43,6 +44,17 @@ Scene_Item.prototype.createCommandWindow = function () {
 Scene_Item.prototype.createItemWindow = function () {
     var wx = this._commandWindow.x + this._commandWindow.windowWidth();
     this._itemWindow = new Window_ItemList(wx, 48, 570, 519);
+    this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
     this.addWindow(this._itemWindow);
     this._commandWindow.setAssociatedWindow(this._itemWindow);
+};
+
+Scene_Item.prototype.onCommandOk = function () {
+    this._itemWindow.activate();
+    this._itemWindow.select(0);
+};
+
+Scene_Item.prototype.onItemCancel = function () {
+    this._itemWindow.deselect();
+    this._commandWindow.activate();
 };
