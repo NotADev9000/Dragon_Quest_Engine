@@ -51,10 +51,11 @@ Scene_Item.prototype.createItemWindow = function () {
 
 Scene_Item.prototype.onCommandOk = function () {
     this._itemWindow.activate();
-    this._itemWindow.select(0);
+    this._itemWindow.select(this._itemWindow._lastSelected);
 };
 
 Scene_Item.prototype.onItemCancel = function () {
+    this._itemWindow.setLastSelected(this._itemWindow.index());
     this._itemWindow.deselect();
     this._commandWindow.activate();
 };

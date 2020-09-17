@@ -271,7 +271,7 @@ Window_Pagination.prototype.cursorLeft = function () {
 Window_Pagination.prototype.select = function (index) {
     this._index = index;
     this._stayCount = 0;
-    if (this._page != this.page()) { this.refresh() };
+    if (this._page != this.page() && this._index > -1) { this.refresh() };
     this.updateCursor();
 };
 

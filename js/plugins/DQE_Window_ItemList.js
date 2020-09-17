@@ -35,6 +35,7 @@ Window_ItemList.prototype.initialize = function (x, y, width, height) {
     this._category = 'none';
     this._data = [];
     this._numActorEquips = 0; // How many items actor has equipped
+    this._lastSelected = 0;
 };
 
 Window_ItemList.prototype.lineGap = function () {
@@ -57,7 +58,15 @@ Window_ItemList.prototype.setCategory = function (category) {
  * Actor categories are stored as integers
  */
 Window_ItemList.prototype.isCategoryActor = function () {
-    return Number.isInteger(this._category)
+    return Number.isInteger(this._category);
+};
+
+/**
+ * sets last selected to current index
+ * used to remember the last item the user had selected
+ */
+Window_ItemList.prototype.setLastSelected = function (index) {
+    this._lastSelected = index;
 };
 
 /**
@@ -146,6 +155,7 @@ Window_ItemList.prototype.itemRect = function (index) {
 };
 
 Window_ItemList.prototype.refresh = function () {
+    this.setLastSelected(0);
     this.makeItemList();
     this.createContents();
     Window_Pagination.prototype.refresh.call(this);
