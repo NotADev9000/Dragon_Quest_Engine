@@ -77,6 +77,16 @@ Window_Pagination.prototype.topIndex = function () {
     return this.maxRows() * (this._page - 1);
 };
 
+/**
+ * The true index is the value of the passed in index
+ * if it were on the first page
+ * e.g. 10 items per page
+ *      index = 15 -> true index = 5
+ */
+Window_Pagination.prototype.trueIndex = function (index) {
+    return index - (this.maxItemsOnPage() * (this._page - 1));
+};
+
 //////////////////////////////
 // Functions - page
 //////////////////////////////
@@ -212,7 +222,7 @@ Window_Pagination.prototype.cursorDown = function () {
     var maxCols = this.maxCols();
 
     if (maxCols === 1 || index < this._itemsOnPage - maxCols) {
-        let select1 = (index + maxCols) % this._itemsOnPage;
+        let select1 = (this.trueIndex(index) + maxCols) % this._itemsOnPage;
         let select2 = (this._page - 1) * this.maxItemsOnPage();
         this.select(select1 + select2);
     }
@@ -223,7 +233,7 @@ Window_Pagination.prototype.cursorUp = function () {
     var maxCols = this.maxCols();
 
     if (maxCols === 1 || index < this._itemsOnPage - maxCols) {
-        let select1 = (index - maxCols + this._itemsOnPage) % this._itemsOnPage;
+        let select1 = (this.trueIndex(index) - maxCols + this._itemsOnPage) % this._itemsOnPage;
         let select2 = (this._page - 1) * this.maxItemsOnPage();
         this.select(select1 + select2);
     }
@@ -300,7 +310,6 @@ Window_Pagination.prototype.itemRect = function (index) {
 
     rect.x = index % maxCols * (rect.width + this.spacing()) - this._scrollX;
     var rectHeightOffset = isBottomRow ? rect.height + lineGap : rect.height;
-    var trueIndex = index - (this.maxItemsOnPage() * (this._page - 1));
-    rect.y = Math.floor(trueIndex / maxCols) * rectHeightOffset - this._scrollY;
+    rect.y = Math.floor(this.trueIndex(index) / maxCols) * rectHeightOffset - this._scrollY;
     return rect;
 };
