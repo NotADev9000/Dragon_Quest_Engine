@@ -50,11 +50,13 @@ Scene_Item.prototype.createItemWindow = function () {
 };
 
 Scene_Item.prototype.onCommandOk = function () {
+    this._commandWindow.showBackgroundDimmer();
     this._itemWindow.activate();
     this._itemWindow.select(this._itemWindow._lastSelected);
 };
 
 Scene_Item.prototype.onItemCancel = function () {
+    this._commandWindow.hideBackgroundDimmer();
     this._itemWindow.setLastSelected(this._itemWindow.index());
     this._itemWindow.deselect();
     this._commandWindow.activate();

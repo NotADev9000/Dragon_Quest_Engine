@@ -112,6 +112,43 @@ Window_Base.prototype.drawHorzLine = function (x, y) {
     this.contents.fillRect(x, y, this.contentsWidth(), 3, this.normalColor());
 };
 
+/**
+ * Dimmer covers the whole window and all contents
+ */
+Window_Base.prototype.showBackgroundDimmer = function () {
+    if (!this._dimmerSprite) {
+        this._dimmerSprite = new Sprite();
+        this._dimmerSprite.bitmap = new Bitmap(0, 0);
+        this.addChild(this._dimmerSprite);
+    }
+    var bitmap = this._dimmerSprite.bitmap;
+    if (bitmap.width !== this.width || bitmap.height !== this.height) {
+        this.refreshDimmerBitmap();
+    }
+    this._dimmerSprite.visible = true;
+    this.updateBackgroundDimmer();
+};
+
+/**
+ * Removed gradient from dimmer
+ * TODO: stop bitmap overlapping window corners
+ */
+Window_Base.prototype.refreshDimmerBitmap = function () {
+    if (this._dimmerSprite) {
+        var bitmap = this._dimmerSprite.bitmap;
+        var w = this.width;
+        var h = this.height;
+        var c1 = this.dimColor1();
+        bitmap.resize(w, h);
+        bitmap.fillRect(0, 0, w, h, c1);
+        this._dimmerSprite.setFrame(0, 0, w, h);
+    }
+};
+
+Window_Base.prototype.dimColor1 = function () {
+    return 'rgba(0, 0, 0, 0.5)';
+};
+
 //-----------------------------------------------------------------------------
 // Window_Selectable
 //-----------------------------------------------------------------------------
