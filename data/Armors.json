@@ -1,4 +1,4 @@
 [
 null,
-{"id":1,"atypeId":1,"description":"","etypeId":4,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":0,"name":"Big Armor","note":"","params":[0,0,0,0,0,0,0,0],"price":0}
+{"id":1,"atypeId":1,"description":"A large suit of armor once worn by a warrior\nking.","etypeId":4,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":0,"name":"Big Armor","note":"","params":[0,0,0,0,0,0,0,0],"price":0}
 ]

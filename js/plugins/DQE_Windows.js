@@ -9,7 +9,7 @@
 * @plugindesc General changes to windows - Dragon Quest Engine V0.1
 *
 *
-* @param Selectable Line Gap
+* @param Base Line Gap
 * @desc The height of the gap between each line of text.
 * Default: 8.
 * @default
@@ -40,7 +40,7 @@ DQEng.Windows = DQEng.Windows || {};
 var parameters = PluginManager.parameters('DQE_Windows');
 DQEng.Parameters = DQEng.Parameters || {};
 DQEng.Parameters.Windows = {};
-DQEng.Parameters.Windows.Selectable_LineGap = Number(parameters["Selectable Line Gap"]) || 8;
+DQEng.Parameters.Windows.Base_LineGap = Number(parameters["Base Line Gap"]) || 8;
 DQEng.Parameters.Windows.ChoiceList_LineGap = Number(parameters["Choice Line Gap"]) || 18;
 DQEng.Parameters.Windows.ChoiceList_ChoiceYOffset = Number(parameters["Choice Y Offset"]) || 48;
 
@@ -71,6 +71,19 @@ Window_Base.prototype.deathColor = function () {
 };
 
 /**
+ * The height of the gap between each line of text
+ * 
+ * @gameMatch custom
+ */
+Window_Base.prototype.lineGap = function () {
+    return DQEng.Parameters.Windows.Base_LineGap;
+};
+
+Window_Base.prototype.fittingHeight = function (numLines) {
+    return numLines * this.lineHeight() + this.standardPadding() * 2 + (this.lineGap() * Math.max(numLines - 1, 0));
+};
+
+/**
  * Open windows immediately
  *
  * @gameMatch DQ1+2 SNES
@@ -96,6 +109,13 @@ Window_Base.prototype.updateClose = function () {
             this._closing = false;
         }
     }
+};
+
+/**
+ * Text height calculated with lineHeight + lineGap
+ */
+Window_Base.prototype.calcTextHeight = function () {
+    return this.lineHeight() + this.lineGap();
 };
 
 /**
@@ -155,19 +175,6 @@ Window_Base.prototype.dimColor1 = function () {
 
 Window_Selectable.prototype.lineHeight = function () {
     return 21;
-};
-
-/**
- * The height of the gap between each line of text
- * 
- * @gameMatch custom
- */
-Window_Selectable.prototype.lineGap = function () {
-    return DQEng.Parameters.Windows.Selectable_LineGap;
-};
-
-Window_Selectable.prototype.fittingHeight = function (numLines) {
-    return numLines * this.lineHeight() + this.standardPadding() * 2 + (this.lineGap() * Math.max(numLines - 1, 0));
 };
 
 Window_Selectable.prototype.itemRect = function (index) {

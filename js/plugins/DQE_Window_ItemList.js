@@ -85,6 +85,11 @@ Window_ItemList.prototype.includes = function (item) {
     }
 };
 
+Window_ItemList.prototype.item = function () {
+    var index = this.index();
+    return this._data && index >= 0 ? this._data[index] : null;
+};
+
 /**
  * Creates the item list to be displayed in the window
  * Retrieves items from party or actor inventory
@@ -141,6 +146,10 @@ Window_ItemList.prototype.drawItem = function (index) {
         this.drawText(item.name, rect.x, rect.y, 432);
         this.resetTextColor();
     }
+};
+
+Window_ItemList.prototype.updateHelp = function () {
+    this.setHelpWindowItem(this.item());
 };
 
 /**
