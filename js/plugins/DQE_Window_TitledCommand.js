@@ -41,9 +41,9 @@ Window_TitledCommand.prototype.constructor = Window_TitledCommand;
  * @param {String} menuTitle the displayed title of the window
  * @param {Array} commands commands that will be displayed below the title
  */
-Window_TitledCommand.prototype.initialize = function (x, y, windowWidth, menuTitle, commands) {
+Window_TitledCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands) {
     this._windowWidth = windowWidth;
-    this._menuTitle = menuTitle || "???"
+    this._menuTitle = menuTitle;
     this._commands = commands;
     Window_Command.prototype.initialize.call(this, x, y);
 };

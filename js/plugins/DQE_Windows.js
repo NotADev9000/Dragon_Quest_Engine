@@ -203,6 +203,17 @@ Window_Selectable.prototype.itemRectForText = function (index) {
 };
 
 //-----------------------------------------------------------------------------
+// Window_Command
+//-----------------------------------------------------------------------------
+
+Window_Command.prototype.updateWindowDisplay = function () {
+    this._height = this.windowHeight();
+    this._width = this.windowWidth();
+    this._refreshAllParts();
+    this.refresh();
+};
+
+//-----------------------------------------------------------------------------
 // Window_ChoiceList
 //-----------------------------------------------------------------------------
 
