@@ -43,7 +43,7 @@ Scene_Item.prototype.createHelpWindow = function () {
 };
 
 Scene_Item.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_TitledPartyCommand(24, 48, 354, 'Items', ['Items', 'Equipment', 'Important']);
+    this._commandWindow = new Window_ItemCommand(24, 48, 354, 'Items', ['Items', 'Equipment', 'Important']);
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
@@ -61,11 +61,12 @@ Scene_Item.prototype.createItemWindow = function () {
 
 Scene_Item.prototype.createDoWhatWindow = function () {
     this._doWhatWindow = new Window_TitledCommand(96, 372, 282, 'Do What?', ['Use', 'Transfer', 'Cancel']);
+    this._doWhatWindow.deactivate();
     this._doWhatWindow.setHandler('cancel', this.onDoWhatCancel.bind(this));
     this._doWhatWindow.setHandler('Cancel', this.onDoWhatCancel.bind(this));
     this._doWhatWindow.hide();
     this.addWindow(this._doWhatWindow);
-}
+};
 
 Scene_Item.prototype.onCommandOk = function () {
     this._commandWindow.showBackgroundDimmer();
@@ -112,9 +113,8 @@ Scene_Item.prototype.manageDoWhatCommands = function () {
     } else if (!isEquipment && hasEquip) {
         this._doWhatWindow._commands.splice(equipIndex, 1);
     }
-    console.log(this._doWhatWindow._list);
-}
+};
 
 Scene_Item.prototype.manageDoWhatPosition = function () {
     this._doWhatWindow.y = this._doWhatWindow._commands.length === 3 ? 372 : 336;
-}
+};
