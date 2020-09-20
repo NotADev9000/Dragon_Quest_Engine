@@ -1,0 +1,20 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/audio": true,
+        "**/data": true,
+        "**/fonts": true,
+        "**/icon": true,
+        "**/img": true,
+        "**/movies": true,
+        "**/save": true,
+        "**/.vscode": true,
+        "**/js/libs": true,
+        "**/js/lunalite-pixi-mv.d.ts": true,
+        "**/js/jsconfig.json": true
+    }
+}
