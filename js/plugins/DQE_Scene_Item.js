@@ -36,6 +36,10 @@ Scene_Item.prototype.create = function () {
     this.createDoWhatWindow();
 };
 
+//////////////////////////////
+// Functions - create windows
+//////////////////////////////
+
 Scene_Item.prototype.createHelpWindow = function () {
     this._helpWindow = new Window_Help(24, 567, 1230, 3);
     this._helpWindow.hide();
@@ -67,6 +71,10 @@ Scene_Item.prototype.createDoWhatWindow = function () {
     this._doWhatWindow.hide();
     this.addWindow(this._doWhatWindow);
 };
+
+//////////////////////////////
+// Functions - on handlers
+//////////////////////////////
 
 Scene_Item.prototype.onCommandOk = function () {
     this._commandWindow.showBackgroundDimmer();
@@ -102,6 +110,10 @@ Scene_Item.prototype.onDoWhatCancel = function () {
     this._doWhatWindow.hide();
     this._itemWindow.activate();
 };
+
+//////////////////////////////
+// Functions - managers
+//////////////////////////////
 
 Scene_Item.prototype.manageDoWhatCommands = function () {
     var isEquipment = DataManager.isWeapon(this.item()) || DataManager.isArmor(this.item());
