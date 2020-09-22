@@ -25,7 +25,7 @@ var DQEng = DQEng || {};
 DQEng.Scene_Menu = DQEng.Scene_Menu || {};
 
 //-----------------------------------------------------------------------------
-// Window_Scene_Menu
+// Scene_Menu
 //-----------------------------------------------------------------------------
 
 Scene_Menu.prototype.start = function () {

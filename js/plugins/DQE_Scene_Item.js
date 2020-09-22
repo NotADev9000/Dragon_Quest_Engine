@@ -51,6 +51,7 @@ Scene_Item.prototype.create = function () {
     this.createDoWhatWindow();
     this.createTransferToWhoWindow();
     this.createUseOnWhoWindow();
+    this.createMessageWindow();
 };
 
 //////////////////////////////
@@ -107,6 +108,11 @@ Scene_Item.prototype.createUseOnWhoWindow = function () {
     this.addWindow(this._useOnWhoWindow);
 }
 
+Scene_Item.prototype.createMessageWindow = function () {
+    this._messageWindow = new Window_Message();
+    this.addWindow(this._messageWindow);
+};
+
 //////////////////////////////
 // Functions - on handlers
 //////////////////////////////
@@ -146,8 +152,7 @@ Scene_Item.prototype.onDoWhatUse = function () {
         this._useOnWhoWindow.show();
         this._useOnWhoWindow.activate();
     } else {
-        console.log('This item cannot be used');
-        this._doWhatWindow.activate();
+        this.displayMessage('This item cannot be used.', Scene_Item.prototype.doWhatUseMessage);
     }
 };
 
@@ -196,3 +201,16 @@ Scene_Item.prototype.manageDoWhatCommands = function () {
 Scene_Item.prototype.manageDoWhatPosition = function () {
     this._doWhatWindow.y = this._doWhatWindow._commands.length === 3 ? 372 : 336;
 };
+
+//////////////////////////////
+// Functions - message callbacks
+//////////////////////////////
+
+/**
+ * This callback method is run when the user tries to 
+ * use an unusable item and the corresponding message 
+ * box has closed
+ */
+Scene_Item.prototype.doWhatUseMessage = function () {
+    this._doWhatWindow.activate();
+}
