@@ -6,7 +6,7 @@
 /*:
 *
 * @author NotADev
-* @plugindesc The The game object class for the party - V0.1
+* @plugindesc The The game object class for an actor - V0.1
 *
 *
 * @help

@@ -25,6 +25,21 @@ var DQEng = DQEng || {};
 DQEng.Scene_Item = DQEng.Scene_Item || {};
 
 //-----------------------------------------------------------------------------
+// Scene_ItemBase
+//-----------------------------------------------------------------------------
+
+/**
+ * Returns false if item is not useable in menu
+ */
+Scene_ItemBase.prototype.canUse = function () {
+    var user = this.user();
+    if (user) {
+        return user.canUse(this.item());
+    }
+    return false;
+};
+
+//-----------------------------------------------------------------------------
 // Scene_Item
 //-----------------------------------------------------------------------------
 
@@ -34,6 +49,8 @@ Scene_Item.prototype.create = function () {
     this.createCommandWindow();
     this.createItemWindow();
     this.createDoWhatWindow();
+    this.createTransferToWhoWindow();
+    this.createUseOnWhoWindow();
 };
 
 //////////////////////////////
@@ -66,11 +83,29 @@ Scene_Item.prototype.createItemWindow = function () {
 Scene_Item.prototype.createDoWhatWindow = function () {
     this._doWhatWindow = new Window_TitledCommand(96, 372, 282, 'Do What?', ['Use', 'Transfer', 'Cancel']);
     this._doWhatWindow.deactivate();
+    this._doWhatWindow.setHandler('Use', this.onDoWhatUse.bind(this));
+    this._doWhatWindow.setHandler('Transfer', this.onDoWhatTransfer.bind(this));
     this._doWhatWindow.setHandler('cancel', this.onDoWhatCancel.bind(this));
     this._doWhatWindow.setHandler('Cancel', this.onDoWhatCancel.bind(this));
     this._doWhatWindow.hide();
     this.addWindow(this._doWhatWindow);
 };
+
+Scene_Item.prototype.createTransferToWhoWindow = function () {
+    this._transferToWhoWindow = new Window_TitledPartyCommand(24, 48, 354, 'To Who?', ['Bag']);
+    this._transferToWhoWindow.deactivate();
+    this._transferToWhoWindow.setHandler('cancel', this.onTransferToWhoCancel.bind(this));
+    this._transferToWhoWindow.hide();
+    this.addWindow(this._transferToWhoWindow);
+}
+
+Scene_Item.prototype.createUseOnWhoWindow = function () {
+    this._useOnWhoWindow = new Window_TitledPartyCommand(24, 48, 354, 'On Who?');
+    this._useOnWhoWindow.deactivate();
+    this._useOnWhoWindow.setHandler('cancel', this.onUseOnWhoCancel.bind(this));
+    this._useOnWhoWindow.hide();
+    this.addWindow(this._useOnWhoWindow);
+}
 
 //////////////////////////////
 // Functions - on handlers
@@ -104,11 +139,42 @@ Scene_Item.prototype.onItemCancel = function () {
     this._commandWindow.activate();
 };
 
+Scene_Item.prototype.onDoWhatUse = function () {
+    if (this.canUse()) {
+        this._doWhatWindow.showBackgroundDimmer();
+        this._useOnWhoWindow.select(0);
+        this._useOnWhoWindow.show();
+        this._useOnWhoWindow.activate();
+    } else {
+        console.log('This item cannot be used');
+        this._doWhatWindow.activate();
+    }
+};
+
+Scene_Item.prototype.onDoWhatTransfer = function () {
+    this._doWhatWindow.showBackgroundDimmer();
+    this._transferToWhoWindow.select(0);
+    this._transferToWhoWindow.show();
+    this._transferToWhoWindow.activate();
+};
+
 Scene_Item.prototype.onDoWhatCancel = function () {
     this._itemWindow.hideBackgroundDimmer();
     this._helpWindow.hideBackgroundDimmer();
     this._doWhatWindow.hide();
     this._itemWindow.activate();
+};
+
+Scene_Item.prototype.onUseOnWhoCancel = function () {
+    this._doWhatWindow.hideBackgroundDimmer();
+    this._useOnWhoWindow.hide();
+    this._doWhatWindow.activate();
+};
+
+Scene_Item.prototype.onTransferToWhoCancel = function () {
+    this._doWhatWindow.hideBackgroundDimmer();
+    this._transferToWhoWindow.hide();
+    this._doWhatWindow.activate();
 };
 
 //////////////////////////////

@@ -15,6 +15,7 @@
         "**/.vscode": true,
         "**/js/libs": true,
         "**/js/lunalite-pixi-mv.d.ts": true,
-        "**/js/jsconfig.json": true
+        "**/js/jsconfig.json": true,
+        "**/index.html": true
     }
 }
