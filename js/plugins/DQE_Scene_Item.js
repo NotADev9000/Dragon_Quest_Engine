@@ -93,7 +93,7 @@ Scene_Item.prototype.createDoWhatWindow = function () {
 };
 
 Scene_Item.prototype.createTransferToWhoWindow = function () {
-    this._transferToWhoWindow = new Window_TitledPartyCommand(24, 48, 354, 'To Who?', ['Bag']);
+    this._transferToWhoWindow = new Window_TitledPartyCommand(24, 48, 354, 'To Who?');
     this._transferToWhoWindow.deactivate();
     this._transferToWhoWindow.setHandler('cancel', this.onTransferToWhoCancel.bind(this));
     this._transferToWhoWindow.hide();
@@ -157,6 +157,10 @@ Scene_Item.prototype.onDoWhatUse = function () {
 };
 
 Scene_Item.prototype.onDoWhatTransfer = function () {
+    this.manageTransferToWhoCommands();
+    this._transferToWhoWindow.clearCommandList();
+    this._transferToWhoWindow.makeCommandList();
+    this._transferToWhoWindow.updateWindowDisplay();
     this._doWhatWindow.showBackgroundDimmer();
     this._transferToWhoWindow.select(0);
     this._transferToWhoWindow.show();
@@ -202,15 +206,36 @@ Scene_Item.prototype.manageDoWhatPosition = function () {
     this._doWhatWindow.y = this._doWhatWindow._commands.length === 3 ? 372 : 336;
 };
 
+/**
+ * Bag command doesn't appear when transferring an 
+ * item that is already in the bag
+ */
+Scene_Item.prototype.manageTransferToWhoCommands = function () {
+    this._transferToWhoWindow._commands = this.inBag() ? ['Bag'] : null;
+}
+
 //////////////////////////////
 // Functions - message callbacks
 //////////////////////////////
 
 /**
- * This callback method is run when the user tries to 
- * use an unusable item and the corresponding message 
- * box has closed
+ * This callback method is run when the player tries 
+ * to use an unusable item and the corresponding
+ * message box has closed
  */
 Scene_Item.prototype.doWhatUseMessage = function () {
     this._doWhatWindow.activate();
+}
+
+//////////////////////////////
+// Functions - misc.
+//////////////////////////////
+
+/**
+ * returns true if player is selecting an
+ * item from within the bag
+ */
+Scene_Item.prototype.inBag = function () {
+    var cmdWin = this._commandWindow;
+    return Number.isInteger(cmdWin.commandSymbol(cmdWin.index()));
 }
