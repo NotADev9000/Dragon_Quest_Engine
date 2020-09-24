@@ -246,12 +246,7 @@ Window_Pagination.prototype.cursorRight = function () {
     if (this._numPages >= 2 && maxCols === 1) {
         var maxItemsOnPage = this.maxItemsOnPage();
         var notLastPage = this._page != this._numPages;
-        this.select(
-            Math.min(
-                this.maxItems() - 1, 
-                index % maxItemsOnPage + (maxItemsOnPage * (this._page * notLastPage))
-            )
-        );
+        this.select(index % maxItemsOnPage + (maxItemsOnPage * (this._page * notLastPage)));
     }
 };
 
@@ -262,12 +257,7 @@ Window_Pagination.prototype.cursorLeft = function () {
     if (this._numPages >= 2 && maxCols === 1) {
         var maxItemsOnPage = this.maxItemsOnPage();
         var firstPage = this._page === 1;
-        this.select(
-            Math.min(
-                this.maxItems() - 1,
-                (index - maxItemsOnPage) + firstPage * (this._numPages * maxItemsOnPage)
-            )
-        );
+        this.select((index - maxItemsOnPage) + firstPage * (this._numPages * maxItemsOnPage));
     }
 };
 
@@ -279,7 +269,7 @@ Window_Pagination.prototype.cursorLeft = function () {
  * Refreshes if the page is changed
  */
 Window_Pagination.prototype.select = function (index) {
-    this._index = index;
+    this._index = Math.min(this.maxItems()-1, index);
     this._stayCount = 0;
     if (this._page != this.page() && this._index > -1) { this.refresh() };
     this.updateCursor();
