@@ -11,6 +11,11 @@
 *
 * @help
 * This is where the party members' held items logic is stored
+* 
+* Items are stored the same as equipment, meaning they are stored
+* as Game_Item objects.
+*
+* Actor's equipment is always stored at the front of the item list.
 *
 */
 
@@ -38,6 +43,26 @@ Game_Actor.prototype.initMembers = function () {
 }
 
 /**
+ * Added items to setup
+ */
+DQEng.Game_Actor.setup = Game_Actor.prototype.setup;
+Game_Actor.prototype.setup = function (actorId) {
+    DQEng.Game_Actor.setup.call(this, actorId);
+    this._items = this.initItems();
+};
+
+/**
+ * Add equipment to held items
+ * 
+ * TODO: Read from Actor notetags to retrieve default items
+ */
+Game_Actor.prototype.initItems = function () {
+    return this._equips.filter(equip => {
+        return equip._itemId;
+    });
+};
+
+/**
  * Returns held items as an array of data items
  */
 Game_Actor.prototype.items = function () {
@@ -46,8 +71,23 @@ Game_Actor.prototype.items = function () {
     });
 };
 
+/**
+ * Returns item at index as a data item
+ * 
+ * @param {number} index of item in actor inventory
+ */
+Game_Actor.prototype.item = function (index) {
+    return this._items[index].object();
+};
+
 Game_Actor.prototype.maxItems = function () {
-    return 50;
+    return 12;
+};
+
+Game_Actor.prototype.numEquips = function () {
+    return this._equips.filter(equip => {
+        return equip._itemId;
+    }).length;
 };
 
 Game_Actor.prototype.numItems = function () {
@@ -62,8 +102,30 @@ Game_Actor.prototype.hasItem = function (item) {
     return this.items().contains(item);
 };
 
+/**
+ * Is the item at given index an equipped item?
+ * 
+ * @param {number} index of held item 
+ */
+Game_Actor.prototype.indexIsEquip = function (index) {
+    return index < this.numEquips();
+};
+
 Game_Actor.prototype.gainItem = function (item) {
     this._items.push(new Game_Item(item));
+};
+
+/**
+ * Removes item at given index
+ * Unequips the item if equipped
+ * 
+ * @param {number} index of item to remove
+ */
+Game_Actor.prototype.removeItemAtIndex = function (index) {
+    if (this.indexIsEquip(index)) {
+        this.discardEquip(this.item(index));
+    }
+    this._items.splice(index, 1);
 };
 
 /**
@@ -81,4 +143,13 @@ Game_Actor.prototype.giveItems = function (item, amount) {
         this.refresh();
     }
     return amount;
+}
+
+Game_Actor.prototype.giveItemToBag = function (index) {
+    $gameParty.gainItem(this.item(index), 1);
+    this.removeItemAtIndex(index);
+}
+
+Game_Actor.prototype.giveItemToBagMessage = function (index) {
+    return `${this._name} placed the ${this.item(index).name} in the bag.`;
 }

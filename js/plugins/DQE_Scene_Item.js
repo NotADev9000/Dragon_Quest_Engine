@@ -49,8 +49,9 @@ Scene_Item.prototype.create = function () {
     this.createCommandWindow();
     this.createItemWindow();
     this.createDoWhatWindow();
-    this.createTransferToWhoWindow();
     this.createUseOnWhoWindow();
+    this.createTransferToWhoWindow();
+    this.createTransferItemWindow();
     this.createMessageWindow();
 };
 
@@ -92,14 +93,6 @@ Scene_Item.prototype.createDoWhatWindow = function () {
     this.addWindow(this._doWhatWindow);
 };
 
-Scene_Item.prototype.createTransferToWhoWindow = function () {
-    this._transferToWhoWindow = new Window_TitledPartyCommand(24, 48, 354, 'To Who?');
-    this._transferToWhoWindow.deactivate();
-    this._transferToWhoWindow.setHandler('cancel', this.onTransferToWhoCancel.bind(this));
-    this._transferToWhoWindow.hide();
-    this.addWindow(this._transferToWhoWindow);
-}
-
 Scene_Item.prototype.createUseOnWhoWindow = function () {
     this._useOnWhoWindow = new Window_TitledPartyCommand(24, 48, 354, 'On Who?');
     this._useOnWhoWindow.deactivate();
@@ -108,10 +101,32 @@ Scene_Item.prototype.createUseOnWhoWindow = function () {
     this.addWindow(this._useOnWhoWindow);
 }
 
+Scene_Item.prototype.createTransferToWhoWindow = function () {
+    this._transferToWhoWindow = new Window_TitledPartyCommand(24, 48, 354, 'To Who?');
+    this._transferToWhoWindow.deactivate();
+    this._transferToWhoWindow.setHandler('ok', this.onTransferToWhoOk.bind(this));
+    this._transferToWhoWindow.setHandler('cancel', this.onTransferToWhoCancel.bind(this));
+    this._transferToWhoWindow.hide();
+    this.addWindow(this._transferToWhoWindow);
+}
+
+Scene_Item.prototype.createTransferItemWindow = function () {
+    mainItemWin = this._itemWindow;
+    this._transferItemWindow = new Window_ItemList(mainItemWin.x, mainItemWin.y, mainItemWin._width, mainItemWin._height);
+    this._transferItemWindow.setHandler('cancel', this.onTransferItemCancel.bind(this));
+    this._transferItemWindow.hide();
+    this.addWindow(this._transferItemWindow);
+    this._transferToWhoWindow.setAssociatedWindow(this._transferItemWindow);
+};
+
+/**
+ * Always call this window last so it's at front
+ */
 Scene_Item.prototype.createMessageWindow = function () {
     this._messageWindow = new Window_Message();
     this.addWindow(this._messageWindow);
 };
+
 
 //////////////////////////////
 // Functions - on handlers
@@ -164,6 +179,7 @@ Scene_Item.prototype.onDoWhatTransfer = function () {
     this._doWhatWindow.showBackgroundDimmer();
     this._transferToWhoWindow.select(0);
     this._transferToWhoWindow.show();
+    this._transferItemWindow.show();
     this._transferToWhoWindow.activate();
 };
 
@@ -180,10 +196,36 @@ Scene_Item.prototype.onUseOnWhoCancel = function () {
     this._doWhatWindow.activate();
 };
 
+/**
+ * If transferring to bag then immediately move item.
+ * If transferring to actor then open item window so
+ * they can select an item to swap
+ */
+Scene_Item.prototype.onTransferToWhoOk = function () {
+    if (this.inBag(this._transferToWhoWindow)) {
+        var actor = $gameParty.members()[this._commandWindow.index()];
+        var itemIndex = this._itemWindow.index();
+        this.displayMessage(actor.giveItemToBagMessage(itemIndex), Scene_Item.prototype.transferToBagMessage);
+        actor.giveItemToBag(itemIndex);
+    } else {
+        this._transferToWhoWindow.showBackgroundDimmer();
+        this._transferItemWindow.activate();
+        this._transferItemWindow.select(this._transferItemWindow._lastSelected);
+    }
+}
+
 Scene_Item.prototype.onTransferToWhoCancel = function () {
     this._doWhatWindow.hideBackgroundDimmer();
+    this._transferItemWindow.hide();
     this._transferToWhoWindow.hide();
     this._doWhatWindow.activate();
+};
+
+Scene_Item.prototype.onTransferItemCancel = function () {
+    this._transferToWhoWindow.hideBackgroundDimmer();
+    this._transferItemWindow.setLastSelected(this._transferItemWindow.index());
+    this._transferItemWindow.deselect();
+    this._transferToWhoWindow.activate();
 };
 
 //////////////////////////////
@@ -211,7 +253,7 @@ Scene_Item.prototype.manageDoWhatPosition = function () {
  * item that is already in the bag
  */
 Scene_Item.prototype.manageTransferToWhoCommands = function () {
-    this._transferToWhoWindow._commands = this.inBag() ? ['Bag'] : null;
+    this._transferToWhoWindow._commands = this.inBag(this._commandWindow) ? null : ['Bag'];
 }
 
 //////////////////////////////
@@ -227,15 +269,25 @@ Scene_Item.prototype.doWhatUseMessage = function () {
     this._doWhatWindow.activate();
 }
 
+Scene_Item.prototype.transferToBagMessage = function () {
+    this._transferItemWindow.hide();
+    this._transferToWhoWindow.hide();
+    this._doWhatWindow.hide();
+    this._doWhatWindow.hideBackgroundDimmer();
+    this._itemWindow.hideBackgroundDimmer();
+    this._helpWindow.hideBackgroundDimmer();
+    this._itemWindow.refresh();
+    this._itemWindow.activate();
+}
+
 //////////////////////////////
 // Functions - misc.
 //////////////////////////////
 
 /**
- * returns true if player is selecting an
- * item from within the bag
+ * Returns true if player is selecting
+ * an option that's in the bag
  */
-Scene_Item.prototype.inBag = function () {
-    var cmdWin = this._commandWindow;
-    return Number.isInteger(cmdWin.commandSymbol(cmdWin.index()));
+Scene_Item.prototype.inBag = function (commandWindow) {
+    return !Number.isInteger(commandWindow.commandSymbol(commandWindow.index()));
 }

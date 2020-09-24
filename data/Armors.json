@@ -1,4 +1,6 @@
 [
 null,
-{"id":1,"atypeId":1,"description":"A large suit of armor once worn by a warrior\nking.","etypeId":4,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":0,"name":"Big Armor","note":"","params":[0,0,0,0,0,0,0,0],"price":0}
+{"id":1,"atypeId":1,"description":"A large suit of armor once worn by a warrior\nking.","etypeId":4,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":0,"name":"Big Armor","note":"","params":[0,0,0,0,0,0,0,0],"price":0},
+{"id":2,"atypeId":1,"description":"A large shield, big enough to protect the entire\nbody of a warrior.","etypeId":2,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":0,"name":"Big Shield","note":"","params":[0,0,0,0,0,0,0,0],"price":0},
+{"id":3,"atypeId":1,"description":"A large helmet that protects the face from all\nangles.","etypeId":3,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":0,"name":"Big Helmet","note":"","params":[0,0,0,0,0,0,0,0],"price":0}
 ]

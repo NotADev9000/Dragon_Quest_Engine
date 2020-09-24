@@ -80,6 +80,8 @@ Window_ItemList.prototype.includes = function (item) {
             return DataManager.isWeapon(item) || DataManager.isArmor(item);
         case 'Important':
             return DataManager.isItem(item) && item.itypeId === 2;
+        case 'Bag':
+            return true;
         default:
             return false;
     }
@@ -98,10 +100,8 @@ Window_ItemList.prototype.item = function () {
 Window_ItemList.prototype.makeItemList = function () {
     if (this.isCategoryActor()) {
         var actor = $gameParty.members()[this._category];
-        var actorEquips = this.getActorEquips(actor);
-        this._data = actorEquips;
-        this._numActorEquips = actorEquips.length;
-        this._data.push(...actor.items());
+        this._numActorEquips = actor.numEquips();
+        this._data = actor.items();
     } else {
         this._data = $gameParty.allItems().filter(function (item) {
             return this.includes(item);
@@ -135,7 +135,7 @@ Window_ItemList.prototype.getActorEquips = function (actor) {
 Window_ItemList.prototype.drawItem = function (index) {
     var item = this._data[index];
     if (item) {
-        var isActorEquip = index < this._numActorEquips; // is the drawn item an actors' equipment
+        var isActorEquip = index < this._numActorEquips; // is the drawn item an actors' equipment?
         var rect = this.itemRectForText(index);
         if (!this.isCategoryActor()) {
             this.drawText($gameParty.numItems(item), rect.x, rect.y, rect.width, 'right');
