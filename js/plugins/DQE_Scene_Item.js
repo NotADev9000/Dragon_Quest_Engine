@@ -173,6 +173,7 @@ Scene_Item.prototype.onDoWhatUse = function () {
 
 Scene_Item.prototype.onDoWhatTransfer = function () {
     this.manageTransferToWhoCommands();
+    this._transferToWhoWindow._excludeActors = [this._commandWindow.currentSymbol()];
     this._transferToWhoWindow.clearCommandList();
     this._transferToWhoWindow.makeCommandList();
     this._transferToWhoWindow.updateWindowDisplay();
@@ -277,7 +278,14 @@ Scene_Item.prototype.transferToBagMessage = function () {
     this._itemWindow.hideBackgroundDimmer();
     this._helpWindow.hideBackgroundDimmer();
     this._itemWindow.refresh();
-    this._itemWindow.activate();
+    if (this._commandWindow.isCurrentItemEnabled()) {
+        this._itemWindow.activate();
+    } else {
+        this._commandWindow.hideBackgroundDimmer();
+        this._helpWindow.hide();
+        this._itemWindow.deselect();
+        this._commandWindow.activate();
+    }
 }
 
 //////////////////////////////

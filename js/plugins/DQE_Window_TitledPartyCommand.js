@@ -37,6 +37,14 @@ function Window_TitledPartyCommand() {
 Window_TitledPartyCommand.prototype = Object.create(Window_TitledCommand.prototype);
 Window_TitledPartyCommand.prototype.constructor = Window_TitledPartyCommand;
 
+/**
+ * @param {number} excludeActors index of actors to exclude from command list
+ */
+Window_TitledPartyCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands, excludeActors = []) {
+    this._excludeActors = excludeActors;
+    Window_TitledCommand.prototype.initialize.call(this, x, y, windowWidth, menuTitle, commands);
+};
+
 //////////////////////////////
 // Functions - commands
 //////////////////////////////
@@ -52,7 +60,9 @@ Window_TitledPartyCommand.prototype.makeCommandList = function () {
 Window_TitledPartyCommand.prototype.addPartyCommands = function () {
     var partyMembers = $gameParty.members();
     partyMembers.forEach((member, index) => {
-        this.addCommand(member._name, index, true);
+        if (this._excludeActors.indexOf(index) === -1) {
+            this.addCommand(member._name, index, true);
+        }
     });
 };
 
