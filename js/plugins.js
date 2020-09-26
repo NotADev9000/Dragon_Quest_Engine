@@ -13,6 +13,7 @@ var $plugins =
 {"name":"DQE_Misc","status":true,"description":"Misc changes for Dragon Quest Engine - V0.1\r\nTODO: Move changes here into a more suitable file","parameters":{}},
 {"name":"DQE_Game_BattlerBase","status":true,"description":"The The game object class for the actor base - V0.1","parameters":{}},
 {"name":"DQE_Game_Actor","status":true,"description":"The The game object class for the party - V0.1","parameters":{}},
+{"name":"DQE_Game_Party","status":true,"description":"The The game object class for the party - V0.1","parameters":{}},
 {"name":"DQE_Scene_MenuBase","status":true,"description":"The scene base for menus - V0.1","parameters":{}},
 {"name":"DQE_Scene_Menu","status":true,"description":"The scene for the main menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_Item","status":true,"description":"The scene for the item menu - V0.1","parameters":{}},

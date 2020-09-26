@@ -7,7 +7,13 @@
 *
 * @author NotADev
 * @plugindesc The scene for the item menu - V0.1
-*
+* TODO: Equipment Details window when cursor is on an equipment piece
+* TODO: Filter and Sort options
+* TODO: Use items + use detail window
+* TODO: Choose how many items to transfer from bag
+* TODO: Equip & Unequip equipment
+* TODO: Ask if equipment piece should be equipped when transferring to actor
+* TODO: Swap items when transferring to full inventory
 *
 * @help
 * N/A
@@ -180,6 +186,7 @@ Scene_Item.prototype.onDoWhatTransfer = function () {
     this._doWhatWindow.showBackgroundDimmer();
     this._transferToWhoWindow.select(0);
     this._transferToWhoWindow.show();
+    this._transferItemWindow.refresh();
     this._transferItemWindow.show();
     this._transferToWhoWindow.activate();
 };
@@ -198,20 +205,31 @@ Scene_Item.prototype.onUseOnWhoCancel = function () {
 };
 
 /**
- * If transferring to bag then immediately move item.
- * If transferring to actor then open item window so
- * they can select an item to swap
+ * On confirmation of transferring an item
+ * 
+ * Moving an item to the bag or to an actor,
+ * who has room, immediately transfers it.
+ * 
+ * If the actor's inventory is full then the
+ * item window is opened and the player can
+ * swap an item.
  */
 Scene_Item.prototype.onTransferToWhoOk = function () {
-    if (this.inBag(this._transferToWhoWindow)) {
-        var actor = $gameParty.members()[this._commandWindow.index()];
-        var itemIndex = this._itemWindow.index();
-        this.displayMessage(actor.giveItemToBagMessage(itemIndex), Scene_Item.prototype.transferToBagMessage);
-        actor.giveItemToBag(itemIndex);
-    } else {
+    var inBagInventory = this.inBag(this._commandWindow); // is the player looking in one of the three bag spaces?
+    var takeFrom = inBagInventory ? $gameParty : $gameParty.members()[this._commandWindow.index()]; // where the item will be moved from
+    var giveActor = $gameParty.members()[this._transferToWhoWindow.currentSymbol()]; // where the item will be moved to
+    var item = inBagInventory ? this._itemWindow._data[this._itemWindow.index()] : this._itemWindow.index(); // item to give
+
+    if (this.inBag(this._transferToWhoWindow)) { // transferring to bag
+        this.displayMessage(takeFrom.giveItemToBagMessage(item), Scene_Item.prototype.transferToBagMessage);
+        takeFrom.giveItemToBag(item);
+    } else if (giveActor.hasMaxItems()) { // transferring to actor with a full inventory
         this._transferToWhoWindow.showBackgroundDimmer();
         this._transferItemWindow.activate();
         this._transferItemWindow.select(this._transferItemWindow._lastSelected);
+    } else { // transferring to actor with inventory space
+        this.displayMessage(takeFrom.giveItemToActorMessage(item, giveActor), Scene_Item.prototype.transferToBagMessage);
+        takeFrom.giveItemToActor(item, giveActor);
     }
 }
 
@@ -234,13 +252,14 @@ Scene_Item.prototype.onTransferItemCancel = function () {
 //////////////////////////////
 
 Scene_Item.prototype.manageDoWhatCommands = function () {
+    var inBag = this.inBag(this._commandWindow);
     var isEquipment = DataManager.isWeapon(this.item()) || DataManager.isArmor(this.item());
     var equipIndex = this._doWhatWindow._commands.indexOf('Equip');
-    var hasEquip = equipIndex > -1;
+    var windowHasEquip = equipIndex > -1;
 
-    if (isEquipment && !hasEquip) {
+    if (isEquipment && !windowHasEquip && !inBag) {
         this._doWhatWindow._commands.splice(2, 0, 'Equip');
-    } else if (!isEquipment && hasEquip) {
+    } else if ((!isEquipment || inBag) && windowHasEquip) {
         this._doWhatWindow._commands.splice(equipIndex, 1);
     }
 };
@@ -295,7 +314,9 @@ Scene_Item.prototype.transferToBagMessage = function () {
 /**
  * Returns true if player is selecting
  * an option that's in the bag
+ * 
+ * @param {Window} selectionWindow checks if the current selection of this window is choosing the bag
  */
-Scene_Item.prototype.inBag = function (commandWindow) {
-    return !Number.isInteger(commandWindow.commandSymbol(commandWindow.index()));
+Scene_Item.prototype.inBag = function (selectionWindow) {
+    return !Number.isInteger(selectionWindow.commandSymbol(selectionWindow.index()));
 }

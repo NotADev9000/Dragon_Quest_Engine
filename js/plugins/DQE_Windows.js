@@ -151,7 +151,6 @@ Window_Base.prototype.showBackgroundDimmer = function () {
 
 /**
  * Removed gradient from dimmer
- * TODO: stop bitmap overlapping window corners
  */
 Window_Base.prototype.refreshDimmerBitmap = function () {
     if (this._dimmerSprite) {

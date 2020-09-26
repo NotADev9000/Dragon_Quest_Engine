@@ -150,6 +150,15 @@ Game_Actor.prototype.giveItemToBag = function (index) {
     this.removeItemAtIndex(index);
 }
 
+Game_Actor.prototype.giveItemToActor = function (index, actor) {
+    actor.giveItems(this.item(index), 1);
+    this.removeItemAtIndex(index);
+}
+
 Game_Actor.prototype.giveItemToBagMessage = function (index) {
     return `${this._name} placed the ${this.item(index).name} in the bag.`;
+}
+
+Game_Actor.prototype.giveItemToActorMessage = function (index, actor) {
+    return `${this._name} handed the ${this.item(index).name} to ${actor._name}.`;
 }
