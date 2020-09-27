@@ -11,7 +11,6 @@
 * TODO: Filter and Sort options
 * TODO: Use items + use detail window
 * TODO: Choose how many items to transfer from bag
-* TODO: Equip & Unequip equipment
 * TODO: Ask if equipment piece should be equipped when transferring to actor
 * TODO: Swap items when transferring to full inventory
 *
@@ -93,6 +92,7 @@ Scene_Item.prototype.createDoWhatWindow = function () {
     this._doWhatWindow.deactivate();
     this._doWhatWindow.setHandler('Use', this.onDoWhatUse.bind(this));
     this._doWhatWindow.setHandler('Transfer', this.onDoWhatTransfer.bind(this));
+    this._doWhatWindow.setHandler('Equip', this.onDoWhatEquip.bind(this));
     this._doWhatWindow.setHandler('Unequip', this.onDoWhatUnequip.bind(this));
     this._doWhatWindow.setHandler('cancel', this.onDoWhatCancel.bind(this));
     this._doWhatWindow.setHandler('Cancel', this.onDoWhatCancel.bind(this));
@@ -133,7 +133,6 @@ Scene_Item.prototype.createMessageWindow = function () {
     this._messageWindow = new Window_Message();
     this.addWindow(this._messageWindow);
 };
-
 
 //////////////////////////////
 // Functions - on handlers
@@ -192,11 +191,24 @@ Scene_Item.prototype.onDoWhatTransfer = function () {
     this._transferToWhoWindow.activate();
 };
 
+Scene_Item.prototype.onDoWhatEquip = function () {
+    var actor = $gameParty.members()[this._commandWindow.currentSymbol()];
+    var index = this._itemWindow.index();
+    var item = this._itemWindow.item();
+
+    if (actor.canEquip(item)) {
+        this.displayMessage(actor.equipItemMessage(index), Scene_Item.prototype.doWhatEquipMessage);
+        actor.equipItemFromInv(index);
+    } else {
+        this.displayMessage(actor.cantEquipMessage(index), Scene_Item.prototype.doWhatEquipMessage);
+    }
+}
+
 Scene_Item.prototype.onDoWhatUnequip = function () {
     var actor = $gameParty.members()[this._commandWindow.currentSymbol()];
     var index = this._itemWindow.index();
 
-    this.displayMessage(actor.unequipItemMessage(index), Scene_Item.prototype.doWhatUnequipMessage);
+    this.displayMessage(actor.unequipItemMessage(index), Scene_Item.prototype.doWhatEquipMessage);
     actor.unequipItem(index);
 }
 
@@ -299,7 +311,7 @@ Scene_Item.prototype.doWhatUseMessage = function () {
     this._doWhatWindow.activate();
 }
 
-Scene_Item.prototype.doWhatUnequipMessage = function () {
+Scene_Item.prototype.doWhatEquipMessage = function () {
     this._doWhatWindow.hide();
     this._itemWindow.hideBackgroundDimmer();
     this._helpWindow.hideBackgroundDimmer();

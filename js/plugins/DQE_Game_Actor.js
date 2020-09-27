@@ -57,9 +57,17 @@ Game_Actor.prototype.setup = function (actorId) {
  * TODO: Read from Actor notetags to retrieve default items
  */
 Game_Actor.prototype.initItems = function () {
+    return this.initCarriedEquips();
+};
+
+Game_Actor.prototype.initCarriedEquips = function () {
     return this._equips.filter(equip => {
         return equip._itemId;
     });
+};
+
+Game_Actor.prototype.resetCarriedEquips = function () {
+    this._items.splice(0, this.numEquips());
 };
 
 /**
@@ -102,6 +110,10 @@ Game_Actor.prototype.hasItem = function (item) {
     return this.items().contains(item);
 };
 
+Game_Actor.prototype.isSlotEquipped = function (slotId) {
+    return this.equips()[slotId];
+}
+
 /**
  * Is the item at given index an equipped item?
  * 
@@ -111,13 +123,37 @@ Game_Actor.prototype.indexIsEquip = function (index) {
     return index < this.numEquips();
 };
 
+Game_Actor.prototype.changeEquip = function (slotId, item) {
+    if (this.tradeItemWithParty(item, this.equips()[slotId]) &&
+        (!item || this.equipSlots()[slotId] === item.etypeId)) {
+        this._equips[slotId].setObject(item);
+        this.refresh();
+    }
+};
+
+/**
+ * Equips an item from actors' own inventory
+ */
+Game_Actor.prototype.equipItemFromInv = function (index) {
+    var item = this.item(index);
+    var slotId = item.etypeId - 1;
+    if (this.isSlotEquipped(slotId)) {
+        this.unequipItem(slotId);
+        index--;
+    }
+    this.removeItemAtIndex(index);
+    this.resetCarriedEquips();
+    this._equips[slotId].setObject(item);
+    this._items = this.initCarriedEquips().concat(this._items);
+}
+
 /**
  * Unequips an item.
  * When keeping the item, it's removed from
  * inventory and re-added.
  * 
- * @param {number} index index of item to unequip
- * @param {boolean} keep should the item be kept in the player's inventory?
+ * @param {number} index of item to unequip
+ * @param {boolean} keep should the item be kept in the actors' inventory?
  */
 Game_Actor.prototype.unequipItem = function (index, keep = true) {
     var item = this.item(index);
@@ -180,6 +216,14 @@ Game_Actor.prototype.giveItemToActorMessage = function (index, actor) {
     return `${this._name} handed the ${this.item(index).name} to ${actor._name}.`;
 }
 
+Game_Actor.prototype.equipItemMessage = function (index) {
+    return `${this._name} equipped the ${this.item(index).name}.`;
+}
+
 Game_Actor.prototype.unequipItemMessage = function (index) {
     return `${this._name} unequipped the ${this.item(index).name}.`;
+}
+
+Game_Actor.prototype.cantEquipMessage = function (index) {
+    return `${this._name} can't equip the ${this.item(index).name}.`;
 }
