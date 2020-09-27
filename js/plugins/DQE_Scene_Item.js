@@ -89,7 +89,7 @@ Scene_Item.prototype.createItemWindow = function () {
 };
 
 Scene_Item.prototype.createDoWhatWindow = function () {
-    this._doWhatWindow = new Window_TitledCommand(96, 372, 282, 'Do What?', ['Use', 'Transfer', 'Cancel']);
+    this._doWhatWindow = new Window_TitledCommand(96, 372, 282, 'Do What?');
     this._doWhatWindow.deactivate();
     this._doWhatWindow.setHandler('Use', this.onDoWhatUse.bind(this));
     this._doWhatWindow.setHandler('Transfer', this.onDoWhatTransfer.bind(this));
@@ -218,7 +218,7 @@ Scene_Item.prototype.onTransferToWhoOk = function () {
     var inBagInventory = this.inBag(this._commandWindow); // is the player looking in one of the three bag spaces?
     var takeFrom = inBagInventory ? $gameParty : $gameParty.members()[this._commandWindow.index()]; // where the item will be moved from
     var giveActor = $gameParty.members()[this._transferToWhoWindow.currentSymbol()]; // where the item will be moved to
-    var item = inBagInventory ? this._itemWindow._data[this._itemWindow.index()] : this._itemWindow.index(); // item to give
+    var item = inBagInventory ? this.item() : this._itemWindow.index(); // item to give
 
     if (this.inBag(this._transferToWhoWindow)) { // transferring to bag
         this.displayMessage(takeFrom.giveItemToBagMessage(item), Scene_Item.prototype.transferToBagMessage);
@@ -252,15 +252,16 @@ Scene_Item.prototype.onTransferItemCancel = function () {
 //////////////////////////////
 
 Scene_Item.prototype.manageDoWhatCommands = function () {
-    var inBag = this.inBag(this._commandWindow);
+    var inBag = this.inBag(this._commandWindow); // is the player looking in the bag space?
     var isEquipment = DataManager.isWeapon(this.item()) || DataManager.isArmor(this.item());
-    var equipIndex = this._doWhatWindow._commands.indexOf('Equip');
-    var windowHasEquip = equipIndex > -1;
 
-    if (isEquipment && !windowHasEquip && !inBag) {
-        this._doWhatWindow._commands.splice(2, 0, 'Equip');
-    } else if ((!isEquipment || inBag) && windowHasEquip) {
-        this._doWhatWindow._commands.splice(equipIndex, 1);
+    this._doWhatWindow._commands = ['Use', 'Transfer', 'Cancel'];
+    if (isEquipment && !inBag) {
+        if (this._itemWindow.isEquippedItem(this._itemWindow.index())) {
+            this._doWhatWindow._commands.splice(2, 0, 'Unequip');
+        } else {
+            this._doWhatWindow._commands.splice(2, 0, 'Equip');
+        }
     }
 };
 
@@ -269,8 +270,8 @@ Scene_Item.prototype.manageDoWhatPosition = function () {
 };
 
 /**
- * Bag command doesn't appear when transferring an 
- * item that is already in the bag
+ * Bag command doesn't appear when transferring
+ * an item from the bag
  */
 Scene_Item.prototype.manageTransferToWhoCommands = function () {
     this._transferToWhoWindow._commands = this.inBag(this._commandWindow) ? null : ['Bag'];

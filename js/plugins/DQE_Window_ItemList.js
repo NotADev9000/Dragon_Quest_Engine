@@ -128,6 +128,10 @@ Window_ItemList.prototype.getActorEquips = function (actor) {
     return equips;
 };
 
+Window_ItemList.prototype.isEquippedItem = function (index) {
+    return index < this._numActorEquips;
+}
+
 /**
  * Draws item to window
  * Number of items is only drawn when viewing party inventory
@@ -135,11 +139,10 @@ Window_ItemList.prototype.getActorEquips = function (actor) {
 Window_ItemList.prototype.drawItem = function (index) {
     var item = this._data[index];
     if (item) {
-        var isActorEquip = index < this._numActorEquips; // is the drawn item an actors' equipment?
         var rect = this.itemRectForText(index);
         if (!this.isCategoryActor()) {
             this.drawText($gameParty.numItems(item), rect.x, rect.y, rect.width, 'right');
-        } else if(isActorEquip) {
+        } else if(this.isEquippedItem(index)) {
             this.changeTextColor(this.deathColor());
             this.drawText('E', rect.x, rect.y, rect.width, 'right');
         }
