@@ -111,9 +111,22 @@ Game_Actor.prototype.indexIsEquip = function (index) {
     return index < this.numEquips();
 };
 
-Game_Actor.prototype.gainItem = function (item) {
-    this._items.push(new Game_Item(item));
-};
+/**
+ * Unequips an item.
+ * When keeping the item, it's removed from
+ * inventory and re-added.
+ * 
+ * @param {number} index index of item to unequip
+ * @param {boolean} keep should the item be kept in the player's inventory?
+ */
+Game_Actor.prototype.unequipItem = function (index, keep = true) {
+    var item = this.item(index);
+
+    this.removeItemAtIndex(index);
+    if (keep) {
+        this.giveItems(item, 1);
+    }
+}
 
 /**
  * Removes item at given index
@@ -126,6 +139,10 @@ Game_Actor.prototype.removeItemAtIndex = function (index) {
         this.discardEquip(this.item(index));
     }
     this._items.splice(index, 1);
+};
+
+Game_Actor.prototype.gainItem = function (item) {
+    this._items.push(new Game_Item(item));
 };
 
 /**
@@ -161,4 +178,8 @@ Game_Actor.prototype.giveItemToBagMessage = function (index) {
 
 Game_Actor.prototype.giveItemToActorMessage = function (index, actor) {
     return `${this._name} handed the ${this.item(index).name} to ${actor._name}.`;
+}
+
+Game_Actor.prototype.unequipItemMessage = function (index) {
+    return `${this._name} unequipped the ${this.item(index).name}.`;
 }

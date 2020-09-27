@@ -93,6 +93,7 @@ Scene_Item.prototype.createDoWhatWindow = function () {
     this._doWhatWindow.deactivate();
     this._doWhatWindow.setHandler('Use', this.onDoWhatUse.bind(this));
     this._doWhatWindow.setHandler('Transfer', this.onDoWhatTransfer.bind(this));
+    this._doWhatWindow.setHandler('Unequip', this.onDoWhatUnequip.bind(this));
     this._doWhatWindow.setHandler('cancel', this.onDoWhatCancel.bind(this));
     this._doWhatWindow.setHandler('Cancel', this.onDoWhatCancel.bind(this));
     this._doWhatWindow.hide();
@@ -191,6 +192,14 @@ Scene_Item.prototype.onDoWhatTransfer = function () {
     this._transferToWhoWindow.activate();
 };
 
+Scene_Item.prototype.onDoWhatUnequip = function () {
+    var actor = $gameParty.members()[this._commandWindow.currentSymbol()];
+    var index = this._itemWindow.index();
+
+    this.displayMessage(actor.unequipItemMessage(index), Scene_Item.prototype.doWhatUnequipMessage);
+    actor.unequipItem(index);
+}
+
 Scene_Item.prototype.onDoWhatCancel = function () {
     this._itemWindow.hideBackgroundDimmer();
     this._helpWindow.hideBackgroundDimmer();
@@ -216,7 +225,7 @@ Scene_Item.prototype.onUseOnWhoCancel = function () {
  */
 Scene_Item.prototype.onTransferToWhoOk = function () {
     var inBagInventory = this.inBag(this._commandWindow); // is the player looking in one of the three bag spaces?
-    var takeFrom = inBagInventory ? $gameParty : $gameParty.members()[this._commandWindow.index()]; // where the item will be moved from
+    var takeFrom = inBagInventory ? $gameParty : $gameParty.members()[this._commandWindow.currentSymbol()]; // where the item will be moved from
     var giveActor = $gameParty.members()[this._transferToWhoWindow.currentSymbol()]; // where the item will be moved to
     var item = inBagInventory ? this.item() : this._itemWindow.index(); // item to give
 
@@ -288,6 +297,14 @@ Scene_Item.prototype.manageTransferToWhoCommands = function () {
  */
 Scene_Item.prototype.doWhatUseMessage = function () {
     this._doWhatWindow.activate();
+}
+
+Scene_Item.prototype.doWhatUnequipMessage = function () {
+    this._doWhatWindow.hide();
+    this._itemWindow.hideBackgroundDimmer();
+    this._helpWindow.hideBackgroundDimmer();
+    this._itemWindow.refresh();
+    this._itemWindow.activate();
 }
 
 Scene_Item.prototype.transferToBagMessage = function () {
