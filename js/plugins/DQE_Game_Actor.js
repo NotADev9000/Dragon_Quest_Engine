@@ -66,6 +66,10 @@ Game_Actor.prototype.initCarriedEquips = function () {
     });
 };
 
+/**
+ * removes equipped items from item list but NOT
+ * from the equips list
+ */
 Game_Actor.prototype.resetCarriedEquips = function () {
     this._items.splice(0, this.numEquips());
 };
@@ -137,11 +141,15 @@ Game_Actor.prototype.changeEquip = function (slotId, item) {
 Game_Actor.prototype.equipItemFromInv = function (index) {
     var item = this.item(index);
     var slotId = item.etypeId - 1;
-    if (this.isSlotEquipped(slotId)) {
-        this.unequipItem(slotId);
-        index--;
+    var replace = new Game_Item(this.equips()[slotId]); // item in this position is being unequipped
+
+    if (replace._itemId) {
+        // move the previously equipped item into inventory
+        this._items[index] = replace;
+    } else {
+        // remove item that has just been equipped
+        this.removeItemAtIndex(index);
     }
-    this.removeItemAtIndex(index);
     this.resetCarriedEquips();
     this._equips[slotId].setObject(item);
     this._items = this.initCarriedEquips().concat(this._items);
