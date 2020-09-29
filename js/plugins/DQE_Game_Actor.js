@@ -185,8 +185,12 @@ Game_Actor.prototype.removeItemAtIndex = function (index) {
     this._items.splice(index, 1);
 };
 
-Game_Actor.prototype.gainItem = function (item) {
-    this._items.push(new Game_Item(item));
+Game_Actor.prototype.gainItem = function (item, index) {
+    if (index) {
+        this._items.splice(index, 0, new Game_Item(item));
+    } else {
+        this._items.push(new Game_Item(item));
+    }
 };
 
 /**
@@ -196,11 +200,12 @@ Game_Actor.prototype.gainItem = function (item) {
  * 
  * @param {dataItem} item the item to add to the inventory
  * @param {number} amount the amount of items to add
+ * @param {number} index to insert the items at
  */
-Game_Actor.prototype.giveItems = function (item, amount) {
+Game_Actor.prototype.giveItems = function (item, amount, index) {
     for (let i = 0; i < amount; i++) {
         if (this.hasMaxItems()) return i;
-        this.gainItem(item);
+        this.gainItem(item, index);
         this.refresh();
     }
     return amount;
@@ -216,12 +221,58 @@ Game_Actor.prototype.giveItemToActor = function (index, actor) {
     this.removeItemAtIndex(index);
 }
 
+/**
+ * Trades an item with the bag
+ * 
+ * @param {number} index of item being swapped with bag
+ * @param {dataItem} item that is being given to actor
+ */
+Game_Actor.prototype.tradeItemWithBag = function (index, item) {
+    var isEquipped = this.indexIsEquip(index);
+    var removedItem = this.item(index);
+
+    this.removeItemAtIndex(index);
+    if (isEquipped) {
+        $gameParty.giveItemToActor(item, this);
+    } else {
+        $gameParty.giveItemToActor(item, this, index);
+    }
+    $gameParty.gainItem(removedItem, 1);
+}
+
+/**
+ * Trades an item with another actor
+ * 
+ * @param {number} index of item being swapped with other actor
+ * @param {number} actorIndex of item being given to this actor
+ * @param {Game_Actor} actor to swap an item with
+ */
+Game_Actor.prototype.tradeItemWithActor = function (index, actorIndex, actor) {
+    var newPos = this.indexIsEquip(index) ? null : index;
+    var item = this.item(index);
+    var actorNewPos = actor.indexIsEquip(actorIndex) ? null : actorIndex;
+    var actorItem = actor.item(actorIndex);
+
+    this.removeItemAtIndex(index);
+    actor.removeItemAtIndex(actorIndex);
+    this.giveItems(actorItem, 1, newPos);
+    actor.giveItems(item, 1, actorNewPos);
+}
+
 Game_Actor.prototype.giveItemToBagMessage = function (index) {
     return `${this._name} placed the ${this.item(index).name} in the bag.`;
 }
 
 Game_Actor.prototype.giveItemToActorMessage = function (index, actor) {
     return `${this._name} handed the ${this.item(index).name} to ${actor._name}.`;
+}
+
+Game_Actor.prototype.tradeItemWithBagMessage = function (index, item) {
+    return `${this._name} swapped the ${this.item(index).name}\nwith the ${item.name} from the bag.`;
+}
+
+Game_Actor.prototype.tradeItemWithActorMessage = function (index, actorIndex, actor) {
+    return `${this._name} handed the ${this.item(index).name} to ${actor._name}\nand received the ${actor.item(actorIndex).name}.`;
 }
 
 Game_Actor.prototype.equipItemMessage = function (index) {
@@ -234,4 +285,8 @@ Game_Actor.prototype.unequipItemMessage = function (index) {
 
 Game_Actor.prototype.cantEquipMessage = function (index) {
     return `${this._name} can't equip the ${this.item(index).name}.`;
+}
+
+Game_Actor.prototype.inventoryFullMessage = function () {
+    return `${this._name} has a full inventory.\nSelect an item to swap.`;
 }

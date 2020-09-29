@@ -120,6 +120,7 @@ Scene_Item.prototype.createTransferToWhoWindow = function () {
 Scene_Item.prototype.createTransferItemWindow = function () {
     mainItemWin = this._itemWindow;
     this._transferItemWindow = new Window_ItemList(mainItemWin.x, mainItemWin.y, mainItemWin._width, mainItemWin._height);
+    this._transferItemWindow.setHandler('ok', this.onTransferItemOk.bind(this));
     this._transferItemWindow.setHandler('cancel', this.onTransferItemCancel.bind(this));
     this._transferItemWindow.hide();
     this.addWindow(this._transferItemWindow);
@@ -242,14 +243,12 @@ Scene_Item.prototype.onTransferToWhoOk = function () {
     var item = inBagInventory ? this.item() : this._itemWindow.index(); // item to give
 
     if (this.inBag(this._transferToWhoWindow)) { // transferring to bag
-        this.displayMessage(takeFrom.giveItemToBagMessage(item), Scene_Item.prototype.transferToBagMessage);
+        this.displayMessage(takeFrom.giveItemToBagMessage(item), Scene_Item.prototype.transferredMessage);
         takeFrom.giveItemToBag(item);
     } else if (giveActor.hasMaxItems()) { // transferring to actor with a full inventory
-        this._transferToWhoWindow.showBackgroundDimmer();
-        this._transferItemWindow.activate();
-        this._transferItemWindow.select(this._transferItemWindow._lastSelected);
+        this.displayMessage(giveActor.inventoryFullMessage(item), Scene_Item.prototype.transferFullMessage);
     } else { // transferring to actor with inventory space
-        this.displayMessage(takeFrom.giveItemToActorMessage(item, giveActor), Scene_Item.prototype.transferToBagMessage);
+        this.displayMessage(takeFrom.giveItemToActorMessage(item, giveActor), Scene_Item.prototype.transferredMessage);
         takeFrom.giveItemToActor(item, giveActor);
     }
 }
@@ -259,6 +258,22 @@ Scene_Item.prototype.onTransferToWhoCancel = function () {
     this._transferItemWindow.hide();
     this._transferToWhoWindow.hide();
     this._doWhatWindow.activate();
+};
+
+Scene_Item.prototype.onTransferItemOk = function () {
+    var inBagInventory = this.inBag(this._commandWindow); // is the player transferring from bag?
+    var takeFrom = inBagInventory ? null : $gameParty.members()[this._commandWindow.currentSymbol()]; // where the item will be moved from
+    var giveTo = $gameParty.members()[this._transferToWhoWindow.currentSymbol()]; // where the item will be moved to
+    var item = inBagInventory ? this.item() : this._itemWindow.index(); // item to transfer
+    var swap = this._transferItemWindow.index(); // item to swap
+
+    if (inBagInventory) {
+        this.displayMessage(giveTo.tradeItemWithBagMessage(swap, item), Scene_Item.prototype.transferredMessage);
+        giveTo.tradeItemWithBag(swap, item);
+    } else {
+        this.displayMessage(takeFrom.tradeItemWithActorMessage(item, swap, giveTo), Scene_Item.prototype.transferredMessage);
+        takeFrom.tradeItemWithActor(item, swap, giveTo);
+    }
 };
 
 Scene_Item.prototype.onTransferItemCancel = function () {
@@ -319,9 +334,11 @@ Scene_Item.prototype.doWhatEquipMessage = function () {
     this._itemWindow.activate();
 }
 
-Scene_Item.prototype.transferToBagMessage = function () {
+Scene_Item.prototype.transferredMessage = function () {
     this._transferItemWindow.hide();
+    this._transferItemWindow.deselect();
     this._transferToWhoWindow.hide();
+    this._transferToWhoWindow.hideBackgroundDimmer();
     this._doWhatWindow.hide();
     this._doWhatWindow.hideBackgroundDimmer();
     this._itemWindow.hideBackgroundDimmer();
@@ -335,6 +352,12 @@ Scene_Item.prototype.transferToBagMessage = function () {
         this._itemWindow.deselect();
         this._commandWindow.activate();
     }
+}
+
+Scene_Item.prototype.transferFullMessage = function () {
+    this._transferToWhoWindow.showBackgroundDimmer();
+    this._transferItemWindow.activate();
+    this._transferItemWindow.select(this._transferItemWindow._lastSelected);
 }
 
 //////////////////////////////

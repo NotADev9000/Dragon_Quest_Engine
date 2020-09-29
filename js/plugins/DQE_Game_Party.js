@@ -28,8 +28,8 @@ DQEng.Game_Party = DQEng.Game_Party || {};
 // Game_Party
 //-----------------------------------------------------------------------------
 
-Game_Party.prototype.giveItemToActor = function (item, actor) {
-    actor.giveItems(item, 1);
+Game_Party.prototype.giveItemToActor = function (item, actor, index) {
+    actor.giveItems(item, 1, index);
     this.loseItem(item, 1, false);
 }
 
