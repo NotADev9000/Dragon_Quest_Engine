@@ -133,6 +133,13 @@ Window_Base.prototype.drawHorzLine = function (x, y) {
 };
 
 /**
+ * Draws a horizontal line across the window
+ */
+Window_Base.prototype.drawVertLine = function (x, y) {
+    this.contents.fillRect(x, y, 3, this.contentsHeight(), this.normalColor());
+};
+
+/**
  * Dimmer covers the whole window and all contents
  */
 Window_Base.prototype.showBackgroundDimmer = function () {

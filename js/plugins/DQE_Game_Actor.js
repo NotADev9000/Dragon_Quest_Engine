@@ -114,6 +114,13 @@ Game_Actor.prototype.hasItem = function (item) {
     return this.items().contains(item);
 };
 
+/**
+ * How many items can actor fit in inventory
+ */
+Game_Actor.prototype.spaceLeft = function () {
+    return this.maxItems() - this.numItems();
+}
+
 Game_Actor.prototype.isSlotEquipped = function (slotId) {
     return this.equips()[slotId];
 }
@@ -186,7 +193,7 @@ Game_Actor.prototype.removeItemAtIndex = function (index) {
 };
 
 Game_Actor.prototype.gainItem = function (item, index) {
-    if (index) {
+    if (index >= 0) {
         this._items.splice(index, 0, new Game_Item(item));
     } else {
         this._items.push(new Game_Item(item));

@@ -23,6 +23,7 @@ var $plugins =
 {"name":"DQE_Window_MenuCommand","status":true,"description":"The main menu command list - V0.1","parameters":{}},
 {"name":"DQE_Window_MenuStatus","status":true,"description":"The status window for each actor - V0.1","parameters":{}},
 {"name":"DQE_Window_Message","status":true,"description":"Message window for Dragon Quest Engine - V0.1","parameters":{}},
+{"name":"DQE_Window_Number","status":true,"description":"The window for selecting a numeric value - V0.1","parameters":{}},
 {"name":"DQE_Window_Pagination","status":true,"description":"A window that display items with pages - V0.1","parameters":{}},
 {"name":"DQE_Window_TitledCommand","status":true,"description":"The command list window with a title - V0.1","parameters":{}},
 {"name":"DQE_Window_TitledPartyCommand","status":true,"description":"The party command base - V0.1","parameters":{}},

@@ -10,9 +10,7 @@
 * TODO: Equipment Details window when cursor is on an equipment piece
 * TODO: Filter and Sort options
 * TODO: Use items + use detail window
-* TODO: Choose how many items to transfer from bag
 * TODO: Ask if equipment piece should be equipped when transferring to actor
-* TODO: Swap items when transferring to full inventory
 *
 * @help
 * N/A
@@ -57,6 +55,7 @@ Scene_Item.prototype.create = function () {
     this.createUseOnWhoWindow();
     this.createTransferToWhoWindow();
     this.createTransferItemWindow();
+    this.createHowManyWindow();
     this.createMessageWindow();
 };
 
@@ -126,6 +125,15 @@ Scene_Item.prototype.createTransferItemWindow = function () {
     this.addWindow(this._transferItemWindow);
     this._transferToWhoWindow.setAssociatedWindow(this._transferItemWindow);
 };
+
+Scene_Item.prototype.createHowManyWindow = function () {
+    mainItemWin = this._itemWindow;
+    this._howManyWindow = new Window_Number(mainItemWin.x, mainItemWin.y, 'How many?', 0, 0);
+    this._howManyWindow.setHandler('ok', this.onHowManyOk.bind(this));
+    this._howManyWindow.setHandler('cancel', this.onHowManyCancel.bind(this));
+    this._howManyWindow.hide();
+    this.addWindow(this._howManyWindow);
+}
 
 /**
  * Always call this window last so it's at front
@@ -241,12 +249,19 @@ Scene_Item.prototype.onTransferToWhoOk = function () {
     var takeFrom = inBagInventory ? $gameParty : $gameParty.members()[this._commandWindow.currentSymbol()]; // where the item will be moved from
     var giveActor = $gameParty.members()[this._transferToWhoWindow.currentSymbol()]; // where the item will be moved to
     var item = inBagInventory ? this.item() : this._itemWindow.index(); // item to give
+    var itemAmount = inBagInventory ? takeFrom.numItems(item) : null;
 
     if (this.inBag(this._transferToWhoWindow)) { // transferring to bag
         this.displayMessage(takeFrom.giveItemToBagMessage(item), Scene_Item.prototype.transferredMessage);
         takeFrom.giveItemToBag(item);
     } else if (giveActor.hasMaxItems()) { // transferring to actor with a full inventory
         this.displayMessage(giveActor.inventoryFullMessage(item), Scene_Item.prototype.transferFullMessage);
+    } else if (inBagInventory && giveActor.spaceLeft() > 1 && itemAmount > 1) { // transferring from bag to actor with inventory space
+        this._transferToWhoWindow.showBackgroundDimmer();
+        this._transferItemWindow.showBackgroundDimmer();
+        this._howManyWindow.setup(1, Math.min(giveActor.spaceLeft(), itemAmount));
+        this._howManyWindow.show();
+        this._howManyWindow.activate();
     } else { // transferring to actor with inventory space
         this.displayMessage(takeFrom.giveItemToActorMessage(item, giveActor), Scene_Item.prototype.transferredMessage);
         takeFrom.giveItemToActor(item, giveActor);
@@ -282,6 +297,20 @@ Scene_Item.prototype.onTransferItemCancel = function () {
     this._transferItemWindow.deselect();
     this._transferToWhoWindow.activate();
 };
+
+Scene_Item.prototype.onHowManyOk = function () {
+    var actor = $gameParty.members()[this._transferToWhoWindow.currentSymbol()];
+    var amount = this._howManyWindow._number;
+    this.displayMessage($gameParty.giveMultipleItemsToActorMessage(this.item(), actor, amount), Scene_Item.prototype.transferredMessage);
+    $gameParty.giveItemToActor(this.item(), actor, null, amount);
+}
+
+Scene_Item.prototype.onHowManyCancel = function () {
+    this._transferToWhoWindow.hideBackgroundDimmer();
+    this._transferItemWindow.hideBackgroundDimmer();
+    this._howManyWindow.hide();
+    this._transferToWhoWindow.activate();
+}
 
 //////////////////////////////
 // Functions - managers
@@ -335,7 +364,9 @@ Scene_Item.prototype.doWhatEquipMessage = function () {
 }
 
 Scene_Item.prototype.transferredMessage = function () {
+    this._howManyWindow.hide();
     this._transferItemWindow.hide();
+    this._transferItemWindow.hideBackgroundDimmer();
     this._transferItemWindow.deselect();
     this._transferToWhoWindow.hide();
     this._transferToWhoWindow.hideBackgroundDimmer();
