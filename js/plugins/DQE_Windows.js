@@ -208,6 +208,36 @@ Window_Selectable.prototype.itemRectForText = function (index) {
     return rect;
 };
 
+Window_Selectable.prototype.cursorDown = function () {
+    var index = this.index();
+    var maxItems = this.maxItems();
+    var maxCols = this.maxCols();
+    this.select((index + maxCols) % maxItems);
+};
+
+Window_Selectable.prototype.cursorUp = function () {
+    var index = this.index();
+    var maxItems = this.maxItems();
+    var maxCols = this.maxCols();
+    this.select((index - maxCols + maxItems) % maxItems);
+};
+
+Window_Selectable.prototype.cursorRight = function () {
+    var index = this.index();
+    var maxCols = this.maxCols();
+    if (maxCols >= 2 && !(index % 2)) {
+        this.select(index + 1);
+    }
+};
+
+Window_Selectable.prototype.cursorLeft = function () {
+    var index = this.index();
+    var maxCols = this.maxCols();
+    if (maxCols >= 2 && index % 2) {
+        this.select(index - 1);
+    }
+};
+
 //-----------------------------------------------------------------------------
 // Window_Command
 //-----------------------------------------------------------------------------
