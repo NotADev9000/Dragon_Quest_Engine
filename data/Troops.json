@@ -1,4 +1,4 @@
 [
 null,
-{"id":1,"members":[{"enemyId":1,"x":284,"y":436,"hidden":false},{"enemyId":1,"x":346,"y":436,"hidden":false},{"enemyId":1,"x":408,"y":436,"hidden":false},{"enemyId":1,"x":470,"y":436,"hidden":false},{"enemyId":1,"x":532,"y":436,"hidden":false}],"name":"Slime*3","pages":[{"conditions":{"actorHp":50,"actorId":1,"actorValid":false,"enemyHp":50,"enemyIndex":0,"enemyValid":false,"switchId":1,"switchValid":false,"turnA":0,"turnB":0,"turnEnding":false,"turnValid":false},"list":[{"code":0,"indent":0,"parameters":[]}],"span":0}]}
+{"id":1,"members":[{"enemyId":2,"x":315,"y":436,"hidden":false},{"enemyId":1,"x":377,"y":436,"hidden":false},{"enemyId":1,"x":439,"y":436,"hidden":false},{"enemyId":2,"x":501,"y":436,"hidden":false}],"name":"Slime*2, She-Slime","pages":[{"conditions":{"actorHp":50,"actorId":1,"actorValid":false,"enemyHp":50,"enemyIndex":0,"enemyValid":false,"switchId":1,"switchValid":false,"turnA":0,"turnB":0,"turnEnding":false,"turnValid":false},"list":[{"code":0,"indent":0,"parameters":[]}],"span":0}]}
 ]

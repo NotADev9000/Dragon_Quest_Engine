@@ -14,6 +14,7 @@ var $plugins =
 {"name":"DQE_Game_BattlerBase","status":true,"description":"The The game object class for the actor base - V0.1","parameters":{}},
 {"name":"DQE_Game_Actor","status":true,"description":"The The game object class for the party - V0.1","parameters":{}},
 {"name":"DQE_Game_Party","status":true,"description":"The The game object class for the party - V0.1","parameters":{}},
+{"name":"DQE_Game_Troop","status":true,"description":"The game object class for a troop and the battle-related data - V0.1","parameters":{}},
 {"name":"DQE_BattleManager","status":true,"description":"Static class for managing the battle - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Scene_Map","status":true,"description":"The scene for the map - V0.1","parameters":{}},
