@@ -1,0 +1,4 @@
+groups = [
+	0: {name: slimes, enemies: [array]}
+	1: {name: she-slimes, enemies: [array]}
+]

@@ -38,7 +38,7 @@ Window_PartyCommand.prototype.windowWidth = function () {
     return 228;
 };
 
-Window_Base.prototype.standardPadding = function () {
+Window_PartyCommand.prototype.standardPadding = function () {
     return 24;
 };
 
