@@ -124,6 +124,7 @@ Window_ActorCommand.prototype.setup = function (actor) {
     this.selectLast();
     this.activate();
     this.open();
+    this.show();
 };
 
 Window_ActorCommand.prototype.selectLast = function () {

@@ -199,8 +199,7 @@ Window_Pagination.prototype.drawPageBlock = function () {
     this.drawHorzLine(0, blockY);
     blockY += 18;
     this.drawText(display, this.extraPadding(), blockY, displayWidth, 'center');
-
-}
+};
 
 /**
  * Draws the items for the current page

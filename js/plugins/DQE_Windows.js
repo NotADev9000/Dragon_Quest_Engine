@@ -70,6 +70,10 @@ Window_Base.prototype.deathColor = function () {
     return this.textColor(2);
 };
 
+Window_Base.prototype.disabledColor = function () {
+    return this.textColor(16);
+};
+
 /**
  * The height of the gap between each line of text
  * 
@@ -81,6 +85,17 @@ Window_Base.prototype.lineGap = function () {
 
 Window_Base.prototype.fittingHeight = function (numLines) {
     return numLines * this.lineHeight() + this.standardPadding() * 2 + (this.lineGap() * Math.max(numLines - 1, 0));
+};
+
+/**
+ * This method is used for calculating the height of windows
+ * with a title block (a horizontal rule with a seperate section.)
+ */
+Window_Base.prototype.fittingHeightTitleBlock = function (numLines) {
+    return numLines * this.lineHeight()
+        + (this.standardPadding() + this.extraPadding()) * 2
+        + (this.lineGap() * Math.max(numLines - 1, 0))
+        + this.titleBlockHeight();
 };
 
 /**
