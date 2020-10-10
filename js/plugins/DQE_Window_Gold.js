@@ -48,10 +48,6 @@ Window_Base.prototype.drawCurrencyValue = function (value, unit, x, y, width) {
 // Window_Gold
 //-----------------------------------------------------------------------------
 
-Window_Gold.prototype.lineHeight = function () {
-    return 21;
-};
-
 Window_Gold.prototype.windowWidth = function () {
     return 306;
 };

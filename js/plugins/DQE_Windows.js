@@ -43,6 +43,26 @@ DQEng.Parameters.Windows = {};
 DQEng.Parameters.Windows.Base_LineGap = Number(parameters["Base Line Gap"]) || 8;
 DQEng.Parameters.Windows.ChoiceList_LineGap = Number(parameters["Choice Line Gap"]) || 18;
 DQEng.Parameters.Windows.ChoiceList_ChoiceYOffset = Number(parameters["Choice Y Offset"]) || 48;
+DQEng.Parameters.Windows.MaskWindow = Number(parameters["Mask Window Size"]) || 3;
+
+//-----------------------------------------------------------------------------
+// WindowLayer
+//-----------------------------------------------------------------------------
+
+WindowLayer.prototype._maskWindow = function (window, shift) {
+    this._windowMask._currentBounds = null;
+    this._windowMask.boundsDirty = true;
+    var rect = this._windowRect;
+    rect.x = this.x + shift.x + window.x;
+    rect.y = this.y + shift.y + window.y + window.height / 2 * (1 - window._openness / 255);
+    rect.width = window.width;
+    rect.height = window.height * window._openness / 255;
+
+    rect.x += DQEng.Parameters.Windows.MaskWindow;
+    rect.y += DQEng.Parameters.Windows.MaskWindow * window._openness / 255;
+    rect.width -= DQEng.Parameters.Windows.MaskWindow * 2;
+    rect.height -= DQEng.Parameters.Windows.MaskWindow * 2 * window._openness / 255;
+};
 
 //-----------------------------------------------------------------------------
 // Window_Base
@@ -72,6 +92,10 @@ Window_Base.prototype.deathColor = function () {
 
 Window_Base.prototype.disabledColor = function () {
     return this.textColor(16);
+};
+
+Window_Base.prototype.lineHeight = function () {
+    return 21;
 };
 
 /**
@@ -193,10 +217,6 @@ Window_Base.prototype.dimColor1 = function () {
 //-----------------------------------------------------------------------------
 // Window_Selectable
 //-----------------------------------------------------------------------------
-
-Window_Selectable.prototype.lineHeight = function () {
-    return 21;
-};
 
 Window_Selectable.prototype.itemRect = function (index) {
     var rect = new Rectangle();

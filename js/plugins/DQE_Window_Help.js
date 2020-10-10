@@ -34,10 +34,6 @@ Window_Help.prototype.initialize = function (x, y, width, numLines = 2) {
     this._text = '';
 };
 
-Window_Help.prototype.lineHeight = function () {
-    return 21;
-};
-
 Window_Help.prototype.lineGap = function () {
     return 9;
 };

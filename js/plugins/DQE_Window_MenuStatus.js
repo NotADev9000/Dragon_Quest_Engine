@@ -59,10 +59,6 @@ Window_MenuStatus.prototype.extraPadding = function () {
     return 15;
 };
 
-Window_MenuStatus.prototype.lineHeight = function () {
-    return 21;
-};
-
 Window_MenuStatus.prototype.windowWidth = function () {
     return 288;
 };

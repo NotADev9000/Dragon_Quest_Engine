@@ -60,6 +60,21 @@ Scene_Battle.prototype.updateStatusWindow = function () {
     }
 };
 
+Scene_Battle.prototype.createAllWindows = function () {
+    this.createLogWindow();
+    this.createStatusWindow();
+    this.createPartyCommandWindow();
+    this.createActorCommandWindow();
+    this.createHelpWindow();
+    this.createSkillWindow();
+    this.createItemWindow();
+    this.createActorWindow();
+    this.createActorStatWindow();
+    this.createEnemyWindow();
+    this.createMessageWindow();
+    this.createScrollTextWindow();
+};
+
 Scene_Battle.prototype.createStatusWindow = function () {
     this._statusWindow = [];
     var partyMembers = $gameParty.members();
@@ -91,7 +106,7 @@ Scene_Battle.prototype.createActorCommandWindow = function () {
 
 Scene_Battle.prototype.createHelpWindow = function () {
     this._helpWindow = new Window_BattleSkillHelp(585, 540, 672);
-    this._helpWindow.visible = false;
+    this._helpWindow.hide();
     this.addWindow(this._helpWindow);
 };
 
@@ -120,6 +135,14 @@ Scene_Battle.prototype.createActorWindow = function () {
     this._actorWindow.setHandler('ok', this.onActorOk.bind(this));
     this._actorWindow.setHandler('cancel', this.onActorCancel.bind(this));
     this.addWindow(this._actorWindow);
+};
+
+Scene_Battle.prototype.createActorStatWindow = function () {
+    var x = this._actorWindow.x + this._actorWindow.windowWidth();
+    var y = this._actorWindow.y;
+    this._actorStatWindow = new Window_BattleActorStat(x, y);
+    this._actorStatWindow.hide();
+    this.addWindow(this._actorStatWindow);
 };
 
 Scene_Battle.prototype.createEnemyWindow = function () {
@@ -192,8 +215,22 @@ Scene_Battle.prototype.commandSkill = function () {
     this._actorCommandWindow.hide();
 };
 
+Scene_Battle.prototype.selectActorSelection = function () {
+    this._actorWindow.refresh();
+    this._actorWindow.show();
+    this._actorWindow.activate();
+};
+
+Scene_Battle.prototype.selectActorStatWindow = function (action) {
+    if (action.isHpRecover()) {
+        this._actorStatWindow.setStat(0);
+    }
+    this._actorStatWindow.show();
+};
+
 Scene_Battle.prototype.onActorCancel = function () {
     this._actorWindow.hide();
+    this._actorStatWindow.hide();
     switch (this._actorCommandWindow.currentSymbol()) {
         case 'Skill':
             this._skillWindow.hideBackgroundDimmer();
@@ -273,6 +310,9 @@ Scene_Battle.prototype.onSelectAction = function () {
         this._skillWindow.showBackgroundDimmer();
         this._itemWindow.showBackgroundDimmer();
         this.selectActorSelection();
+        if (action.isRecover()) {
+            this.selectActorStatWindow(action);
+        }
     }
 };
 
