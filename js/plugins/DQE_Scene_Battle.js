@@ -228,6 +228,18 @@ Scene_Battle.prototype.selectActorStatWindow = function (action) {
     this._actorStatWindow.show();
 };
 
+Scene_Battle.prototype.onActorOk = function () {
+    var action = BattleManager.inputtingAction();
+    action.setTarget(this._actorWindow.index());
+    this._actorWindow.hide();
+    this._actorStatWindow.hide();
+    this._skillWindow.hide();
+    this._skillWindow.hideBackgroundDimmer();
+    this._helpWindow.hideBackgroundDimmer();
+    this._itemWindow.hide();
+    this.selectNextCommand();
+};
+
 Scene_Battle.prototype.onActorCancel = function () {
     this._actorWindow.hide();
     this._actorStatWindow.hide();

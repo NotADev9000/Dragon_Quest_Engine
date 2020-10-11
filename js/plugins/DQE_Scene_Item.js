@@ -302,7 +302,7 @@ Scene_Item.prototype.onHowManyOk = function () {
     var actor = $gameParty.members()[this._transferToWhoWindow.currentSymbol()];
     var amount = this._howManyWindow._number;
     this.displayMessage($gameParty.giveMultipleItemsToActorMessage(this.item(), actor, amount), Scene_Item.prototype.transferredMessage);
-    $gameParty.giveItemToActor(this.item(), actor, null, amount);
+    $gameParty.giveItemToActor(this.item(), actor, -1, amount);
 }
 
 Scene_Item.prototype.onHowManyCancel = function () {
