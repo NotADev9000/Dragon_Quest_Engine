@@ -111,6 +111,23 @@ Window_ActorCommand.prototype.addEquipmentCommand = function () {
     this.addCommand(TextManager.equip, 'Equipment');
 };
 
+Window_ActorCommand.prototype.isCurrentItemEnabled = function () {
+    return this.isEnabled(this.currentSymbol());
+};
+
+Window_ActorCommand.prototype.isEnabled = function (symbol) {
+    switch (symbol) {
+        case 'Skill':
+            return this._actor.skills().find(function (skill) {
+                return skill.stypeId === this.currentExt();
+            }, this) != undefined;
+        case 'Item':
+            return this._actor.items().length > 0;
+        default:
+            return true;
+    }
+};
+
 //////////////////////////////
 // Functions - settings
 //////////////////////////////
