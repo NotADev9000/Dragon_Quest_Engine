@@ -27,6 +27,7 @@ var $plugins =
 {"name":"DQE_Windows","status":true,"description":"General changes to windows - Dragon Quest Engine V0.1","parameters":{"Selectable Line Gap":"","Choice Line Gap":"","Choice Y Offset":""}},
 {"name":"DQE_Window_Cursor","status":true,"description":"uses an arrow cursor before text instead of highlighting for Dragon Quest Engine - V0.1","parameters":{}},
 {"name":"DQE_Window_Gold","status":true,"description":"similar to default window but with different size/padding - V0.1","parameters":{}},
+{"name":"DQE_Window_Help","status":true,"description":"The window for displaying the description of the selected item - V0.1","parameters":{}},
 {"name":"DQE_Window_MenuCommand","status":true,"description":"The main menu command list - V0.1","parameters":{}},
 {"name":"DQE_Window_MenuStatus","status":true,"description":"The status window for each actor - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleStatus","status":true,"description":"The window that displays party member status in battle - V0.1","parameters":{}},
@@ -44,8 +45,9 @@ var $plugins =
 {"name":"DQE_Window_ItemList","status":true,"description":"The window for displaying items - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleSkill","status":true,"description":"The window that displays skills to use in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleItem","status":true,"description":"The window that displays skills to use in battle - V0.1","parameters":{}},
-{"name":"DQE_Window_Help","status":true,"description":"The window for displaying the description of the selected item - V0.1","parameters":{}},
+{"name":"DQE_Window_BattleHelp","status":true,"description":"The parent window for help windows in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleSkillHelp","status":true,"description":"The window for displaying the skill description/cost - V0.1","parameters":{}},
+{"name":"DQE_Window_BattleItemHelp","status":true,"description":"The window for displaying the skill description/cost - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}}
 ];

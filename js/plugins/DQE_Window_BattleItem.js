@@ -138,9 +138,19 @@ Window_BattleItem.prototype.updateHelp = function () {
     this.setHelpWindowItem(this.item(), this._actor);
 };
 
+Window_BattleItem.prototype.showBackgroundDimmer = function () {
+    this.showHelpWindowBackgroundDimmer();
+    Window_Pagination.prototype.showBackgroundDimmer.call(this);
+};
+
+Window_BattleItem.prototype.hideBackgroundDimmer = function () {
+    this.hideHelpWindowBackgroundDimmer();
+    Window_Pagination.prototype.hideBackgroundDimmer.call(this);
+};
+
 Window_BattleItem.prototype.show = function () {
-    this.showHelpWindow();
     this.select(0);
+    this.showHelpWindow();
     Window_Pagination.prototype.show.call(this);
 };
 

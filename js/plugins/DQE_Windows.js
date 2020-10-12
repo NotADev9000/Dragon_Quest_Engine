@@ -243,6 +243,18 @@ Window_Selectable.prototype.itemRectForText = function (index) {
     return rect;
 };
 
+Window_Selectable.prototype.showHelpWindowBackgroundDimmer = function () {
+    if (this._helpWindow) {
+        this._helpWindow.showBackgroundDimmer();
+    }
+};
+
+Window_Selectable.prototype.hideHelpWindowBackgroundDimmer = function () {
+    if (this._helpWindow) {
+        this._helpWindow.hideBackgroundDimmer();
+    }
+};
+
 Window_Selectable.prototype.cursorDown = function () {
     var index = this.index();
     var maxItems = this.maxItems();

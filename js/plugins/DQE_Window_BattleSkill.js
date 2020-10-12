@@ -176,6 +176,16 @@ Window_BattleSkill.prototype.updateHelp = function () {
     this.setHelpWindowItem(this.item(), this._actor);
 };
 
+Window_BattleSkill.prototype.showBackgroundDimmer = function () {
+    this.showHelpWindowBackgroundDimmer();
+    Window_Pagination.prototype.showBackgroundDimmer.call(this);
+};
+
+Window_BattleSkill.prototype.hideBackgroundDimmer = function () {
+    this.hideHelpWindowBackgroundDimmer();
+    Window_Pagination.prototype.hideBackgroundDimmer.call(this);
+};
+
 Window_BattleSkill.prototype.show = function () {
     this.selectLast();
     this.showHelpWindow();

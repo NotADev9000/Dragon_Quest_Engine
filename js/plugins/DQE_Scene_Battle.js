@@ -65,8 +65,9 @@ Scene_Battle.prototype.createAllWindows = function () {
     this.createStatusWindow();
     this.createPartyCommandWindow();
     this.createActorCommandWindow();
-    this.createHelpWindow();
+    this.createSkillHelpWindow();
     this.createSkillWindow();
+    this.createItemHelpWindow();
     this.createItemWindow();
     this.createActorWindow();
     this.createActorStatWindow();
@@ -104,23 +105,29 @@ Scene_Battle.prototype.createActorCommandWindow = function () {
     this.addWindow(this._actorCommandWindow);
 };
 
-Scene_Battle.prototype.createHelpWindow = function () {
-    this._helpWindow = new Window_BattleSkillHelp(585, 540, 672);
-    this._helpWindow.hide();
-    this.addWindow(this._helpWindow);
+Scene_Battle.prototype.createSkillHelpWindow = function () {
+    this._skillHelpWindow = new Window_BattleSkillHelp(585, 540, 672);
+    this._skillHelpWindow.hide();
+    this.addWindow(this._skillHelpWindow);
 };
 
 Scene_Battle.prototype.createSkillWindow = function () {
     this._skillWindow = new Window_BattleSkill(63, 456, 522, 261);
-    this._skillWindow.setHelpWindow(this._helpWindow);
+    this._skillWindow.setHelpWindow(this._skillHelpWindow);
     this._skillWindow.setHandler('ok', this.onSkillOk.bind(this));
     this._skillWindow.setHandler('cancel', this.onSkillCancel.bind(this));
     this.addWindow(this._skillWindow);
 };
 
+Scene_Battle.prototype.createItemHelpWindow = function () {
+    this._itemHelpWindow = new Window_BattleItemHelp(585, 540, 672);
+    this._itemHelpWindow.hide();
+    this.addWindow(this._itemHelpWindow);
+};
+
 Scene_Battle.prototype.createItemWindow = function () {
     this._itemWindow = new Window_BattleItem(63, 468, 522, 249);
-    // this._itemWindow.setHelpWindow(this._helpWindow);
+    this._itemWindow.setHelpWindow(this._itemHelpWindow);
     this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
     this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
     this.addWindow(this._itemWindow);
@@ -272,11 +279,16 @@ Scene_Battle.prototype.onActorOk = function () {
     action.setTarget(this._actorWindow.index());
     this._actorWindow.hide();
     this._actorStatWindow.hide();
-    this._skillWindow.hide();
-    this._skillWindow.hideBackgroundDimmer();
-    this._itemWindow.hide();
-    this._itemWindow.hideBackgroundDimmer();
-    this._helpWindow.hideBackgroundDimmer();
+    switch (this._actorCommandWindow.currentSymbol()) {
+        case 'Skill':
+            this._skillWindow.hide();
+            this._skillWindow.hideBackgroundDimmer();
+            break;
+        case 'Item':
+            this._itemWindow.hide();
+            this._itemWindow.hideBackgroundDimmer();
+            break;
+    }
     this.selectNextCommand();
 };
 
@@ -286,14 +298,10 @@ Scene_Battle.prototype.onActorCancel = function () {
     switch (this._actorCommandWindow.currentSymbol()) {
         case 'Skill':
             this._skillWindow.hideBackgroundDimmer();
-            this._itemWindow.hideBackgroundDimmer();
-            this._helpWindow.hideBackgroundDimmer();
             this._skillWindow.activate();
             break;
         case 'Item':
-            this._skillWindow.hideBackgroundDimmer();
             this._itemWindow.hideBackgroundDimmer();
-            this._helpWindow.hideBackgroundDimmer();
             this._itemWindow.activate();
             break;
     }
@@ -315,11 +323,16 @@ Scene_Battle.prototype.onEnemyOk = function () {
     this._enemyWindow.hide();
     this._enemyWindow.deselect();
     this._actorCommandWindow.hideBackgroundDimmer();
-    this._skillWindow.hide();
-    this._skillWindow.hideBackgroundDimmer();
-    this._itemWindow.hide();
-    this._itemWindow.hideBackgroundDimmer();
-    this._helpWindow.hideBackgroundDimmer();
+    switch (this._actorCommandWindow.currentSymbol()) {
+        case 'Skill':
+            this._skillWindow.hide();
+            this._skillWindow.hideBackgroundDimmer();
+            break;
+        case 'Item':
+            this._itemWindow.hide();
+            this._itemWindow.hideBackgroundDimmer();
+            break;
+    }
     this.selectNextCommand();
 };
 
@@ -332,15 +345,11 @@ Scene_Battle.prototype.onEnemyCancel = function () {
             break;
         case 'Skill':
             this._skillWindow.hideBackgroundDimmer();
-            this._itemWindow.hideBackgroundDimmer();
-            this._helpWindow.hideBackgroundDimmer();
             this._enemyWindow.hide();
             this._skillWindow.activate();
             break;
         case 'Item':
-            this._skillWindow.hideBackgroundDimmer();
             this._itemWindow.hideBackgroundDimmer();
-            this._helpWindow.hideBackgroundDimmer();
             this._enemyWindow.hide();
             this._itemWindow.activate();
             break;
@@ -368,26 +377,28 @@ Scene_Battle.prototype.onSelectAction = function () {
         this._itemWindow.hide();
         this.selectNextCommand();
     } else if (action.isForOpponent()) {
-        this._helpWindow.showBackgroundDimmer();
-        this._skillWindow.showBackgroundDimmer();
-        this._itemWindow.showBackgroundDimmer();
         switch (this._actorCommandWindow.currentSymbol()) {
             case 'Skill':
+                this._skillHelpWindow.showBackgroundDimmer();
+                this._skillWindow.showBackgroundDimmer();
                 this.selectEnemySelection(2);
                 break;
             case 'Item':
+                this._itemHelpWindow.showBackgroundDimmer();
+                this._itemWindow.showBackgroundDimmer();
                 this.selectEnemySelection(3);
                 break;
         }
     } else {
-        this._helpWindow.showBackgroundDimmer();
-        this._skillWindow.showBackgroundDimmer();
-        this._itemWindow.showBackgroundDimmer();
         switch (this._actorCommandWindow.currentSymbol()) {
             case 'Skill':
+                this._skillHelpWindow.showBackgroundDimmer();
+                this._skillWindow.showBackgroundDimmer();
                 this.selectActorSelection(0);
                 break;
             case 'Item':
+                this._itemHelpWindow.showBackgroundDimmer();
+                this._itemWindow.showBackgroundDimmer();
                 this.selectActorSelection(1);
                 break;
         }
