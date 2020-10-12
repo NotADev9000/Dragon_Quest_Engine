@@ -101,7 +101,10 @@ Window_BattleItem.prototype.maxItems = function () {
 //////////////////////////////
 
 Window_BattleItem.prototype.drawPageBlock = function () {
-    
+    if (this._numPages > 1) {
+        var y = (this.maxRows()-1) * (this.lineHeight() + this.lineGap());
+        this.drawText('>', 459, y, 24);
+    }
 };
 
 Window_BattleItem.prototype.drawItem = function (index) {

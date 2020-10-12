@@ -246,6 +246,11 @@ Scene_Battle.prototype.commandItem = function () {
     this._actorCommandWindow.hide();
 };
 
+Scene_Battle.prototype.commandGuard = function () {
+    BattleManager.inputtingAction().setGuard();
+    this.selectNextCommand();
+};
+
 /**
  * @param {Number} pos to move actor window to
  */
@@ -395,4 +400,5 @@ Scene_Battle.prototype.onSelectAction = function () {
 Scene_Battle.prototype.endCommandSelection = function () {
     this._partyCommandWindow.close();
     this._actorCommandWindow.close();
+    this._enemyWindow.hide();
 };
