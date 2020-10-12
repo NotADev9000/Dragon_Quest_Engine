@@ -168,7 +168,6 @@ Window_BattleSkill.prototype.cursorUp = function () {
     this.refresh();
 };
 
-
 //////////////////////////////
 // Functions - updates to window
 //////////////////////////////

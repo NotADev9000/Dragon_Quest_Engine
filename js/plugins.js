@@ -43,6 +43,7 @@ var $plugins =
 {"name":"DQE_Window_ItemCommand","status":true,"description":"The item menu command list - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemList","status":true,"description":"The window for displaying items - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleSkill","status":true,"description":"The window that displays skills to use in battle - V0.1","parameters":{}},
+{"name":"DQE_Window_BattleItem","status":true,"description":"The window that displays skills to use in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_Help","status":true,"description":"The window for displaying the description of the selected item - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleSkillHelp","status":true,"description":"The window for displaying the skill description/cost - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},

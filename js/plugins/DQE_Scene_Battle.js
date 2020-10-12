@@ -119,10 +119,8 @@ Scene_Battle.prototype.createSkillWindow = function () {
 };
 
 Scene_Battle.prototype.createItemWindow = function () {
-    var wy = this._helpWindow.y + this._helpWindow.height;
-    var wh = 300 - wy;
-    this._itemWindow = new Window_BattleItem(0, wy, Graphics.boxWidth, wh);
-    this._itemWindow.setHelpWindow(this._helpWindow);
+    this._itemWindow = new Window_BattleItem(63, 468, 522, 249);
+    // this._itemWindow.setHelpWindow(this._helpWindow);
     this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
     this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
     this.addWindow(this._itemWindow);
@@ -130,8 +128,7 @@ Scene_Battle.prototype.createItemWindow = function () {
 
 Scene_Battle.prototype.createActorWindow = function () {
     var x = 513;
-    var y = this._skillWindow.y;
-    this._actorWindow = new Window_BattleActor(x, y);
+    this._actorWindow = new Window_BattleActor(x, 0);
     this._actorWindow.setHandler('ok', this.onActorOk.bind(this));
     this._actorWindow.setHandler('cancel', this.onActorCancel.bind(this));
     this.addWindow(this._actorWindow);
@@ -146,8 +143,7 @@ Scene_Battle.prototype.createActorStatWindow = function () {
 };
 
 Scene_Battle.prototype.createEnemyWindow = function () {
-    var y = this._partyCommandWindow.y;
-    this._enemyWindow = new Window_BattleEnemy(0, y);
+    this._enemyWindow = new Window_BattleEnemy(0, 0);
     this._enemyWindow.setHandler('ok', this.onEnemyOk.bind(this));
     this._enemyWindow.setHandler('cancel', this.onEnemyCancel.bind(this));
     this.addWindow(this._enemyWindow);
@@ -158,7 +154,8 @@ Scene_Battle.prototype.createEnemyWindow = function () {
  * 
  * Default: party command (bottom & center)
  * 1:       actor command (bottom & right)
- * 2:       skill command (up & right)
+ * 2:       skill window (up & right)
+ * 3:       item window (a little below skill window)
  * 
  * @param {Number} pos 
  */
@@ -172,13 +169,38 @@ Scene_Battle.prototype.showEnemyWindow = function (pos) {
             this._enemyWindow.x = this._actorCommandWindow.x + this._actorCommandWindow.windowWidth();
             this._enemyWindow.y = this._skillWindow.y;
             break;
+        case 3:
+            this._enemyWindow.x = this._actorCommandWindow.x + this._actorCommandWindow.windowWidth();
+            this._enemyWindow.y = this._itemWindow.y;
+            break;
         default:
             this._enemyWindow.x = this._partyCommandWindow.x + this._partyCommandWindow.windowWidth();
             this._enemyWindow.y = this._partyCommandWindow.y;
             break;
     }
     this._enemyWindow.show();
-}
+};
+
+/**
+ * Shows actor window in certain positions
+ * 
+ * Default: skill window (inline with top of skill window)
+ * 1:       item window (inline with top of item window)
+ * 
+ * @param {Number} pos 
+ */
+Scene_Battle.prototype.showActorWindow = function (pos) {
+    switch (pos) {
+        case 1:
+            this._actorWindow.y = this._itemWindow.y;
+            break;
+        default:
+            this._actorWindow.y = this._skillWindow.y;
+            break;
+    }
+    this._actorStatWindow.y = this._actorWindow.y;
+    this._actorWindow.show();
+};
 
 Scene_Battle.prototype.refreshStatus = function () {
     this._statusWindow.forEach(statusWindow => {
@@ -215,9 +237,21 @@ Scene_Battle.prototype.commandSkill = function () {
     this._actorCommandWindow.hide();
 };
 
-Scene_Battle.prototype.selectActorSelection = function () {
+Scene_Battle.prototype.commandItem = function () {
+    this._itemWindow.setActor(BattleManager.actor());
+    this._itemWindow.refresh();
+    this._itemWindow.show();
+    this._itemWindow.activate();
+    this._enemyWindow.hide();
+    this._actorCommandWindow.hide();
+};
+
+/**
+ * @param {Number} pos to move actor window to
+ */
+Scene_Battle.prototype.selectActorSelection = function (pos = 0) {
     this._actorWindow.refresh();
-    this._actorWindow.show();
+    this.showActorWindow(pos)
     this._actorWindow.activate();
 };
 
@@ -235,8 +269,9 @@ Scene_Battle.prototype.onActorOk = function () {
     this._actorStatWindow.hide();
     this._skillWindow.hide();
     this._skillWindow.hideBackgroundDimmer();
-    this._helpWindow.hideBackgroundDimmer();
     this._itemWindow.hide();
+    this._itemWindow.hideBackgroundDimmer();
+    this._helpWindow.hideBackgroundDimmer();
     this.selectNextCommand();
 };
 
@@ -246,11 +281,15 @@ Scene_Battle.prototype.onActorCancel = function () {
     switch (this._actorCommandWindow.currentSymbol()) {
         case 'Skill':
             this._skillWindow.hideBackgroundDimmer();
+            this._itemWindow.hideBackgroundDimmer();
             this._helpWindow.hideBackgroundDimmer();
             this._skillWindow.activate();
             break;
         case 'Item':
-            // STUFF HERE
+            this._skillWindow.hideBackgroundDimmer();
+            this._itemWindow.hideBackgroundDimmer();
+            this._helpWindow.hideBackgroundDimmer();
+            this._itemWindow.activate();
             break;
     }
 };
@@ -273,8 +312,9 @@ Scene_Battle.prototype.onEnemyOk = function () {
     this._actorCommandWindow.hideBackgroundDimmer();
     this._skillWindow.hide();
     this._skillWindow.hideBackgroundDimmer();
-    this._helpWindow.hideBackgroundDimmer();
     this._itemWindow.hide();
+    this._itemWindow.hideBackgroundDimmer();
+    this._helpWindow.hideBackgroundDimmer();
     this.selectNextCommand();
 };
 
@@ -286,14 +326,17 @@ Scene_Battle.prototype.onEnemyCancel = function () {
             this._actorCommandWindow.activate();
             break;
         case 'Skill':
-            this._skillWindow.show();
-            this._enemyWindow.hide();
             this._skillWindow.hideBackgroundDimmer();
+            this._itemWindow.hideBackgroundDimmer();
             this._helpWindow.hideBackgroundDimmer();
+            this._enemyWindow.hide();
             this._skillWindow.activate();
             break;
         case 'Item':
-            this._itemWindow.show();
+            this._skillWindow.hideBackgroundDimmer();
+            this._itemWindow.hideBackgroundDimmer();
+            this._helpWindow.hideBackgroundDimmer();
+            this._enemyWindow.hide();
             this._itemWindow.activate();
             break;
     }
@@ -301,6 +344,13 @@ Scene_Battle.prototype.onEnemyCancel = function () {
 
 Scene_Battle.prototype.onSkillCancel = function () {
     this._skillWindow.hide();
+    this._actorCommandWindow.show();
+    this._actorCommandWindow.activate();
+    this.showEnemyWindow(1);
+};
+
+Scene_Battle.prototype.onItemCancel = function () {
+    this._itemWindow.hide();
     this._actorCommandWindow.show();
     this._actorCommandWindow.activate();
     this.showEnemyWindow(1);
@@ -316,12 +366,26 @@ Scene_Battle.prototype.onSelectAction = function () {
         this._helpWindow.showBackgroundDimmer();
         this._skillWindow.showBackgroundDimmer();
         this._itemWindow.showBackgroundDimmer();
-        this.selectEnemySelection(2);
+        switch (this._actorCommandWindow.currentSymbol()) {
+            case 'Skill':
+                this.selectEnemySelection(2);
+                break;
+            case 'Item':
+                this.selectEnemySelection(3);
+                break;
+        }
     } else {
         this._helpWindow.showBackgroundDimmer();
         this._skillWindow.showBackgroundDimmer();
         this._itemWindow.showBackgroundDimmer();
-        this.selectActorSelection();
+        switch (this._actorCommandWindow.currentSymbol()) {
+            case 'Skill':
+                this.selectActorSelection(0);
+                break;
+            case 'Item':
+                this.selectActorSelection(1);
+                break;
+        }
         if (action.isRecover()) {
             this.selectActorStatWindow(action);
         }
