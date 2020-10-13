@@ -28,42 +28,6 @@ DQEng.Scene_Battle = DQEng.Scene_Battle || {};
 // Scene_Battle
 //-----------------------------------------------------------------------------
 
-Scene_Battle.prototype.isBusy = function () {
-    return this._fadeDuration > 0 || this._activeMessage != null;
-};
-
-Scene_Battle.prototype.update = function () {
-    var active = this.isActive();
-    $gameTimer.update(active);
-    $gameScreen.update();
-    if (active && !this.isBusy()) {
-        this.updateBattleProcess();
-    }
-    Scene_Base.prototype.update.call(this);
-};
-
-Scene_Battle.prototype.updateBattleProcess = function () {
-    if ((!this.isAnyInputWindowActive() || BattleManager.isAborting() ||
-        BattleManager.isBattleEnd()) && !BattleManager.isBusy()) {
-        BattleManager.update();
-        this.changeInputWindow();
-    }
-};
-
-Scene_Battle.prototype.stop = function () {
-    Scene_Base.prototype.stop.call(this);
-    if (this.needsSlowFadeOut()) {
-        this.startFadeOut(this.slowFadeSpeed(), false);
-    } else {
-        this.startFadeOut(this.fadeSpeed(), false);
-    }
-    this._statusWindow.forEach(statusWindow => {
-        statusWindow.close();
-    });
-    this._partyCommandWindow.close();
-    this._actorCommandWindow.close();
-};
-
 Scene_Battle.prototype.createAllWindows = function () {
     this.createLogWindow();
     this.createStatusWindow();
@@ -79,6 +43,10 @@ Scene_Battle.prototype.createAllWindows = function () {
     this.createMessageWindow();
     this.createScrollTextWindow();
 };
+
+//////////////////////////////
+// Functions - create windows
+//////////////////////////////
 
 Scene_Battle.prototype.createStatusWindow = function () {
     this._statusWindow = [];
@@ -161,6 +129,10 @@ Scene_Battle.prototype.createEnemyWindow = function () {
     this.addWindow(this._enemyWindow);
 };
 
+//////////////////////////////
+// Functions - moving windows
+//////////////////////////////
+
 /**
  * Shows enemy window in certain positions
  * 
@@ -214,24 +186,9 @@ Scene_Battle.prototype.showActorWindow = function (pos) {
     this._actorWindow.show();
 };
 
-Scene_Battle.prototype.refreshStatus = function () {
-    this._statusWindow.forEach(statusWindow => {
-        statusWindow.refresh();
-    });
-};
-
-Scene_Battle.prototype.startPartyCommandSelection = function () {
-    this.refreshStatus();
-    this._actorCommandWindow.close();
-    this._partyCommandWindow.setup();
-    this.showEnemyWindow(0);
-};
-
-Scene_Battle.prototype.startActorCommandSelection = function () {
-    this._partyCommandWindow.close();
-    this._actorCommandWindow.setup(BattleManager.actor());
-    this.showEnemyWindow(1);
-};
+//////////////////////////////
+// Functions - command handlers
+//////////////////////////////
 
 Scene_Battle.prototype.commandAttack = function () {
     BattleManager.inputtingAction().setAttack();
@@ -264,23 +221,8 @@ Scene_Battle.prototype.commandGuard = function () {
 };
 
 Scene_Battle.prototype.commandActorDisabled = function () {
-    this.displayMessage(this.actorCommandDisabledMessage(), Scene_Battle.prototype.actorCommandDisabledCallback);
-};
-
-/**
- * @param {Number} pos to move actor window to
- */
-Scene_Battle.prototype.selectActorSelection = function (pos = 0) {
-    this._actorWindow.refresh();
-    this.showActorWindow(pos)
-    this._actorWindow.activate();
-};
-
-Scene_Battle.prototype.selectActorStatWindow = function (action) {
-    if (action.isHpRecover()) {
-        this._actorStatWindow.setStat(0);
-    }
-    this._actorStatWindow.show();
+    this.displayMessage(this.actorCommandDisabledMessage(), 
+                        Scene_Battle.prototype.actorCommandDisabledCallback);
 };
 
 Scene_Battle.prototype.onActorOk = function () {
@@ -314,16 +256,6 @@ Scene_Battle.prototype.onActorCancel = function () {
             this._itemWindow.activate();
             break;
     }
-};
-
-/**
- * @param {Number} pos to move enemy window to
- */
-Scene_Battle.prototype.selectEnemySelection = function (pos = 0) {
-    this._enemyWindow.refresh();
-    this.showEnemyWindow(pos);
-    this._enemyWindow.select(0);
-    this._enemyWindow.activate();
 };
 
 Scene_Battle.prototype.onEnemyOk = function () {
@@ -379,6 +311,49 @@ Scene_Battle.prototype.onItemCancel = function () {
     this.showEnemyWindow(1);
 };
 
+//////////////////////////////
+// Functions - change input
+//////////////////////////////
+
+Scene_Battle.prototype.startPartyCommandSelection = function () {
+    this.refreshStatus();
+    this._actorCommandWindow.close();
+    this._partyCommandWindow.setup();
+    this.showEnemyWindow(0);
+};
+
+Scene_Battle.prototype.startActorCommandSelection = function () {
+    this._partyCommandWindow.close();
+    this._actorCommandWindow.setup(BattleManager.actor());
+    this.showEnemyWindow(1);
+};
+
+/**
+ * @param {Number} pos to move actor window to
+ */
+Scene_Battle.prototype.selectActorSelection = function (pos = 0) {
+    this._actorWindow.refresh();
+    this.showActorWindow(pos)
+    this._actorWindow.activate();
+};
+
+Scene_Battle.prototype.selectActorStatWindow = function (action) {
+    if (action.isHpRecover()) {
+        this._actorStatWindow.setStat(0);
+    }
+    this._actorStatWindow.show();
+};
+
+/**
+ * @param {Number} pos to move enemy window to
+ */
+Scene_Battle.prototype.selectEnemySelection = function (pos = 0) {
+    this._enemyWindow.refresh();
+    this.showEnemyWindow(pos);
+    this._enemyWindow.select(0);
+    this._enemyWindow.activate();
+};
+
 Scene_Battle.prototype.onSelectAction = function () {
     var action = BattleManager.inputtingAction();
     if (!action.needsSelection()) {
@@ -428,22 +403,22 @@ Scene_Battle.prototype.endCommandSelection = function () {
 //////////////////////////////
 
 Scene_Battle.prototype.actorCommandDisabledMessage = function () {
-    var msg = '';
     var actor = BattleManager.actor();
+    var msg = `${actor._name} has no`;
     switch (this._actorCommandWindow.currentSymbol()) {
         case 'Skill':
             if (this._actorCommandWindow.currentExt() === 1) {
-                msg = `${actor.name} has no battle abilities!`;
+                msg += ` battle abilities!`;
             } else {
-                msg = `${actor.name} has no battle spells!`;
+                msg += ` battle spells!`;
             }
             break;
         case 'Item':
-            msg = `${actor.name} has no items!`;
+            msg += ` items!`;
             break;
     }
     return msg;
-}
+};
 
 //////////////////////////////
 // Functions - message callbacks
@@ -451,4 +426,54 @@ Scene_Battle.prototype.actorCommandDisabledMessage = function () {
 
 Scene_Battle.prototype.actorCommandDisabledCallback = function () {
     this._actorCommandWindow.activate();
-}
+};
+
+//////////////////////////////
+// Functions - scene actions
+//////////////////////////////
+
+Scene_Battle.prototype.isBusy = function () {
+    return this._fadeDuration > 0 || this._activeMessage != null;
+};
+
+Scene_Battle.prototype.refreshStatus = function () {
+    this._statusWindow.forEach(statusWindow => {
+        statusWindow.refresh();
+    });
+};
+
+Scene_Battle.prototype.stop = function () {
+    Scene_Base.prototype.stop.call(this);
+    if (this.needsSlowFadeOut()) {
+        this.startFadeOut(this.slowFadeSpeed(), false);
+    } else {
+        this.startFadeOut(this.fadeSpeed(), false);
+    }
+    this._statusWindow.forEach(statusWindow => {
+        statusWindow.close();
+    });
+    this._partyCommandWindow.close();
+    this._actorCommandWindow.close();
+};
+
+//////////////////////////////
+// Functions - scene updates
+//////////////////////////////
+
+Scene_Battle.prototype.update = function () {
+    var active = this.isActive();
+    $gameTimer.update(active);
+    $gameScreen.update();
+    if (active && !this.isBusy()) {
+        this.updateBattleProcess();
+    }
+    Scene_Base.prototype.update.call(this);
+};
+
+Scene_Battle.prototype.updateBattleProcess = function () {
+    if ((!this.isAnyInputWindowActive() || BattleManager.isAborting() ||
+        BattleManager.isBattleEnd()) && !BattleManager.isBusy()) {
+        BattleManager.update();
+        this.changeInputWindow();
+    }
+};

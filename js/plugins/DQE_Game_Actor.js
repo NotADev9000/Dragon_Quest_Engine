@@ -33,6 +33,10 @@ DQEng.Game_Actor = DQEng.Game_Actor || {};
 // Game_Actor
 //-----------------------------------------------------------------------------
 
+//////////////////////////////
+// Functions - actor setup
+//////////////////////////////
+
 /**
  * Initialize items array
  */
@@ -50,6 +54,10 @@ Game_Actor.prototype.setup = function (actorId) {
     DQEng.Game_Actor.setup.call(this, actorId);
     this._items = this.initItems();
 };
+
+//////////////////////////////
+// Functions - item setup
+//////////////////////////////
 
 /**
  * Add equipment to held items
@@ -73,6 +81,10 @@ Game_Actor.prototype.initCarriedEquips = function () {
 Game_Actor.prototype.resetCarriedEquips = function () {
     this._items.splice(0, this.numEquips());
 };
+
+//////////////////////////////
+// Functions - item queries
+//////////////////////////////
 
 /**
  * Returns held items as an array of data items
@@ -133,6 +145,10 @@ Game_Actor.prototype.isSlotEquipped = function (slotId) {
 Game_Actor.prototype.indexIsEquip = function (index) {
     return index < this.numEquips();
 };
+
+//////////////////////////////
+// Functions - item movement
+//////////////////////////////
 
 Game_Actor.prototype.changeEquip = function (slotId, item) {
     if (this.tradeItemWithParty(item, this.equips()[slotId]) &&
@@ -265,6 +281,10 @@ Game_Actor.prototype.tradeItemWithActor = function (index, actorIndex, actor) {
     this.giveItems(actorItem, 1, newPos);
     actor.giveItems(item, 1, actorNewPos);
 }
+
+//////////////////////////////
+// Functions - messages
+//////////////////////////////
 
 Game_Actor.prototype.giveItemToBagMessage = function (index) {
     return `${this._name} placed the ${this.item(index).name} in the bag.`;
