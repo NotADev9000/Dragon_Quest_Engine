@@ -28,15 +28,26 @@ DQEng.Scene_Battle = DQEng.Scene_Battle || {};
 // Scene_Battle
 //-----------------------------------------------------------------------------
 
+Scene_Battle.prototype.isBusy = function () {
+    return this._fadeDuration > 0 || this._activeMessage != null;
+};
+
 Scene_Battle.prototype.update = function () {
     var active = this.isActive();
     $gameTimer.update(active);
     $gameScreen.update();
-    this.updateStatusWindow();
     if (active && !this.isBusy()) {
         this.updateBattleProcess();
     }
     Scene_Base.prototype.update.call(this);
+};
+
+Scene_Battle.prototype.updateBattleProcess = function () {
+    if ((!this.isAnyInputWindowActive() || BattleManager.isAborting() ||
+        BattleManager.isBattleEnd()) && !BattleManager.isBusy()) {
+        BattleManager.update();
+        this.changeInputWindow();
+    }
 };
 
 Scene_Battle.prototype.stop = function () {
@@ -51,13 +62,6 @@ Scene_Battle.prototype.stop = function () {
     });
     this._partyCommandWindow.close();
     this._actorCommandWindow.close();
-};
-
-Scene_Battle.prototype.updateStatusWindow = function () {
-    if ($gameMessage.isBusy()) {
-        this._partyCommandWindow.close();
-        this._actorCommandWindow.close();
-    }
 };
 
 Scene_Battle.prototype.createAllWindows = function () {
@@ -101,6 +105,7 @@ Scene_Battle.prototype.createActorCommandWindow = function () {
     this._actorCommandWindow.setHandler('Guard', this.commandGuard.bind(this));
     this._actorCommandWindow.setHandler('Item', this.commandItem.bind(this));
     // this._actorCommandWindow.setHandler('Equipment', this.commandEquipment.bind(this));
+    this._actorCommandWindow.setHandler('Disabled', this.commandActorDisabled.bind(this));
     this._actorCommandWindow.setHandler('cancel', this.selectPreviousCommand.bind(this));
     this.addWindow(this._actorCommandWindow);
 };
@@ -258,6 +263,10 @@ Scene_Battle.prototype.commandGuard = function () {
     this.selectNextCommand();
 };
 
+Scene_Battle.prototype.commandActorDisabled = function () {
+    this.displayMessage(this.actorCommandDisabledMessage(), Scene_Battle.prototype.actorCommandDisabledCallback);
+};
+
 /**
  * @param {Number} pos to move actor window to
  */
@@ -413,3 +422,33 @@ Scene_Battle.prototype.endCommandSelection = function () {
     this._actorCommandWindow.close();
     this._enemyWindow.hide();
 };
+
+//////////////////////////////
+// Functions - in-battle messages
+//////////////////////////////
+
+Scene_Battle.prototype.actorCommandDisabledMessage = function () {
+    var msg = '';
+    var actor = BattleManager.actor();
+    switch (this._actorCommandWindow.currentSymbol()) {
+        case 'Skill':
+            if (this._actorCommandWindow.currentExt() === 1) {
+                msg = `${actor.name} has no battle abilities!`;
+            } else {
+                msg = `${actor.name} has no battle spells!`;
+            }
+            break;
+        case 'Item':
+            msg = `${actor.name} has no items!`;
+            break;
+    }
+    return msg;
+}
+
+//////////////////////////////
+// Functions - message callbacks
+//////////////////////////////
+
+Scene_Battle.prototype.actorCommandDisabledCallback = function () {
+    this._actorCommandWindow.activate();
+}

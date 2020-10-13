@@ -1,6 +1,6 @@
 //=============================================================================
-// Dragon Quest Engine - Scene Menu Base
-// DQE_Scene_MenuBase.js                                                             
+// Dragon Quest Engine - Scene Base
+// DQE_Scene_Base.js                                                             
 //=============================================================================
 
 /*:
@@ -19,18 +19,19 @@
 //------
 
 var Imported = Imported || {};
-Imported.DQEng_Scene_MenuBase = true;
+Imported.DQEng_Scene_Base = true;
 
 var DQEng = DQEng || {};
-DQEng.Scene_MenuBase = DQEng.Scene_MenuBase || {};
+DQEng.Scene_Base = DQEng.Scene_Base || {};
 
 //-----------------------------------------------------------------------------
-// Scene_MenuBase
+// Scene_Base
 //-----------------------------------------------------------------------------
 
-Scene_MenuBase.prototype.initialize = function () {
+DQEng.Scene_Base.initialize = Scene_Base.prototype.initialize;
+Scene_Base.prototype.initialize = function () {
     this._activeMessage = null;
-    Scene_Base.prototype.initialize.call(this);
+    DQEng.Scene_Base.initialize.call(this);
 };
 
 /**
@@ -40,7 +41,7 @@ Scene_MenuBase.prototype.initialize = function () {
  * @param {String} message the text to display in a message box
  * @param {String} callback the method to call after the message box is closed
  */
-Scene_MenuBase.prototype.displayMessage = function (message, callback) {
+Scene_Base.prototype.displayMessage = function (message, callback) {
     $gameMessage.add(message);
     this._activeMessage = callback;
 }
@@ -48,7 +49,7 @@ Scene_MenuBase.prototype.displayMessage = function (message, callback) {
 /**
  * Runs callback function after a message has been closed
  */
-Scene_MenuBase.prototype.manageMessageCallback = function () {
+Scene_Base.prototype.manageMessageCallback = function () {
     if (this._activeMessage) {
         this._activeMessage.call(this);
         this._activeMessage = null;
@@ -58,10 +59,11 @@ Scene_MenuBase.prototype.manageMessageCallback = function () {
 /**
  * If a message window has finished closing, manage the callbacks
  */
-Scene_MenuBase.prototype.update = function () {
+DQEng.Scene_Base.update = Scene_Base.prototype.update;
+Scene_Base.prototype.update = function () {
     if (this._activeMessage && !$gameMessage.isBusy() && 
         this._messageWindow && !this._messageWindow.isClosing()) {
         this.manageMessageCallback();
     }
-    Scene_Base.prototype.update.call(this);
+    DQEng.Scene_Base.update.call(this);
 };

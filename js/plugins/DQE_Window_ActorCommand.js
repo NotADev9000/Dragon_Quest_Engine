@@ -132,6 +132,26 @@ Window_ActorCommand.prototype.isEnabled = function (symbol) {
 // Functions - settings
 //////////////////////////////
 
+Window_ActorCommand.prototype.processOk = function () {
+    if (this._actor) {
+        if (ConfigManager.commandRemember) {
+            this._actor.setLastCommandSymbol(this.currentSymbol());
+        } else {
+            this._actor.setLastCommandSymbol('');
+        }
+    }
+    if (this.isCurrentItemEnabled()) {
+        this.playOkSound();
+        this.updateInputData();
+        this.deactivate();
+        this.callOkHandler();
+    } else {
+        this.updateInputData();
+        this.deactivate();
+        this.callHandler('Disabled');
+    }
+};
+
 Window_ActorCommand.prototype.setup = function (actor) {
     this._actor = actor;
     this.makeWindowTitle();
@@ -149,7 +169,7 @@ Window_ActorCommand.prototype.selectLast = function () {
     if (this._actor && ConfigManager.commandRemember) {
         var symbol = this._actor.lastCommandSymbol();
         this.selectSymbol(symbol);
-        if (symbol === 'skill') {
+        if (symbol === 'Skill') {
             var skill = this._actor.lastBattleSkill();
             if (skill) {
                 this.selectExt(skill.stypeId);

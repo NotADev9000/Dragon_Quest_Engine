@@ -1,0 +1,4 @@
+1. move dqe_scene_menubase -> dqe_scene_base
+2. update dqe_scene_battle's isBusy function to
+   check if this._activeMessage != null
+3. add message callbacks to dqe_scene_battle
