@@ -9,6 +9,14 @@
 * @plugindesc The game object class for a troop and the battle-related data - V0.1
 *
 *
+* @param Enemy X Default Offset
+* @desc Moves enemies along the x-axis to align with the background. Default: .
+* @default
+*
+* @param Enemy Y Default Offset
+* @desc Moves enemies along the y-axis to align with the background. Default: .
+* @default
+* 
 * @help
 * N/A
 *
@@ -24,6 +32,12 @@ Imported.DQEng_Game_Troop = true;
 var DQEng = DQEng || {};
 DQEng.Game_Troop = DQEng.Game_Troop || {};
 
+var parameters = PluginManager.parameters('DQE_Windows');
+DQEng.Parameters = DQEng.Parameters || {};
+DQEng.Parameters.Game_Troop = {};
+DQEng.Parameters.Game_Troop.EnemyXDefaultOffset = Number(parameters["Enemy X Default Offset"]) || 231;
+DQEng.Parameters.Game_Troop.EnemyYDefaultOffset = Number(parameters["Enemy Y Default Offset"]) || 180;
+
 //-----------------------------------------------------------------------------
 // Game_Troop
 //-----------------------------------------------------------------------------
@@ -38,9 +52,27 @@ Game_Troop.prototype.clear = function () {
     this._groups = [];
 };
 
-DQEng.Game_Troop.setup = Game_Troop.prototype.setup;
 Game_Troop.prototype.setup = function (troopId) {
-    DQEng.Game_Troop.setup.call(this, troopId);
+    this.clear();
+    this._troopId = troopId;
+    this._enemies = [];
+    this.troop().members.forEach(function (member) {
+        if ($dataEnemies[member.enemyId]) {
+            var enemyId = member.enemyId;
+            var x = member.x;
+            x -= x%3;
+            x += DQEng.Parameters.Game_Troop.EnemyXDefaultOffset;
+            var y = member.y;
+            y -= y%3;
+            y += DQEng.Parameters.Game_Troop.EnemyYDefaultOffset;
+            var enemy = new Game_Enemy(enemyId, x, y);
+            if (member.hidden) {
+                enemy.hide();
+            }
+            this._enemies.push(enemy);
+        }
+    }, this);
+    this.makeUniqueNames();
     this.autoCreateEnemyGroups();
 };
 

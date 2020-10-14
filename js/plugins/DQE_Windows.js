@@ -22,6 +22,10 @@
 * @desc How far should the Y position of the choice window be positioned from the message box. Default: 48.
 * @default
 *
+* @param Mask Window Size
+* @desc How far the windows should overlap in pixels. Default: 3.
+* @default
+*
 * @help
 * N/A
 *

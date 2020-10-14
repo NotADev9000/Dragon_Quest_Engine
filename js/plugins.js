@@ -24,7 +24,7 @@ var $plugins =
 {"name":"DQE_Scene_Battle","status":true,"description":"The scene for the battle - V0.1","parameters":{}},
 {"name":"DQE_Spriteset_Battle","status":true,"description":"The sprites used in a battle - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
-{"name":"DQE_Windows","status":true,"description":"General changes to windows - Dragon Quest Engine V0.1","parameters":{"Selectable Line Gap":"","Choice Line Gap":"","Choice Y Offset":""}},
+{"name":"DQE_Windows","status":true,"description":"General changes to windows - Dragon Quest Engine V0.1","parameters":{"Base Line Gap":"","Choice Line Gap":"","Choice Y Offset":"","Mask Window Size":""}},
 {"name":"DQE_Window_Cursor","status":true,"description":"uses an arrow cursor before text instead of highlighting for Dragon Quest Engine - V0.1","parameters":{}},
 {"name":"DQE_Window_Gold","status":true,"description":"similar to default window but with different size/padding - V0.1","parameters":{}},
 {"name":"DQE_Window_Help","status":true,"description":"The window for displaying the description of the selected item - V0.1","parameters":{}},
