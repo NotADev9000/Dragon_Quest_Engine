@@ -98,6 +98,10 @@ Window_Base.prototype.disabledColor = function () {
     return this.textColor(16);
 };
 
+Window_Base.prototype.extraPadding = function () {
+    return 0;
+};
+
 Window_Base.prototype.lineHeight = function () {
     return 21;
 };
