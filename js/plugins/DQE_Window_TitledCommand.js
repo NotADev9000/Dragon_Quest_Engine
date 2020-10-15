@@ -68,10 +68,7 @@ Window_TitledCommand.prototype.windowHeight = function () {
  * @param {number} numLines the number of commands
  */
 Window_TitledCommand.prototype.fittingHeight = function (numLines) {
-    return numLines * this.lineHeight()
-        + (this.standardPadding() + this.extraPadding()) * 2
-        + (this.lineGap() * Math.max(numLines - 1, 0))
-        + this.titleBlockHeight();
+    return Window_Base.prototype.fittingHeightTitleBlock.call(this, numLines);
 };
 
 /**

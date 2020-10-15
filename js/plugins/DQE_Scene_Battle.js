@@ -129,6 +129,14 @@ Scene_Battle.prototype.createEnemyWindow = function () {
     this.addWindow(this._enemyWindow);
 };
 
+Scene_Battle.prototype.createMessageWindow = function () {
+    this._messageWindow = new Window_BattleMessage();
+    this.addWindow(this._messageWindow);
+    this._messageWindow.subWindows().forEach(function (window) {
+        this.addWindow(window);
+    }, this);
+};
+
 //////////////////////////////
 // Functions - moving windows
 //////////////////////////////
@@ -221,8 +229,10 @@ Scene_Battle.prototype.commandGuard = function () {
 };
 
 Scene_Battle.prototype.commandActorDisabled = function () {
+    this._actorCommandWindow.showBackgroundDimmer();
+    this._enemyWindow.showBackgroundDimmer();
     this.displayMessage(this.actorCommandDisabledMessage(), 
-                        Scene_Battle.prototype.actorCommandDisabledCallback);
+    Scene_Battle.prototype.actorCommandDisabledCallback);
 };
 
 Scene_Battle.prototype.onActorOk = function () {
@@ -425,6 +435,8 @@ Scene_Battle.prototype.actorCommandDisabledMessage = function () {
 //////////////////////////////
 
 Scene_Battle.prototype.actorCommandDisabledCallback = function () {
+    this._actorCommandWindow.hideBackgroundDimmer();
+    this._enemyWindow.hideBackgroundDimmer();
     this._actorCommandWindow.activate();
 };
 
