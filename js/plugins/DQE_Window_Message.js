@@ -50,6 +50,17 @@ Window.prototype._refreshPauseSign = function () {
 // Window_Message
 //-----------------------------------------------------------------------------
 
+Window_Message.prototype.initialize = function () {
+    var width = this.windowWidth();
+    var height = this.windowHeight();
+    var x = $gameSystem.makeDivisibleBy((Graphics.boxWidth - width) / 2);
+    Window_Base.prototype.initialize.call(this, x, 0, width, height);
+    this.openness = 0;
+    this.initMembers();
+    this.createSubWindows();
+    this.updatePlacement();
+};
+
 /**
  * Creates all the subwindows so they're ready to open
  * goldWindow has been moved to be in-line with the message box

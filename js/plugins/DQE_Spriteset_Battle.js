@@ -37,7 +37,7 @@ Spriteset_Battle.prototype.createBattleback = function () {
 Spriteset_Battle.prototype.locateBattleback = function () {
     var width = this._back1Sprite.bitmap.width;
     var height = this._back1Sprite.bitmap.height;
-    var x = ((Graphics.boxWidth - width) / 2) - 1;
+    var x = $gameSystem.makeDivisibleBy((Graphics.boxWidth - width) / 2);
     var y = (Graphics.boxHeight - height) / 2;
     this._back1Sprite.move(x, y);
 };

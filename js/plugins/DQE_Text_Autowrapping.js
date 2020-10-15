@@ -11,7 +11,7 @@
 *
 * @help
 * TODO: Look into why textWidthExCheck prevents sfonts from coloring correctly
-* TODO: May need some changes when autowrapping battel log & message window
+* TODO: May need some changes when autowrapping battle log & message window
 * 
 */
 

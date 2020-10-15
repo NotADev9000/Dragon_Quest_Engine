@@ -60,10 +60,10 @@ Game_Troop.prototype.setup = function (troopId) {
         if ($dataEnemies[member.enemyId]) {
             var enemyId = member.enemyId;
             var x = member.x;
-            x -= x%3;
+            x = $gameSystem.makeDivisibleBy(x);
             x += DQEng.Parameters.Game_Troop.EnemyXDefaultOffset;
             var y = member.y;
-            y -= y%3;
+            y = $gameSystem.makeDivisibleBy(y);
             y += DQEng.Parameters.Game_Troop.EnemyYDefaultOffset;
             var enemy = new Game_Enemy(enemyId, x, y);
             if (member.hidden) {
