@@ -51,6 +51,7 @@ var $plugins =
 {"name":"DQE_Window_BattleHelp","status":true,"description":"The parent window for help windows in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleSkillHelp","status":true,"description":"The window for displaying the skill description/cost - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleItemHelp","status":true,"description":"The window for displaying the skill description/cost - V0.1","parameters":{}},
+{"name":"DQE_Window_BattleLog","status":true,"description":"The window for displaying battle progress - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}}
 ];
