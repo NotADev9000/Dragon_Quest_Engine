@@ -101,15 +101,30 @@ Game_Troop.prototype.autoCreateEnemyGroups = function () {
     }, this);
 };
 
+/**
+ * Returns all the enemy groups with their living members
+ * Groups with no living enemies will not be returned
+ */
 Game_Troop.prototype.aliveAllGroups = function () {
-    return this.groups().filter(function (group) {
-        return this.aliveGroup(group);
+    var aliveGroups = [];
+    this.groups().forEach(group => {
+        var aliveGroup = this.aliveGroup(group);
+        if (aliveGroup.enemies.length >= 1) {
+            aliveGroups.push(aliveGroup);
+        }
     }, this);
+    return aliveGroups;
 };
 
+/**
+ * Returns a group of enemies with only the alive members
+ * Will still returns an object if there are no alive enemies
+ * @param {Object} group 
+ */
 Game_Troop.prototype.aliveGroup = function (group) {
-    return group.enemies.filter(function (enemy) {
+    group.enemies = group.enemies.filter(function (enemy) {
         return enemy.isAlive();
     });
+    return group;
 };
 
