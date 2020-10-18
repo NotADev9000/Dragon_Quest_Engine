@@ -18,7 +18,17 @@
 * @default
 * 
 * @help
-* N/A
+* @property _groups
+* @type     array
+* a single group contains:
+* 
+* // name of the group (this is what's displayed in the battle window)
+* @property name
+* @type     String
+*
+* // the enemies in the group (an array of Game_Enemy)
+* @property enemies
+* @type     array
 *
 */
 
