@@ -30,8 +30,12 @@ DQEng.Window_BattleEnemy = DQEng.Window_BattleEnemy || {};
 // Window_BattleEnemy
 //-----------------------------------------------------------------------------
 
+Window_BattleEnemy.STATE_GROUP  = 1;
+Window_BattleEnemy.STATE_SINGLE = 2;
+
 DQEng.Window_BattleEnemy.initialize = Window_BattleEnemy.prototype.initialize;
 Window_BattleEnemy.prototype.initialize = function (x, y) {
+    this._state = Window_BattleEnemy.STATE_GROUP;
     this._groups = [];
     DQEng.Window_BattleEnemy.initialize.call(this, x, y);
 }
@@ -49,21 +53,43 @@ Window_BattleEnemy.prototype.lineGap = function () {
 };
 
 Window_BattleEnemy.prototype.maxCols = function () {
-    return 1;
+    switch (this._state) {
+        case 2:
+            return 2;
+        default:
+            return 1;
+    }
 };
 
 Window_BattleEnemy.prototype.maxItems = function () {
-    return this._groups.length;
+    switch (this._state) {
+        case 2:
+            return this._enemies.length;
+        default:
+            return this._groups.length;
+    }
 };
 
 Window_BattleEnemy.prototype.drawItem = function (index) {
     this.resetTextColor();
-    var group = this._groups[index];
-    var name = group.name;
-    var amount = group.enemies.length;
     var rect = this.itemRectForText(index);
-    this.drawText(name, rect.x, rect.y, rect.width);
-    this.drawText(amount, 672, rect.y, 16);
+    switch (this._state) {
+        case 2:
+            var name = this._enemies[index].name();
+            this.drawText(name, rect.x, rect.y, rect.width);
+            break;
+        default:
+            var group = this._groups[index];
+            var name = group.name;
+            var amount = group.enemies.length;
+            this.drawText(name, rect.x, rect.y, rect.width);
+            this.drawText(amount, 672, rect.y, 16);
+            break;
+    }
+};
+
+Window_BattleEnemy.prototype.setState = function (state) {
+    this._state = state;
 };
 
 Window_BattleEnemy.prototype.show = function () {
