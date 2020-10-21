@@ -67,10 +67,77 @@ Window_BattleLog.prototype.updatePlacement = function () {
     return Window_BattleMessage.prototype.updatePlacement.call(this);
 };
 
+Window_BattleLog.prototype.showAnimation = function (subject, targets, animationId, stypeId) {
+    if (animationId < 0) {
+        this.showAttackAnimation(subject, targets);
+    } else {
+        this.showNormalAnimation(targets, animationId, undefined, subject, stypeId);
+    }
+};
+
+Window_BattleLog.prototype.showActorAttackAnimation = function (subject, targets) {
+    this.playActSound(subject);
+    this.showNormalAnimation(targets, subject.attackAnimationId1(), false, subject);
+    this.showNormalAnimation(targets, subject.attackAnimationId2(), true, subject);
+};
+
+Window_BattleLog.prototype.showEnemyAttackAnimation = function (subject, targets) {
+    this.playActSound(subject);
+};
+
+Window_BattleLog.prototype.showNormalAnimation = function (targets, animationId, mirror, subject, stypeId) {
+    var animation = $dataAnimations[animationId];
+    this.playActSound(subject, stypeId, animationId);
+    if (animation) {
+        var delay = this.animationBaseDelay(stypeId);
+        var nextDelay = this.animationNextDelay();
+        targets.forEach(function (target) {
+            target.startAnimation(animationId, mirror, delay);
+            delay += nextDelay;
+        });
+    }
+};
+
+/**
+ * Plays the sound effect before a move is used
+ */
+Window_BattleLog.prototype.playActSound = function (subject, stypeId = 0, animId = 1) {
+    if (animId != 0) { // no act sound if there is no animation
+        if (stypeId === 2) { // magic
+            SoundManager.playUseSkill();
+        } else if (subject.isActor()) {
+            SoundManager.playPlayerAttack();
+        } else {
+            SoundManager.playEnemyAttack();
+        }
+    }
+};
+
+Window_BattleLog.prototype.animationBaseDelay = function (stypeId = 0) {
+    if (stypeId === 2) { // magic
+        return 24;
+    } else {
+        return 10;
+    }
+};
+
+Window_BattleLog.prototype.animationNextDelay = function () {
+    return 12;
+};
+
 Window_BattleLog.prototype.drawLineText = function (index) {
     var rect = this.itemRect(index);
     this.contents.clearRect(rect.x, rect.y, rect.width, rect.height);
     this.drawTextEx(this._lines[index], rect.x, rect.y, rect.width);
+};
+
+Window_BattleLog.prototype.startAction = function (subject, action, targets) {
+    var item = action.item();
+    this.push('performActionStart', subject, action);
+    this.push('waitForMovement');
+    this.push('performAction', subject, action);
+    this.push('showAnimation', subject, targets.clone(), item.animationId, item.stypeId);
+    this.displayAction(subject, item);
 };
 
 Window_BattleLog.prototype.refresh = function () {
