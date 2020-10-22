@@ -267,31 +267,79 @@ Window_Selectable.prototype.cursorDown = function () {
     var index = this.index();
     var maxItems = this.maxItems();
     var maxCols = this.maxCols();
-    this.select((index + maxCols) % maxItems);
+    var oddAmount = maxItems % 2;
+    if (maxItems > maxCols && (index != 1 || maxItems != 3)) { // if there's more than one row & the cursor isn't on a row with only one item
+        if (oddAmount && index > Math.floor(maxItems / maxCols)) { // if moving from bottom of list to top
+            this.select(
+                index - (
+                maxCols * (Math.ceil(maxItems / maxCols) - 1))
+            );
+        } else {
+            this.select((index + maxCols) % maxItems);
+        }
+    }
 };
 
 Window_Selectable.prototype.cursorUp = function () {
     var index = this.index();
     var maxItems = this.maxItems();
     var maxCols = this.maxCols();
-    this.select((index - maxCols + maxItems) % maxItems);
+    var oddAmount = maxItems % 2;
+    if (maxItems > maxCols && (index != 1 || maxItems != 3)) { // if there's more than one row & the cursor isn't on a row with only one item
+        if (oddAmount && index < maxCols) { // if moving from top of list to bottom
+            this.select(
+                index + (
+                maxCols * (Math.ceil(maxItems / maxCols)-1))
+            );
+        } else {
+            this.select((index - maxCols + maxItems) % maxItems);
+        }
+    }
 };
 
 Window_Selectable.prototype.cursorRight = function () {
     var index = this.index();
+    var maxItems = this.maxItems();
     var maxCols = this.maxCols();
-    if (maxCols >= 2 && !(index % 2)) {
-        this.select(index + 1);
+    var oddAmount = maxItems % 2;
+    if (maxCols >= 2 && !(oddAmount && index >= maxItems - 1)) {
+        if (!(index % 2)) {
+            this.select((index + 1) % maxItems);
+        } else {
+            this.select((index - 1 + maxItems) % maxItems);
+        }
     }
 };
 
 Window_Selectable.prototype.cursorLeft = function () {
     var index = this.index();
+    var maxItems = this.maxItems();
     var maxCols = this.maxCols();
-    if (maxCols >= 2 && index % 2) {
-        this.select(index - 1);
+    var oddAmount = maxItems % 2;
+    if (maxCols >= 2 && !(oddAmount && index >= maxItems - 1)) {
+        if (index % 2) {
+            this.select((index - 1 + maxItems) % maxItems);
+        } else {
+            this.select((index + 1) % maxItems);
+        }
     }
 };
+
+// Window_Selectable.prototype.cursorRight = function () {
+//     var index = this.index();
+//     var maxCols = this.maxCols();
+//     if (maxCols >= 2 && !(index % 2)) {
+//         this.select(index + 1);
+//     }
+// };
+
+// Window_Selectable.prototype.cursorLeft = function () {
+//     var index = this.index();
+//     var maxCols = this.maxCols();
+//     if (maxCols >= 2 && index % 2) {
+//         this.select(index - 1);
+//     }
+// };
 
 //-----------------------------------------------------------------------------
 // Window_Command
