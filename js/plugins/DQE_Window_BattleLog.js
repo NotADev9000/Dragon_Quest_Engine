@@ -67,6 +67,21 @@ Window_BattleLog.prototype.updatePlacement = function () {
     return Window_BattleMessage.prototype.updatePlacement.call(this);
 };
 
+Window_BattleLog.prototype.critSpeed = function () {
+    return 36;
+};
+
+Window_BattleLog.prototype.wait = function (waitType = 'msg') {
+    switch (waitType) {
+        case 'crit':
+            this._waitCount = this.critSpeed();
+            break;
+        default:
+            this._waitCount = this.messageSpeed();
+            break;
+    }
+};
+
 Window_BattleLog.prototype.showAnimation = function (subject, targets, animationId, stypeId) {
     if (animationId < 0) {
         this.showAttackAnimation(subject, targets);
@@ -98,11 +113,15 @@ Window_BattleLog.prototype.showNormalAnimation = function (targets, animationId,
     }
 };
 
+Window_BattleLog.prototype.showCriticalAnimation = function (targets, animationId) {
+    this.showNormalAnimation(targets, animationId, false, undefined, -1);
+};
+
 /**
  * Plays the sound effect before a move is used
  */
 Window_BattleLog.prototype.playActSound = function (subject, stypeId = 0, animId = 1) {
-    if (animId != 0) { // no act sound if there is no animation
+    if (animId != 0 && stypeId >= 0) { // no act sound if there is no animation or skill type
         if (stypeId === 2) { // magic
             SoundManager.playUseSkill();
         } else if (subject.isActor()) {
@@ -138,6 +157,34 @@ Window_BattleLog.prototype.startAction = function (subject, action, targets) {
     this.push('performAction', subject, action);
     this.push('showAnimation', subject, targets.clone(), item.animationId, item.stypeId);
     this.displayAction(subject, item);
+};
+
+Window_BattleLog.prototype.displayActionResults = function (subject, target) {
+    if (target.result().used) {
+        this.push('clear');
+        this.push('pushBaseLine');
+        this.displayCritical(target);
+        this.push('popupDamage', target);
+        this.push('popupDamage', subject);
+        this.displayDamage(target);
+        this.displayAffectedStatus(target);
+        this.displayFailure(target);
+        this.push('waitForNewLine');
+        this.push('popBaseLine');
+    }
+};
+
+Window_BattleLog.prototype.displayCritical = function (target) {
+    if (target.result().critical) {
+        if (target.isActor()) {
+            this.push('addText', TextManager.criticalToActor);
+        } else {
+            this.push('showCriticalAnimation', [target], 3);
+            this.push('addText', TextManager.criticalToEnemy);
+        }
+        this.push('wait', 'crit');
+        this.push('clear');
+    }
 };
 
 Window_BattleLog.prototype.refresh = function () {

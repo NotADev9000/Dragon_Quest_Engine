@@ -466,9 +466,6 @@ Scene_Battle.prototype.stop = function () {
     } else {
         this.startFadeOut(this.fadeSpeed(), false);
     }
-    this._statusWindow.forEach(statusWindow => {
-        statusWindow.close();
-    });
     this._partyCommandWindow.close();
     this._actorCommandWindow.close();
 };

@@ -13,6 +13,7 @@ var $plugins =
 {"name":"DQE_Misc","status":true,"description":"Misc changes for Dragon Quest Engine - V0.1\r\nTODO: Move changes here into a more suitable file","parameters":{}},
 {"name":"DQE_Game_BattlerBase","status":true,"description":"The The game object class for the actor base - V0.1","parameters":{}},
 {"name":"DQE_Game_Actor","status":true,"description":"The The game object class for the party - V0.1","parameters":{}},
+{"name":"DQE_Game_Enemy","status":true,"description":"The The game object class for the enemy - V0.1","parameters":{}},
 {"name":"DQE_Game_Party","status":true,"description":"The The game object class for the party - V0.1","parameters":{}},
 {"name":"DQE_Game_Troop","status":true,"description":"The game object class for a troop and the battle-related data - V0.1","parameters":{}},
 {"name":"DQE_SoundManager","status":true,"description":"The Sound Manager - V0.1","parameters":{}},
