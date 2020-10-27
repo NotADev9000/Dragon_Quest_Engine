@@ -268,7 +268,7 @@ Window_Selectable.prototype.cursorDown = function () {
     var maxItems = this.maxItems();
     var maxCols = this.maxCols();
     var oddAmount = maxItems % 2;
-    if (maxItems > maxCols && (index != 1 || maxItems != 3)) { // if there's more than one row & the cursor isn't on a row with only one item
+    if (maxItems > maxCols && maxCols === 1 || (index != 1 || maxItems != 3)) { // if there's more than one row & the cursor isn't on a row with only one item
         if (oddAmount && index > Math.floor(maxItems / maxCols)) { // if moving from bottom of list to top
             this.select(
                 index - (
@@ -285,7 +285,7 @@ Window_Selectable.prototype.cursorUp = function () {
     var maxItems = this.maxItems();
     var maxCols = this.maxCols();
     var oddAmount = maxItems % 2;
-    if (maxItems > maxCols && (index != 1 || maxItems != 3)) { // if there's more than one row & the cursor isn't on a row with only one item
+    if (maxItems > maxCols && maxCols === 1 || (index != 1 || maxItems != 3)) { // if there's more than one row & the cursor isn't on a row with only one item
         if (oddAmount && index < maxCols) { // if moving from top of list to bottom
             this.select(
                 index + (

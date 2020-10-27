@@ -79,10 +79,12 @@ Window_BattleActorStat.prototype.drawStats = function () {
         var text = '';
         switch (this._stat) {
             case 0:
-                text = `HP: ${actor.hp}/${actor.mhp}`;
+                padHp = actor.hp.toString().padStart(3, ' ');
+                text = `HP: ${padHp}/${actor.mhp}`;
                 break;
             case 1:
-                text = `MP: ${actor.mp}/${actor.mmp}`;
+                padMp = actor.mp.toString().padStart(3, ' ');
+                text = `MP: ${padMp}/${actor.mmp}`;
                 break;
             default:
                 break;
