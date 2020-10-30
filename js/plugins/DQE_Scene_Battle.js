@@ -331,6 +331,19 @@ Scene_Battle.prototype.onItemCancel = function () {
 // Functions - change input
 //////////////////////////////
 
+Scene_Battle.prototype.changeInputWindow = function () {
+    if (BattleManager.isInputting()) {
+        this._logWindow.opacity = 0;
+        if (BattleManager.actor()) {
+            this.startActorCommandSelection();
+        } else {
+            this.startPartyCommandSelection();
+        }
+    } else {
+        this.endCommandSelection();
+    }
+};
+
 Scene_Battle.prototype.startPartyCommandSelection = function () {
     this.refreshStatus();
     this._actorCommandWindow.close();

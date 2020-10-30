@@ -57,3 +57,22 @@ BattleManager.refreshStatus = function () {
         statusWindow.refresh();
     });
 };
+
+BattleManager.updateTurn = function () {
+    $gameParty.requestMotionRefresh();
+    if (!this._subject) {
+        this._subject = this.getNextSubject();
+    }
+    if (this._subject) {
+        this._logWindow.opacity = 255;
+        this.processTurn();
+    } else {
+        this.endTurn();
+    }
+};
+
+DQEng.Battle_Manager = BattleManager.updateBattleEnd;
+BattleManager.updateBattleEnd = function () {
+    this._logWindow.opacity = 0;
+    DQEng.Battle_Manager.call(this);
+};

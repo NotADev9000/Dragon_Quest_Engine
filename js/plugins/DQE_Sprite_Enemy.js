@@ -28,6 +28,11 @@ DQEng.Sprite_Enemy = DQEng.Sprite_Enemy || {};
 // Sprite_Enemy
 //-----------------------------------------------------------------------------
 
+Sprite_Enemy.prototype.startInstantCollapse = function () {
+    this._effectDuration = 1;
+    this._appeared = false;
+};
+
 Sprite_Enemy.prototype.damageOffsetY = function () {
     return -(this.height + 15);
 };
