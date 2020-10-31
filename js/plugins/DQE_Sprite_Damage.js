@@ -31,6 +31,7 @@ DQEng.Sprite_Damage = DQEng.Sprite_Damage || {};
 DQEng.Sprite_Damage.initialize = Sprite_Damage.prototype.initialize;
 Sprite_Damage.prototype.initialize = function () {
     DQEng.Sprite_Damage.initialize.call(this);
+    this._duration = 101;
     this._width = 0;
 };
 
@@ -54,7 +55,8 @@ Sprite_Damage.prototype.createMiss = function () {
     var h = this.digitHeight();
     var sprite = this.createChildSprite();
     sprite.setFrame(0, 5 * h, 4 * w, h);
-    sprite.dy = 0;
+    sprite.ry = 0;
+    sprite.moveState = 0;
     this._width = w * 4;
 };
 
@@ -68,7 +70,50 @@ Sprite_Damage.prototype.createDigits = function (baseRow, value, critical) {
         var n = Number(string[i]);
         sprite.setFrame(n * w, row * h, w, h);
         sprite.x = (i - (string.length - 1) / 2) * w;
-        sprite.dy = -i;
+        sprite.ry = sprite.y + (i*6);
+        sprite.moveState = 0;
     }
     this._width = string.length * w;
+};
+
+Sprite_Damage.prototype.createChildSprite = function() {
+    var sprite = new Sprite();
+    sprite.bitmap = this._damageBitmap;
+    sprite.anchor.x = 0.5;
+    sprite.anchor.y = 1;
+    sprite.y = 6;
+    this.addChild(sprite);
+    return sprite;
+};
+
+Sprite_Damage.prototype.updateChild = function (sprite) {
+    switch (sprite.moveState) {
+        case 0:
+            sprite.ry -= 3;
+            if (sprite.ry <= -27) sprite.moveState = 1;
+            break;
+        case 1:
+            sprite.ry += 2;
+            if (sprite.ry >= 0) sprite.moveState = 2;
+            break;
+        case 2:
+            sprite.ry -= 2;
+            if (sprite.ry <= -12) sprite.moveState = 3;
+            break;
+        case 3:
+            sprite.ry += 1;
+            if (sprite.ry >= 0) sprite.moveState = 4;
+            break;
+    }
+    sprite.y = Math.round(sprite.ry);
+    sprite.setBlendColor(this._flashColor);
+};
+
+Sprite_Damage.prototype.updateOpacity = function () {
+    var deleteAt = 20; // at what duration should the numbers start dissapearing
+    for (var i = 0; i < this.children.length; i++) {
+        if (deleteAt - (i*5) >= this._duration) {
+            this.children[i].opacity = 0;
+        }
+    }
 };
