@@ -36,7 +36,7 @@ Scene_Map.prototype.launchBattle = function () {
     this.snapForBattleBackground();
     BattleManager.saveBgmAndBgs();
     this.stopAudioOnBattleStart();
-    SoundManager.playBattleStart();
+    BattleManager.playBattleBgm();
     this.startEncounterEffect();
     this._mapNameWindow.hide();
 };
@@ -62,7 +62,6 @@ Scene_Map.prototype.updateEncounterEffect = function () {
             this.startFlashForEncounter(speed / 2);
         }
         if (n === Math.floor(speed / 2)) {
-            BattleManager.playBattleBgm();
             this.startFadeOut(this.fadeSpeed());
         }
     }

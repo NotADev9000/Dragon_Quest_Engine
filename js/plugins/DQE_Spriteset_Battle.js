@@ -41,3 +41,7 @@ Spriteset_Battle.prototype.locateBattleback = function () {
     var y = (Graphics.boxHeight - height) / 2;
     this._back1Sprite.move(x, y);
 };
+
+Spriteset_Battle.prototype.defaultBattleback1Name = function () {
+    return 'Grassland_DQ3';
+};
