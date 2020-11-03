@@ -1,0 +1,5 @@
+DQMV - Audio Loop Tags:
+
+DQ6 - Courageous Fight
+LOOPSTART	95047
+LOOPLENGTH	2313388
