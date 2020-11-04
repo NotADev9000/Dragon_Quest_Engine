@@ -153,10 +153,13 @@ Window_BattleLog.prototype.drawLineText = function (index) {
 
 Window_BattleLog.prototype.startAction = function (subject, action, targets) {
     var item = action.item();
+    var isEnemyUser = subject.enemyId;
+    var animationId = isEnemyUser ? item.meta.enemyAnimId : item.animationId;
+    var animTargets = isEnemyUser ? [subject] : targets.clone();
     this.push('performActionStart', subject, action);
     this.push('waitForMovement');
     this.push('performAction', subject, action);
-    this.push('showAnimation', subject, targets.clone(), item.animationId, item.stypeId);
+    this.push('showAnimation', subject, animTargets, animationId, item.stypeId);
     this.displayAction(subject, item);
 };
 
