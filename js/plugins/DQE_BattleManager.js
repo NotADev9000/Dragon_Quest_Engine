@@ -78,7 +78,7 @@ BattleManager.startAction = function () {
     this._phase = 'action';
     this._action = action;
     this._targets = targets;
-    subject.useItem(action.item(), action._modifiedItem);
+    subject.useItem(action.item(), action._modifiedItem, action._itemIndex);
     this._action.applyGlobal();
     this.refreshStatus();
     this._logWindow.startAction(subject, action, targets);

@@ -28,11 +28,15 @@ DQEng.Game_Battler = DQEng.Game_Battler || {};
 // Game_Battler
 //-----------------------------------------------------------------------------
 
-Game_Battler.prototype.useItem = function (item, modifier) {
+Game_Battler.prototype.useItem = function (item, modifiedSkill, itemIndex = -1) {
     if (DataManager.isSkill(item)) {
-        var skill = modifier ? modifier : item;
+        var skill = modifiedSkill ? modifiedSkill : item;
         this.paySkillCost(skill);
     } else if (DataManager.isItem(item)) {
-        this.consumeItem(item);
+        if (itemIndex !== -1) {
+            this.consumeActorItem(itemIndex);
+        } else {
+            this.consumeItem(item); // consume item from bag
+        }
     }
 };

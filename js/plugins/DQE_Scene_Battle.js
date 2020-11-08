@@ -323,7 +323,7 @@ Scene_Battle.prototype.onSkillCancel = function () {
 Scene_Battle.prototype.onItemOk = function () {
     var item = this._itemWindow.item();
     var action = BattleManager.inputtingAction();
-    action.setItem(item);
+    action.setItem(item, this._itemWindow.index());
     $gameParty.setLastItem(item);
     this.onSelectAction();
 };

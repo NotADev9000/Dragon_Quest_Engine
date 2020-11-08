@@ -40,6 +40,7 @@ DQEng.Game_Action.clear = Game_Action.prototype.clear;
 Game_Action.prototype.clear = function () {
     DQEng.Game_Action.clear.call(this);
     this._modifiedItem = null;
+    this._itemIndex = -1; // index of item needs to be known when selecting from actor inventory
 };
 
 /**
@@ -47,7 +48,7 @@ Game_Action.prototype.clear = function () {
  * checks the meta skillId property for a skill an item should use
  * if there isn't a skillId and the item doesn't do anything a nothing skill is used
  */
-Game_Action.prototype.setItem = function (item) {
+Game_Action.prototype.setItem = function (item, itemIndex) {
     var invokedSkill;
     if (item.meta.skillId) {
         invokedSkill = $dataSkills[item.meta.skillId];
@@ -62,6 +63,7 @@ Game_Action.prototype.setItem = function (item) {
         invokedSkill = item;
     }
     this._item.setObject(invokedSkill);
+    this._itemIndex = itemIndex;
 };
 
 Game_Action.prototype.applyGlobal = function () {

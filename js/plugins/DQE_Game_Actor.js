@@ -150,6 +150,17 @@ Game_Actor.prototype.indexIsEquip = function (index) {
 // Functions - item movement
 //////////////////////////////
 
+/**
+ * Removes item at index if it is a consumable
+ * 
+ * @param {number} index 
+ */
+Game_Actor.prototype.consumeActorItem = function (index) {
+    if (this.item(index).consumable) {
+        this.removeItemAtIndex(index);
+    }
+};
+
 Game_Actor.prototype.changeEquip = function (slotId, item) {
     if (this.tradeItemWithParty(item, this.equips()[slotId]) &&
         (!item || this.equipSlots()[slotId] === item.etypeId)) {

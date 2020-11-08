@@ -1,6 +1,6 @@
 /* TODO list in any order
 *
-* . Use items properly in battle and menu
+* . Use items in menu
 * . Remove pressing enter to speed through text
 * . Change equipment in battle
 * . Equipment menu
@@ -20,7 +20,6 @@
 * . Skill tree system
 * . Shop system
 * . Bank system
-* . Use items in battle (remove one time uses from inventory)
 * . States/Elements/Skills/Abilities
 * . Battle formulas (crit, evasion...)
 * . Battleback match terrain
