@@ -71,6 +71,19 @@ BattleManager.updateTurn = function () {
     }
 };
 
+BattleManager.startAction = function () {
+    var subject = this._subject;
+    var action = subject.currentAction();
+    var targets = action.makeTargets();
+    this._phase = 'action';
+    this._action = action;
+    this._targets = targets;
+    subject.useItem(action.item(), action._modifiedItem);
+    this._action.applyGlobal();
+    this.refreshStatus();
+    this._logWindow.startAction(subject, action, targets);
+};
+
 DQEng.Battle_Manager = BattleManager.updateBattleEnd;
 BattleManager.updateBattleEnd = function () {
     this._logWindow.opacity = 0;

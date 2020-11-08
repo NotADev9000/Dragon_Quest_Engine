@@ -8,9 +8,10 @@
 * . Magic menu
 * . Save/Load menu
 * . Option menu
-* . Misc menu (heal all, settings, current objective...)
+* . Misc menu (heal all, line-up, settings, current objective...)
+* . Miss sfx when player evades a moves/takes no damage
 * . Battle Line-up
-* . Battle Misc
+* . Battle Misc (battle text speed...)
 * . Death in battle plays whole of gameover music before stopping
 * . Death doesn't cause gameover but leads to last church used and losing half your gold
 * . Targeting groups in battle
@@ -19,10 +20,10 @@
 * . Skill tree system
 * . Shop system
 * . Bank system
-* . Use equipment as item in battle
-* . Use unsuable equipment as item in battle (just displays a 'but it did nothing' message)
+* . Use items in battle (remove one time uses from inventory)
 * . States/Elements/Skills/Abilities
 * . Battle formulas (crit, evasion...)
 * . Battleback match terrain
 * . Level up sfx
+* . Implement animation shake
 */

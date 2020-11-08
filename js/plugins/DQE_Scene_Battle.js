@@ -320,6 +320,14 @@ Scene_Battle.prototype.onSkillCancel = function () {
     this.showEnemyWindow(1, Window_BattleEnemy.STATE_GROUP);
 };
 
+Scene_Battle.prototype.onItemOk = function () {
+    var item = this._itemWindow.item();
+    var action = BattleManager.inputtingAction();
+    action.setItem(item);
+    $gameParty.setLastItem(item);
+    this.onSelectAction();
+};
+
 Scene_Battle.prototype.onItemCancel = function () {
     this._itemWindow.hide();
     this._actorCommandWindow.show();

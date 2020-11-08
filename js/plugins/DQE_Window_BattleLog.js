@@ -98,7 +98,7 @@ Window_BattleLog.prototype.showActorAttackAnimation = function (subject, targets
 };
 
 Window_BattleLog.prototype.showEnemyAttackAnimation = function (subject, targets) {
-    this.playActSound(subject);
+    this.playActSound(subject, 0, 1);
 };
 
 Window_BattleLog.prototype.showNormalAnimation = function (targets, animationId, mirror, subject, stypeId) {
@@ -121,7 +121,7 @@ Window_BattleLog.prototype.showCriticalAnimation = function (targets, animationI
 /**
  * Plays the sound effect before a move is used
  */
-Window_BattleLog.prototype.playActSound = function (subject, stypeId = 0, animId = 1) {
+Window_BattleLog.prototype.playActSound = function (subject, stypeId = 0, animId = 0) {
     if (animId != 0 && stypeId >= 0) { // no act sound if there is no animation or skill type
         if (stypeId === 2) { // magic
             SoundManager.playUseSkill();
@@ -136,9 +136,10 @@ Window_BattleLog.prototype.playActSound = function (subject, stypeId = 0, animId
 Window_BattleLog.prototype.animationBaseDelay = function (stypeId = 0) {
     if (stypeId === 2) { // magic
         return 24;
-    } else {
-        return 10;
+    } else if (stypeId === -1) { // item that invokes skill
+        return 20;
     }
+    return 10;
 };
 
 Window_BattleLog.prototype.animationNextDelay = function () {
@@ -153,14 +154,35 @@ Window_BattleLog.prototype.drawLineText = function (index) {
 
 Window_BattleLog.prototype.startAction = function (subject, action, targets) {
     var item = action.item();
+    var skillType = action._modifiedItem ? -1 : item.stypeId;
     var isEnemyUser = subject.enemyId;
     var animationId = isEnemyUser ? item.meta.enemyAnimId : item.animationId;
     var animTargets = isEnemyUser ? [subject] : targets.clone();
     this.push('performActionStart', subject, action);
     this.push('waitForMovement');
     this.push('performAction', subject, action);
-    this.push('showAnimation', subject, animTargets, animationId, item.stypeId);
-    this.displayAction(subject, item);
+    this.push('showAnimation', subject, animTargets, animationId, skillType);
+    this.displayAction(subject, item, action._modifiedItem);
+};
+
+Window_BattleLog.prototype.displayAction = function (subject, item, modifiedItem) {
+    var numMethods = this._methods.length;
+    if (DataManager.isSkill(item)) {
+        var name = modifiedItem && modifiedItem.name ? modifiedItem.name : item.name;
+        var msg1 = modifiedItem && modifiedItem.message1 ? modifiedItem.message1 : item.message1;
+        var msg2 = modifiedItem && modifiedItem.message2 ? modifiedItem.message2 : item.message2;
+        if (msg1) {
+            this.push('addText', subject.name() + msg1.format(name));
+        }
+        if (msg2) {
+            this.push('addText', msg2.format(name));
+        }
+    } else {
+        this.push('addText', TextManager.useItem.format(subject.name(), item.name));
+    }
+    if (this._methods.length === numMethods) {
+        this.push('wait');
+    }
 };
 
 Window_BattleLog.prototype.displayActionResults = function (subject, target) {
