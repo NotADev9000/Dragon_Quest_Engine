@@ -6,7 +6,7 @@
 /*:
 *
 * @author NotADev
-* @plugindesc The The game object class for the actor base - V0.1
+* @plugindesc The superclass of Game_Battler. It mainly contains parameters calculation. - V0.1
 *
 *
 * @help

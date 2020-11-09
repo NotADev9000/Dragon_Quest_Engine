@@ -39,8 +39,17 @@ DQEng.Parameters.Game_Action.nothingHappensSkillId = Number(parameters["Nothing 
 DQEng.Game_Action.clear = Game_Action.prototype.clear;
 Game_Action.prototype.clear = function () {
     DQEng.Game_Action.clear.call(this);
-    this._modifiedItem = null;
+    this.clearModifiedItem();
     this._itemIndex = -1; // index of item needs to be known when selecting from actor inventory
+};
+
+Game_Action.prototype.clearModifiedItem = function () {
+    this._modifiedItem = null;
+};
+
+Game_Action.prototype.setSkill = function (skillId) {
+    this.clearModifiedItem();
+    this._item.setObject($dataSkills[skillId]);
 };
 
 /**
@@ -49,6 +58,7 @@ Game_Action.prototype.clear = function () {
  * if there isn't a skillId and the item doesn't do anything a nothing skill is used
  */
 Game_Action.prototype.setItem = function (item, itemIndex) {
+    this.clearModifiedItem();
     var invokedSkill;
     if (item.meta.skillId) {
         invokedSkill = $dataSkills[item.meta.skillId];
