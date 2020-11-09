@@ -273,7 +273,8 @@ Scene_Battle.prototype.onActorCancel = function () {
 
 Scene_Battle.prototype.onEnemyOk = function () {
     var action = BattleManager.inputtingAction();
-    action.setTarget(this._enemyWindow.enemyIndex());
+    var targetIndex = action.isForGroup() ? this._enemyWindow.groupIndex() : this._enemyWindow.enemyIndex();
+    action.setTarget(targetIndex);
     this._enemyWindow.hide();
     this._enemyWindow.deselect();
     this._enemyWindow.setState(Window_BattleEnemy.STATE_GROUP);
@@ -397,16 +398,17 @@ Scene_Battle.prototype.onSelectAction = function () {
         this._itemWindow.hide();
         this.selectNextCommand();
     } else if (action.isForOpponent()) {
+        let enemyWindowState = action.isForGroup() ? Window_BattleEnemy.STATE_GROUP : Window_BattleEnemy.STATE_SINGLE;
         switch (this._actorCommandWindow.currentSymbol()) {
             case 'Skill':
                 this._skillHelpWindow.showBackgroundDimmer();
                 this._skillWindow.showBackgroundDimmer();
-                this.selectEnemySelection(2, Window_BattleEnemy.STATE_SINGLE);
+                this.selectEnemySelection(2, enemyWindowState);
                 break;
             case 'Item':
                 this._itemHelpWindow.showBackgroundDimmer();
                 this._itemWindow.showBackgroundDimmer();
-                this.selectEnemySelection(3, Window_BattleEnemy.STATE_SINGLE);
+                this.selectEnemySelection(3, enemyWindowState);
                 break;
         }
     } else {

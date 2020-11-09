@@ -70,6 +70,19 @@ Window_BattleEnemy.prototype.maxItems = function () {
     }
 };
 
+Window_BattleEnemy.prototype.group = function () {
+    return this._groups[this.index()];
+};
+
+Window_BattleEnemy.prototype.enemiesInGroup = function () {
+    var group = this.group();
+    return group ? group.enemies : undefined;
+};
+
+Window_BattleEnemy.prototype.groupIndex = function () {
+    return this._groups[this.index()].troopIndex;
+};
+
 Window_BattleEnemy.prototype.drawItem = function (index) {
     this.resetTextColor();
     var rect = this.itemRectForText(index);
@@ -101,4 +114,10 @@ Window_BattleEnemy.prototype.refresh = function () {
     this._enemies = $gameTroop.aliveMembers();
     this._groups = $gameTroop.aliveAllGroups();
     Window_Selectable.prototype.refresh.call(this);
+};
+
+Window_BattleEnemy.prototype.select = function (index) {
+    Window_Selectable.prototype.select.call(this, index);
+    var enemies = this._state === Window_BattleEnemy.STATE_GROUP ? this.enemiesInGroup() : [this.enemy()];
+    $gameTroop.select(enemies);
 };

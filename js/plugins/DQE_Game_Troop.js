@@ -56,6 +56,10 @@ Game_Troop.prototype.groups = function () {
     return this._groups;
 };
 
+Game_Troop.prototype.group = function (index) {
+    return this._groups[index];
+};
+
 DQEng.Game_Troop.clear = Game_Troop.prototype.clear;
 Game_Troop.prototype.clear = function () {
     DQEng.Game_Troop.clear.call(this);
@@ -105,7 +109,7 @@ Game_Troop.prototype.autoCreateEnemyGroups = function () {
                     return false;
                 }, this)) {
                 // if none of the groups matched this enemy, add it to a new group
-                this._groups.push({ name: name, enemies: [enemy] });
+                this._groups.push({ name: name, enemies: [enemy], troopIndex: this._groups.length });
             }
         }
     }, this);
@@ -128,7 +132,7 @@ Game_Troop.prototype.aliveAllGroups = function () {
 
 /**
  * Returns a group of enemies with only the alive members
- * Will still returns an object if there are no alive enemies
+ * Will still return an object if there are no alive enemies
  * @param {Object} group 
  */
 Game_Troop.prototype.aliveGroup = function (group) {

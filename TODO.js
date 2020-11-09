@@ -14,7 +14,6 @@
 * . Battle Misc (battle text speed...)
 * . Death in battle plays whole of gameover music before stopping
 * . Death doesn't cause gameover but leads to last church used and losing half your gold
-* . Targeting groups in battle
 * . Actor stats
 * . Quest system
 * . Skill tree system

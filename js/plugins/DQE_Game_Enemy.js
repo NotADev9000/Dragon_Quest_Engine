@@ -6,7 +6,7 @@
 /*:
 *
 * @author NotADev
-* @plugindesc The The game object class for the enemy - V0.1
+* @plugindesc The game object class for the enemy - V0.1
 *
 *
 * @help

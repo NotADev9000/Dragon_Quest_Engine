@@ -66,10 +66,40 @@ Game_Action.prototype.setItem = function (item, itemIndex) {
     this._itemIndex = itemIndex;
 };
 
-Game_Action.prototype.applyGlobal = function () {
-    this.item().effects && this.item().effects.forEach(function (effect) {
-        if (effect.code === Game_Action.EFFECT_COMMON_EVENT) {
-            $gameTemp.reserveCommonEvent(effect.dataId);
+Game_Action.prototype.checkItemScope = function (list) {
+    var scope = this.item().meta.scope ? Number(this.item().meta.scope) : this.item().scope;
+    return list.contains(scope);
+};
+
+Game_Action.prototype.isForOpponent = function () {
+    return this.checkItemScope([1, 2, 3, 4, 5, 6, 12]);
+};
+
+Game_Action.prototype.isForGroup = function () {
+    return this.checkItemScope([12]);
+};
+
+Game_Action.prototype.needsSelection = function () {
+    return this.checkItemScope([1, 7, 9, 12]);
+};
+
+Game_Action.prototype.targetsForOpponents = function () {
+    var targets = [];
+    var unit = this.opponentsUnit();
+    if (this.isForRandom()) {
+        for (var i = 0; i < this.numTargets(); i++) {
+            targets.push(unit.randomTarget());
         }
-    }, this);
+    } else if (this.isForOne()) {
+        if (this._targetIndex < 0) {
+            targets.push(unit.randomTarget());
+        } else {
+            targets.push(unit.smoothTarget(this._targetIndex));
+        }
+    } else if (this.isForGroup()) { 
+        targets = unit.aliveGroup(unit.group(this._targetIndex)).enemies;
+    } else {
+        targets = unit.aliveMembers();
+    }
+    return targets;
 };
