@@ -161,13 +161,15 @@ Scene_Item.prototype.onItemCancel = function () {
 };
 
 Scene_Item.prototype.onDoWhatUse = function () {
-    if (this.canUse()) {
+    if (!this.canUse()) {
+        this.displayMessage('This item cannot be used.', Scene_Item.prototype.doWhatUseMessage);
+    } else if (this.action().isForAll()) {
+        this.startItemUse(true);
+    } else {
         this._doWhatWindow.showBackgroundDimmer();
         this._useOnWhoWindow.select(0);
         this._useOnWhoWindow.show();
         this._useOnWhoWindow.activate();
-    } else {
-        this.displayMessage('This item cannot be used.', Scene_Item.prototype.doWhatUseMessage);
     }
 };
 
@@ -214,15 +216,18 @@ Scene_Item.prototype.onDoWhatCancel = function () {
 };
 
 Scene_Item.prototype.onUseOnWhoOk = function () {
+    this.startItemUse();
+};
+
+Scene_Item.prototype.startItemUse = function (forAll = false) {
     var inBagInventory = this.inBag(this._commandWindow); // is the player looking in one of the three bag spaces?
-    var useOnActor = $gameParty.members()[this._useOnWhoWindow.currentSymbol()]; // who the item will be used on
     if (inBagInventory) {
         var takeFrom = this.user();
         var useByActor = takeFrom;
         var itemIndex = -1;
         var item = this.item();
     } else {
-        var takeFrom = $gameParty.members()[this._commandWindow.currentSymbol()]; 
+        var takeFrom = $gameParty.members()[this._commandWindow.currentSymbol()];
         var useByActor = this.user();
         var itemIndex = this._itemWindow.index();
         var item = takeFrom.item(itemIndex);
@@ -233,10 +238,13 @@ Scene_Item.prototype.onUseOnWhoOk = function () {
         $gameMessage.add(useByActor.itemUsedMessage(item));
         this.applyItem();
         this.displayItemResultMessages(Scene_Item.prototype);
+    } else if (forAll) {
+        this.displayMessage(useByActor.triedToUseAllMessage(item), Scene_Item.prototype.triedToUseMessage);
     } else {
+        let useOnActor = $gameParty.members()[this._useOnWhoWindow.currentSymbol()];
         this.displayMessage(useByActor.triedToUseMessage(item, useOnActor), Scene_Item.prototype.triedToUseMessage);
     }
-};
+}
 
 Scene_Item.prototype.onUseOnWhoCancel = function () {
     this._doWhatWindow.hideBackgroundDimmer();

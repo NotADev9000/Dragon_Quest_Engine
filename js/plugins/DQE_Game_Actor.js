@@ -305,6 +305,11 @@ Game_Actor.prototype.triedToUseMessage = function (item, target) {
     return `${this._name} tried to use the ${item.name}.\\!\nBut it had no effect on ${target.name()}.`;
 };
 
+// for items that target the whole party
+Game_Actor.prototype.triedToUseAllMessage = function (item, target) {
+    return `${this._name} tried to use the ${item.name}.\\!\nBut it had no effect.`;
+};
+
 Game_Actor.prototype.giveItemToBagMessage = function (index) {
     return `${this._name} placed the ${this.item(index).name} in the bag.`;
 };

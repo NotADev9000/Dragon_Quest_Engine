@@ -7,7 +7,7 @@
 * . Magic menu
 * . Save/Load menu
 * . Option menu
-* . Misc menu (heal all, line-up, settings, current objective...)
+* . Misc menu (heal all, line-up, settings, current objective, battle music...)
 * . Miss sfx when player evades a moves/takes no damage
 * . Battle Line-up
 * . Battle Misc (battle text speed...)
