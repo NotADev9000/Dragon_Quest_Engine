@@ -33,7 +33,7 @@ Game_Battler.prototype.useItem = function (item, modifiedSkill, itemIndex = -1) 
         var skill = modifiedSkill ? modifiedSkill : item;
         this.paySkillCost(skill);
     } else if (DataManager.isItem(item)) {
-        if (itemIndex !== -1) {
+        if (itemIndex >= 0) {
             this.consumeActorItem(itemIndex);
         } else {
             this.consumeItem(item); // consume item from bag

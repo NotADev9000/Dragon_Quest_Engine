@@ -44,17 +44,20 @@ Scene_Base.prototype.initialize = function () {
 Scene_Base.prototype.displayMessage = function (message, callback) {
     $gameMessage.add(message);
     this._activeMessage = callback;
-}
+};
 
 /**
  * Runs callback function after a message has been closed
  */
 Scene_Base.prototype.manageMessageCallback = function () {
     if (this._activeMessage) {
+        let msg = this._activeMessage; // stored here so it can be checked if the active message changed
         this._activeMessage.call(this);
-        this._activeMessage = null;
+        if (msg === this._activeMessage) {
+            this._activeMessage = null;
+        }
     }
-}
+};
 
 /**
  * If a message window has finished closing, manage the callbacks

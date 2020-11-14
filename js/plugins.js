@@ -26,6 +26,7 @@ var $plugins =
 {"name":"DQE_Scene_Base","status":true,"description":"The scene base for menus - V0.1","parameters":{}},
 {"name":"DQE_Scene_Map","status":true,"description":"The scene for the map - V0.1","parameters":{}},
 {"name":"DQE_Scene_Menu","status":true,"description":"The scene for the main menu - V0.1","parameters":{}},
+{"name":"DQE_Scene_ItemBase","status":true,"description":"The superclass of Scene_Item and Scene_Skill - V0.1","parameters":{}},
 {"name":"DQE_Scene_Item","status":true,"description":"The scene for the item menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_Battle","status":true,"description":"The scene for the battle - V0.1","parameters":{}},
 {"name":"DQE_Spriteset_Battle","status":true,"description":"The sprites used in a battle - V0.1","parameters":{}},

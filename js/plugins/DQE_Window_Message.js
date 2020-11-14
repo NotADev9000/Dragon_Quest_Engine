@@ -141,3 +141,16 @@ Window_Message.prototype.calcTextHeight = function (textState, all) {
 Window_Message.prototype.normalColor = function () {
     return this.textColor(1);
 };
+
+DQEng.Window_Message = Window_Message.prototype.processEscapeCharacter;
+Window_Message.prototype.processEscapeCharacter = function (code, textState) {
+    switch (code) {
+        case 'SYSX':
+            SoundManager.playSystemSound(this.obtainEscapeParam(textState));
+            break;
+        case 'SFX':
+            SoundManager.playSoundByName(this.obtainEscapeParamString(textState));
+            break;
+    }
+    DQEng.Window_Message.call(this, code, textState);
+};

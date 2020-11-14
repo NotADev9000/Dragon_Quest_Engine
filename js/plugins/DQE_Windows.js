@@ -222,6 +222,16 @@ Window_Base.prototype.dimColor1 = function () {
     return 'rgba(0, 0, 0, 0.5)';
 };
 
+Window_Base.prototype.obtainEscapeParamString = function (textState) {
+    var arr = /^\[\w+\]/.exec(textState.text.slice(textState.index));
+    if (arr) {
+        textState.index += arr[0].length;
+        return arr[0].slice(1, -1);
+    } else {
+        return '';
+    }
+};
+
 //-----------------------------------------------------------------------------
 // Window_Selectable
 //-----------------------------------------------------------------------------

@@ -10,7 +10,6 @@
 * TODO: Equipment Details window when cursor is on an equipment piece
 * TODO: Filter and Sort options
 * TODO: Use items + use detail window
-* TODO: Ask if equipment piece should be equipped when transferring to actor
 *
 * @help
 * N/A
@@ -26,21 +25,6 @@ Imported.DQEng_Scene_Item = true;
 
 var DQEng = DQEng || {};
 DQEng.Scene_Item = DQEng.Scene_Item || {};
-
-//-----------------------------------------------------------------------------
-// Scene_ItemBase
-//-----------------------------------------------------------------------------
-
-/**
- * Returns false if item is not useable in menu
- */
-Scene_ItemBase.prototype.canUse = function () {
-    var user = this.user();
-    if (user) {
-        return user.canUse(this.item());
-    }
-    return false;
-};
 
 //-----------------------------------------------------------------------------
 // Scene_Item
@@ -102,10 +86,11 @@ Scene_Item.prototype.createDoWhatWindow = function () {
 Scene_Item.prototype.createUseOnWhoWindow = function () {
     this._useOnWhoWindow = new Window_TitledPartyCommand(24, 48, 354, 'On Who?');
     this._useOnWhoWindow.deactivate();
+    this._useOnWhoWindow.setHandler('ok', this.onUseOnWhoOk.bind(this));
     this._useOnWhoWindow.setHandler('cancel', this.onUseOnWhoCancel.bind(this));
     this._useOnWhoWindow.hide();
     this.addWindow(this._useOnWhoWindow);
-}
+};
 
 Scene_Item.prototype.createTransferToWhoWindow = function () {
     this._transferToWhoWindow = new Window_TitledPartyCommand(24, 48, 354, 'To Who?');
@@ -114,7 +99,7 @@ Scene_Item.prototype.createTransferToWhoWindow = function () {
     this._transferToWhoWindow.setHandler('cancel', this.onTransferToWhoCancel.bind(this));
     this._transferToWhoWindow.hide();
     this.addWindow(this._transferToWhoWindow);
-}
+};
 
 Scene_Item.prototype.createTransferItemWindow = function () {
     mainItemWin = this._itemWindow;
@@ -228,6 +213,31 @@ Scene_Item.prototype.onDoWhatCancel = function () {
     this._itemWindow.activate();
 };
 
+Scene_Item.prototype.onUseOnWhoOk = function () {
+    var inBagInventory = this.inBag(this._commandWindow); // is the player looking in one of the three bag spaces?
+    var useOnActor = $gameParty.members()[this._useOnWhoWindow.currentSymbol()]; // who the item will be used on
+    if (inBagInventory) {
+        var takeFrom = this.user();
+        var useByActor = takeFrom;
+        var itemIndex = -1;
+        var item = this.item();
+    } else {
+        var takeFrom = $gameParty.members()[this._commandWindow.currentSymbol()]; 
+        var useByActor = this.user();
+        var itemIndex = this._itemWindow.index();
+        var item = takeFrom.item(itemIndex);
+    }
+
+    if (this.isItemEffectsValid()) {
+        takeFrom.useItem(item, null, itemIndex);
+        $gameMessage.add(useByActor.itemUsedMessage(item));
+        this.applyItem();
+        this.displayItemResultMessages(Scene_Item.prototype);
+    } else {
+        this.displayMessage(useByActor.triedToUseMessage(item, useOnActor), Scene_Item.prototype.triedToUseMessage);
+    }
+};
+
 Scene_Item.prototype.onUseOnWhoCancel = function () {
     this._doWhatWindow.hideBackgroundDimmer();
     this._useOnWhoWindow.hide();
@@ -262,7 +272,7 @@ Scene_Item.prototype.onTransferToWhoOk = function () {
         this._howManyWindow.setup(1, Math.min(giveActor.spaceLeft(), itemAmount));
         this._howManyWindow.show();
         this._howManyWindow.activate();
-    } else { // transferring to actor with inventory space
+    } else { // transferring from actor to actor with inventory space
         this.displayMessage(takeFrom.giveItemToActorMessage(item, giveActor), Scene_Item.prototype.transferredMessage);
         takeFrom.giveItemToActor(item, giveActor);
     }
@@ -353,7 +363,7 @@ Scene_Item.prototype.manageTransferToWhoCommands = function () {
  */
 Scene_Item.prototype.doWhatUseMessage = function () {
     this._doWhatWindow.activate();
-}
+};
 
 Scene_Item.prototype.doWhatEquipMessage = function () {
     this._doWhatWindow.hide();
@@ -361,7 +371,31 @@ Scene_Item.prototype.doWhatEquipMessage = function () {
     this._helpWindow.hideBackgroundDimmer();
     this._itemWindow.refresh();
     this._itemWindow.activate();
-}
+};
+
+Scene_Item.prototype.itemUsedMessage = function () {
+    this.applyItem();
+    this.displayItemResultMessages(Scene_Item.prototype);
+};
+
+Scene_Item.prototype.actionResolvedMessage = function () {
+    this.checkCommonEvent();
+    this.checkGameover();
+    this._useOnWhoWindow.hide();
+    this._itemWindow.hideBackgroundDimmer();
+    this._helpWindow.hideBackgroundDimmer();
+    this._doWhatWindow.hideBackgroundDimmer();
+    this._doWhatWindow.hide();
+    this._itemWindow.refresh();
+    this._itemWindow.activate();
+};
+
+/**
+ * Used an item which failed
+ */
+Scene_Item.prototype.triedToUseMessage = function () {
+    this._useOnWhoWindow.activate();
+};
 
 Scene_Item.prototype.transferredMessage = function () {
     this._howManyWindow.hide();
@@ -383,17 +417,26 @@ Scene_Item.prototype.transferredMessage = function () {
         this._itemWindow.deselect();
         this._commandWindow.activate();
     }
-}
+};
 
 Scene_Item.prototype.transferFullMessage = function () {
     this._transferToWhoWindow.showBackgroundDimmer();
     this._transferItemWindow.activate();
     this._transferItemWindow.select(this._transferItemWindow._lastSelected);
-}
+};
 
 //////////////////////////////
 // Functions - misc.
 //////////////////////////////
+
+Scene_Item.prototype.user = function () {
+    if (this.inBag(this._commandWindow)) {
+        return $gameParty.movableMembers()[0];
+    } else {
+        let itemUser = $gameParty.members()[this._commandWindow.currentSymbol()];
+        return itemUser.canMove() ? itemUser : $gameParty.movableMembers()[0];
+    }
+};
 
 /**
  * Returns true if player is selecting

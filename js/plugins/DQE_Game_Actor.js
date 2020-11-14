@@ -44,7 +44,7 @@ DQEng.Game_Actor.initMembers = Game_Actor.prototype.initMembers;
 Game_Actor.prototype.initMembers = function () {
     DQEng.Game_Actor.initMembers.call(this);
     this._items = [];
-}
+};
 
 /**
  * Added items to setup
@@ -131,11 +131,11 @@ Game_Actor.prototype.hasItem = function (item) {
  */
 Game_Actor.prototype.spaceLeft = function () {
     return this.maxItems() - this.numItems();
-}
+};
 
 Game_Actor.prototype.isSlotEquipped = function (slotId) {
     return this.equips()[slotId];
-}
+};
 
 /**
  * Is the item at given index an equipped item?
@@ -187,7 +187,7 @@ Game_Actor.prototype.equipItemFromInv = function (index) {
     this.resetCarriedEquips();
     this._equips[slotId].setObject(item);
     this._items = this.initCarriedEquips().concat(this._items);
-}
+};
 
 /**
  * Unequips an item.
@@ -204,7 +204,7 @@ Game_Actor.prototype.unequipItem = function (index, keep = true) {
     if (keep) {
         this.giveItems(item, 1);
     }
-}
+};
 
 /**
  * Removes item at given index
@@ -243,17 +243,17 @@ Game_Actor.prototype.giveItems = function (item, amount, index) {
         this.refresh();
     }
     return amount;
-}
+};
 
 Game_Actor.prototype.giveItemToBag = function (index) {
     $gameParty.gainItem(this.item(index), 1);
     this.removeItemAtIndex(index);
-}
+};
 
 Game_Actor.prototype.giveItemToActor = function (index, actor) {
     actor.giveItems(this.item(index), 1);
     this.removeItemAtIndex(index);
-}
+};
 
 /**
  * Trades an item with the bag
@@ -272,7 +272,7 @@ Game_Actor.prototype.tradeItemWithBag = function (index, item) {
         $gameParty.giveItemToActor(item, this, index);
     }
     $gameParty.gainItem(removedItem, 1);
-}
+};
 
 /**
  * Trades an item with another actor
@@ -291,40 +291,48 @@ Game_Actor.prototype.tradeItemWithActor = function (index, actorIndex, actor) {
     actor.removeItemAtIndex(actorIndex);
     this.giveItems(actorItem, 1, newPos);
     actor.giveItems(item, 1, actorNewPos);
-}
+};
 
 //////////////////////////////
 // Functions - messages
 //////////////////////////////
 
+Game_Actor.prototype.itemUsedMessage = function (item) {
+    return `${this._name} used the ${item.name}.`;
+};
+
+Game_Actor.prototype.triedToUseMessage = function (item, target) {
+    return `${this._name} tried to use the ${item.name}.\\!\nBut it had no effect on ${target.name()}.`;
+};
+
 Game_Actor.prototype.giveItemToBagMessage = function (index) {
     return `${this._name} placed the ${this.item(index).name} in the bag.`;
-}
+};
 
 Game_Actor.prototype.giveItemToActorMessage = function (index, actor) {
     return `${this._name} handed the ${this.item(index).name} to ${actor._name}.`;
-}
+};
 
 Game_Actor.prototype.tradeItemWithBagMessage = function (index, item) {
     return `${this._name} swapped the ${this.item(index).name}\nwith the ${item.name} from the bag.`;
-}
+};
 
 Game_Actor.prototype.tradeItemWithActorMessage = function (index, actorIndex, actor) {
     return `${this._name} handed the ${this.item(index).name} to ${actor._name}\nand received the ${actor.item(actorIndex).name}.`;
-}
+};
 
 Game_Actor.prototype.equipItemMessage = function (index) {
     return `${this._name} equipped the ${this.item(index).name}.`;
-}
+};
 
 Game_Actor.prototype.unequipItemMessage = function (index) {
     return `${this._name} unequipped the ${this.item(index).name}.`;
-}
+};
 
 Game_Actor.prototype.cantEquipMessage = function (index) {
     return `${this._name} can't equip the ${this.item(index).name}.`;
-}
+};
 
 Game_Actor.prototype.inventoryFullMessage = function () {
     return `${this._name} has a full inventory.\nSelect an item to swap.`;
-}
+};

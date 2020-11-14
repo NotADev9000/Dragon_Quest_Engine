@@ -93,7 +93,7 @@ Window_BattleActorStat.prototype.drawStats = function () {
         var y = index * (this.lineHeight() + this.lineGap());
         this.drawText(text, 0, y, textWidth);
     }
-}
+};
 
 Window_BattleActorStat.prototype.refresh = function () {
     this.contents.clear();
