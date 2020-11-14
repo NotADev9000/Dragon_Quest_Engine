@@ -146,6 +146,10 @@ Window_BattleLog.prototype.animationNextDelay = function () {
     return 12;
 };
 
+Window_BattleLog.prototype.performRevival = function (target) {
+    target.performRevival();
+};
+
 Window_BattleLog.prototype.drawLineText = function (index) {
     var rect = this.itemRect(index);
     this.contents.clearRect(rect.x, rect.y, rect.width, rect.height);
@@ -211,6 +215,35 @@ Window_BattleLog.prototype.displayCritical = function (target) {
         this.push('wait', 'crit');
         this.push('clear');
     }
+};
+
+Window_BattleLog.prototype.displayDamage = function (target) {
+    if (target.result().missed) {
+        this.displayMiss(target);
+    } else if (target.result().evaded) {
+        this.displayEvasion(target);
+    } else if (!this.targetWasRevived(target)) {
+        this.displayHpDamage(target);
+        this.displayMpDamage(target);
+        this.displayTpDamage(target);
+    }
+};
+
+Window_BattleLog.prototype.displayRemovedStates = function (target) {
+    target.result().removedStateObjects().forEach(function (state) {
+        if (state.message4) {
+            this.push('popBaseLine');
+            this.push('pushBaseLine');
+            state.id === target.deathStateId() && this.push('performRevival', target);
+            this.push('addText', target.name() + state.message4);
+        }
+    }, this);
+};
+
+Window_BattleLog.prototype.targetWasRevived = function (target) {
+    return target.result().removedStateObjects().some(
+        state => state.id === target.deathStateId()
+    )
 };
 
 Window_BattleLog.prototype.refresh = function () {

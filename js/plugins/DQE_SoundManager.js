@@ -45,3 +45,12 @@ SoundManager.playPlayerAttack = function () {
         volume: 100
     });
 };
+
+SoundManager.playRevival = function () {
+    AudioManager.playStaticSe({
+        name: 'Revive',
+        pan: 0,
+        pitch: 100,
+        volume: 100
+    });
+};

@@ -28,6 +28,10 @@ DQEng.Game_Battler = DQEng.Game_Battler || {};
 // Game_Battler
 //-----------------------------------------------------------------------------
 
+Game_Battler.prototype.performRevival = function () {
+    SoundManager.playRevival();
+};
+
 Game_Battler.prototype.useItem = function (item, modifiedSkill, itemIndex = -1) {
     if (DataManager.isSkill(item)) {
         var skill = modifiedSkill ? modifiedSkill : item;
