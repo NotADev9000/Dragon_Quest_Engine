@@ -10,9 +10,7 @@
 *
 *
 * @help
-* _stat:
-* 0 = hp
-* 1 = mp
+* N/A
 * 
 */
 
@@ -34,6 +32,9 @@ function Window_ItemActorStat() {
     this.initialize.apply(this, arguments);
 }
 
+Window_ItemActorStat.STAT_HP = 0;
+Window_ItemActorStat.STAT_MP = 1;
+
 Window_ItemActorStat.prototype = Object.create(Window_Base.prototype);
 Window_ItemActorStat.prototype.constructor = Window_ItemActorStat;
 
@@ -42,6 +43,7 @@ Window_ItemActorStat.prototype.initialize = function (x, y) {
     var height = this.windowHeight();
     Window_Base.prototype.initialize.call(this, x, y, width, height);
     this._stat = -1;
+    this._actorIndex = -1;
 };
 
 Window_ItemActorStat.prototype.windowWidth = function () {
@@ -60,45 +62,79 @@ Window_ItemActorStat.prototype.extraPadding = function () {
     return 15;
 };
 
-Window_ItemActorStat.prototype.setStat = function (stat) {
-    this._stat = stat;
+Window_ItemActorStat.prototype.textWidth = function () {
+    return this.windowWidth() - (this.standardPadding() + this.extraPadding()) * 2;
+};
+
+Window_ItemActorStat.prototype.setCategory = function (category) {
+    if (this._actorIndex !== category) {
+        this._actorIndex = category;
+        this.refresh();
+    }
+};
+
+Window_ItemActorStat.prototype.setAction = function (action) {
+    this.setStat(action);
     this.refresh();
 };
 
+Window_ItemActorStat.prototype.setStat = function (action) {
+    if (action.isHpRecover()) {
+        this._stat = Window_ItemActorStat.STAT_HP;
+    } else if (action.isMpRecover()) {
+        this._stat = Window_ItemActorStat.STAT_MP;
+    }
+};
+
 Window_ItemActorStat.prototype.drawStat = function () {
-    var textWidth = this.windowWidth() - (this.standardPadding() * 2);
     var text = '';
+    var pos = this.extraPadding();
     switch (this._stat) {
-        case 0:
+        case Window_ItemActorStat.STAT_HP:
             text = 'HP';
             break;
+        case Window_ItemActorStat.STAT_MP:
+            text = 'MP';
+            break;
     }
-    this.drawText(text, 0, 0, textWidth);
+    this.changeTextColor(this.hpColor($gameParty.battleMembers()[this._actorIndex]));
+    this.drawText(text, pos, pos, this.textWidth(), 'center');
 };
 
 Window_ItemActorStat.prototype.drawStatValue = function () {
-    var actor = $gameParty.battleMembers()[index];
+    var actor = $gameParty.battleMembers()[this._actorIndex];
     var text = '';
     switch (this._stat) {
-        case 0:
-            padHp = actor.hp.toString().padStart(3, ' ');
-            text = `HP: ${padHp}/${actor.mhp}`;
+        case Window_ItemActorStat.STAT_HP:
+            padHp = actor.hp.toString();
+            text = `${padHp}/${actor.mhp}`;
             break;
-        case 1:
-            padMp = actor.mp.toString().padStart(3, ' ');
-            text = `MP: ${padMp}/${actor.mmp}`;
+        case Window_ItemActorStat.STAT_MP:
+            padMp = actor.mp.toString();
+            text = `${padMp}/${actor.mmp}`;
             break;
         default:
             break;
     }
-    var textWidth = this.windowWidth() - (this.standardPadding() * 2);
-    var y = index * (this.lineHeight() + this.lineGap());
-    this.drawText(text, 0, y, textWidth);
+    var y = 69;
+    this.changeTextColor(this.hpColor(actor));
+    this.drawText(text, this.extraPadding(), y, this.textWidth(), 'center');
+};
+
+Window_ItemActorStat.prototype.show = function () {
+    this._stat >= 0 && Window_Base.prototype.show.call(this);
+};
+
+Window_ItemActorStat.prototype.hide = function () {
+    this._stat = -1;
+    Window_Base.prototype.hide.call(this);
 };
 
 Window_ItemActorStat.prototype.refresh = function () {
-    this.contents.clear();
-    this.drawStat();
-    this.drawHorzLine(0, 51);
-    this.drawStatValue();
+    if (this._stat >= 0) {
+        this.contents.clear();
+        this.drawStat();
+        this.drawHorzLine(0, 51);
+        this.drawStatValue();
+    }
 };

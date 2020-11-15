@@ -151,6 +151,9 @@ Window_Message.prototype.processEscapeCharacter = function (code, textState) {
         case 'SFX':
             SoundManager.playSoundByName(this.obtainEscapeParamString(textState));
             break;
+        case 'FUNC':
+            this.obtainEscapeParamFunc(textState);
+            break;
     }
     DQEng.Window_Message.call(this, code, textState);
 };

@@ -65,6 +65,11 @@ Scene_ItemBase.prototype.itemTargetActors = function () {
 // Functions - item use messages
 //////////////////////////////
 
+Scene_ItemBase.prototype.addToMessage = function (text) {
+    let refresh = '\\func[Scene_Item.prototype.refreshItemStatWindow]';
+    $gameMessage.add(refresh + text);
+}
+
 Scene_ItemBase.prototype.displayItemResultMessages = function (scene) {
     this.itemTargetActors().forEach(target => {
         if (target.result().used) {
@@ -86,10 +91,10 @@ Scene_ItemBase.prototype.getRevived = function (target) {
     var revived = false;
     result.removedStateObjects().forEach(function (state) {
         if (state.id === target.deathStateId()) {
-            $gameMessage.add('\\sfx[Revive]' + target.name() + state.message4); // system sound effect XX (revival)
+            this.addToMessage('\\sfx[Revive]' + target.name() + state.message4);
             revived = true;
         }
-    });
+    }, this);
     return revived;
 }
  
@@ -98,7 +103,7 @@ Scene_ItemBase.prototype.getDamage = function (target) {
     if (result.missed) {
         // this.displayMiss(target);
     } else if (result.hpAffected) {
-        $gameMessage.add(this.getHpRecover(target)); // system sound effect 16 (recovery)
+        this.addToMessage(this.getHpRecover(target));
     }
 };
 

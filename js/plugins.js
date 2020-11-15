@@ -56,6 +56,7 @@ var $plugins =
 {"name":"DQE_Window_PartyCommand","status":true,"description":"Static class for managing the battle - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemCommand","status":true,"description":"The item menu command list - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemList","status":true,"description":"The window for displaying items - V0.1","parameters":{}},
+{"name":"DQE_Window_ItemActorStat","status":true,"description":"The window for displaying party members stats in the item menu - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleSkill","status":true,"description":"The window that displays skills to use in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleItem","status":true,"description":"The window that displays skills to use in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleHelp","status":true,"description":"The parent window for help windows in battle - V0.1","parameters":{}},
