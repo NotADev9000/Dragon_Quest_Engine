@@ -88,8 +88,9 @@ BattleManager.gainExp = function () {
     var exp = this._rewards.exp;
     var playSound = true; // play lv up sound
     $gameParty.allMembers().forEach(function (actor) {
+        let lastLevel = actor._level;
         actor.gainExp(exp, playSound);
-        playSound = false;
+        if (actor._level > lastLevel) playSound = false;
     });
 };
 
