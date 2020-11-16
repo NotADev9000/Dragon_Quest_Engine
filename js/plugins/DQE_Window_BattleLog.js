@@ -229,6 +229,33 @@ Window_BattleLog.prototype.displayDamage = function (target) {
     }
 };
 
+Window_BattleLog.prototype.displayMiss = function (target) {
+    var fmt;
+    if (target.result().physical) {
+        fmt = target.isActor() ? TextManager.actorNoHit : TextManager.enemyNoHit;
+        this.push('performMiss', target);
+    } else {
+        fmt = TextManager.actionFailure;
+        this.push('performMiss', target);
+    }
+    this.push('addText', fmt.format(target.name()));
+};
+
+Window_BattleLog.prototype.displayHpDamage = function (target) {
+    if (target.result().hpAffected) {
+        if (target.result().hpDamage > 0 && !target.result().drain) {
+            this.push('performDamage', target);
+        }
+        if (target.result().hpDamage < 0) {
+            this.push('performRecovery', target);
+        }
+        if (target.result().hpDamage === 0) {
+            this.push('performMiss', target);
+        }
+        this.push('addText', this.makeHpDamageText(target));
+    }
+};
+
 Window_BattleLog.prototype.displayRemovedStates = function (target) {
     target.result().removedStateObjects().forEach(function (state) {
         if (state.message4) {

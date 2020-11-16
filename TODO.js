@@ -8,7 +8,6 @@
 * . Save/Load menu
 * . Option menu
 * . Misc menu (heal all, line-up, settings, current objective, battle music...)
-* . Miss sfx when player evades a moves/takes no damage
 * . Battle Line-up
 * . Battle Misc (battle text speed...)
 * . Death in battle plays whole of gameover music before stopping
@@ -21,6 +20,5 @@
 * . States/Elements/Skills/Abilities
 * . Battle formulas (crit, evasion...)
 * . Battleback match terrain
-* . Level up sfx
 * . Implement animation shake
 */
