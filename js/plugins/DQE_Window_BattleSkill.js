@@ -82,7 +82,7 @@ Window_BattleSkill.prototype.setHelpWindowItem = function (item, actor) {
 };
 
 Window_BattleSkill.prototype.includes = function (item) {
-    return item && item.stypeId === this._stypeId;
+    return item && item.stypeId === this._stypeId && this._actor.isOccasionOk(item);
 };
 
 Window_BattleSkill.prototype.item = function () {
