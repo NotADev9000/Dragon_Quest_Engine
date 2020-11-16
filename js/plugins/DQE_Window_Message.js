@@ -151,6 +151,9 @@ Window_Message.prototype.processEscapeCharacter = function (code, textState) {
         case 'SFX':
             SoundManager.playSoundByName(this.obtainEscapeParamString(textState));
             break;
+        case 'ME':
+            SoundManager.playMeByName(this.obtainEscapeParamString(textState));
+            break;
         case 'FUNC':
             this.obtainEscapeParamFunc(textState);
             break;

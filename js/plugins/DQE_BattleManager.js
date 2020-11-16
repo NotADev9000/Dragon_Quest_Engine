@@ -84,6 +84,15 @@ BattleManager.startAction = function () {
     this._logWindow.startAction(subject, action, targets);
 };
 
+BattleManager.gainExp = function () {
+    var exp = this._rewards.exp;
+    var playSound = true; // play lv up sound
+    $gameParty.allMembers().forEach(function (actor) {
+        actor.gainExp(exp, playSound);
+        playSound = false;
+    });
+};
+
 DQEng.Battle_Manager = BattleManager.updateBattleEnd;
 BattleManager.updateBattleEnd = function () {
     this._logWindow.opacity = 0;

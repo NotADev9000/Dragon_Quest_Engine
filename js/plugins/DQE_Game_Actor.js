@@ -294,6 +294,42 @@ Game_Actor.prototype.tradeItemWithActor = function (index, actorIndex, actor) {
 };
 
 //////////////////////////////
+// Functions - levels
+//////////////////////////////
+
+Game_Actor.prototype.gainExp = function (exp, playSound) {
+    var newExp = this.currentExp() + Math.round(exp * this.finalExpRate());
+    this.changeExp(newExp, this.shouldDisplayLevelUp(), playSound);
+};
+
+Game_Actor.prototype.changeExp = function (exp, show, playSound = false) {
+    this._exp[this._classId] = Math.max(exp, 0);
+    var lastLevel = this._level;
+    var lastSkills = this.skills();
+    while (!this.isMaxLevel() && this.currentExp() >= this.nextLevelExp()) {
+        this.levelUp();
+    }
+    while (this.currentExp() < this.currentLevelExp()) {
+        this.levelDown();
+    }
+    if (show && this._level > lastLevel) {
+        this.displayLevelUp(this.findNewSkills(lastSkills), playSound);
+    }
+    this.refresh();
+};
+
+Game_Actor.prototype.displayLevelUp = function (newSkills, playSound) {
+    var text = TextManager.levelUp.format(this._name, TextManager.level, this._level);
+    var me = playSound ? '\\ME[Level_Up]' : '';
+    var breaker = playSound ? ' \\|' : '';
+    $gameMessage.newPage();
+    $gameMessage.add(me + text + breaker);
+    newSkills.forEach(function (skill) {
+        $gameMessage.add(TextManager.obtainSkill.format(skill.name));
+    });
+};
+
+//////////////////////////////
 // Functions - messages
 //////////////////////////////
 

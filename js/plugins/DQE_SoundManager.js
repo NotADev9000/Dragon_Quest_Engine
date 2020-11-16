@@ -28,6 +28,15 @@ DQEng.SoundManager = DQEng.SoundManager || {};
 // SoundManager
 //-----------------------------------------------------------------------------
 
+SoundManager.playMeByName = function (name, pan = 0, pitch = 100, volume = 100) {
+    AudioManager.playMe({
+        name: name,
+        pan: pan,
+        pitch: pitch,
+        volume: volume
+    });
+};
+
 SoundManager.playSoundByName = function (name, pan = 0, pitch = 100, volume = 100) {
     AudioManager.playStaticSe({
         name: name,
@@ -35,7 +44,7 @@ SoundManager.playSoundByName = function (name, pan = 0, pitch = 100, volume = 10
         pitch: pitch,
         volume: volume
     });
-}
+};
 
 SoundManager.playPlayerAttack = function () {
     AudioManager.playStaticSe({
