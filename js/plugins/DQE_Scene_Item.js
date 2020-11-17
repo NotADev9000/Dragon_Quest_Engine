@@ -59,7 +59,7 @@ Scene_Item.prototype.createCommandWindow = function () {
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
-}
+};
 
 Scene_Item.prototype.createItemWindow = function () {
     var wx = this._commandWindow.x + this._commandWindow.windowWidth();

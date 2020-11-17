@@ -38,7 +38,7 @@ Scene_Menu.prototype.start = function () {
 Scene_Menu.prototype.createCommandWindow = function () {
     this._commandWindow = new Window_MenuCommand(24, 48);
     this._commandWindow.setHandler('item', this.commandItem.bind(this));
-    this._commandWindow.setHandler('skill', this.commandPersonal.bind(this));
+    this._commandWindow.setHandler('skill', this.commandSkill.bind(this));
     this._commandWindow.setHandler('equip', this.commandPersonal.bind(this));
     this._commandWindow.setHandler('status', this.commandPersonal.bind(this));
     this._commandWindow.setHandler('formation', this.commandFormation.bind(this));
@@ -63,4 +63,8 @@ Scene_Menu.prototype.createStatusWindow = function () {
         this._statusWindow[i] = new Window_MenuStatus(63 + (Window_MenuStatus.prototype.windowWidth() * i), 480, partyMembers[i]);
         this.addWindow(this._statusWindow[i]);
     }
+};
+
+Scene_Menu.prototype.commandSkill = function () {
+    SceneManager.push(Scene_Skill);
 };

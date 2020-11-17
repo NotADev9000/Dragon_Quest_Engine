@@ -28,29 +28,11 @@ DQEng.Window_ItemList = DQEng.Window_ItemList || {};
 // Window_ItemList
 //-----------------------------------------------------------------------------
 
-Window_ItemList.prototype = Object.create(Window_Pagination.prototype);
+Window_ItemList.prototype = Object.create(Window_ItemListBase.prototype);
 
 Window_ItemList.prototype.initialize = function (x, y, width, height) {
-    Window_Pagination.prototype.initialize.call(this, x, y, width, height);
-    this._category = 'none';
-    this._data = [];
+    Window_ItemListBase.prototype.initialize.call(this, x, y, width, height);
     this._numActorEquips = 0; // How many items actor has equipped
-    this._lastSelected = 0;
-};
-
-Window_ItemList.prototype.lineGap = function () {
-    return 15;
-};
-
-Window_ItemList.prototype.maxCols = function () {
-    return 1;
-};
-
-Window_ItemList.prototype.setCategory = function (category) {
-    if (this._category !== category) {
-        this._category = category;
-        this.refresh();
-    }
 };
 
 /**
@@ -59,14 +41,6 @@ Window_ItemList.prototype.setCategory = function (category) {
  */
 Window_ItemList.prototype.isCategoryActor = function () {
     return Number.isInteger(this._category);
-};
-
-/**
- * sets last selected to current index
- * used to remember the last item the user had selected
- */
-Window_ItemList.prototype.setLastSelected = function (index) {
-    this._lastSelected = index;
 };
 
 /**
@@ -87,11 +61,6 @@ Window_ItemList.prototype.includes = function (item) {
     }
 };
 
-Window_ItemList.prototype.item = function () {
-    var index = this.index();
-    return this._data && index >= 0 ? this._data[index] : null;
-};
-
 /**
  * Creates the item list to be displayed in the window
  * Retrieves items from party or actor inventory
@@ -107,10 +76,6 @@ Window_ItemList.prototype.makeItemList = function () {
             return this.includes(item);
         }, this);
     }
-};
-
-Window_ItemList.prototype.maxItems = function () {
-    return this._data ? this._data.length : 1;
 };
 
 /**
@@ -149,27 +114,4 @@ Window_ItemList.prototype.drawItem = function (index) {
         this.drawText(item.name, rect.x, rect.y, 432);
         this.resetTextColor();
     }
-};
-
-Window_ItemList.prototype.updateHelp = function () {
-    this.setHelpWindowItem(this.item());
-};
-
-/**
- * extraPadding is added to properly adjust commands
- */
-Window_ItemList.prototype.itemRect = function (index) {
-    var rect = Window_Pagination.prototype.itemRect.call(this, index);
-    rect.x += this.extraPadding();
-    rect.y += this.extraPadding();
-    rect.width -= this.extraPadding() * 2;
-    return rect;
-};
-
-Window_ItemList.prototype.refresh = function () {
-    this.setLastSelected(0);
-    this.makeItemList();
-    this.createContents();
-    Window_Pagination.prototype.refresh.call(this);
-    this.drawAllItems();
 };
