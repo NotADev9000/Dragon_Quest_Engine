@@ -34,6 +34,16 @@ Window_SkillList.prototype.initialize = function (x, y, width, height) {
     Window_ItemListBase.prototype.initialize.call(this, x, y, width, height);
 };
 
+Window_SkillList.prototype.updateHelp = function () {
+    let actorMP = $gameParty.members()[this._category].mp;
+    this.setHelpWindowItem(this.item(), actorMP);
+};
+
+Window_SkillList.prototype.setHelpWindowItem = function (item, mp) {
+    this._helpWindow[0].setItem(item);
+    this._helpWindow[1].setItem(item, mp);
+};
+
 Window_SkillList.prototype.includes = function (item, actor) {
     return actor.isOccasionOk(item);
 };

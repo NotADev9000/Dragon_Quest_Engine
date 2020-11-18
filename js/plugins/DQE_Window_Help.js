@@ -28,9 +28,9 @@ DQEng.Window_Help = DQEng.Window_Help || {};
 // Window_Help
 //-----------------------------------------------------------------------------
 
-Window_Help.prototype.initialize = function (x, y, width, numLines = 2) {
-    var height = this.fittingHeight(numLines);
-    Window_Base.prototype.initialize.call(this, x, y, width, height);
+Window_Help.prototype.initialize = function (x, y, width, numLines = 2, height = 0) {
+    var winHeight = height ? height : this.fittingHeight(numLines);
+    Window_Base.prototype.initialize.call(this, x, y, width, winHeight);
     this._text = '';
 };
 

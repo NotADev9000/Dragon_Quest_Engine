@@ -75,8 +75,8 @@ Window_BattleItem.prototype.setActor = function (actor) {
 };
 
 Window_BattleItem.prototype.setHelpWindowItem = function (item, actor) {
-    if (this._helpWindow) {
-        this._helpWindow.setItem(item, actor);
+    if (this._helpWindow && this._helpWindow.length) {
+        this._helpWindow[0].setItem(item, actor);
     }
 };
 

@@ -146,7 +146,7 @@ Scene_Item.prototype.onCommandOk = function () {
     this._commandWindow.showBackgroundDimmer();
     this._itemWindow.activate();
     this._itemWindow.select(this._itemWindow._lastSelected);
-    this._helpWindow.show();
+    this._itemWindow.showHelpWindow();
 };
 
 Scene_Item.prototype.onItemOk = function () {
@@ -156,7 +156,7 @@ Scene_Item.prototype.onItemOk = function () {
     this._doWhatWindow.updateWindowDisplay();
     this.manageDoWhatPosition();
     this._itemWindow.showBackgroundDimmer();
-    this._helpWindow.showBackgroundDimmer();
+    this._itemWindow.showHelpWindowBackgroundDimmer();
     this._doWhatWindow.select(0);
     this._doWhatWindow.show();
     this._doWhatWindow.activate();
@@ -164,7 +164,7 @@ Scene_Item.prototype.onItemOk = function () {
 
 Scene_Item.prototype.onItemCancel = function () {
     this._commandWindow.hideBackgroundDimmer();
-    this._helpWindow.hide();
+    this._itemWindow.hideHelpWindow();
     this._itemWindow.setLastSelected(this._itemWindow.index());
     this._itemWindow.deselect();
     this._commandWindow.activate();
@@ -222,7 +222,7 @@ Scene_Item.prototype.onDoWhatUnequip = function () {
 
 Scene_Item.prototype.onDoWhatCancel = function () {
     this._itemWindow.hideBackgroundDimmer();
-    this._helpWindow.hideBackgroundDimmer();
+    this._itemWindow.hideHelpWindowBackgroundDimmer();
     this._doWhatWindow.hide();
     this._itemWindow.activate();
 };
@@ -389,7 +389,7 @@ Scene_Item.prototype.doWhatUseMessage = function () {
 Scene_Item.prototype.doWhatEquipMessage = function () {
     this._doWhatWindow.hide();
     this._itemWindow.hideBackgroundDimmer();
-    this._helpWindow.hideBackgroundDimmer();
+    this._itemWindow.hideHelpWindowBackgroundDimmer();
     this._itemWindow.refresh();
     this._itemWindow.activate();
 };
@@ -400,7 +400,7 @@ Scene_Item.prototype.actionResolvedMessage = function () {
     this._useOnWhoWindow.hide();
     this._itemStatWindow.hide();
     this._itemWindow.hideBackgroundDimmer();
-    this._helpWindow.hideBackgroundDimmer();
+    this._itemWindow.hideHelpWindowBackgroundDimmer();
     this._doWhatWindow.hideBackgroundDimmer();
     this._doWhatWindow.hide();
     this._itemWindow.refresh();
@@ -408,7 +408,7 @@ Scene_Item.prototype.actionResolvedMessage = function () {
         this._itemWindow.activate();
     } else {
         this._commandWindow.hideBackgroundDimmer();
-        this._helpWindow.hide();
+        this._itemWindow.hideHelpWindow();
         this._itemWindow.deselect();
         this._commandWindow.activate();
     }
@@ -431,13 +431,13 @@ Scene_Item.prototype.transferredMessage = function () {
     this._doWhatWindow.hide();
     this._doWhatWindow.hideBackgroundDimmer();
     this._itemWindow.hideBackgroundDimmer();
-    this._helpWindow.hideBackgroundDimmer();
+    this._itemWindow.hideHelpWindowBackgroundDimmer();
     this._itemWindow.refresh();
     if (this._commandWindow.isCurrentItemEnabled()) {
         this._itemWindow.activate();
     } else {
         this._commandWindow.hideBackgroundDimmer();
-        this._helpWindow.hide();
+        this._itemWindow.hideHelpWindow();
         this._itemWindow.deselect();
         this._commandWindow.activate();
     }

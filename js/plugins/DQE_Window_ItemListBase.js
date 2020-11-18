@@ -58,6 +58,14 @@ Window_ItemListBase.prototype.setCategory = function (category) {
 };
 
 /**
+ * returns true if the current category is an Actor
+ * Actor categories are stored as integers
+ */
+Window_ItemListBase.prototype.isCategoryActor = function () {
+    return Number.isInteger(this._category);
+};
+
+/**
  * sets last selected to current index
  * used to remember the last item the user had selected
  */

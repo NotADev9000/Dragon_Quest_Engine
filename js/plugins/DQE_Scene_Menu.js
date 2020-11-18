@@ -30,9 +30,7 @@ DQEng.Scene_Menu = DQEng.Scene_Menu || {};
 
 Scene_Menu.prototype.start = function () {
     Scene_MenuBase.prototype.start.call(this);
-    this._statusWindow.forEach(statusWindow => {
-        statusWindow.refresh();
-    });
+    this.refreshStatusWindow();
 };
 
 Scene_Menu.prototype.createCommandWindow = function () {

@@ -36,14 +36,6 @@ Window_ItemList.prototype.initialize = function (x, y, width, height) {
 };
 
 /**
- * returns true if the current category is an Actor
- * Actor categories are stored as integers
- */
-Window_ItemList.prototype.isCategoryActor = function () {
-    return Number.isInteger(this._category);
-};
-
-/**
  * checks if an item is in the selected category
  */
 Window_ItemList.prototype.includes = function (item) {

@@ -76,8 +76,8 @@ Window_BattleSkill.prototype.setStypeId = function (stypeId) {
 };
 
 Window_BattleSkill.prototype.setHelpWindowItem = function (item, actor) {
-    if (this._helpWindow) {
-        this._helpWindow.setItem(item, actor);
+    if (this._helpWindow && this._helpWindow.length) {
+        this._helpWindow[0].setItem(item, actor);
     }
 };
 
