@@ -4,7 +4,6 @@
 * . Change equipment in battle
 * . Equipment menu
 * . Status menu
-* . Magic menu
 * . Save/Load menu
 * . Option menu
 * . Misc menu (heal all, line-up, settings, current objective, battle music...)
