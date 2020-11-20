@@ -44,6 +44,10 @@ Scene_ItemBase.prototype.canUse = function () {
     return false;
 };
 
+Scene_ItemBase.prototype.item = function () {
+    return this._itemWindow ? this._itemWindow.item() : this._skillWindow.item();
+};
+
 Scene_ItemBase.prototype.action = function () {
     var action = new Game_Action(this.user());
     action.setItemObject(this.item());
@@ -66,9 +70,9 @@ Scene_ItemBase.prototype.itemTargetActors = function () {
 //////////////////////////////
 
 Scene_ItemBase.prototype.addToMessage = function (text) {
-    let refresh = '\\func[Scene_Item.prototype.refreshItemStatWindow]';
+    let refresh = '\\func[SceneManager._scene.refreshItemStatWindow]';
     $gameMessage.add(refresh + text);
-}
+};
 
 Scene_ItemBase.prototype.displayItemResultMessages = function (scene) {
     this.itemTargetActors().forEach(target => {
@@ -84,7 +88,7 @@ Scene_ItemBase.prototype.getResultTexts = function (target) {
     if (!this.getRevived(target)) {
         this.getDamage(target);
     }
-}
+};
 
 Scene_ItemBase.prototype.getRevived = function (target) {
     var result = target.result();
@@ -96,7 +100,7 @@ Scene_ItemBase.prototype.getRevived = function (target) {
         }
     }, this);
     return revived;
-}
+};
  
 Scene_ItemBase.prototype.getDamage = function (target) {
     var result = target.result();

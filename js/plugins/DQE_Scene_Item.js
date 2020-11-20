@@ -128,7 +128,7 @@ Scene_Item.prototype.createHowManyWindow = function () {
     this._howManyWindow.setHandler('cancel', this.onHowManyCancel.bind(this));
     this._howManyWindow.hide();
     this.addWindow(this._howManyWindow);
-}
+};
 
 /**
  * Always call this window last so it's at front
@@ -251,12 +251,12 @@ Scene_Item.prototype.startItemUse = function (forAll = false) {
         this.applyItem();
         this.displayItemResultMessages(Scene_Item.prototype);
     } else if (forAll) {
-        this.displayMessage(useByActor.triedToUseAllMessage(item), Scene_Item.prototype.triedToUseMessage);
+        this.displayMessage(useByActor.triedToUseAllMessage(item), Scene_Item.prototype.triedToUseAllMessage);
     } else {
         let useOnActor = $gameParty.members()[this._useOnWhoWindow.currentSymbol()];
         this.displayMessage(useByActor.triedToUseMessage(item, useOnActor), Scene_Item.prototype.triedToUseMessage);
     }
-}
+};
 
 Scene_Item.prototype.onUseOnWhoCancel = function () {
     this._doWhatWindow.hideBackgroundDimmer();
@@ -421,6 +421,10 @@ Scene_Item.prototype.triedToUseMessage = function () {
     this._useOnWhoWindow.activate();
 };
 
+Scene_Item.prototype.triedToUseAllMessage = function () {
+    this._doWhatWindow.activate();
+};
+
 Scene_Item.prototype.transferredMessage = function () {
     this._howManyWindow.hide();
     this._transferItemWindow.hide();
@@ -470,8 +474,8 @@ Scene_Item.prototype.user = function () {
  */
 Scene_Item.prototype.inBag = function (selectionWindow) {
     return !Number.isInteger(selectionWindow.commandSymbol(selectionWindow.index()));
-}
+};
 
 Scene_Item.prototype.refreshItemStatWindow = function () {
     this._itemStatWindow.refresh();
-}
+};

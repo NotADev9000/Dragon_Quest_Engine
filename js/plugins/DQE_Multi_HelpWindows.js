@@ -72,9 +72,25 @@ Window_Selectable.prototype.showHelpWindowBackgroundDimmer = function (index = 0
     }
 };
 
+Window_Selectable.prototype.showAllHelpWindowBackgroundDimmers = function () {
+    if (this._helpWindow) {
+        this._helpWindow.forEach(helpWindow => {
+            helpWindow.showBackgroundDimmer();
+        });
+    }
+};
+
 Window_Selectable.prototype.hideHelpWindowBackgroundDimmer = function (index = 0) {
     if (this._helpWindow && this._helpWindow.length) {
         this._helpWindow[index].hideBackgroundDimmer();
+    }
+};
+
+Window_Selectable.prototype.hideAllHelpWindowBackgroundDimmers = function () {
+    if (this._helpWindow) {
+        this._helpWindow.forEach(helpWindow => {
+            helpWindow.hideBackgroundDimmer();
+        });
     }
 };
 

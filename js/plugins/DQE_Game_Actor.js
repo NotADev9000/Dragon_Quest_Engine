@@ -333,6 +333,18 @@ Game_Actor.prototype.displayLevelUp = function (newSkills, playSound) {
 // Functions - messages
 //////////////////////////////
 
+Game_Actor.prototype.magicUsedMessage = function (item) {
+    return `\\sfx[Magic]${this._name}` + `${item.message1.format(item.name)}`;
+};
+
+Game_Actor.prototype.triedToMagicMessage = function (item, target) {
+    return `${this._name} starts to cast ${item.name}...\\!\nBut it won't have any effect on ${target.name()}.`;
+};
+
+Game_Actor.prototype.triedToMagicAllMessage = function (item) {
+    return `${this._name} starts to cast ${item.name}...\\!\nBut it won't have any effect.`;
+};
+
 Game_Actor.prototype.itemUsedMessage = function (item) {
     return `${this._name} used the ${item.name}.`;
 };
@@ -342,7 +354,7 @@ Game_Actor.prototype.triedToUseMessage = function (item, target) {
 };
 
 // for items that target the whole party
-Game_Actor.prototype.triedToUseAllMessage = function (item, target) {
+Game_Actor.prototype.triedToUseAllMessage = function (item) {
     return `${this._name} tried to use the ${item.name}.\\!\nBut it had no effect.`;
 };
 

@@ -43,3 +43,15 @@ Scene_MenuBase.prototype.refreshStatusWindow = function () {
         statusWindow.refresh();
     });
 };
+
+Scene_MenuBase.prototype.showStatusWindowBackgroundDimmers = function () {
+    this._statusWindow.forEach(statusWindow => {
+        statusWindow.showBackgroundDimmer();
+    });
+};
+
+Scene_MenuBase.prototype.hideStatusWindowBackgroundDimmers = function () {
+    this._statusWindow.forEach(statusWindow => {
+        statusWindow.hideBackgroundDimmer();
+    });
+};

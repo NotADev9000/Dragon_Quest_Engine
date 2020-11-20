@@ -49,10 +49,10 @@ Window_SkillList.prototype.includes = function (item, actor) {
 };
 
 Window_SkillList.prototype.makeItemList = function () {
-        var actor = $gameParty.members()[this._category];
-        this._data = actor.skills().filter(function (item) {
-            return this.includes(item, actor);
-        }, this);
+    var actor = $gameParty.members()[this._category];
+    this._data = actor.skills().filter(function (item) {
+        return this.includes(item, actor);
+    }, this);
 };
 
 /**
