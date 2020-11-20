@@ -34,6 +34,7 @@ Scene_Skill.prototype.create = function () {
     this.createSkillWindow();
     this.createSkillStatWindow();
     this.createUseOnWhoWindow();
+    this.createItemStatWindow();
     this.createStatusWindow();
     this.createMessageWindow();
 };
@@ -88,6 +89,15 @@ Scene_Skill.prototype.createUseOnWhoWindow = function () {
     this.addWindow(this._useOnWhoWindow);
 };
 
+Scene_Skill.prototype.createItemStatWindow = function () {
+    let x = this._useOnWhoWindow.x + this._useOnWhoWindow.windowWidth();
+    let y = this._useOnWhoWindow.y;
+    this._itemStatWindow = new Window_ItemActorStat(x, y);
+    this._itemStatWindow.hide();
+    this.addWindow(this._itemStatWindow);
+    this._useOnWhoWindow.setAssociatedWindow(this._itemStatWindow);
+};
+
 Scene_Skill.prototype.createStatusWindow = function () {
     Scene_MenuBase.prototype.createStatusWindow.call(this);
 };
@@ -117,8 +127,8 @@ Scene_Skill.prototype.onSkillOk = function () {
     } else if (this.action().isForOne()) {
         this._useOnWhoWindow.select(0);
         this._useOnWhoWindow.show();
-        // this._itemStatWindow.setAction(this.action());
-        // this._itemStatWindow.show();
+        this._itemStatWindow.setAction(this.action());
+        this._itemStatWindow.show();
         this._skillWindow.showBackgroundDimmer();
         this._skillWindow.showAllHelpWindowBackgroundDimmers();
         this._useOnWhoWindow.activate();
@@ -159,7 +169,7 @@ Scene_Skill.prototype.startItemUse = function (forAll = false) {
 
 Scene_Skill.prototype.onUseOnWhoCancel = function () {
     this._useOnWhoWindow.hide();
-    // this._itemStatWindow.hide();
+    this._itemStatWindow.hide();
     this._skillWindow.hideBackgroundDimmer();
     this._skillWindow.hideAllHelpWindowBackgroundDimmers();
     this._skillWindow.activate();
@@ -173,7 +183,7 @@ Scene_Skill.prototype.actionResolvedMessage = function () {
     this.checkCommonEvent();
     this.checkGameover();
     this._useOnWhoWindow.hide();
-    // this._itemStatWindow.hide();
+    this._itemStatWindow.hide();
     this._skillWindow.hideBackgroundDimmer();
     this._skillWindow.hideAllHelpWindowBackgroundDimmers();
     this.hideStatusWindowBackgroundDimmers();
@@ -204,6 +214,6 @@ Scene_Skill.prototype.user = function () {
 };
 
 Scene_Skill.prototype.refreshItemStatWindow = function () {
-    // refresh stat window here
+    this._itemStatWindow.refresh();
     this.refreshStatusWindow();
 };
