@@ -9,6 +9,10 @@
 * @plugindesc Static class for managing the battle - V0.1
 *
 *
+* @param Defeat Music Wait
+* @desc How many seconds the game waits, when the party is wiped out, before ending the battle. Default: 7.
+* @default 7
+* 
 * @help
 * N/A
 *
@@ -23,6 +27,11 @@ Imported.DQEng_Battle_Manager = true;
 
 var DQEng = DQEng || {};
 DQEng.Battle_Manager = DQEng.Battle_Manager || {};
+
+var parameters = PluginManager.parameters('DQE_BattleManager');
+DQEng.Parameters = DQEng.Parameters || {};
+DQEng.Parameters.BattleManager = {};
+DQEng.Parameters.BattleManager.defeatWait = Number(parameters["Defeat Music Wait"]) || 7;
 
 //-----------------------------------------------------------------------------
 // Battle_Manager
@@ -84,6 +93,17 @@ BattleManager.startAction = function () {
     this._logWindow.startAction(subject, action, targets);
 };
 
+DQEng.Battle_Manager.displayDefeatMessage = BattleManager.displayDefeatMessage;
+BattleManager.displayDefeatMessage = function () {
+    DQEng.Battle_Manager.displayDefeatMessage.call(this);
+    let wait = DQEng.Parameters.BattleManager.defeatWait;
+    let text = '';
+    for (let i = 0; i < wait; i++) {
+        text += '\\|';
+    }
+    $gameMessage.add(text);
+};
+
 BattleManager.gainExp = function () {
     var exp = this._rewards.exp;
     var playSound = true; // play lv up sound
@@ -94,8 +114,8 @@ BattleManager.gainExp = function () {
     });
 };
 
-DQEng.Battle_Manager = BattleManager.updateBattleEnd;
+DQEng.Battle_Manager.updateBattleEnd = BattleManager.updateBattleEnd;
 BattleManager.updateBattleEnd = function () {
     this._logWindow.opacity = 0;
-    DQEng.Battle_Manager.call(this);
+    DQEng.Battle_Manager.updateBattleEnd.call(this);
 };

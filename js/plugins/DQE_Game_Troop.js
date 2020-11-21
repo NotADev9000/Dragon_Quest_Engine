@@ -42,7 +42,7 @@ Imported.DQEng_Game_Troop = true;
 var DQEng = DQEng || {};
 DQEng.Game_Troop = DQEng.Game_Troop || {};
 
-var parameters = PluginManager.parameters('DQE_Windows');
+var parameters = PluginManager.parameters('DQE_Game_Troop');
 DQEng.Parameters = DQEng.Parameters || {};
 DQEng.Parameters.Game_Troop = {};
 DQEng.Parameters.Game_Troop.EnemyXDefaultOffset = Number(parameters["Enemy X Default Offset"]) || 231;

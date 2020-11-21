@@ -28,7 +28,7 @@ Imported.DQEng_Game_Action = true;
 var DQEng = DQEng || {};
 DQEng.Game_Action = DQEng.Game_Action || {};
 
-var parameters = PluginManager.parameters('DQE_Windows');
+var parameters = PluginManager.parameters('DQE_Game_Action');
 DQEng.Parameters = DQEng.Parameters || {};
 DQEng.Parameters.Game_Action = {};
 DQEng.Parameters.Game_Action.nothingHappensSkillId = Number(parameters["Nothing Happens Skill ID"]) || 3;

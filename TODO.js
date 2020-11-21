@@ -6,10 +6,9 @@
 * . Status menu
 * . Save/Load menu
 * . Option menu
-* . Misc menu (heal all, line-up, settings, current objective, battle music...)
+* . Misc menu (heal all, line-up, settings (text speed), current objective, battle music...)
 * . Battle Line-up
 * . Battle Misc (battle text speed...)
-* . Death in battle plays whole of gameover music before stopping
 * . Death doesn't cause gameover but leads to last church used and losing half your gold
 * . Actor stats
 * . Quest system
