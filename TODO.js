@@ -18,5 +18,4 @@
 * . States/Elements/Skills/Abilities
 * . Battle formulas (crit, evasion...)
 * . Battleback match terrain
-* . Implement animation shake
 */
