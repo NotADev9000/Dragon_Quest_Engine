@@ -35,6 +35,7 @@ var $plugins =
 {"name":"DQE_Sprite_Damage","status":true,"description":"The sprite object class for the Damage - V0.1","parameters":{}},
 {"name":"DQE_Sprite_Battler","status":true,"description":"The sprite object class for the battler - V0.1","parameters":{}},
 {"name":"DQE_Sprite_Enemy","status":true,"description":"The The sprite object class for the enemy - V0.1","parameters":{}},
+{"name":"DQE_Sprite_Animation","status":true,"description":"Sprite Animations - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Text_Autowrapping","status":true,"description":"The logic for autowrapping text in windows - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
