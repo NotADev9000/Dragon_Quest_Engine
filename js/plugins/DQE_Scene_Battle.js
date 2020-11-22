@@ -37,6 +37,9 @@ Scene_Battle.prototype.createAllWindows = function () {
     this.createSkillWindow();
     this.createItemHelpWindow();
     this.createItemWindow();
+    this.createEquipmentHelpWindow();
+    this.createEquipmentWindow();
+    this.createEquipmentDoWhatWindow();
     this.createActorWindow();
     this.createActorStatWindow();
     this.createEnemyWindow();
@@ -72,7 +75,7 @@ Scene_Battle.prototype.createActorCommandWindow = function () {
     this._actorCommandWindow.setHandler('Skill', this.commandSkill.bind(this));
     this._actorCommandWindow.setHandler('Guard', this.commandGuard.bind(this));
     this._actorCommandWindow.setHandler('Item', this.commandItem.bind(this));
-    // this._actorCommandWindow.setHandler('Equipment', this.commandEquipment.bind(this));
+    this._actorCommandWindow.setHandler('Equipment', this.commandEquipment.bind(this));
     this._actorCommandWindow.setHandler('Disabled', this.commandActorDisabled.bind(this));
     this._actorCommandWindow.setHandler('cancel', this.selectPreviousCommand.bind(this));
     this.addWindow(this._actorCommandWindow);
@@ -104,6 +107,33 @@ Scene_Battle.prototype.createItemWindow = function () {
     this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
     this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
     this.addWindow(this._itemWindow);
+};
+
+Scene_Battle.prototype.createEquipmentHelpWindow = function () {
+    this._equipmentHelpWindow = new Window_BattleItemHelp(585, 588, 672, 3, false);
+    this._equipmentHelpWindow.hide();
+    this.addWindow(this._equipmentHelpWindow);
+};
+
+Scene_Battle.prototype.createEquipmentWindow = function () {
+    this._equipmentWindow = new Window_BattleEquipment(63, 468, 522, 249);
+    this._equipmentWindow.setHelpWindow(this._equipmentHelpWindow);
+    this._equipmentWindow.setHandler('ok', this.onEquipmentOk.bind(this));
+    this._equipmentWindow.setHandler('cancel', this.onEquipmentCancel.bind(this));
+    this.addWindow(this._equipmentWindow);
+};
+
+Scene_Battle.prototype.createEquipmentDoWhatWindow = function () {
+    let x = this._equipmentWindow.x + this._equipmentWindow._width;
+    let y = this._equipmentWindow.y;
+    this._equipmentDoWhatWindow = new Window_TitledCommand(x, y, 282, 'Do What?');
+    this._equipmentDoWhatWindow.deactivate();
+    // this._equipmentDoWhatWindow.setHandler('Equip', this.onEquipmentDoWhatEquip.bind(this));
+    // this._equipmentDoWhatWindow.setHandler('Unequip', this.onEquipmentDoWhatUnequip.bind(this));
+    this._equipmentDoWhatWindow.setHandler('cancel', this.onEquipmentDoWhatCancel.bind(this));
+    this._equipmentDoWhatWindow.setHandler('Cancel', this.onEquipmentDoWhatCancel.bind(this));
+    this._equipmentDoWhatWindow.hide();
+    this.addWindow(this._equipmentDoWhatWindow);
 };
 
 Scene_Battle.prototype.createActorWindow = function () {
@@ -226,6 +256,15 @@ Scene_Battle.prototype.commandItem = function () {
     this._actorCommandWindow.hide();
 };
 
+Scene_Battle.prototype.commandEquipment = function () {
+    this._equipmentWindow.setActor(BattleManager.actor());
+    this._equipmentWindow.refresh();
+    this._equipmentWindow.show();
+    this._equipmentWindow.activate();
+    this._enemyWindow.hide();
+    this._actorCommandWindow.hide();
+};
+
 Scene_Battle.prototype.commandGuard = function () {
     BattleManager.inputtingAction().setGuard();
     this.selectNextCommand();
@@ -331,9 +370,36 @@ Scene_Battle.prototype.onItemOk = function () {
 
 Scene_Battle.prototype.onItemCancel = function () {
     this._itemWindow.hide();
+    this.itemWindowClosed();
+};
+
+Scene_Battle.prototype.onEquipmentOk = function () {
+    this.manageDoWhatCommands();
+    this._equipmentDoWhatWindow.clearCommandList();
+    this._equipmentDoWhatWindow.makeCommandList();
+    this._equipmentDoWhatWindow.updateWindowDisplay();
+    this._equipmentWindow.showBackgroundDimmer();
+    this._equipmentWindow.showHelpWindowBackgroundDimmer();
+    this._equipmentDoWhatWindow.select(0);
+    this._equipmentDoWhatWindow.show();
+    this._equipmentDoWhatWindow.activate();
+};
+
+Scene_Battle.prototype.onEquipmentCancel = function () {
+    this._equipmentWindow.hide();
+    this.itemWindowClosed();
+};
+
+Scene_Battle.prototype.itemWindowClosed = function () {
     this._actorCommandWindow.show();
     this._actorCommandWindow.activate();
     this.showEnemyWindow(1, Window_BattleEnemy.STATE_GROUP);
+};
+
+Scene_Battle.prototype.onEquipmentDoWhatCancel = function () {
+    this._equipmentWindow.hideBackgroundDimmer();
+    this._equipmentDoWhatWindow.hide();
+    this._equipmentWindow.activate();
 };
 
 //////////////////////////////
@@ -436,6 +502,13 @@ Scene_Battle.prototype.endCommandSelection = function () {
     this._enemyWindow.hide();
 };
 
+DQEng.Scene_Battle.isAnyInputWindowActive = Scene_Battle.prototype.isAnyInputWindowActive;
+Scene_Battle.prototype.isAnyInputWindowActive = function () {
+    return this._equipmentWindow.active ||
+           this._equipmentDoWhatWindow.active ||
+           DQEng.Scene_Battle.isAnyInputWindowActive.call(this);
+}
+
 //////////////////////////////
 // Functions - in-battle messages
 //////////////////////////////
@@ -491,6 +564,19 @@ Scene_Battle.prototype.stop = function () {
     }
     this._partyCommandWindow.close();
     this._actorCommandWindow.close();
+};
+
+//////////////////////////////
+// Functions - managers
+//////////////////////////////
+
+Scene_Battle.prototype.manageDoWhatCommands = function () {
+    this._equipmentDoWhatWindow._commands = ['Cancel'];
+    if (this._equipmentWindow.isEquippedItem(this._equipmentWindow.index())) {
+        this._equipmentDoWhatWindow._commands.unshift('Unequip');
+    } else {
+        this._equipmentDoWhatWindow._commands.unshift('Equip');
+    }
 };
 
 //////////////////////////////

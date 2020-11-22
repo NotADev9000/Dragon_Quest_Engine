@@ -35,12 +35,17 @@ function Window_BattleHelp() {
 Window_BattleHelp.prototype = Object.create(Window_Help.prototype);
 Window_BattleHelp.prototype.constructor = Window_BattleHelp;
 
+Window_BattleHelp.prototype.initialize = function (x, y, width, numLines, titleBlock = true) {
+    this._titleBlock = titleBlock;
+    Window_Help.prototype.initialize.call(this, x, y, width, numLines);
+};
+
 Window_BattleHelp.prototype.fittingHeight = function (numLines) {
     return Window_Base.prototype.fittingHeightTitleBlock.call(this, numLines);
 };
 
 Window_BattleHelp.prototype.titleBlockHeight = function () {
-    return 48;
+    return this._titleBlock ? 48 : 0;
 };
 
 Window_BattleHelp.prototype.standardPadding = function () {

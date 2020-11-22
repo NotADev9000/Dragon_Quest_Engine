@@ -87,7 +87,7 @@ Window_ItemList.prototype.getActorEquips = function (actor) {
 
 Window_ItemList.prototype.isEquippedItem = function (index) {
     return index < this._numActorEquips;
-}
+};
 
 /**
  * Draws item to window

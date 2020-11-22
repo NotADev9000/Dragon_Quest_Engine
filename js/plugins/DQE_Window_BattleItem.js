@@ -6,7 +6,7 @@
 /*:
 *
 * @author NotADev
-* @plugindesc The window that displays skills to use in battle - V0.1
+* @plugindesc The window that displays items to use in battle - V0.1
 *
 *
 * @help
