@@ -1,6 +1,5 @@
 /* TODO list in any order
 *
-* . Remove pressing enter to speed through text
 * . Equipment menu
 * . Status menu
 * . Save/Load menu

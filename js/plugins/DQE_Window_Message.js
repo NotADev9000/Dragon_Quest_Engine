@@ -160,3 +160,8 @@ Window_Message.prototype.processEscapeCharacter = function (code, textState) {
     }
     DQEng.Window_Message.call(this, code, textState);
 };
+
+Window_Message.prototype.isTriggered = function () {
+    return (Input.isTriggered('ok') || Input.isTriggered('cancel') ||
+        TouchInput.isTriggered());
+};
