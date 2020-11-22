@@ -1,7 +1,6 @@
 /* TODO list in any order
 *
 * . Remove pressing enter to speed through text
-* . Change equipment in battle
 * . Equipment menu
 * . Status menu
 * . Save/Load menu

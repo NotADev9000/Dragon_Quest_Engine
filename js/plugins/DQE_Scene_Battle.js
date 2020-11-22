@@ -128,8 +128,8 @@ Scene_Battle.prototype.createEquipmentDoWhatWindow = function () {
     let y = this._equipmentWindow.y;
     this._equipmentDoWhatWindow = new Window_TitledCommand(x, y, 282, 'Do What?');
     this._equipmentDoWhatWindow.deactivate();
-    // this._equipmentDoWhatWindow.setHandler('Equip', this.onEquipmentDoWhatEquip.bind(this));
-    // this._equipmentDoWhatWindow.setHandler('Unequip', this.onEquipmentDoWhatUnequip.bind(this));
+    this._equipmentDoWhatWindow.setHandler('Equip', this.onEquipmentDoWhatEquip.bind(this));
+    this._equipmentDoWhatWindow.setHandler('Unequip', this.onEquipmentDoWhatUnequip.bind(this));
     this._equipmentDoWhatWindow.setHandler('cancel', this.onEquipmentDoWhatCancel.bind(this));
     this._equipmentDoWhatWindow.setHandler('Cancel', this.onEquipmentDoWhatCancel.bind(this));
     this._equipmentDoWhatWindow.hide();
@@ -396,6 +396,27 @@ Scene_Battle.prototype.itemWindowClosed = function () {
     this.showEnemyWindow(1, Window_BattleEnemy.STATE_GROUP);
 };
 
+Scene_Battle.prototype.onEquipmentDoWhatEquip = function () {
+    var actor = BattleManager.actor();
+    var index = this._equipmentWindow._trueIndexes[this._equipmentWindow.index()];
+    var item = this._equipmentWindow.item();
+
+    if (actor.canEquip(item)) {
+        this.displayMessage(actor.equipItemMessage(index), Scene_Battle.prototype.doWhatEquipMessage);
+        actor.equipItemFromInv(index);
+    } else {
+        this.displayMessage(actor.cantEquipMessage(index), Scene_Battle.prototype.doWhatEquipMessage);
+    }
+};
+
+Scene_Battle.prototype.onEquipmentDoWhatUnequip = function () {
+    let actor = BattleManager.actor();
+    let index = this._equipmentWindow._trueIndexes[this._equipmentWindow.index()];
+
+    this.displayMessage(actor.unequipItemMessage(index), Scene_Battle.prototype.doWhatEquipMessage);
+    actor.unequipItem(index);
+};
+
 Scene_Battle.prototype.onEquipmentDoWhatCancel = function () {
     this._equipmentWindow.hideBackgroundDimmer();
     this._equipmentDoWhatWindow.hide();
@@ -527,6 +548,9 @@ Scene_Battle.prototype.actorCommandDisabledMessage = function () {
         case 'Item':
             msg += ` items!`;
             break;
+        case 'Equipment':
+            msg += ` equipment!`;
+            break;
     }
     return msg;
 };
@@ -539,6 +563,14 @@ Scene_Battle.prototype.actorCommandDisabledCallback = function () {
     this._actorCommandWindow.hideBackgroundDimmer();
     this._enemyWindow.hideBackgroundDimmer();
     this._actorCommandWindow.activate();
+};
+
+Scene_Battle.prototype.doWhatEquipMessage = function () {
+    this._equipmentDoWhatWindow.hide();
+    this._equipmentWindow.hideBackgroundDimmer();
+    this._equipmentWindow.hideHelpWindowBackgroundDimmer();
+    this._equipmentWindow.refresh();
+    this._equipmentWindow.activate();
 };
 
 //////////////////////////////

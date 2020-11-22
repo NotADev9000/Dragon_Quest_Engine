@@ -60,11 +60,8 @@ Window_BattleSkill.prototype.pageBlockHeight = function () {
 //////////////////////////////
 
 Window_BattleSkill.prototype.setActor = function (actor) {
-    if (this._actor !== actor) {
-        this._actor = actor;
-        this.refresh();
-        this.resetScroll();
-    }
+    this._actor = actor;
+    this.refresh();
 };
 
 Window_BattleSkill.prototype.setStypeId = function (stypeId) {

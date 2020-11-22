@@ -67,11 +67,8 @@ Window_BattleItem.prototype.pageBlockHeight = function () {
 //////////////////////////////
 
 Window_BattleItem.prototype.setActor = function (actor) {
-    if (this._actor !== actor) {
-        this._actor = actor;
-        this.refresh();
-        this.resetScroll();
-    }
+    this._actor = actor;
+    this.refresh();
 };
 
 Window_BattleItem.prototype.setHelpWindowItem = function (item, actor) {

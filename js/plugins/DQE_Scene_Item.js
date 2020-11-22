@@ -210,7 +210,7 @@ Scene_Item.prototype.onDoWhatEquip = function () {
     } else {
         this.displayMessage(actor.cantEquipMessage(index), Scene_Item.prototype.doWhatEquipMessage);
     }
-}
+};
 
 Scene_Item.prototype.onDoWhatUnequip = function () {
     var actor = $gameParty.members()[this._commandWindow.currentSymbol()];
@@ -218,7 +218,7 @@ Scene_Item.prototype.onDoWhatUnequip = function () {
 
     this.displayMessage(actor.unequipItemMessage(index), Scene_Item.prototype.doWhatEquipMessage);
     actor.unequipItem(index);
-}
+};
 
 Scene_Item.prototype.onDoWhatCancel = function () {
     this._itemWindow.hideBackgroundDimmer();
@@ -297,7 +297,7 @@ Scene_Item.prototype.onTransferToWhoOk = function () {
         this.displayMessage(takeFrom.giveItemToActorMessage(item, giveActor), Scene_Item.prototype.transferredMessage);
         takeFrom.giveItemToActor(item, giveActor);
     }
-}
+};
 
 Scene_Item.prototype.onTransferToWhoCancel = function () {
     this._doWhatWindow.hideBackgroundDimmer();
@@ -334,14 +334,14 @@ Scene_Item.prototype.onHowManyOk = function () {
     var amount = this._howManyWindow._number;
     this.displayMessage($gameParty.giveMultipleItemsToActorMessage(this.item(), actor, amount), Scene_Item.prototype.transferredMessage);
     $gameParty.giveItemToActor(this.item(), actor, -1, amount);
-}
+};
 
 Scene_Item.prototype.onHowManyCancel = function () {
     this._transferToWhoWindow.hideBackgroundDimmer();
     this._transferItemWindow.hideBackgroundDimmer();
     this._howManyWindow.hide();
     this._transferToWhoWindow.activate();
-}
+};
 
 //////////////////////////////
 // Functions - managers
@@ -371,7 +371,7 @@ Scene_Item.prototype.manageDoWhatPosition = function () {
  */
 Scene_Item.prototype.manageTransferToWhoCommands = function () {
     this._transferToWhoWindow._commands = this.inBag(this._commandWindow) ? null : ['Bag'];
-}
+};
 
 //////////////////////////////
 // Functions - message callbacks

@@ -122,8 +122,11 @@ Window_ActorCommand.prototype.isEnabled = function (symbol) {
                 return skill.stypeId === this.currentExt();
             }, this) != undefined;
         case 'Item':
-        case 'Equipment':
             return this._actor.items().length > 0;
+        case 'Equipment':
+            return this._actor.items().filter(function (item) {
+                return DataManager.isWeapon(item) || DataManager.isArmor(item);
+            }).length > 0;
         default:
             return true;
     }

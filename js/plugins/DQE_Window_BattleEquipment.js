@@ -38,6 +38,7 @@ Window_BattleEquipment.prototype.constructor = Window_BattleEquipment;
 Window_BattleEquipment.prototype.initialize = function (x, y, width, height) {
     Window_BattleItem.prototype.initialize.call(this, x, y, width, height);
     this._numActorEquips = 0;
+    this._trueIndexes = []; // the index of the equipment piece when in the actor's inventory NOT when in this window's data
 };
 
 //////////////////////////////
@@ -45,10 +46,15 @@ Window_BattleEquipment.prototype.initialize = function (x, y, width, height) {
 //////////////////////////////
 
 Window_BattleEquipment.prototype.makeItemList = function () {
+    this._trueIndexes = [];
     if (this._actor) {
         this._numActorEquips = this._actor.numEquips();
-        this._data = this._actor.items().filter(function (item) {
-            return DataManager.isWeapon(item) || DataManager.isArmor(item);
+        this._data = this._actor.items().filter(function (item, index) {
+            if (DataManager.isWeapon(item) || DataManager.isArmor(item)) {
+                this._trueIndexes.push(index);
+                return true;
+            }
+            return false;
         }, this);
     } else {
         this._numActorEquips = 0;
