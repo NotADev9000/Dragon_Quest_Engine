@@ -43,3 +43,22 @@ Game_Unit.prototype.select = function (activeMembers) {
         });
     }, this);
 };
+
+/**
+ * Returns the members of the front line party (first 4)
+ */
+Game_Unit.prototype.frontline = function () {
+    return this.members().slice(0, 4);
+};
+
+Game_Unit.prototype.aliveFrontline = function () {
+    return this.frontline().filter(function (member) {
+        return member.isAlive();
+    });
+};
+
+Game_Unit.prototype.deadFrontline = function () {
+    return this.frontline().filter(function (member) {
+        return member.isDead();
+    });
+};

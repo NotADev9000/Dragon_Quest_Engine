@@ -44,3 +44,26 @@ Game_Battler.prototype.useItem = function (item, modifiedSkill, itemIndex = -1) 
         }
     }
 };
+
+Game_Battler.prototype.addState = function (stateId) {
+    if (this.isStateAddable(stateId)) {
+        if (!this.isStateAffected(stateId)) {
+            this.addNewState(stateId);
+            this.refresh();
+            stateId === this.deathStateId() && $gamePlayer.refresh();
+        }
+        this.resetStateCounts(stateId);
+        this._result.pushAddedState(stateId);
+    }
+};
+
+Game_Battler.prototype.removeState = function (stateId) {
+    if (this.isStateAffected(stateId)) {
+        let removeDeath = stateId === this.deathStateId();
+        removeDeath && this.revive();
+        this.eraseState(stateId);
+        $gamePlayer.refresh();
+        removeDeath && this.refresh();
+        this._result.pushRemovedState(stateId);
+    }
+};
