@@ -46,9 +46,43 @@ Window_PartyCommand.prototype.lineGap = function () {
     return 15;
 };
 
+//////////////////////////////
+// Functions - commands
+//////////////////////////////
+
 Window_PartyCommand.prototype.makeCommandList = function () {
     this.addCommand(TextManager.fight, 'Fight');
     this.addCommand('Misc.', 'Misc.');
     this.addCommand('Line-Up', 'Line-Up');
     this.addCommand(TextManager.escape, 'Escape', BattleManager.canEscape());
+};
+
+Window_PartyCommand.prototype.isCurrentItemEnabled = function () {
+    return this.isEnabled(this.currentSymbol());
+};
+
+Window_PartyCommand.prototype.isEnabled = function (symbol) {
+    switch (symbol) {
+        case 'Line-Up':
+            return $gameParty.members().length > 1;
+        default:
+            return true;
+    }
+};
+
+//////////////////////////////
+// Functions - settings
+//////////////////////////////
+
+Window_PartyCommand.prototype.processOk = function () {
+    if (this.isCurrentItemEnabled()) {
+        this.playOkSound();
+        this.updateInputData();
+        this.deactivate();
+        this.callOkHandler();
+    } else {
+        this.updateInputData();
+        this.deactivate();
+        this.callHandler('Disabled');
+    }
 };

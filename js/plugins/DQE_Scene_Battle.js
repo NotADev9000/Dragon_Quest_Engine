@@ -29,20 +29,30 @@ DQEng.Scene_Battle = DQEng.Scene_Battle || {};
 //-----------------------------------------------------------------------------
 
 Scene_Battle.prototype.createAllWindows = function () {
+    // text windows 1
     this.createLogWindow();
+    // party status
     this.createStatusWindow();
+    // command windows
     this.createPartyCommandWindow();
     this.createActorCommandWindow();
+    // skill windows
     this.createSkillHelpWindow();
     this.createSkillWindow();
+    // item windows
     this.createItemHelpWindow();
     this.createItemWindow();
+    // equipment windows
     this.createEquipmentHelpWindow();
     this.createEquipmentWindow();
     this.createEquipmentDoWhatWindow();
+    // target windows
     this.createActorWindow();
     this.createActorStatWindow();
     this.createEnemyWindow();
+    // line-up windows
+    this.createLineUpCommandWindow();
+    // text windows 2
     this.createMessageWindow();
     this.createScrollTextWindow();
 };
@@ -50,6 +60,8 @@ Scene_Battle.prototype.createAllWindows = function () {
 //////////////////////////////
 // Functions - create windows
 //////////////////////////////
+
+// party status
 
 Scene_Battle.prototype.createStatusWindow = function () {
     this._statusWindow = [];
@@ -61,10 +73,14 @@ Scene_Battle.prototype.createStatusWindow = function () {
     }
 };
 
+// command windows
+
 Scene_Battle.prototype.createPartyCommandWindow = function () {
     this._partyCommandWindow = new Window_PartyCommand(63, 540);
     this._partyCommandWindow.setHandler('Fight', this.commandFight.bind(this));
+    this._partyCommandWindow.setHandler('Line-Up', this.commandLineUp.bind(this));
     this._partyCommandWindow.setHandler('Escape', this.commandEscape.bind(this));
+    this._partyCommandWindow.setHandler('Disabled', this.commandPartyDisabled.bind(this));
     this._partyCommandWindow.deselect();
     this.addWindow(this._partyCommandWindow);
 };
@@ -81,6 +97,8 @@ Scene_Battle.prototype.createActorCommandWindow = function () {
     this.addWindow(this._actorCommandWindow);
 };
 
+// skill windows
+
 Scene_Battle.prototype.createSkillHelpWindow = function () {
     this._skillHelpWindow = new Window_BattleSkillHelp(585, 540, 672);
     this._skillHelpWindow.hide();
@@ -95,6 +113,8 @@ Scene_Battle.prototype.createSkillWindow = function () {
     this.addWindow(this._skillWindow);
 };
 
+// item windows
+
 Scene_Battle.prototype.createItemHelpWindow = function () {
     this._itemHelpWindow = new Window_BattleItemHelp(585, 540, 672);
     this._itemHelpWindow.hide();
@@ -108,6 +128,8 @@ Scene_Battle.prototype.createItemWindow = function () {
     this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
     this.addWindow(this._itemWindow);
 };
+
+// equipment windows
 
 Scene_Battle.prototype.createEquipmentHelpWindow = function () {
     this._equipmentHelpWindow = new Window_BattleItemHelp(585, 588, 672, 3, false);
@@ -136,6 +158,8 @@ Scene_Battle.prototype.createEquipmentDoWhatWindow = function () {
     this.addWindow(this._equipmentDoWhatWindow);
 };
 
+// target windows
+
 Scene_Battle.prototype.createActorWindow = function () {
     var x = 513;
     this._actorWindow = new Window_BattleActor(x, 0);
@@ -158,6 +182,21 @@ Scene_Battle.prototype.createEnemyWindow = function () {
     this._enemyWindow.setHandler('cancel', this.onEnemyCancel.bind(this));
     this.addWindow(this._enemyWindow);
 };
+
+// line-up windows
+
+Scene_Battle.prototype.createLineUpCommandWindow = function () {
+    let x = this._partyCommandWindow.x + this._partyCommandWindow.windowWidth();
+    this._lineUpCommandWindow = new Window_LineUpCommand(x, 612);
+    this._lineUpCommandWindow.deactivate();
+    // this._lineUpCommandWindow.setHandler('Individual', this.commandIndividual.bind(this));
+    // this._lineUpCommandWindow.setHandler('Group', this.commandGroup.bind(this));
+    this._lineUpCommandWindow.setHandler('cancel', this.commandLineUpCancel.bind(this));
+    this._lineUpCommandWindow.hide();
+    this.addWindow(this._lineUpCommandWindow);
+};
+
+// text windows 2
 
 Scene_Battle.prototype.createMessageWindow = function () {
     this._messageWindow = new Window_BattleMessage();
@@ -230,6 +269,21 @@ Scene_Battle.prototype.showActorWindow = function (pos) {
 //////////////////////////////
 // Functions - command handlers
 //////////////////////////////
+
+Scene_Battle.prototype.commandLineUp = function () {
+    this._lineUpCommandWindow.select(0);
+    this._lineUpCommandWindow.show();
+    this._partyCommandWindow.showBackgroundDimmer();
+    this._enemyWindow.showBackgroundDimmer();
+    this._lineUpCommandWindow.activate();
+};
+
+Scene_Battle.prototype.commandPartyDisabled = function () {
+    this._partyCommandWindow.showBackgroundDimmer();
+    this._enemyWindow.showBackgroundDimmer();
+    this.displayMessage(this.partyCommandDisabledMessage(),
+    Scene_Battle.prototype.partyCommandDisabledCallback);
+};
 
 Scene_Battle.prototype.commandAttack = function () {
     BattleManager.inputtingAction().setAttack();
@@ -423,6 +477,13 @@ Scene_Battle.prototype.onEquipmentDoWhatCancel = function () {
     this._equipmentWindow.activate();
 };
 
+Scene_Battle.prototype.commandLineUpCancel = function () {
+    this._partyCommandWindow.hideBackgroundDimmer();
+    this._enemyWindow.hideBackgroundDimmer();
+    this._lineUpCommandWindow.hide();
+    this._partyCommandWindow.activate();
+};
+
 //////////////////////////////
 // Functions - change input
 //////////////////////////////
@@ -527,12 +588,22 @@ DQEng.Scene_Battle.isAnyInputWindowActive = Scene_Battle.prototype.isAnyInputWin
 Scene_Battle.prototype.isAnyInputWindowActive = function () {
     return this._equipmentWindow.active ||
            this._equipmentDoWhatWindow.active ||
+           this._lineUpCommandWindow.active ||
            DQEng.Scene_Battle.isAnyInputWindowActive.call(this);
 }
 
 //////////////////////////////
 // Functions - in-battle messages
 //////////////////////////////
+
+Scene_Battle.prototype.partyCommandDisabledMessage = function () {
+    switch (this._partyCommandWindow.currentSymbol()) {
+        case 'Line-Up':
+            return `You can't change the line-up with only one party member!`;
+        default:
+            return ``;
+    }
+};
 
 Scene_Battle.prototype.actorCommandDisabledMessage = function () {
     var actor = BattleManager.actor();
@@ -558,6 +629,12 @@ Scene_Battle.prototype.actorCommandDisabledMessage = function () {
 //////////////////////////////
 // Functions - message callbacks
 //////////////////////////////
+
+Scene_Battle.prototype.partyCommandDisabledCallback = function () {
+    this._partyCommandWindow.hideBackgroundDimmer();
+    this._enemyWindow.hideBackgroundDimmer();
+    this._partyCommandWindow.activate();
+};
 
 Scene_Battle.prototype.actorCommandDisabledCallback = function () {
     this._actorCommandWindow.hideBackgroundDimmer();
