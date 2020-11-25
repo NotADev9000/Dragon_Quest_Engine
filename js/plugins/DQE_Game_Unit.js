@@ -67,5 +67,5 @@ Game_Unit.prototype.deadFrontline = function () {
  * Returns the members of the back line party (members 4-8)
  */
 Game_Unit.prototype.backline = function () {
-    return $gameParty.allMembers().length > 4 ? this.members().slice(4, 8) : [];
+    return $gameParty.allMembers().length > 4 ? this.allMembers().slice(4, 8) : [];
 };

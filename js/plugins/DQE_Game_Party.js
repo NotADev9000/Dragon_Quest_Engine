@@ -31,12 +31,40 @@ DQEng.Game_Party = DQEng.Game_Party || {};
 Game_Party.prototype.giveItemToActor = function (item, actor, index, amount = 1) {
     actor.giveItems(item, amount, index);
     this.loseItem(item, amount, false);
-}
+};
 
 Game_Party.prototype.giveItemToActorMessage = function (item, actor) {
     return `${actor._name} took the ${item.name} from the bag.`;
-}
+};
 
 Game_Party.prototype.giveMultipleItemsToActorMessage = function (item, actor, amount) {
     return `${actor._name} took ${amount} ${item.name}s from the bag.`;
-}
+};
+
+Game_Party.prototype.onBattleStart = function () {
+    this.allMembers().forEach(function (member) {
+        member.onBattleStart();
+    });
+    this._inBattle = true;
+};
+
+Game_Party.prototype.onBattleEnd = function () {
+    this._inBattle = false;
+    this.allMembers().forEach(function (member) {
+        member.onBattleEnd();
+    });
+};
+
+Game_Party.prototype.makeActions = function () {
+    this.allMembers().forEach(function (member) {
+        member.makeActions();
+    });
+};
+
+Game_Party.prototype.attemptSwap = function (index1, index2) {
+    let frontline = Object.assign([], $gameParty.frontline());
+    let swapWith = $gameParty.allMembers()[index2];
+    frontline[index1] = swapWith;
+
+    return frontline.some(actor => actor.isAlive());
+};

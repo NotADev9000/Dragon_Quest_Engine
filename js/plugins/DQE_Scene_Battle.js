@@ -215,7 +215,7 @@ Scene_Battle.prototype.createLineUpIndividualWithWhoWindow = function () {
     let y = this._lineUpIndivPartyWindow.y - 54;
     this._lineUpIndivWithWhoWindow = new Window_TitledPartyCommand(x, y, 354, 'With Who?', undefined, [], 'backline');
     this._lineUpIndivWithWhoWindow.deactivate();
-    // this._lineUpIndivWithWhoWindow.setHandler('ok', this.onLineUpIndivWithWhoOk.bind(this));
+    this._lineUpIndivWithWhoWindow.setHandler('ok', this.onLineUpIndivWithWhoOk.bind(this));
     this._lineUpIndivWithWhoWindow.setHandler('cancel', this.onLineUpIndivWithWhoCancel.bind(this));
     this._lineUpIndivWithWhoWindow.hide();
     this.addWindow(this._lineUpIndivWithWhoWindow);
@@ -224,10 +224,10 @@ Scene_Battle.prototype.createLineUpIndividualWithWhoWindow = function () {
 Scene_Battle.prototype.createLineUpIndividualStatusWindow = function () {
     let x = this._lineUpIndivWithWhoWindow.x + this._lineUpIndivWithWhoWindow.windowWidth();
     let y = this._lineUpIndivWithWhoWindow.y;
-    this._lineUpIndividualStatusWindow = new Window_BattleStatus(x, y, undefined, 'center');
-    this._lineUpIndividualStatusWindow.hide();
-    this._lineUpIndivWithWhoWindow.setAssociatedWindow(this._lineUpIndividualStatusWindow);
-    this.addWindow(this._lineUpIndividualStatusWindow);
+    this._lineUpIndivStatusWindow = new Window_BattleStatus(x, y, undefined, 'center');
+    this._lineUpIndivStatusWindow.hide();
+    this._lineUpIndivWithWhoWindow.setAssociatedWindow(this._lineUpIndivStatusWindow);
+    this.addWindow(this._lineUpIndivStatusWindow);
 };
 
 // text windows 2
@@ -528,7 +528,7 @@ Scene_Battle.prototype.onLineUpCommandCancel = function () {
 Scene_Battle.prototype.onLineUpIndivPartyOk = function () {
     this._lineUpIndivWithWhoWindow.select(0);
     this._lineUpIndivWithWhoWindow.show();
-    this._lineUpIndividualStatusWindow.show();
+    this._lineUpIndivStatusWindow.show();
     this._lineUpIndivPartyWindow.showBackgroundDimmer();
     this._lineUpIndivWithWhoWindow.activate();
 };
@@ -539,10 +539,39 @@ Scene_Battle.prototype.onLineUpIndivPartyCancel = function () {
     this._lineUpCommandWindow.activate();
 };
 
+Scene_Battle.prototype.onLineUpIndivWithWhoOk = function () {
+    var swapWho = this._lineUpIndivPartyWindow.currentSymbol();
+    var swapWith = this._lineUpIndivWithWhoWindow.currentSymbol();
+    
+    if ($gameParty.attemptSwap(swapWho, swapWith)) {
+        $gameParty.swapOrder(swapWho, swapWith);
+        this.refreshStatusIndex(swapWho, swapWho);
+        this._partyCommandWindow.select(0);
+        this._lineUpIndivStatusWindow.hide();
+        this._lineUpIndivStatusWindow.hideBackgroundDimmer();
+        this._lineUpIndivWithWhoWindow.hide();
+        this._lineUpIndivWithWhoWindow.hideBackgroundDimmer();
+        this._lineUpIndivPartyWindow.hide();
+        this._lineUpIndivPartyWindow.hideBackgroundDimmer();
+        this._lineUpCommandWindow.hide();
+        this._lineUpCommandWindow.hideBackgroundDimmer();
+        this._enemyWindow.hideBackgroundDimmer();
+        this._partyCommandWindow.hideBackgroundDimmer();
+        this._lineUpIndivPartyWindow.refresh();
+        this._lineUpIndivWithWhoWindow.refresh();
+        this._lineUpIndivStatusWindow.setCategory(this._lineUpIndivWithWhoWindow.currentSymbol(), true);
+        this._partyCommandWindow.activate();
+    } else {
+        this._lineUpIndivWithWhoWindow.showBackgroundDimmer();
+        this._lineUpIndivStatusWindow.showBackgroundDimmer();
+        this.displayMessage(this.lineUpSwapFailed(), Scene_Battle.prototype.lineUpSwapFailedMessage);
+    }
+};
+
 Scene_Battle.prototype.onLineUpIndivWithWhoCancel = function () {
     this._lineUpIndivPartyWindow.hideBackgroundDimmer();
     this._lineUpIndivWithWhoWindow.hide();
-    this._lineUpIndividualStatusWindow.hide();
+    this._lineUpIndivStatusWindow.hide();
     this._lineUpIndivPartyWindow.activate();
 };
 
@@ -690,6 +719,10 @@ Scene_Battle.prototype.actorCommandDisabledMessage = function () {
     return msg;
 };
 
+Scene_Battle.prototype.lineUpSwapFailed = function () {
+    return `A party full of coffins doesn't make for much of a fight!`
+};
+
 //////////////////////////////
 // Functions - message callbacks
 //////////////////////////////
@@ -714,6 +747,12 @@ Scene_Battle.prototype.doWhatEquipMessage = function () {
     this._equipmentWindow.activate();
 };
 
+Scene_Battle.prototype.lineUpSwapFailedMessage = function () {
+    this._lineUpIndivWithWhoWindow.hideBackgroundDimmer();
+    this._lineUpIndivStatusWindow.hideBackgroundDimmer();
+    this._lineUpIndivWithWhoWindow.activate();
+};
+
 //////////////////////////////
 // Functions - scene actions
 //////////////////////////////
@@ -726,6 +765,10 @@ Scene_Battle.prototype.refreshStatus = function () {
     this._statusWindow.forEach(statusWindow => {
         statusWindow.refresh();
     });
+};
+
+Scene_Battle.prototype.refreshStatusIndex = function (windowIndex, actorIndex) {
+    this._statusWindow[windowIndex].setCategory(actorIndex, true);
 };
 
 Scene_Battle.prototype.stop = function () {

@@ -40,8 +40,8 @@ Window_BattleStatus.prototype.initialize = function (x, y, actor, titleAlign = '
     Window_MenuStatus.prototype.initialize.call(this, x, y, actor, titleAlign);
 };
 
-Window_BattleStatus.prototype.setCategory = function (category) {
-    if (this._actorIndex !== category) {
+Window_BattleStatus.prototype.setCategory = function (category, force = false) {
+    if ((this._actorIndex !== category) || force) {
         this._actorIndex = category;
         this._actor = $gameParty.allMembers()[this._actorIndex];
         this.refresh();
