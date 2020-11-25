@@ -58,6 +58,7 @@ var $plugins =
 {"name":"DQE_Window_Pagination","status":true,"description":"A window that display items with pages - V0.1","parameters":{}},
 {"name":"DQE_Window_TitledCommand","status":true,"description":"The command list window with a title - V0.1","parameters":{}},
 {"name":"DQE_Window_TitledPartyCommand","status":true,"description":"The party command base - V0.1","parameters":{}},
+{"name":"DQE_Window_PartySelection","status":true,"description":"The command list window with party members - V0.1","parameters":{}},
 {"name":"DQE_Window_ActorCommand","status":true,"description":"Static class for managing the battle - V0.1","parameters":{}},
 {"name":"DQE_Window_PartyCommand","status":true,"description":"Static class for managing the battle - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemCommand","status":true,"description":"The item menu command list - V0.1","parameters":{}},

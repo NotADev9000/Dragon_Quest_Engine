@@ -64,7 +64,7 @@ Window_PartyCommand.prototype.isCurrentItemEnabled = function () {
 Window_PartyCommand.prototype.isEnabled = function (symbol) {
     switch (symbol) {
         case 'Line-Up':
-            return $gameParty.members().length > 1;
+            return $gameParty.allMembers().length > 4;
         default:
             return true;
     }

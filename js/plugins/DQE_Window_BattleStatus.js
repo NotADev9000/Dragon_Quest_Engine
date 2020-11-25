@@ -35,6 +35,15 @@ function Window_BattleStatus() {
 Window_BattleStatus.prototype = Object.create(Window_MenuStatus.prototype);
 Window_BattleStatus.prototype.constructor = Window_BattleStatus;
 
-Window_BattleStatus.prototype.initialize = function (x, y, actor) {
-    Window_MenuStatus.prototype.initialize.call(this, x, y, actor);
+Window_BattleStatus.prototype.initialize = function (x, y, actor, titleAlign = 'left') {
+    this._actorIndex = -1;
+    Window_MenuStatus.prototype.initialize.call(this, x, y, actor, titleAlign);
+};
+
+Window_BattleStatus.prototype.setCategory = function (category) {
+    if (this._actorIndex !== category) {
+        this._actorIndex = category;
+        this._actor = $gameParty.allMembers()[this._actorIndex];
+        this.refresh();
+    }
 };

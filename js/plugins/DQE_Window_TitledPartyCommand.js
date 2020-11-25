@@ -40,8 +40,9 @@ Window_TitledPartyCommand.prototype.constructor = Window_TitledPartyCommand;
 /**
  * @param {number} excludeActors index of actors to exclude from command list
  */
-Window_TitledPartyCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands, excludeActors = []) {
+Window_TitledPartyCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands, excludeActors = [], commandType) {
     this._excludeActors = excludeActors;
+    this._commandType = commandType;
     Window_TitledCommand.prototype.initialize.call(this, x, y, windowWidth, menuTitle, commands);
 };
 
@@ -50,8 +51,25 @@ Window_TitledPartyCommand.prototype.initialize = function (x, y, windowWidth, me
 //////////////////////////////
 
 Window_TitledPartyCommand.prototype.makeCommandList = function () {
-    this.addPartyCommands();
+    switch (this._commandType) {
+        case 'backline':
+            this.addBacklineCommands();
+            break;
+        default:
+            this.addPartyCommands();
+            break;
+    }
     if (this._commands != undefined) { this.addCommands(); }
+};
+
+Window_TitledPartyCommand.prototype.addBacklineCommands = function () {
+    var backline = $gameParty.backline();
+    backline.forEach((member, index) => {
+        index += 4; // add 4 so it lines up with all party members
+        if (this._excludeActors.indexOf(index) === -1) {
+            this.addCommand(member._name, index, true);
+        }
+    });
 };
 
 /**

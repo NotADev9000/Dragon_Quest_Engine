@@ -97,12 +97,12 @@ Window_ItemActorStat.prototype.drawStat = function () {
             text = 'MP';
             break;
     }
-    this.changeTextColor(this.hpColor($gameParty.battleMembers()[this._actorIndex]));
+    this.changeTextColor(this.hpColor($gameParty.allMembers()[this._actorIndex]));
     this.drawText(text, pos, pos, this.textWidth(), 'center');
 };
 
 Window_ItemActorStat.prototype.drawStatValue = function () {
-    var actor = $gameParty.battleMembers()[this._actorIndex];
+    var actor = $gameParty.allMembers()[this._actorIndex];
     var text = '';
     switch (this._stat) {
         case Window_ItemActorStat.STAT_HP:

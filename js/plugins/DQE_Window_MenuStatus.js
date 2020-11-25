@@ -36,10 +36,11 @@ function Window_MenuStatus() {
 Window_MenuStatus.prototype = Object.create(Window_Base.prototype);
 Window_MenuStatus.prototype.constructor = Window_MenuStatus;
 
-Window_MenuStatus.prototype.initialize = function(x, y, actor) {
+Window_MenuStatus.prototype.initialize = function(x, y, actor, titleAlign = 'left') {
     var width = this.windowWidth();
     var height = this.windowHeight();
     this._actor = actor;
+    this._titleAlign = titleAlign;
     Window_Base.prototype.initialize.call(this, x, y, width, height);
     this.refresh();
 };
@@ -69,20 +70,22 @@ Window_MenuStatus.prototype.windowHeight = function () {
 
 Window_MenuStatus.prototype.refresh = function () {
     this.contents.clear();
-    this.drawActorName(this._actor, this.extraPadding(), this.extraPadding());
-    this.drawHorzLine(0, 51);
-    this.drawStatBlock(TextManager.hpA, this._actor.hp, this.extraPadding(), 66, 72);
-    this.drawStatBlock(TextManager.mpA, this._actor.mp,this.extraPadding(), 102, 72);
-    this.drawStatBlock(TextManager.levelA, this._actor.level,this.extraPadding(), 138, 72);
+    if (this._actor) {
+        this.drawActorName(this._actor, this.extraPadding(), this.extraPadding());
+        this.drawHorzLine(0, 51);
+        this.drawStatBlock(TextManager.hpA, this._actor.hp, this.extraPadding(), 66, 72);
+        this.drawStatBlock(TextManager.mpA, this._actor.mp,this.extraPadding(), 102, 72);
+        this.drawStatBlock(TextManager.levelA, this._actor.level,this.extraPadding(), 138, 72);
+    }
 };
 
 /**
  * Draws actor name limited to 10 characters
  */
 Window_MenuStatus.prototype.drawActorName = function (actor, x, y, width) {
-    width = width || 168;
+    width = width || this.windowWidth() - (this.standardPadding() * 2) - (this.extraPadding() * 2);
     this.changeTextColor(this.hpColor(this._actor));
-    this.drawText(actor.name().slice(0, 10), x, y, width);
+    this.drawText(actor.name().slice(0, 10), x, y, width, this._titleAlign);
 };
 
 /**

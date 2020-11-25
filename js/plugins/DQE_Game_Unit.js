@@ -62,3 +62,10 @@ Game_Unit.prototype.deadFrontline = function () {
         return member.isDead();
     });
 };
+
+/**
+ * Returns the members of the back line party (members 4-8)
+ */
+Game_Unit.prototype.backline = function () {
+    return $gameParty.allMembers().length > 4 ? this.members().slice(4, 8) : [];
+};
