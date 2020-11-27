@@ -35,9 +35,10 @@ function Window_PartySelection() {
 Window_PartySelection.prototype = Object.create(Window_Command.prototype);
 Window_PartySelection.prototype.constructor = Window_PartySelection;
 
-Window_PartySelection.prototype.initialize = function (x, y, windowWidth, commandType) {
+Window_PartySelection.prototype.initialize = function (x, y, windowWidth, commandType, excludeActors = []) {
     this._windowWidth = windowWidth;
     this._commandType = commandType;
+    this._excludeActors = excludeActors;
     Window_Command.prototype.initialize.call(this, x, y);
 };
 
@@ -84,8 +85,10 @@ Window_PartySelection.prototype.addFrontlineCommands = function () {
 };
 
 Window_PartySelection.prototype.addAllCommands = function () {
-    let all = $gameParty.members();
+    let all = $gameParty.allMembers();
     all.forEach((member, index) => {
-        this.addCommand(member._name, index);
+        if (this._excludeActors.indexOf(index) === -1) {
+            this.addCommand(member._name, index);
+        }
     });
 };

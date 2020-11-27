@@ -42,7 +42,7 @@ Window_TitledCommand.prototype.constructor = Window_TitledCommand;
  * @param {Array} commands commands that will be displayed below the title
  */
 Window_TitledCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands = []) {
-    this._windowWidth = windowWidth;
+    this._width = windowWidth;
     this._menuTitle = menuTitle;
     this._commands = commands;
     Window_Command.prototype.initialize.call(this, x, y);
@@ -53,7 +53,7 @@ Window_TitledCommand.prototype.initialize = function (x, y, windowWidth, menuTit
 //////////////////////////////
 
 Window_TitledCommand.prototype.windowWidth = function () {
-    return this._windowWidth;
+    return this._width;
 };
 
 Window_TitledCommand.prototype.windowHeight = function () {
@@ -123,7 +123,7 @@ Window_TitledCommand.prototype.drawTitleBlock = function () {
 
     this.drawText(this._menuTitle, this.extraPadding(), this.extraPadding(), titleWidth, 'center');
     this.drawHorzLine(0, 51);
-}
+};
 
 /**
  * extraPadding is added to properly adjust commands

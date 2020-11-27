@@ -58,7 +58,9 @@ var $plugins =
 {"name":"DQE_Window_Pagination","status":true,"description":"A window that display items with pages - V0.1","parameters":{}},
 {"name":"DQE_Window_TitledCommand","status":true,"description":"The command list window with a title - V0.1","parameters":{}},
 {"name":"DQE_Window_TitledPartyCommand","status":true,"description":"The party command base - V0.1","parameters":{}},
+{"name":"DQE_Window_TitledList","status":true,"description":"Displays a list with a title - V0.1","parameters":{}},
 {"name":"DQE_Window_PartySelection","status":true,"description":"The command list window with party members - V0.1","parameters":{}},
+{"name":"DQE_Window_PartyOrder","status":true,"description":"The command list window with party members - V0.1","parameters":{}},
 {"name":"DQE_Window_ActorCommand","status":true,"description":"Static class for managing the battle - V0.1","parameters":{}},
 {"name":"DQE_Window_PartyCommand","status":true,"description":"Static class for managing the battle - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemCommand","status":true,"description":"The item menu command list - V0.1","parameters":{}},
@@ -75,6 +77,7 @@ var $plugins =
 {"name":"DQE_Window_BattleItemHelp","status":true,"description":"The window for displaying the skill description/cost - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleLog","status":true,"description":"The window for displaying battle progress - V0.1","parameters":{}},
 {"name":"DQE_Window_LineUpCommand","status":true,"description":"Window for selecting line-up type - V0.1","parameters":{}},
+{"name":"DQE_Window_ConfirmCancel","status":true,"description":"A simple command window with confirm/cancel - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}}
 ];

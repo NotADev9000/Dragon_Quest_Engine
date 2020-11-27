@@ -68,3 +68,28 @@ Game_Party.prototype.attemptSwap = function (index1, index2) {
 
     return frontline.some(actor => actor.isAlive());
 };
+
+/**
+ * Checks if the passed array of actor indexes have at least
+ * one living actor in the frontline
+ */
+Game_Party.prototype.checkGroupOrder = function (array) {
+    let frontlineInd = array.slice().splice(0, 4);
+    return frontlineInd.some(index => 
+        $gameParty.allMembers()[index].isAlive()
+    );
+};
+
+/**
+ * takes an array of character positions and converts them to
+ * the character indexes and then sets that as the party order
+ * 
+ * @param {array} list an array of character positions
+ */
+Game_Party.prototype.swapAll = function (list) {
+    var actorIds = [];
+    list.forEach((element) => {
+        actorIds.push($gameParty.allMembers()[element]._actorId);
+    });
+    this._actors = actorIds;
+};

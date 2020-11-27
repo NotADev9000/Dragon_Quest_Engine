@@ -55,6 +55,10 @@ Scene_Battle.prototype.createAllWindows = function () {
     this.createLineUpIndividualPartyWindow();
     this.createLineUpIndividualWithWhoWindow();
     this.createLineUpIndividualStatusWindow();
+    this.createLineUpGroupPartyWindow();
+    this.createLineUpGroupListWindow();
+    this.createLineUpGroupStatusWindow();
+    this.createLineUpGroupConfirmWindow();
     // text windows 2
     this.createMessageWindow();
     this.createScrollTextWindow();
@@ -193,7 +197,7 @@ Scene_Battle.prototype.createLineUpCommandWindow = function () {
     this._lineUpCommandWindow = new Window_LineUpCommand(x, 612);
     this._lineUpCommandWindow.deactivate();
     this._lineUpCommandWindow.setHandler('Individual', this.onLineUpCommandIndividual.bind(this));
-    // this._lineUpCommandWindow.setHandler('Group', this.onLineUpCommandGroup.bind(this));
+    this._lineUpCommandWindow.setHandler('Group', this.onLineUpCommandGroup.bind(this));
     this._lineUpCommandWindow.setHandler('cancel', this.onLineUpCommandCancel.bind(this));
     this._lineUpCommandWindow.hide();
     this.addWindow(this._lineUpCommandWindow);
@@ -229,6 +233,49 @@ Scene_Battle.prototype.createLineUpIndividualStatusWindow = function () {
     this._lineUpIndivWithWhoWindow.setAssociatedWindow(this._lineUpIndivStatusWindow);
     this.addWindow(this._lineUpIndivStatusWindow);
 };
+
+Scene_Battle.prototype.createLineUpGroupPartyWindow = function () {
+    let x = this._partyCommandWindow.x;
+    this._lineUpGroupPartyWindow = new Window_PartyOrder(x, 0, 354);
+    this._lineUpGroupPartyWindow.y = Graphics.boxHeight - this._lineUpGroupPartyWindow.windowHeight() - 3;
+    this._lineUpGroupPartyWindow.deactivate();
+    this._lineUpGroupPartyWindow.setHandler('ok', this.onLineUpGroupPartyOk.bind(this));
+    this._lineUpGroupPartyWindow.setHandler('cancel', this.onLineUpGroupPartyCancel.bind(this));
+    this._lineUpGroupPartyWindow.hide();
+    this.addWindow(this._lineUpGroupPartyWindow);
+};
+
+Scene_Battle.prototype.createLineUpGroupListWindow = function () {
+    let x = this._lineUpGroupPartyWindow.x + this._lineUpGroupPartyWindow.windowWidth();
+    this._lineUpGroupListWindow = new Window_TitledList(x, 0, 354, 'Order', $gameParty.allMembers().length);
+    this._lineUpGroupListWindow.y = Graphics.boxHeight - this._lineUpGroupListWindow.windowHeight() - 3;
+    this._lineUpGroupListWindow.deactivate();
+    this._lineUpGroupListWindow.hide();
+    this._lineUpGroupPartyWindow.setAssociatedWindow(this._lineUpGroupListWindow);
+    this.addWindow(this._lineUpGroupListWindow);
+};
+
+Scene_Battle.prototype.createLineUpGroupStatusWindow = function () {
+    let x = this._lineUpGroupListWindow.x + this._lineUpGroupListWindow.windowWidth();
+    let y = this._lineUpGroupListWindow.y;
+    this._lineUpGroupStatusWindow = new Window_BattleStatus(x, y, undefined, 'center');
+    this._lineUpGroupStatusWindow.hide();
+    this._lineUpGroupPartyWindow.setStatusWindow(this._lineUpGroupStatusWindow);
+    this.addWindow(this._lineUpGroupStatusWindow);
+};
+
+Scene_Battle.prototype.createLineUpGroupConfirmWindow = function () {
+    let x = this._lineUpGroupPartyWindow.x;
+    let y = this._lineUpGroupPartyWindow.y;
+    this._lineUpGroupConfirmWindow = new Window_ConfirmCancel(x, y, 354);
+    this._lineUpGroupConfirmWindow.setHandler('Confirm', this.onLineUpGroupConfirmOk.bind(this));
+    this._lineUpGroupConfirmWindow.setHandler('Cancel', this.onLineUpGroupConfirmCancel.bind(this));
+    this._lineUpGroupConfirmWindow.setHandler('cancel', this.onLineUpGroupConfirmCancel.bind(this));
+    this._lineUpGroupConfirmWindow.deactivate();
+    this._lineUpGroupConfirmWindow.hide();
+    this.addWindow(this._lineUpGroupConfirmWindow);
+};
+
 
 // text windows 2
 
@@ -518,6 +565,13 @@ Scene_Battle.prototype.onLineUpCommandIndividual = function () {
     this._lineUpIndivPartyWindow.activate();
 };
 
+Scene_Battle.prototype.onLineUpCommandGroup = function () {
+    this._lineUpGroupPartyWindow.select(0);
+    this._lineUpGroupPartyWindow.show();
+    this._lineUpCommandWindow.showBackgroundDimmer();
+    this._lineUpGroupPartyWindow.activate();
+};
+
 Scene_Battle.prototype.onLineUpCommandCancel = function () {
     this._partyCommandWindow.hideBackgroundDimmer();
     this._enemyWindow.hideBackgroundDimmer();
@@ -560,11 +614,13 @@ Scene_Battle.prototype.onLineUpIndivWithWhoOk = function () {
         this._lineUpIndivPartyWindow.refresh();
         this._lineUpIndivWithWhoWindow.refresh();
         this._lineUpIndivStatusWindow.setCategory(this._lineUpIndivWithWhoWindow.currentSymbol(), true);
+        this._lineUpGroupPartyWindow.clearAssociatedWindow();
+        this._lineUpGroupStatusWindow.setCategory(this._lineUpGroupPartyWindow.currentSymbol(), true);
         this._partyCommandWindow.activate();
     } else {
         this._lineUpIndivWithWhoWindow.showBackgroundDimmer();
         this._lineUpIndivStatusWindow.showBackgroundDimmer();
-        this.displayMessage(this.lineUpSwapFailed(), Scene_Battle.prototype.lineUpSwapFailedMessage);
+        this.displayMessage(this.lineUpSwapFailed(), Scene_Battle.prototype.lineUpIndivSwapFailedMessage);
     }
 };
 
@@ -573,6 +629,68 @@ Scene_Battle.prototype.onLineUpIndivWithWhoCancel = function () {
     this._lineUpIndivWithWhoWindow.hide();
     this._lineUpIndivStatusWindow.hide();
     this._lineUpIndivPartyWindow.activate();
+};
+
+Scene_Battle.prototype.onLineUpGroupPartyOk = function () {
+    if (this._lineUpGroupListWindow._list.length < this._lineUpGroupListWindow._rows) { // if there's room in the list window
+        this._lineUpGroupPartyWindow.updateAssociatedWindow(this._lineUpGroupPartyWindow.currentSymbol());
+        this._lineUpGroupPartyWindow.activate();
+    }
+    if (this._lineUpGroupListWindow._list.length >= this._lineUpGroupListWindow._rows) {
+        this._lineUpGroupStatusWindow.hide();
+        this._lineUpGroupPartyWindow.showBackgroundDimmer();
+        this._lineUpGroupPartyWindow.deactivate();
+        this._lineUpGroupConfirmWindow.select(0);
+        this._lineUpGroupConfirmWindow.show();
+        this._lineUpGroupConfirmWindow.activate();
+    }
+};
+
+Scene_Battle.prototype.onLineUpGroupPartyCancel = function () {
+    if (this._lineUpGroupListWindow._list.length) { // if there's items to remove from the list window
+        this._lineUpGroupPartyWindow.updateAssociatedWindow(this._lineUpGroupPartyWindow.currentSymbol(), false);
+        this._lineUpGroupPartyWindow.activate();
+    } else {
+        this._lineUpCommandWindow.hideBackgroundDimmer();
+        this._lineUpGroupPartyWindow.hide();
+        this._lineUpCommandWindow.activate();
+    }
+};
+
+Scene_Battle.prototype.onLineUpGroupConfirmOk = function () {
+    if ($gameParty.checkGroupOrder(this._lineUpGroupListWindow._list)) {
+        $gameParty.swapAll(this._lineUpGroupListWindow._list);
+        this.refreshAllStatusIndex();
+        this._partyCommandWindow.select(0);
+        this._lineUpGroupConfirmWindow.hide();
+        this._lineUpGroupConfirmWindow.hideBackgroundDimmer();
+        // this._lineUpGroupStatusWindow.hide();
+        // this._lineUpGroupStatusWindow.hideBackgroundDimmer();
+        this._lineUpGroupListWindow.hide();
+        this._lineUpGroupListWindow.hideBackgroundDimmer();
+        this._lineUpGroupPartyWindow.hide();
+        this._lineUpGroupPartyWindow.hideBackgroundDimmer();
+        this._lineUpCommandWindow.hide();
+        this._lineUpCommandWindow.hideBackgroundDimmer();
+        this._enemyWindow.hideBackgroundDimmer();
+        this._partyCommandWindow.hideBackgroundDimmer();
+        this._lineUpGroupPartyWindow.clearAssociatedWindow();
+        this._lineUpIndivPartyWindow.refresh();
+        this._lineUpIndivWithWhoWindow.refresh();
+        this._lineUpIndivStatusWindow.setCategory(this._lineUpIndivWithWhoWindow.currentSymbol(), true);
+        this._partyCommandWindow.activate();
+    } else {
+        this._lineUpGroupListWindow.showBackgroundDimmer();
+        this._lineUpGroupConfirmWindow.showBackgroundDimmer();
+        this.displayMessage(this.lineUpSwapFailed(), Scene_Battle.prototype.lineUpGroupSwapFailedMessage);
+    }
+};
+
+Scene_Battle.prototype.onLineUpGroupConfirmCancel = function () {
+    this._lineUpGroupPartyWindow.hideBackgroundDimmer();
+    this._lineUpGroupConfirmWindow.hide();
+    this.onLineUpGroupPartyCancel();
+    this._lineUpGroupStatusWindow.show();
 };
 
 //////////////////////////////
@@ -682,6 +800,8 @@ Scene_Battle.prototype.isAnyInputWindowActive = function () {
            this._lineUpCommandWindow.active ||
            this._lineUpIndivPartyWindow.active ||
            this._lineUpIndivWithWhoWindow.active ||
+           this._lineUpGroupPartyWindow.active ||
+           this._lineUpGroupConfirmWindow.active ||
            DQEng.Scene_Battle.isAnyInputWindowActive.call(this);
 }
 
@@ -747,10 +867,19 @@ Scene_Battle.prototype.doWhatEquipMessage = function () {
     this._equipmentWindow.activate();
 };
 
-Scene_Battle.prototype.lineUpSwapFailedMessage = function () {
+Scene_Battle.prototype.lineUpIndivSwapFailedMessage = function () {
     this._lineUpIndivWithWhoWindow.hideBackgroundDimmer();
     this._lineUpIndivStatusWindow.hideBackgroundDimmer();
     this._lineUpIndivWithWhoWindow.activate();
+};
+
+Scene_Battle.prototype.lineUpGroupSwapFailedMessage = function () {
+    this._lineUpGroupConfirmWindow.hide();
+    this._lineUpGroupConfirmWindow.hideBackgroundDimmer();
+    this._lineUpGroupListWindow.hideBackgroundDimmer();
+    this._lineUpGroupPartyWindow.hideBackgroundDimmer();
+    this.onLineUpGroupPartyCancel();
+    this._lineUpGroupStatusWindow.show();
 };
 
 //////////////////////////////
@@ -769,6 +898,12 @@ Scene_Battle.prototype.refreshStatus = function () {
 
 Scene_Battle.prototype.refreshStatusIndex = function (windowIndex, actorIndex) {
     this._statusWindow[windowIndex].setCategory(actorIndex, true);
+};
+
+Scene_Battle.prototype.refreshAllStatusIndex = function () {
+    this._statusWindow.forEach((statusWindow, index) => {
+        statusWindow.setCategory(index, true);
+    });
 };
 
 Scene_Battle.prototype.stop = function () {
