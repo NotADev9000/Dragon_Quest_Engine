@@ -66,7 +66,7 @@ Game_Interpreter.prototype.giveActorsItems = function (itemType, itemId, amount,
     // place items into actor inventory starting with front actor
     for (const actor of actors) {
         amountGiven = actor.giveItems(item, leftover);
-        leftover = amount - amountGiven;
+        leftover = leftover - amountGiven;
         if (messages && amountGiven) {
             this.giveActorsItemsMessage(amount, amountGiven, actor);
         }
