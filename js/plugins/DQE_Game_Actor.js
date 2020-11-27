@@ -197,13 +197,17 @@ Game_Actor.prototype.equipItemFromInv = function (index) {
  * @param {number} index of item to unequip
  * @param {boolean} keep should the item be kept in the actors' inventory?
  */
-Game_Actor.prototype.unequipItem = function (index, keep = true) {
+Game_Actor.prototype.unequipItem = function (index, keep = true, slot = undefined) {
     var item = this.item(index);
 
-    this.removeItemAtIndex(index);
+    this.removeItemAtIndex(index, slot);
     if (keep) {
         this.giveItems(item, 1);
     }
+};
+
+Game_Actor.prototype.discardEquipAtSlot = function (slotId) {
+    this._equips[slotId].setObject(null);
 };
 
 /**
@@ -212,9 +216,13 @@ Game_Actor.prototype.unequipItem = function (index, keep = true) {
  * 
  * @param {number} index of item to remove
  */
-Game_Actor.prototype.removeItemAtIndex = function (index) {
+Game_Actor.prototype.removeItemAtIndex = function (index, slot = undefined) {
     if (this.indexIsEquip(index)) {
-        this.discardEquip(this.item(index));
+        if (slot) {
+            this.discardEquipAtSlot(slot);
+        } else {
+            this.discardEquip(this.item(index));
+        }
     }
     this._items.splice(index, 1);
 };

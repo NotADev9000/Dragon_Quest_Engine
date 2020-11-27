@@ -215,9 +215,10 @@ Scene_Item.prototype.onDoWhatEquip = function () {
 Scene_Item.prototype.onDoWhatUnequip = function () {
     var actor = $gameParty.members()[this._commandWindow.currentSymbol()];
     var index = this._itemWindow.index();
+    var slotIndex = this._itemWindow.slotIndex();
 
     this.displayMessage(actor.unequipItemMessage(index), Scene_Item.prototype.doWhatEquipMessage);
-    actor.unequipItem(index);
+    actor.unequipItem(index, true, slotIndex);
 };
 
 Scene_Item.prototype.onDoWhatCancel = function () {

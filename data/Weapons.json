@@ -1,5 +1,5 @@
 [
 null,
-{"id":1,"animationId":0,"description":"A large sword once wielded by a warrior king.","etypeId":1,"traits":[{"code":31,"dataId":1,"value":0},{"code":22,"dataId":0,"value":0}],"iconIndex":0,"name":"Big Sword","note":"<skillId:9>\n<message1: raises the Big Sword!>","params":[0,0,0,0,0,0,0,0],"price":0,"wtypeId":2},
-{"id":2,"animationId":0,"description":"A huge Axe that could cut a mountain in two.","etypeId":1,"traits":[{"code":31,"dataId":1,"value":0},{"code":22,"dataId":0,"value":0}],"iconIndex":0,"name":"Big Axe","note":"","params":[0,0,20,0,0,0,0,0],"price":0,"wtypeId":4}
+{"id":1,"animationId":1,"description":"A large sword once wielded by a warrior king.","etypeId":1,"traits":[{"code":31,"dataId":1,"value":0},{"code":22,"dataId":0,"value":0}],"iconIndex":0,"name":"Big Sword","note":"<skillId:9>\n<message1: raises the Big Sword!>","params":[0,0,0,0,0,0,0,0],"price":0,"wtypeId":2},
+{"id":2,"animationId":2,"description":"A huge Axe that could cut a mountain in two.","etypeId":1,"traits":[{"code":31,"dataId":1,"value":0},{"code":22,"dataId":0,"value":0}],"iconIndex":0,"name":"Big Axe","note":"","params":[0,0,0,0,0,0,0,0],"price":0,"wtypeId":4}
 ]

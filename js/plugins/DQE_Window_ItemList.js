@@ -33,6 +33,7 @@ Window_ItemList.prototype = Object.create(Window_ItemListBase.prototype);
 Window_ItemList.prototype.initialize = function (x, y, width, height) {
     Window_ItemListBase.prototype.initialize.call(this, x, y, width, height);
     this._numActorEquips = 0; // How many items actor has equipped
+    this._slotData = []; // a list of which equipped piece is in which slot
 };
 
 /**
@@ -63,11 +64,19 @@ Window_ItemList.prototype.makeItemList = function () {
         var actor = $gameParty.members()[this._category];
         this._numActorEquips = actor.numEquips();
         this._data = actor.items();
+        this._slotData = [];
+        actor._equips.forEach((item, index) => {
+            if (item && item._itemId) this._slotData.push(index);
+        });
     } else {
         this._data = $gameParty.allItems().filter(function (item) {
             return this.includes(item);
         }, this);
     }
+};
+
+Window_ItemList.prototype.slotIndex = function () {
+    return this._slotData[this.index()];
 };
 
 /**
