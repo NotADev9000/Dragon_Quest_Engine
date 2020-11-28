@@ -74,6 +74,33 @@ Game_Actor.prototype.initCarriedEquips = function () {
     });
 };
 
+Game_Actor.prototype.initEquips = function (equips) {
+    var slots = this.equipSlots();
+    var maxSlots = slots.length;
+    this._equips = [];
+    for (var i = 0; i < maxSlots; i++) {
+        this._equips[i] = new Game_Item();
+    }
+    for (var j = 0; j < equips.length; j++) {
+        if (j < maxSlots) {
+            this._equips[j].setEquip(slots[j] === 1, equips[j]);
+        }
+    }
+    this.releaseUnequippableItems(true);
+    this.refresh();
+};
+
+Game_Actor.prototype.equipSlots = function () {
+    var slots = [];
+    for (var i = 1; i < $dataSystem.equipTypes.length; i++) {
+        slots.push(i);
+    }
+    if (slots.length >= 2 && this.isDualWield()) {
+        slots[1] = 1;
+    }
+    return slots;
+};
+
 /**
  * removes equipped items from item list but NOT
  * from the equips list
@@ -146,6 +173,14 @@ Game_Actor.prototype.indexIsEquip = function (index) {
     return index < this.numEquips();
 };
 
+Game_Actor.prototype.getSlotData = function () {
+    var slotData = [];
+    this._equips.forEach((item, index) => {
+        if (item && item._itemId) slotData.push(index);
+    });
+    return slotData;
+};
+
 //////////////////////////////
 // Functions - item movement
 //////////////////////////////
@@ -158,14 +193,6 @@ Game_Actor.prototype.indexIsEquip = function (index) {
 Game_Actor.prototype.consumeActorItem = function (index) {
     if (this.item(index).consumable) {
         this.removeItemAtIndex(index);
-    }
-};
-
-Game_Actor.prototype.changeEquip = function (slotId, item) {
-    if (this.tradeItemWithParty(item, this.equips()[slotId]) &&
-        (!item || this.equipSlots()[slotId] === item.etypeId)) {
-        this._equips[slotId].setObject(item);
-        this.refresh();
     }
 };
 
@@ -196,6 +223,7 @@ Game_Actor.prototype.equipItemFromInv = function (index) {
  * 
  * @param {number} index of item to unequip
  * @param {boolean} keep should the item be kept in the actors' inventory?
+ * @param {number} slot of the equipped item is in
  */
 Game_Actor.prototype.unequipItem = function (index, keep = true, slot = undefined) {
     var item = this.item(index);
@@ -215,6 +243,7 @@ Game_Actor.prototype.discardEquipAtSlot = function (slotId) {
  * Unequips the item if equipped
  * 
  * @param {number} index of item to remove
+ * @param {number} slot of the equipped item is in
  */
 Game_Actor.prototype.removeItemAtIndex = function (index, slot = undefined) {
     if (this.indexIsEquip(index)) {
@@ -253,14 +282,14 @@ Game_Actor.prototype.giveItems = function (item, amount, index) {
     return amount;
 };
 
-Game_Actor.prototype.giveItemToBag = function (index) {
+Game_Actor.prototype.giveItemToBag = function (index, slot = undefined) {
     $gameParty.gainItem(this.item(index), 1);
-    this.removeItemAtIndex(index);
+    this.removeItemAtIndex(index, slot);
 };
 
-Game_Actor.prototype.giveItemToActor = function (index, actor) {
+Game_Actor.prototype.giveItemToActor = function (index, actor, slot = undefined) {
     actor.giveItems(this.item(index), 1);
-    this.removeItemAtIndex(index);
+    this.removeItemAtIndex(index, slot);
 };
 
 /**
@@ -268,12 +297,13 @@ Game_Actor.prototype.giveItemToActor = function (index, actor) {
  * 
  * @param {number} index of item being swapped with bag
  * @param {dataItem} item that is being given to actor
+ * @param {number} slot of the equipped item is in
  */
-Game_Actor.prototype.tradeItemWithBag = function (index, item) {
+Game_Actor.prototype.tradeItemWithBag = function (index, item, slot = undefined) {
     var isEquipped = this.indexIsEquip(index);
     var removedItem = this.item(index);
 
-    this.removeItemAtIndex(index);
+    this.removeItemAtIndex(index, slot);
     if (isEquipped) {
         $gameParty.giveItemToActor(item, this);
     } else {
@@ -289,14 +319,14 @@ Game_Actor.prototype.tradeItemWithBag = function (index, item) {
  * @param {number} actorIndex of item being given to this actor
  * @param {Game_Actor} actor to swap an item with
  */
-Game_Actor.prototype.tradeItemWithActor = function (index, actorIndex, actor) {
+Game_Actor.prototype.tradeItemWithActor = function (index, actorIndex, actor, thisSlot = undefined, actorSlot = undefined) {
     var newPos = this.indexIsEquip(index) ? null : index;
     var item = this.item(index);
     var actorNewPos = actor.indexIsEquip(actorIndex) ? null : actorIndex;
     var actorItem = actor.item(actorIndex);
 
-    this.removeItemAtIndex(index);
-    actor.removeItemAtIndex(actorIndex);
+    this.removeItemAtIndex(index, thisSlot);
+    actor.removeItemAtIndex(actorIndex, actorSlot);
     this.giveItems(actorItem, 1, newPos);
     actor.giveItems(item, 1, actorNewPos);
 };

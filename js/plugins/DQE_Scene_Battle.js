@@ -547,9 +547,10 @@ Scene_Battle.prototype.onEquipmentDoWhatEquip = function () {
 Scene_Battle.prototype.onEquipmentDoWhatUnequip = function () {
     let actor = BattleManager.actor();
     let index = this._equipmentWindow._trueIndexes[this._equipmentWindow.index()];
+    var slotIndex = this._equipmentWindow.slotIndex();
 
     this.displayMessage(actor.unequipItemMessage(index), Scene_Battle.prototype.doWhatEquipMessage);
-    actor.unequipItem(index);
+    actor.unequipItem(index, true, slotIndex);
 };
 
 Scene_Battle.prototype.onEquipmentDoWhatCancel = function () {

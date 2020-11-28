@@ -39,6 +39,7 @@ Window_BattleEquipment.prototype.initialize = function (x, y, width, height) {
     Window_BattleItem.prototype.initialize.call(this, x, y, width, height);
     this._numActorEquips = 0;
     this._trueIndexes = []; // the index of the equipment piece when in the actor's inventory NOT when in this window's data
+    this._slotData = []; // a list of which equipped piece is in which slot
 };
 
 //////////////////////////////
@@ -56,6 +57,7 @@ Window_BattleEquipment.prototype.makeItemList = function () {
             }
             return false;
         }, this);
+        this._slotData = this._actor.getSlotData();
     } else {
         this._numActorEquips = 0;
         this._data = [];
@@ -64,6 +66,10 @@ Window_BattleEquipment.prototype.makeItemList = function () {
 
 Window_BattleEquipment.prototype.isEquippedItem = function (index) {
     return index < this._numActorEquips;
+};
+
+Window_BattleEquipment.prototype.slotIndex = function () {
+    return this._slotData[this.index()];
 };
 
 Window_BattleEquipment.prototype.drawItem = function (index) {

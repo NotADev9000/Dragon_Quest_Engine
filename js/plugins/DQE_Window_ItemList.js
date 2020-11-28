@@ -64,10 +64,7 @@ Window_ItemList.prototype.makeItemList = function () {
         var actor = $gameParty.members()[this._category];
         this._numActorEquips = actor.numEquips();
         this._data = actor.items();
-        this._slotData = [];
-        actor._equips.forEach((item, index) => {
-            if (item && item._itemId) this._slotData.push(index);
-        });
+        this._slotData = actor.getSlotData();
     } else {
         this._data = $gameParty.allItems().filter(function (item) {
             return this.includes(item);

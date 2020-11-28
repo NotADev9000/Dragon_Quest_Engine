@@ -281,11 +281,12 @@ Scene_Item.prototype.onTransferToWhoOk = function () {
     var takeFrom = inBagInventory ? $gameParty : $gameParty.members()[this._commandWindow.currentSymbol()]; // where the item will be moved from
     var giveActor = $gameParty.members()[this._transferToWhoWindow.currentSymbol()]; // where the item will be moved to
     var item = inBagInventory ? this.item() : this._itemWindow.index(); // item to give
+    var slotIndex = this._itemWindow.slotIndex();
     var itemAmount = inBagInventory ? takeFrom.numItems(item) : null;
 
     if (this.inBag(this._transferToWhoWindow)) { // transferring to bag
         this.displayMessage(takeFrom.giveItemToBagMessage(item), Scene_Item.prototype.transferredMessage);
-        takeFrom.giveItemToBag(item);
+        takeFrom.giveItemToBag(item, slotIndex);
     } else if (giveActor.hasMaxItems()) { // transferring to actor with a full inventory
         this.displayMessage(giveActor.inventoryFullMessage(item), Scene_Item.prototype.transferFullMessage);
     } else if (inBagInventory && giveActor.spaceLeft() > 1 && itemAmount > 1) { // transferring from bag to actor with inventory space
@@ -296,7 +297,7 @@ Scene_Item.prototype.onTransferToWhoOk = function () {
         this._howManyWindow.activate();
     } else { // transferring from actor to actor with inventory space
         this.displayMessage(takeFrom.giveItemToActorMessage(item, giveActor), Scene_Item.prototype.transferredMessage);
-        takeFrom.giveItemToActor(item, giveActor);
+        takeFrom.giveItemToActor(item, giveActor, slotIndex);
     }
 };
 
@@ -312,14 +313,16 @@ Scene_Item.prototype.onTransferItemOk = function () {
     var takeFrom = inBagInventory ? null : $gameParty.members()[this._commandWindow.currentSymbol()]; // where the item will be moved from
     var giveTo = $gameParty.members()[this._transferToWhoWindow.currentSymbol()]; // where the item will be moved to
     var item = inBagInventory ? this.item() : this._itemWindow.index(); // item to transfer
+    var slotIndex = this._itemWindow.slotIndex();
     var swap = this._transferItemWindow.index(); // item to swap
 
     if (inBagInventory) {
         this.displayMessage(giveTo.tradeItemWithBagMessage(swap, item), Scene_Item.prototype.transferredMessage);
-        giveTo.tradeItemWithBag(swap, item);
+        giveTo.tradeItemWithBag(swap, item, slotIndex);
     } else {
         this.displayMessage(takeFrom.tradeItemWithActorMessage(item, swap, giveTo), Scene_Item.prototype.transferredMessage);
-        takeFrom.tradeItemWithActor(item, swap, giveTo);
+        let otherSlotIndex = this._transferItemWindow.slotIndex(); // the slot index for the actor being swapped with
+        takeFrom.tradeItemWithActor(item, swap, giveTo, slotIndex, otherSlotIndex);
     }
 };
 
