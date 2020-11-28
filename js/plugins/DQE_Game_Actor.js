@@ -74,29 +74,17 @@ Game_Actor.prototype.initCarriedEquips = function () {
     });
 };
 
-Game_Actor.prototype.initEquips = function (equips) {
-    var slots = this.equipSlots();
-    var maxSlots = slots.length;
-    this._equips = [];
-    for (var i = 0; i < maxSlots; i++) {
-        this._equips[i] = new Game_Item();
-    }
-    for (var j = 0; j < equips.length; j++) {
-        if (j < maxSlots) {
-            this._equips[j].setEquip(slots[j] === 1, equips[j]);
-        }
-    }
-    this.releaseUnequippableItems(true);
-    this.refresh();
-};
-
 Game_Actor.prototype.equipSlots = function () {
     var slots = [];
     for (var i = 1; i < $dataSystem.equipTypes.length; i++) {
         slots.push(i);
     }
-    if (slots.length >= 2 && this.isDualWield()) {
-        slots[1] = 1;
+    if (slots.length >= 2) {
+        if (this.isDualWield()) {
+            slots[1] = 1;
+        } else if (this.isAllWield()) {
+            slots[1] = 6;
+        }
     }
     return slots;
 };
@@ -107,6 +95,35 @@ Game_Actor.prototype.equipSlots = function () {
  */
 Game_Actor.prototype.resetCarriedEquips = function () {
     this._items.splice(0, this.numEquips());
+};
+
+Game_Actor.prototype.releaseUnequippableItems = function (forcing) {
+    for (; ;) {
+        var slots = this.equipSlots();
+        var equips = this.equips();
+        var changed = false;
+        for (var i = 0; i < equips.length; i++) {
+            var item = equips[i];
+            if (item && (!this.canEquip(item) || !this.eTypeMatchesSlot(item.etypeId, slots[i]))) {
+                if (!forcing) {
+                    this.tradeItemWithParty(null, item);
+                }
+                this._equips[i].setObject(null);
+                changed = true;
+            }
+        }
+        if (!changed) {
+            break;
+        }
+    }
+};
+
+Game_Actor.prototype.eTypeMatchesSlot = function (eType, slot) {
+    if (slot === 6) {
+        return eType === 1 || eType === 2;
+    } else {
+        return eType === slot;
+    }
 };
 
 //////////////////////////////

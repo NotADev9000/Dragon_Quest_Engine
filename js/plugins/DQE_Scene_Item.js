@@ -295,8 +295,9 @@ Scene_Item.prototype.onTransferToWhoOk = function () {
         this._howManyWindow.setup(1, Math.min(giveActor.spaceLeft(), itemAmount));
         this._howManyWindow.show();
         this._howManyWindow.activate();
-    } else { // transferring from actor to actor with inventory space
+    } else { // transferring from actor/bag to actor with inventory space
         this.displayMessage(takeFrom.giveItemToActorMessage(item, giveActor), Scene_Item.prototype.transferredMessage);
+        if (inBagInventory) slotIndex = undefined;
         takeFrom.giveItemToActor(item, giveActor, slotIndex);
     }
 };
