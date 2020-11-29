@@ -175,8 +175,8 @@ Window_Base.prototype.drawActorStat = function (statValue, x, y, width, align) {
 /**
  * Draws a horizontal line across the window
  */
-Window_Base.prototype.drawHorzLine = function (x, y) {
-    this.contents.fillRect(x, y, this.contentsWidth(), 3, this.normalColor());
+Window_Base.prototype.drawHorzLine = function (x, y, width = this.contentsWidth()) {
+    this.contents.fillRect(x, y, width, 3, this.normalColor());
 };
 
 /**

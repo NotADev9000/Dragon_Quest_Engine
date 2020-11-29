@@ -53,6 +53,8 @@ DQEng.Game_Actor.setup = Game_Actor.prototype.setup;
 Game_Actor.prototype.setup = function (actorId) {
     DQEng.Game_Actor.setup.call(this, actorId);
     this._items = this.initItems();
+    this.releaseUnequippableItems(true);
+    this.refresh();
 };
 
 //////////////////////////////
@@ -72,6 +74,20 @@ Game_Actor.prototype.initCarriedEquips = function () {
     return this._equips.filter(equip => {
         return equip._itemId;
     });
+};
+
+Game_Actor.prototype.initEquips = function (equips) {
+    var slots = this.equipSlots();
+    var maxSlots = slots.length;
+    this._equips = [];
+    for (var i = 0; i < maxSlots; i++) {
+        this._equips[i] = new Game_Item();
+    }
+    for (var j = 0; j < equips.length; j++) {
+        if (j < maxSlots) {
+            this._equips[j].setEquip(slots[j] === 1, equips[j]);
+        }
+    }
 };
 
 Game_Actor.prototype.equipSlots = function () {
@@ -108,7 +124,7 @@ Game_Actor.prototype.releaseUnequippableItems = function (forcing) {
                 if (!forcing) {
                     this.tradeItemWithParty(null, item);
                 }
-                this._equips[i].setObject(null);
+                this.unequipItem(i, !forcing);
                 changed = true;
             }
         }
@@ -119,7 +135,7 @@ Game_Actor.prototype.releaseUnequippableItems = function (forcing) {
 };
 
 Game_Actor.prototype.eTypeMatchesSlot = function (eType, slot) {
-    if (slot === 6) {
+    if (slot === 6) { // all wield
         return eType === 1 || eType === 2;
     } else {
         return eType === slot;
@@ -145,7 +161,7 @@ Game_Actor.prototype.items = function () {
  * @param {number} index of item in actor inventory
  */
 Game_Actor.prototype.item = function (index) {
-    return this._items[index].object();
+    return this._items.length ? this._items[index].object() : null;
 };
 
 Game_Actor.prototype.maxItems = function () {
@@ -231,6 +247,8 @@ Game_Actor.prototype.equipItemFromInv = function (index) {
     this.resetCarriedEquips();
     this._equips[slotId].setObject(item);
     this._items = this.initCarriedEquips().concat(this._items);
+    this.updateTwoHand(slotId, item);
+    this.refresh();
 };
 
 /**
@@ -245,14 +263,23 @@ Game_Actor.prototype.equipItemFromInv = function (index) {
 Game_Actor.prototype.unequipItem = function (index, keep = true, slot = undefined) {
     var item = this.item(index);
 
-    this.removeItemAtIndex(index, slot);
-    if (keep) {
-        this.giveItems(item, 1);
+    if (item) {
+        this.removeItemAtIndex(index, slot);
+        if (keep) {
+            this.giveItems(item, 1);
+        }
     }
+};
+
+DQEng.Game_Actor.discardEquip = Game_Actor.prototype.discardEquip;
+Game_Actor.prototype.discardEquip = function (item) {
+    DQEng.Game_Actor.discardEquip.call(this, item);
+    this.refresh();
 };
 
 Game_Actor.prototype.discardEquipAtSlot = function (slotId) {
     this._equips[slotId].setObject(null);
+    this.refresh();
 };
 
 /**
@@ -271,6 +298,27 @@ Game_Actor.prototype.removeItemAtIndex = function (index, slot = undefined) {
         }
     }
     this._items.splice(index, 1);
+};
+
+/**
+ * 
+ * 
+ * @param {number} slot the item is being equipped into
+ * @param {item} item the item equipped
+ */
+Game_Actor.prototype.updateTwoHand = function (slot, item) {
+    switch (slot) {
+        case 0: // right hand (weapon)
+            if (this.equips()[1] && (item.meta.twoHand || this.equips()[1].meta.twoHand)) {
+                this.unequipItem(1, true, 1);
+            }
+            break;
+        case 1: // left hand (weapon or shield)
+            if (this.equips()[0] && (item.meta.twoHand || this.equips()[0].meta.twoHand)) {
+                this.unequipItem(0, true, 0);
+            }
+            break;
+    }
 };
 
 Game_Actor.prototype.gainItem = function (item, index) {

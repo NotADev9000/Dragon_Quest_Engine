@@ -286,7 +286,7 @@ Window_Pagination.prototype.refresh = function () {
     this._itemsOnPage = this.itemsOnPage();
     this._numRows = this.numRows();
     this.drawPageBlock();
-}
+};
 
 Window_Pagination.prototype.itemRect = function (index) {
     var rect = new Rectangle();
