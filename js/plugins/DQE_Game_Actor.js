@@ -157,6 +157,24 @@ Game_Actor.prototype.items = function () {
 };
 
 /**
+ * Returns held items that are equipment pieces
+ */
+Game_Actor.prototype.itemsEquipment = function (includeEquips = true) {
+    if (!includeEquips) var numEquips = this.numEquips();
+    return this._items.filter(function (item, index) {
+        return includeEquips ? item._dataClass !== "item" : item._dataClass !== "item" && index >= numEquips;
+    }).map(function (item) {
+        return item.object();
+    });
+};
+
+Game_Actor.prototype.equipmentByType = function (etype, includeEquips) {
+    return this.itemsEquipment(includeEquips).filter(function (item) {
+        return item.etypeId === etype;
+    });
+};
+
+/**
  * Returns item at index as a data item
  * 
  * @param {number} index of item in actor inventory

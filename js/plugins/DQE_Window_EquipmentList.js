@@ -45,7 +45,7 @@ Window_EquipmentList.prototype.initialize = function (x, y, width, height) {
 //////////////////////////////
 
 Window_EquipmentList.prototype.titleHeight = function () {
-    return 81;
+    return 72;
 };
 
 Window_EquipmentList.prototype.pageBlockHeight = function () {
@@ -83,22 +83,50 @@ Window_EquipmentList.prototype.setSlot = function (slot) {
     }
 };
 
+Window_EquipmentList.prototype.item = function () {
+    let index = this.index();
+    return this._data && index >= 0 ? this._data[index].item : null;
+};
+
 Window_EquipmentList.prototype.makeItemList = function () {
+    this._data = [];
+    let etype;
     switch (this._actor.equipSlots()[this._slot]) {
         case 1: // right hand
-
+        etype = 1;
             break;
         case 2: // left hand
+        etype = 2;
             break;
         case 3: // head
+        etype = 3;
             break;
         case 4: // torso
+        etype = 4;
             break;
         case 5: // accessory
+        etype = 5;
             break;
         case 7: // right & left hand
+        this.getData(1);
+        etype = 2;
             break;
     }
+    if (etype) this.getData(etype);
+};
+
+Window_EquipmentList.prototype.getData = function (etype) {
+    $gameParty.members().forEach((actor, actorIndex) => {
+        let includeEquips = this._category !== actorIndex; // if equipping for this actor, ignore their equipped items
+        actor.equipmentByType(etype, includeEquips).forEach((equipment, equipmentIndex) => {
+            let item = {
+                item: equipment,
+                heldBy: actorIndex,
+                equipped: includeEquips ? equipmentIndex < actor.numEquips() : false
+            };
+            this._data.push(item);
+        });
+    });
 };
 
 //////////////////////////////
@@ -114,18 +142,24 @@ Window_EquipmentList.prototype.drawTitle = function () {
 };
 
 Window_EquipmentList.prototype.drawSlot = function () {
-    if (this._slot > 0) {
-        let slotName = $dataSystem.equipTypes[this._slot];
-        let textWidth = this.contents.measureTextWidth(slotName);
-        let x = this.extraPadding() + this.textPadding() + 24;
-        let y = this.extraPadding() + this.itemHeight() + this.lineGap();
-    
-        this.drawHorzLine(0, y + 9, x - 3);
-        this.changeTextColor(this.deathColor());
-        this.drawText(slotName, x, y, textWidth);
-        this.resetTextColor();
-        let lineX = x + textWidth;
-        this.drawHorzLine(lineX, y + 9);
+    let slotName = $dataSystem.equipTypes[this._slot+1];
+    let textWidth = this.contents.measureTextWidth(slotName);
+    let x = this.extraPadding() + this.textPadding() + 24;
+    let y = this.extraPadding() + this.itemHeight() + this.lineGap();
+
+    this.drawHorzLine(0, y + 9, x - 3);
+    this.changeTextColor(this.deathColor());
+    this.drawText(slotName, x, y, textWidth);
+    this.resetTextColor();
+    let lineX = x + textWidth;
+    this.drawHorzLine(lineX, y + 9);
+};
+
+Window_EquipmentList.prototype.drawItem = function (index) {
+    var item = this._data[index] ? this._data[index].item : null;
+    if (item) {
+        var rect = this.itemRectForText(index);
+        this.drawText(item.name, rect.x, rect.y, 432);
     }
 };
 
@@ -136,6 +170,7 @@ Window_EquipmentList.prototype.drawSlot = function () {
 Window_EquipmentList.prototype.itemRect = function (index) {
     var rect = Window_ItemListBase.prototype.itemRect.call(this, index);
     rect.y += this.titleHeight();
+    return rect;
 };
 
 Window_EquipmentList.prototype.refresh = function () {
@@ -144,6 +179,8 @@ Window_EquipmentList.prototype.refresh = function () {
     this.createContents();
     Window_Pagination.prototype.refresh.call(this);
     this.drawTitle();
-    this.drawSlot();
-    this.drawAllItems();
+    if (this._slot !== null) {
+        this.drawSlot();
+        this.drawAllItems();
+    }
 };

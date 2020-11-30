@@ -86,7 +86,7 @@ Scene_Equip.prototype.onCommandOk = function () {
 
 Scene_Equip.prototype.onEquipSlotOk = function () {
     this._equipSlotWindow.hide();
-    this._equipItemWindow.setSlot(this._equipSlotWindow.index()+1);
+    this._equipItemWindow.setSlot(this._equipSlotWindow.index());
     this._equipItemWindow.select(this._equipItemWindow._lastSelected);
     this._equipItemWindow.show();
     this._equipItemWindow.activate();
