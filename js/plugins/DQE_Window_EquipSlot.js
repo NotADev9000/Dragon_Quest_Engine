@@ -32,6 +32,7 @@ Window_EquipSlot.prototype.initialize = function (x, y, width, height) {
     Window_Selectable.prototype.initialize.call(this, x, y, width, height);
     this._category = -1; // actor index
     this._actor = null;
+    this._data = [];
 };
 
 //////////////////////////////
@@ -63,18 +64,26 @@ Window_EquipSlot.prototype.itemWidth = function () {
 //////////////////////////////
 
 Window_EquipSlot.prototype.maxItems = function () {
-    return this.slots().length;
+    return this.slots().length-1;
 };
 
 Window_EquipSlot.prototype.slots = function () {
-    return [
-        'Right Hand',
-        'Left Hand',
-        'Head',
-        'Torso',
-        'First Accessory',
-        'Second Accessory'
-    ];
+    return $dataSystem.equipTypes;
+};
+
+Window_EquipSlot.prototype.makeDisplayData = function () {
+    this._data = Object.assign([], this._actor.equips());
+    if (this._data[0] && this._data[0].meta.twoHand) {
+        this._data[1] = Object.assign({}, this._data[0]);
+        this._data[1].cloned = true;
+    } else if (this._data[1] && this._data[1].meta.twoHand) {
+        this._data[0] = Object.assign({}, this._data[1]);
+        this._data[0].cloned = true;
+    }
+};
+
+Window_EquipSlot.prototype.dataItem = function () {
+    return this._actor ? this._data[this.index()] : null;
 };
 
 Window_EquipSlot.prototype.setCategory = function (category) {
@@ -102,12 +111,12 @@ Window_EquipSlot.prototype.drawSlots = function () {
     let x = this.extraPadding() + this.textPadding() + 24;
 
     for (let i = 0; i < this.maxItems(); i++) {
-        let textWidth = this.contents.measureTextWidth(slots[i]);
+        let textWidth = this.contents.measureTextWidth(slots[i+1]);
         let y = this.extraPadding() + this.titleHeight();
         y += (this.itemHeight() + this.lineGap()) * 2 * i; // extra spacing between slots for the item to fit into
         this.drawHorzLine(0, y + 9, x - 3);
         this.changeTextColor(this.deathColor());
-        this.drawText(slots[i], x, y, textWidth);
+        this.drawText(slots[i+1], x, y, textWidth);
         this.resetTextColor();
         let lineX = x + textWidth;
         this.drawHorzLine(lineX, y + 9);
@@ -122,9 +131,10 @@ Window_EquipSlot.prototype.drawAllItems = function () {
 
 Window_EquipSlot.prototype.drawItem = function (index) {
     var rect = this.itemRectForText(index);
-    var equip = this._actor.equips()[index];
+    var equip = this._data[index];
     var text = '';
     if (equip) {
+        if (equip.cloned) this.changeTextColor(this.disabledColor());
         text = equip.name;
     } else {
         this.changeTextColor(this.disabledColor());
@@ -154,12 +164,13 @@ Window_EquipSlot.prototype.itemRect = function (index) {
 //////////////////////////////
 
 Window_EquipSlot.prototype.updateHelp = function () {
-    this.setHelpWindowItem(this.item());
+    this.setHelpWindowItem(this.dataItem());
 };
 
 Window_EquipSlot.prototype.refresh = function () {
     if (this._actor && this.contents) {
         this.contents.clear();
+        this.makeDisplayData();
         this.drawTitle();
         this.drawSlots();
         this.drawAllItems();

@@ -67,6 +67,7 @@ var $plugins =
 {"name":"DQE_Window_ItemCommand","status":true,"description":"The item menu command list - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemListBase","status":true,"description":"The superclass window for displaying items/skills - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemList","status":true,"description":"The window for displaying items - V0.1","parameters":{}},
+{"name":"DQE_Window_EquipmentList","status":true,"description":"The window for displaying equipments - V0.1","parameters":{}},
 {"name":"DQE_Window_SkillList","status":true,"description":"The window for displaying skills - V0.1","parameters":{}},
 {"name":"DQE_Window_SkillCost","status":true,"description":"The window for displaying a skills MP cost in the magic menu - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemActorStat","status":true,"description":"The window for displaying party members stats in the item menu - V0.1","parameters":{}},

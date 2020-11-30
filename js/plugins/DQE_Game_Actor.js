@@ -99,8 +99,9 @@ Game_Actor.prototype.equipSlots = function () {
         if (this.isDualWield()) {
             slots[1] = 1;
         } else if (this.isAllWield()) {
-            slots[1] = 6;
+            slots[1] = 7;
         }
+        slots[5] = 5; // second accessory should match first
     }
     return slots;
 };
@@ -135,7 +136,7 @@ Game_Actor.prototype.releaseUnequippableItems = function (forcing) {
 };
 
 Game_Actor.prototype.eTypeMatchesSlot = function (eType, slot) {
-    if (slot === 6) { // all wield
+    if (slot === 7) { // all wield
         return eType === 1 || eType === 2;
     } else {
         return eType === slot;

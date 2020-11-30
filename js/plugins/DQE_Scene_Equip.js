@@ -32,6 +32,7 @@ Scene_Equip.prototype.create = function () {
     this.createHelpWindow();
     this.createCommandWindow();
     this.createEquipSlotWindow();
+    this.createEquipItemWindow();
 };
 
 //////////////////////////////
@@ -52,13 +53,24 @@ Scene_Equip.prototype.createCommandWindow = function () {
 };
 
 Scene_Equip.prototype.createEquipSlotWindow = function () {
-    var wx = this._commandWindow.x + this._commandWindow.windowWidth();
-    this._equipSlotWindow = new Window_EquipSlot(wx, 48, 522, 501);
+    var x = this._commandWindow.x + this._commandWindow.windowWidth();
+    this._equipSlotWindow = new Window_EquipSlot(x, 48, 522, 501);
     this._equipSlotWindow.setHelpWindow(this._helpWindow);
-    // this._equipSlotWindow.setHandler('ok', this.onItemOk.bind(this));
+    this._equipSlotWindow.setHandler('ok', this.onEquipSlotOk.bind(this));
     this._equipSlotWindow.setHandler('cancel', this.onEquipSlotCancel.bind(this));
     this.addWindow(this._equipSlotWindow);
     this._commandWindow.setAssociatedWindow(this._equipSlotWindow);
+};
+
+Scene_Equip.prototype.createEquipItemWindow = function () {
+    var x = this._commandWindow.x + this._commandWindow.windowWidth();
+    this._equipItemWindow = new Window_EquipmentList(x, 48, 522, 501);
+    this._equipItemWindow.setHelpWindow(this._helpWindow);
+    // this._equipItemWindow.setHandler('ok', this.onEquipItemOk.bind(this));
+    this._equipItemWindow.setHandler('cancel', this.onEquipItemCancel.bind(this));
+    this._equipItemWindow.hide();
+    this.addWindow(this._equipItemWindow);
+    this._commandWindow.setAssociatedWindow(this._equipItemWindow);
 };
 
 //////////////////////////////
@@ -72,9 +84,24 @@ Scene_Equip.prototype.onCommandOk = function () {
     this._equipSlotWindow.activate();
 };
 
+Scene_Equip.prototype.onEquipSlotOk = function () {
+    this._equipSlotWindow.hide();
+    this._equipItemWindow.setSlot(this._equipSlotWindow.index()+1);
+    this._equipItemWindow.select(this._equipItemWindow._lastSelected);
+    this._equipItemWindow.show();
+    this._equipItemWindow.activate();
+};
+
 Scene_Equip.prototype.onEquipSlotCancel = function () {
     this._commandWindow.hideBackgroundDimmer();
     this._equipSlotWindow.deselect();
     this._equipSlotWindow.hideHelpWindow();
     this._commandWindow.activate();
+};
+
+Scene_Equip.prototype.onEquipItemCancel = function () {
+    this._equipItemWindow.setLastSelected(this._equipItemWindow.index());
+    this._equipItemWindow.hide();
+    this._equipSlotWindow.show();
+    this._equipSlotWindow.activate();
 };
