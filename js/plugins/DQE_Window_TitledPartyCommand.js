@@ -43,6 +43,7 @@ Window_TitledPartyCommand.prototype.constructor = Window_TitledPartyCommand;
 Window_TitledPartyCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands, excludeActors = [], commandType) {
     this._excludeActors = excludeActors;
     this._commandType = commandType;
+    this._associatedWindow = [];
     Window_TitledCommand.prototype.initialize.call(this, x, y, windowWidth, menuTitle, commands);
 };
 
@@ -85,12 +86,14 @@ Window_TitledPartyCommand.prototype.addPartyCommands = function () {
 };
 
 Window_TitledPartyCommand.prototype.setAssociatedWindow = function (window) {
-    this._associatedWindow = window;
+    this._associatedWindow.push(window);
 };
 
 Window_TitledPartyCommand.prototype.update = function () {
     Window_TitledCommand.prototype.update.call(this);
-    if (this._associatedWindow) {
-        this._associatedWindow.setCategory(this.currentSymbol());
+    if (this._associatedWindow.length) {
+        this._associatedWindow.forEach(window => {
+            window.setCategory(this.currentSymbol());
+        });
     }
 };

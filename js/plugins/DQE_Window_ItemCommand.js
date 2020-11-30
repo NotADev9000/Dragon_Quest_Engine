@@ -37,5 +37,5 @@ Window_ItemCommand.prototype = Object.create(Window_TitledPartyCommand.prototype
 Window_ItemCommand.prototype.constructor = Window_ItemCommand;
 
 Window_ItemCommand.prototype.isCurrentItemEnabled = function () {
-    return this._associatedWindow._data.length;
+    return this._associatedWindow[0]._data.length;
 };

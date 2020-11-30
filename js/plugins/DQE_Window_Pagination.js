@@ -67,7 +67,7 @@ Window_Pagination.prototype.extraPadding = function () {
 
 Window_Pagination.prototype.pageBlockHeight = function () {
     return 54;
-}
+};
 
 //////////////////////////////
 // Functions - index
@@ -180,10 +180,10 @@ Window_Pagination.prototype.maxRows = function () {
     var pageHeight = this.height - ((this.padding + this.extraPadding()) * 2) - this.pageBlockHeight();
     var itemHeight = this.lineHeight() + this.lineGap();
     return Math.floor((pageHeight / itemHeight) + 1);
-}
+};
 Window_Pagination.prototype.maxPageRows = function () {
     return this.maxRows();
-}
+};
 
 //////////////////////////////
 // Functions - draw items
