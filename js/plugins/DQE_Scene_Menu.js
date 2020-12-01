@@ -34,7 +34,7 @@ Scene_Menu.prototype.start = function () {
 };
 
 Scene_Menu.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_MenuCommand(24, 48);
+    this._commandWindow = new Window_MenuCommand(48, 48);
     this._commandWindow.setHandler('item', this.commandItem.bind(this));
     this._commandWindow.setHandler('skill', this.commandSkill.bind(this));
     this._commandWindow.setHandler('equip', this.commandEquip.bind(this));
@@ -58,7 +58,7 @@ Scene_Menu.prototype.createStatusWindow = function () {
     var partyMembers = $gameParty.members();
 
     for (let i = 0; i < Math.min(partyMembers.length, 4); i++) {
-        this._statusWindow[i] = new Window_MenuStatus(63 + (Window_MenuStatus.prototype.windowWidth() * i), 480, partyMembers[i]);
+        this._statusWindow[i] = new Window_MenuStatus(144 + (Window_MenuStatus.prototype.windowWidth() * i), 570, partyMembers[i]);
         this.addWindow(this._statusWindow[i]);
     }
 };

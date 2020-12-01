@@ -49,21 +49,23 @@ Scene_Skill.prototype.start = function () {
 //////////////////////////////
 
 Scene_Skill.prototype.createHelpWindow = function () {
-    this._helpWindow = new Window_Help(900, 48, 354, 8, 288);
+    this._helpWindow = new Window_Help(0, 48, 444, 8, 360);
     this._helpWindow.hide();
     this.addWindow(this._helpWindow);
 };
 
 Scene_Skill.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_ItemCommand(24, 48, 354, 'Magic');
+    this._commandWindow = new Window_ItemCommand(48, 48, 354, 'Magic');
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
 };
 
 Scene_Skill.prototype.createSkillWindow = function () {
-    var wx = this._commandWindow.x + this._commandWindow.windowWidth();
-    this._skillWindow = new Window_SkillList(wx, 48, 522, 411);
+    var x = this._commandWindow.x + this._commandWindow.windowWidth();
+    var y = this._commandWindow.y;
+    this._skillWindow = new Window_SkillList(x, y, 546, 483);
+    this._helpWindow.x = this._skillWindow.x + this._skillWindow.width;
     this._skillWindow.setHelpWindow(this._helpWindow);
     this._skillWindow.setHandler('ok', this.onSkillOk.bind(this));
     this._skillWindow.setHandler('cancel', this.onSkillCancel.bind(this));
@@ -73,7 +75,7 @@ Scene_Skill.prototype.createSkillWindow = function () {
 
 Scene_Skill.prototype.createSkillStatWindow = function () {
     let x = this._helpWindow.x;
-    let y = 336;
+    let y = 408;
     this._skillStatWindow = new Window_SkillCost(x, y);
     this._skillStatWindow.hide();
     this.addWindow(this._skillStatWindow);
@@ -81,7 +83,10 @@ Scene_Skill.prototype.createSkillStatWindow = function () {
 };
 
 Scene_Skill.prototype.createUseOnWhoWindow = function () {
-    this._useOnWhoWindow = new Window_TitledPartyCommand(24, 48, 354, 'On Who?');
+    var x = this._commandWindow.x;
+    var y = this._commandWindow.y;
+    var width = this._commandWindow.width;
+    this._useOnWhoWindow = new Window_TitledPartyCommand(x, y, width, 'On Who?');
     this._useOnWhoWindow.deactivate();
     this._useOnWhoWindow.setHandler('ok', this.onUseOnWhoOk.bind(this));
     this._useOnWhoWindow.setHandler('cancel', this.onUseOnWhoCancel.bind(this));

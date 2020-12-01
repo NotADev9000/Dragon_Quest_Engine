@@ -44,7 +44,7 @@ Window_SkillCost.prototype.initialize = function (x, y) {
 };
 
 Window_SkillCost.prototype.windowWidth = function () {
-    return 354;
+    return 444;
 };
 
 Window_SkillCost.prototype.windowHeight = function () {
