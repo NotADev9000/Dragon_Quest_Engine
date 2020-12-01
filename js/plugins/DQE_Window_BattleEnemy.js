@@ -41,7 +41,7 @@ Window_BattleEnemy.prototype.initialize = function (x, y) {
 }
 
 Window_BattleEnemy.prototype.windowWidth = function () {
-    return 744;
+    return 840;
 };
 
 Window_BattleEnemy.prototype.standardPadding = function () {
@@ -96,7 +96,7 @@ Window_BattleEnemy.prototype.drawItem = function (index) {
             var name = group.name;
             var amount = group.enemies.length;
             this.drawText(name, rect.x, rect.y, rect.width);
-            this.drawText(amount, 672, rect.y, 16);
+            this.drawText(amount, this.windowWidth()-72, rect.y, 16);
             break;
     }
 };

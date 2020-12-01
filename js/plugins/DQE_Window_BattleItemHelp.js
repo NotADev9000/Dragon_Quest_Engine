@@ -37,7 +37,7 @@ function Window_BattleItemHelp() {
 Window_BattleItemHelp.prototype = Object.create(Window_BattleHelp.prototype);
 Window_BattleItemHelp.prototype.constructor = Window_BattleSkillHelp;
 
-Window_BattleItemHelp.prototype.initialize = function (x, y, width, numLines = 3, titleBlock = true) {
+Window_BattleItemHelp.prototype.initialize = function (x, y, width, numLines = 4, titleBlock = true) {
     Window_BattleHelp.prototype.initialize.call(this, x, y, width, numLines, titleBlock);
     this._useage = 0;
 };

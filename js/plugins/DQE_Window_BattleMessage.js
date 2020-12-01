@@ -64,7 +64,7 @@ Window_BattleMessage.prototype.normalColor = function () {
 };
 
 Window_BattleMessage.prototype.updatePlacement = function () {
-    this.y = 540
+    this.y = 621;
 };
 
 /**

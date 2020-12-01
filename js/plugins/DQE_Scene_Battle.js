@@ -75,7 +75,7 @@ Scene_Battle.prototype.createStatusWindow = function () {
     var partyMembers = $gameParty.members();
 
     for (let i = 0; i < Math.min(partyMembers.length, 4); i++) {
-        this._statusWindow[i] = new Window_BattleStatus(63 + (Window_MenuStatus.prototype.windowWidth() * i), -12, partyMembers[i]);
+        this._statusWindow[i] = new Window_BattleStatus(144 + (Window_MenuStatus.prototype.windowWidth() * i), -12, partyMembers[i]);
         this.addWindow(this._statusWindow[i]);
     }
 };
@@ -83,7 +83,7 @@ Scene_Battle.prototype.createStatusWindow = function () {
 // command windows
 
 Scene_Battle.prototype.createPartyCommandWindow = function () {
-    this._partyCommandWindow = new Window_PartyCommand(63, 540);
+    this._partyCommandWindow = new Window_PartyCommand(144, 621);
     this._partyCommandWindow.setHandler('Fight', this.commandFight.bind(this));
     this._partyCommandWindow.setHandler('Line-Up', this.commandLineUp.bind(this));
     this._partyCommandWindow.setHandler('Escape', this.commandEscape.bind(this));
@@ -93,7 +93,7 @@ Scene_Battle.prototype.createPartyCommandWindow = function () {
 };
 
 Scene_Battle.prototype.createActorCommandWindow = function () {
-    this._actorCommandWindow = new Window_ActorCommand(63, 498, 450);
+    this._actorCommandWindow = new Window_ActorCommand(144, 579, 450);
     this._actorCommandWindow.setHandler('Attack', this.commandAttack.bind(this));
     this._actorCommandWindow.setHandler('Skill', this.commandSkill.bind(this));
     this._actorCommandWindow.setHandler('Guard', this.commandGuard.bind(this));
@@ -107,13 +107,13 @@ Scene_Battle.prototype.createActorCommandWindow = function () {
 // skill windows
 
 Scene_Battle.prototype.createSkillHelpWindow = function () {
-    this._skillHelpWindow = new Window_BattleSkillHelp(585, 540, 672);
+    this._skillHelpWindow = new Window_BattleSkillHelp(690, 591, 672);
     this._skillHelpWindow.hide();
     this.addWindow(this._skillHelpWindow);
 };
 
 Scene_Battle.prototype.createSkillWindow = function () {
-    this._skillWindow = new Window_BattleSkill(63, 456, 522, 261);
+    this._skillWindow = new Window_BattleSkill(144, 537, 546, 261);
     this._skillWindow.setHelpWindow(this._skillHelpWindow);
     this._skillWindow.setHandler('ok', this.onSkillOk.bind(this));
     this._skillWindow.setHandler('cancel', this.onSkillCancel.bind(this));
@@ -123,13 +123,13 @@ Scene_Battle.prototype.createSkillWindow = function () {
 // item windows
 
 Scene_Battle.prototype.createItemHelpWindow = function () {
-    this._itemHelpWindow = new Window_BattleItemHelp(585, 540, 672);
+    this._itemHelpWindow = new Window_BattleItemHelp(690, 591, 672);
     this._itemHelpWindow.hide();
     this.addWindow(this._itemHelpWindow);
 };
 
 Scene_Battle.prototype.createItemWindow = function () {
-    this._itemWindow = new Window_BattleItem(63, 468, 522, 249);
+    this._itemWindow = new Window_BattleItem(144, 549, 546, 249);
     this._itemWindow.setHelpWindow(this._itemHelpWindow);
     this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
     this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
@@ -139,13 +139,13 @@ Scene_Battle.prototype.createItemWindow = function () {
 // equipment windows
 
 Scene_Battle.prototype.createEquipmentHelpWindow = function () {
-    this._equipmentHelpWindow = new Window_BattleItemHelp(585, 588, 672, 3, false);
+    this._equipmentHelpWindow = new Window_BattleItemHelp(690, 639, 672, 4, false);
     this._equipmentHelpWindow.hide();
     this.addWindow(this._equipmentHelpWindow);
 };
 
 Scene_Battle.prototype.createEquipmentWindow = function () {
-    this._equipmentWindow = new Window_BattleEquipment(63, 468, 522, 249);
+    this._equipmentWindow = new Window_BattleEquipment(144, 549, 546, 249);
     this._equipmentWindow.setHelpWindow(this._equipmentHelpWindow);
     this._equipmentWindow.setHandler('ok', this.onEquipmentOk.bind(this));
     this._equipmentWindow.setHandler('cancel', this.onEquipmentCancel.bind(this));
@@ -168,7 +168,7 @@ Scene_Battle.prototype.createEquipmentDoWhatWindow = function () {
 // target windows
 
 Scene_Battle.prototype.createActorWindow = function () {
-    var x = 513;
+    var x = 690;
     this._actorWindow = new Window_BattleActor(x, 0);
     this._actorWindow.setHandler('ok', this.onActorOk.bind(this));
     this._actorWindow.setHandler('cancel', this.onActorCancel.bind(this));
@@ -194,7 +194,7 @@ Scene_Battle.prototype.createEnemyWindow = function () {
 
 Scene_Battle.prototype.createLineUpCommandWindow = function () {
     let x = this._partyCommandWindow.x + this._partyCommandWindow.windowWidth();
-    this._lineUpCommandWindow = new Window_LineUpCommand(x, 612);
+    this._lineUpCommandWindow = new Window_LineUpCommand(x, 621);
     this._lineUpCommandWindow.deactivate();
     this._lineUpCommandWindow.setHandler('Individual', this.onLineUpCommandIndividual.bind(this));
     this._lineUpCommandWindow.setHandler('Group', this.onLineUpCommandGroup.bind(this));
@@ -237,7 +237,7 @@ Scene_Battle.prototype.createLineUpIndividualStatusWindow = function () {
 Scene_Battle.prototype.createLineUpGroupPartyWindow = function () {
     let x = this._partyCommandWindow.x;
     this._lineUpGroupPartyWindow = new Window_PartyOrder(x, 0, 354);
-    this._lineUpGroupPartyWindow.y = Graphics.boxHeight - this._lineUpGroupPartyWindow.windowHeight() - 3;
+    this._lineUpGroupPartyWindow.y = Graphics.boxHeight - this._lineUpGroupPartyWindow.windowHeight() - 12;
     this._lineUpGroupPartyWindow.deactivate();
     this._lineUpGroupPartyWindow.setHandler('ok', this.onLineUpGroupPartyOk.bind(this));
     this._lineUpGroupPartyWindow.setHandler('cancel', this.onLineUpGroupPartyCancel.bind(this));
@@ -248,7 +248,7 @@ Scene_Battle.prototype.createLineUpGroupPartyWindow = function () {
 Scene_Battle.prototype.createLineUpGroupListWindow = function () {
     let x = this._lineUpGroupPartyWindow.x + this._lineUpGroupPartyWindow.windowWidth();
     this._lineUpGroupListWindow = new Window_TitledList(x, 0, 354, 'Order', $gameParty.allMembers().length);
-    this._lineUpGroupListWindow.y = Graphics.boxHeight - this._lineUpGroupListWindow.windowHeight() - 3;
+    this._lineUpGroupListWindow.y = Graphics.boxHeight - this._lineUpGroupListWindow.windowHeight() - 12;
     this._lineUpGroupListWindow.deactivate();
     this._lineUpGroupListWindow.hide();
     this._lineUpGroupPartyWindow.setAssociatedWindow(this._lineUpGroupListWindow);

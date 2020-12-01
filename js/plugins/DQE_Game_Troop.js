@@ -45,8 +45,8 @@ DQEng.Game_Troop = DQEng.Game_Troop || {};
 var parameters = PluginManager.parameters('DQE_Game_Troop');
 DQEng.Parameters = DQEng.Parameters || {};
 DQEng.Parameters.Game_Troop = {};
-DQEng.Parameters.Game_Troop.EnemyXDefaultOffset = Number(parameters["Enemy X Default Offset"]) || 231;
-DQEng.Parameters.Game_Troop.EnemyYDefaultOffset = Number(parameters["Enemy Y Default Offset"]) || 180;
+DQEng.Parameters.Game_Troop.EnemyXDefaultOffset = Number(parameters["Enemy X Default Offset"]) || 315;
+DQEng.Parameters.Game_Troop.EnemyYDefaultOffset = Number(parameters["Enemy Y Default Offset"]) || 168;
 
 //-----------------------------------------------------------------------------
 // Game_Troop

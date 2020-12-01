@@ -35,7 +35,7 @@ function Window_BattleSkillHelp() {
 Window_BattleSkillHelp.prototype = Object.create(Window_BattleHelp.prototype);
 Window_BattleSkillHelp.prototype.constructor = Window_BattleSkillHelp;
 
-Window_BattleSkillHelp.prototype.initialize = function (x, y, width, numLines = 3) {
+Window_BattleSkillHelp.prototype.initialize = function (x, y, width, numLines = 4) {
     Window_BattleHelp.prototype.initialize.call(this, x, y, width, numLines);
     this._mpCost = '';
     this._mpTotal = '';
