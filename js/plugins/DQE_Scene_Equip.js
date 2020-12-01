@@ -40,13 +40,13 @@ Scene_Equip.prototype.create = function () {
 //////////////////////////////
 
 Scene_Equip.prototype.createHelpWindow = function () {
-    this._helpWindow = new Window_Help(24, 549, 1230, 3);
+    this._helpWindow = new Window_Help(48, 549, 1344, 3);
     this._helpWindow.hide();
     this.addWindow(this._helpWindow);
 };
 
 Scene_Equip.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_TitledPartyCommand(24, 48, 354, 'Equipment');
+    this._commandWindow = new Window_TitledPartyCommand(48, 48, 354, 'Equipment');
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
@@ -54,7 +54,7 @@ Scene_Equip.prototype.createCommandWindow = function () {
 
 Scene_Equip.prototype.createEquipSlotWindow = function () {
     var x = this._commandWindow.x + this._commandWindow.windowWidth();
-    this._equipSlotWindow = new Window_EquipSlot(x, 48, 522, 501);
+    this._equipSlotWindow = new Window_EquipSlot(x, 48, 546, 501);
     this._equipSlotWindow.setHelpWindow(this._helpWindow);
     this._equipSlotWindow.setHandler('ok', this.onEquipSlotOk.bind(this));
     this._equipSlotWindow.setHandler('cancel', this.onEquipSlotCancel.bind(this));
@@ -64,7 +64,7 @@ Scene_Equip.prototype.createEquipSlotWindow = function () {
 
 Scene_Equip.prototype.createEquipItemWindow = function () {
     var x = this._commandWindow.x + this._commandWindow.windowWidth();
-    this._equipItemWindow = new Window_EquipmentList(x, 48, 522, 501);
+    this._equipItemWindow = new Window_EquipmentList(x, 48, 546, 573);
     this._equipItemWindow.setHelpWindow(this._helpWindow);
     // this._equipItemWindow.setHandler('ok', this.onEquipItemOk.bind(this));
     this._equipItemWindow.setHandler('cancel', this.onEquipItemCancel.bind(this));
@@ -88,6 +88,7 @@ Scene_Equip.prototype.onEquipSlotOk = function () {
     this._equipSlotWindow.hide();
     this._equipItemWindow.setSlot(this._equipSlotWindow.index());
     this._equipItemWindow.select(this._equipItemWindow._lastSelected);
+    this.manageHelpWindowPosition(false);
     this._equipItemWindow.show();
     this._equipItemWindow.activate();
 };
@@ -102,6 +103,15 @@ Scene_Equip.prototype.onEquipSlotCancel = function () {
 Scene_Equip.prototype.onEquipItemCancel = function () {
     this._equipItemWindow.setLastSelected(this._equipItemWindow.index());
     this._equipItemWindow.hide();
+    this.manageHelpWindowPosition(true);
     this._equipSlotWindow.show();
     this._equipSlotWindow.activate();
+};
+
+//////////////////////////////
+// Functions - managers
+//////////////////////////////
+
+Scene_Equip.prototype.manageHelpWindowPosition = function (inSlotWin) {
+    this._helpWindow.y = inSlotWin ? 549 : 621;
 };
