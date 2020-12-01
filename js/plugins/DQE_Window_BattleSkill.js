@@ -129,7 +129,7 @@ Window_BattleSkill.prototype.drawPageBlock = function () {
         this.drawHorzLine(0, blockY);
         blockY += 15;
         this.drawText(display, this.extraPadding(), blockY, displayWidth, 'center');
-        if (this._numPages > 1) { this.drawText('>', 474, blockY, 24); }
+        if (this._numPages > 1) { this.drawText('>', 498, blockY, 24); }
     }
 };
 

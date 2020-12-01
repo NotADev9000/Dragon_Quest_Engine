@@ -48,13 +48,13 @@ Scene_Item.prototype.create = function () {
 //////////////////////////////
 
 Scene_Item.prototype.createHelpWindow = function () {
-    this._helpWindow = new Window_Help(24, 567, 1230, 3);
+    this._helpWindow = new Window_Help(48, 639, 1344, 3);
     this._helpWindow.hide();
     this.addWindow(this._helpWindow);
 };
 
 Scene_Item.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_ItemCommand(24, 48, 354, 'Items', ['Items', 'Equipment', 'Important']);
+    this._commandWindow = new Window_ItemCommand(48, 48, 354, 'Items', ['Items', 'Equipment', 'Important']);
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
@@ -62,7 +62,7 @@ Scene_Item.prototype.createCommandWindow = function () {
 
 Scene_Item.prototype.createItemWindow = function () {
     var wx = this._commandWindow.x + this._commandWindow.windowWidth();
-    this._itemWindow = new Window_ItemList(wx, 48, 570, 519);
+    this._itemWindow = new Window_ItemList(wx, 48, 594, 591);
     this._itemWindow.setHelpWindow(this._helpWindow);
     this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
     this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
@@ -71,7 +71,7 @@ Scene_Item.prototype.createItemWindow = function () {
 };
 
 Scene_Item.prototype.createDoWhatWindow = function () {
-    this._doWhatWindow = new Window_TitledCommand(96, 372, 282, 'Do What?');
+    this._doWhatWindow = new Window_TitledCommand(120, 444, 282, 'Do What?');
     this._doWhatWindow.deactivate();
     this._doWhatWindow.setHandler('Use', this.onDoWhatUse.bind(this));
     this._doWhatWindow.setHandler('Transfer', this.onDoWhatTransfer.bind(this));
@@ -84,7 +84,7 @@ Scene_Item.prototype.createDoWhatWindow = function () {
 };
 
 Scene_Item.prototype.createUseOnWhoWindow = function () {
-    this._useOnWhoWindow = new Window_TitledPartyCommand(24, 48, 354, 'On Who?');
+    this._useOnWhoWindow = new Window_TitledPartyCommand(48, 48, 354, 'On Who?');
     this._useOnWhoWindow.deactivate();
     this._useOnWhoWindow.setHandler('ok', this.onUseOnWhoOk.bind(this));
     this._useOnWhoWindow.setHandler('cancel', this.onUseOnWhoCancel.bind(this));
@@ -102,7 +102,7 @@ Scene_Item.prototype.createItemStatWindow = function () {
 };
 
 Scene_Item.prototype.createTransferToWhoWindow = function () {
-    this._transferToWhoWindow = new Window_TitledPartyCommand(24, 48, 354, 'To Who?');
+    this._transferToWhoWindow = new Window_TitledPartyCommand(48, 48, 354, 'To Who?');
     this._transferToWhoWindow.deactivate();
     this._transferToWhoWindow.setHandler('ok', this.onTransferToWhoOk.bind(this));
     this._transferToWhoWindow.setHandler('cancel', this.onTransferToWhoCancel.bind(this));
@@ -366,7 +366,7 @@ Scene_Item.prototype.manageDoWhatCommands = function () {
 };
 
 Scene_Item.prototype.manageDoWhatPosition = function () {
-    this._doWhatWindow.y = this._doWhatWindow._commands.length === 3 ? 372 : 336;
+    this._doWhatWindow.y = this._doWhatWindow._commands.length === 3 ? 444 : 408;
 };
 
 /**
