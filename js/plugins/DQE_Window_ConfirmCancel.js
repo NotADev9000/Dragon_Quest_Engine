@@ -40,9 +40,25 @@ Window_ConfirmCancel.prototype.initialize = function (x, y, windowWidth) {
     Window_Command.prototype.initialize.call(this, x, y);
 };
 
+//////////////////////////////
+// Functions - window sizing
+//////////////////////////////
+
 Window_ConfirmCancel.prototype.windowWidth = function () {
     return this._width;
 };
+
+Window_ConfirmCancel.prototype.standardPadding = function () {
+    return 24;
+};
+
+Window_ConfirmCancel.prototype.lineGap = function () {
+    return 15;
+};
+
+//////////////////////////////
+// Functions - data
+//////////////////////////////
 
 Window_ConfirmCancel.prototype.makeCommandList = function () {
     this.addCommand('Confirm', 'Confirm');

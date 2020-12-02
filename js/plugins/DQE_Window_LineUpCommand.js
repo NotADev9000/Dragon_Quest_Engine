@@ -39,6 +39,10 @@ Window_LineUpCommand.prototype.initialize = function (x, y) {
     Window_Command.prototype.initialize.call(this, x, y);
 };
 
+//////////////////////////////
+// Functions - window sizing
+//////////////////////////////
+
 Window_LineUpCommand.prototype.windowWidth = function () {
     return 306;
 };
@@ -51,9 +55,9 @@ Window_LineUpCommand.prototype.lineGap = function () {
     return 15;
 };
 
-Window_LineUpCommand.prototype.numVisibleRows = function () {
-    return 2;
-};
+//////////////////////////////
+// Functions - data
+//////////////////////////////
 
 Window_LineUpCommand.prototype.makeCommandList = function () {
     this.addCommand('Individual', 'Individual');

@@ -45,7 +45,7 @@ Window_EquipmentList.prototype.initialize = function (x, y, width, height) {
 //////////////////////////////
 
 Window_EquipmentList.prototype.titleHeight = function () {
-    return 72;
+    return 78;
 };
 
 Window_EquipmentList.prototype.pageBlockHeight = function () {
@@ -77,10 +77,13 @@ Window_EquipmentList.prototype.setCategory = function (category) {
 };
 
 Window_EquipmentList.prototype.setSlot = function (slot) {
-    if (this._slot !== slot) {
-        this._slot = slot;
-        this.refresh();
-    }
+    this._slot = slot;
+    return this.refresh();
+};
+
+Window_EquipmentList.prototype.data = function () {
+    let index = this.index();
+    return this._data && index >= 0 ? this._data[index] : null;
 };
 
 Window_EquipmentList.prototype.item = function () {
@@ -118,11 +121,14 @@ Window_EquipmentList.prototype.makeItemList = function () {
 Window_EquipmentList.prototype.getData = function (etype) {
     $gameParty.members().forEach((actor, actorIndex) => {
         let includeEquips = this._category !== actorIndex; // if equipping for this actor, ignore their equipped items
+        if (includeEquips) {
+            var equipmentIndexList = actor.itemsEquipmentIsEquipped(etype);
+        }
         actor.equipmentByType(etype, includeEquips).forEach((equipment, equipmentIndex) => {
             let item = {
                 item: equipment,
                 heldBy: actorIndex,
-                equipped: includeEquips ? equipmentIndex < actor.numEquips() : false
+                equipped: includeEquips ? equipmentIndexList[equipmentIndex] : false
             };
             this._data.push(item);
         });
@@ -159,7 +165,27 @@ Window_EquipmentList.prototype.drawItem = function (index) {
     var item = this._data[index] ? this._data[index].item : null;
     if (item) {
         var rect = this.itemRectForText(index);
+        if (this._data[index].equipped) {
+            this.changeTextColor(this.deathColor());
+            this.drawText('E', rect.x, rect.y, this.itemWidth() - this.extraPadding(), 'right');
+        }
         this.drawText(item.name, rect.x, rect.y, 432);
+        this.resetTextColor();
+    }
+};
+
+//////////////////////////////
+// Functions - help windows
+//////////////////////////////
+
+Window_EquipmentList.prototype.updateHelp = function () {
+    this.setHelpWindowItem(this.data());
+};
+
+Window_EquipmentList.prototype.setHelpWindowItem = function (data) {
+    if (data) {
+        this._helpWindow[0].setItem(data.item);
+        this._helpWindow[1].setItem(data.equipped, data.heldBy);
     }
 };
 
@@ -183,4 +209,5 @@ Window_EquipmentList.prototype.refresh = function () {
         this.drawSlot();
         this.drawAllItems();
     }
+    return this._data.length;
 };

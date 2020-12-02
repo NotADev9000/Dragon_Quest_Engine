@@ -168,6 +168,22 @@ Game_Actor.prototype.itemsEquipment = function (includeEquips = true) {
     });
 };
 
+/**
+ * returns array of whether equipment piece is equipped
+ * index of array applies to equipment held
+ */
+Game_Actor.prototype.itemsEquipmentIsEquipped = function (etype) {
+    let array = [];
+    let numEquips = this.numEquips();
+    this._items.forEach(function (item, index) {
+        // is equipment                  no etype OR item is of requested etype
+        if (item._dataClass !== "item" && (!etype || etype === item.object().etypeId)) {
+            array.push(index < numEquips);
+        }
+    });
+    return array;
+};
+
 Game_Actor.prototype.equipmentByType = function (etype, includeEquips) {
     return this.itemsEquipment(includeEquips).filter(function (item) {
         return item.etypeId === etype;

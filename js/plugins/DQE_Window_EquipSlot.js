@@ -48,7 +48,7 @@ Window_EquipSlot.prototype.extraPadding = function () {
 };
 
 Window_EquipSlot.prototype.lineGap = function () {
-    return 15;
+    return 21;
 };
 
 Window_EquipSlot.prototype.titleHeight = function () {
