@@ -169,16 +169,22 @@ Game_Actor.prototype.itemsEquipment = function (includeEquips = true) {
 };
 
 /**
- * returns array of whether equipment piece is equipped
- * index of array applies to equipment held
+ * returns some extra information about the equipment held
+ * - is it equipped?
+ * - the index of the equipment
  */
-Game_Actor.prototype.itemsEquipmentIsEquipped = function (etype) {
+Game_Actor.prototype.itemsEquipmentExtraInfo = function (etype, includeEquips = true) {
     let array = [];
     let numEquips = this.numEquips();
     this._items.forEach(function (item, index) {
-        // is equipment                  no etype OR item is of requested etype
-        if (item._dataClass !== "item" && (!etype || etype === item.object().etypeId)) {
-            array.push(index < numEquips);
+        if (includeEquips || index >= numEquips) {
+            // is equipment                  no etype OR item is of requested etype
+            if (item._dataClass !== "item" && (!etype || etype === item.object().etypeId)) {
+                array.push({
+                    equipped: index < numEquips,
+                    index: index
+                });
+            }
         }
     });
     return array;

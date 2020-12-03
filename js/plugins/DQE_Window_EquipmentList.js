@@ -119,19 +119,33 @@ Window_EquipmentList.prototype.makeItemList = function () {
 };
 
 Window_EquipmentList.prototype.getData = function (etype) {
+    // actor items
     $gameParty.members().forEach((actor, actorIndex) => {
         let includeEquips = this._category !== actorIndex; // if equipping for this actor, ignore their equipped items
-        if (includeEquips) {
-            var equipmentIndexList = actor.itemsEquipmentIsEquipped(etype);
-        }
+        let equipmentInfo = actor.itemsEquipmentExtraInfo(etype, includeEquips);
         actor.equipmentByType(etype, includeEquips).forEach((equipment, equipmentIndex) => {
-            let item = {
-                item: equipment,
-                heldBy: actorIndex,
-                equipped: includeEquips ? equipmentIndexList[equipmentIndex] : false
-            };
-            this._data.push(item);
+            if (this._actor.canEquip(equipment)) {
+                let item = {
+                    item: equipment,
+                    heldBy: actorIndex,
+                    equipped: includeEquips ? equipmentInfo[equipmentIndex].equipped : false,
+                    index: equipmentInfo[equipmentIndex].index
+                };
+                this._data.push(item);
+            }
         });
+    });
+    // bag items
+    $gameParty.equipItems().filter(function (equipment) {
+        return equipment.etypeId === etype && this._actor.canEquip(equipment);
+    }, this).forEach((equipment) => {
+        let item = {
+            item: equipment,
+            heldBy: -1,
+            equipped: false,
+            index: 0
+        };
+        this._data.push(item);
     });
 };
 
