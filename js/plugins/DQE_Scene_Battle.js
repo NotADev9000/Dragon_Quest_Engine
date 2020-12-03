@@ -194,7 +194,7 @@ Scene_Battle.prototype.createEnemyWindow = function () {
 
 Scene_Battle.prototype.createLineUpCommandWindow = function () {
     let x = this._partyCommandWindow.x + this._partyCommandWindow.windowWidth();
-    this._lineUpCommandWindow = new Window_LineUpCommand(x, 621);
+    this._lineUpCommandWindow = new Window_CustomCommand(x, 621, 306, ['Individual', 'Group']);
     this._lineUpCommandWindow.deactivate();
     this._lineUpCommandWindow.setHandler('Individual', this.onLineUpCommandIndividual.bind(this));
     this._lineUpCommandWindow.setHandler('Group', this.onLineUpCommandGroup.bind(this));
@@ -267,7 +267,7 @@ Scene_Battle.prototype.createLineUpGroupStatusWindow = function () {
 Scene_Battle.prototype.createLineUpGroupConfirmWindow = function () {
     let x = this._lineUpGroupPartyWindow.x;
     let y = this._lineUpGroupPartyWindow.y;
-    this._lineUpGroupConfirmWindow = new Window_ConfirmCancel(x, y, 354);
+    this._lineUpGroupConfirmWindow = new Window_CustomCommand(x, y, 354, ['Confirm', 'Cancel']);
     this._lineUpGroupConfirmWindow.setHandler('Confirm', this.onLineUpGroupConfirmOk.bind(this));
     this._lineUpGroupConfirmWindow.setHandler('Cancel', this.onLineUpGroupConfirmCancel.bind(this));
     this._lineUpGroupConfirmWindow.setHandler('cancel', this.onLineUpGroupConfirmCancel.bind(this));

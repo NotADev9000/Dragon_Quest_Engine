@@ -79,8 +79,7 @@ var $plugins =
 {"name":"DQE_Window_BattleSkillHelp","status":true,"description":"The window for displaying the skill description/cost - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleItemHelp","status":true,"description":"The window for displaying the skill description/cost - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleLog","status":true,"description":"The window for displaying battle progress - V0.1","parameters":{}},
-{"name":"DQE_Window_LineUpCommand","status":true,"description":"Window for selecting line-up type - V0.1","parameters":{}},
-{"name":"DQE_Window_ConfirmCancel","status":true,"description":"A simple command window with confirm/cancel - V0.1","parameters":{}},
+{"name":"DQE_Window_CustomCommand","status":true,"description":"Window for selecting some commands passed as parameters on initialization - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}}
 ];
