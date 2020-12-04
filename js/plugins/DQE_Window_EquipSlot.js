@@ -71,19 +71,45 @@ Window_EquipSlot.prototype.slots = function () {
     return $dataSystem.equipTypes;
 };
 
+Window_EquipSlot.prototype.slotIndex = function () {
+    let index = this.index();
+    if (this._data[index].cloned >= 0) {
+        return this._data[index].cloned;
+    } else {
+        return index;
+    }
+};
+
 Window_EquipSlot.prototype.makeDisplayData = function () {
     this._data = Object.assign([], this._actor.equips());
     if (this._data[0] && this._data[0].meta.twoHand) {
         this._data[1] = Object.assign({}, this._data[0]);
-        this._data[1].cloned = true;
+        this._data[1].cloned = 0;
     } else if (this._data[1] && this._data[1].meta.twoHand) {
         this._data[0] = Object.assign({}, this._data[1]);
-        this._data[0].cloned = true;
+        this._data[0].cloned = 1;
     }
 };
 
 Window_EquipSlot.prototype.dataItem = function () {
     return this._actor ? this._data[this.index()] : null;
+};
+
+Window_EquipSlot.prototype.orderInInventory = function () {
+    let count = 0;
+    let order = [];
+    this._data.forEach((item, index) => {
+        // let position = item ? item.cloned >= 0 ? item.cloned : index : null;
+        if (!item) {
+            order.push(null);
+        } else if (item.cloned >= 0) {
+            item.cloned > index ? order.push(count) : order.push(count-1);
+        } else {
+            order.push(count);
+            count++;
+        }
+    });
+    return order;
 };
 
 Window_EquipSlot.prototype.setCategory = function (category) {
@@ -134,7 +160,7 @@ Window_EquipSlot.prototype.drawItem = function (index) {
     var equip = this._data[index];
     var text = '';
     if (equip) {
-        if (equip.cloned) this.changeTextColor(this.disabledColor());
+        if (equip.cloned >= 0) this.changeTextColor(this.disabledColor());
         text = equip.name;
     } else {
         this.changeTextColor(this.disabledColor());
