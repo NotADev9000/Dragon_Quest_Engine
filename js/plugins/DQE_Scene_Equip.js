@@ -83,7 +83,7 @@ Scene_Equip.prototype.createEquipItemWindow = function () {
     let x = this._commandWindow.x + this._commandWindow.windowWidth();
     this._equipItemWindow = new Window_EquipmentList(x, 48, 571, 573);
     this._equipItemWindow.setHelpWindow(this._helpWindow);
-    // this._equipItemWindow.setHandler('ok', this.onEquipItemOk.bind(this));
+    this._equipItemWindow.setHandler('ok', this.onEquipItemOk.bind(this));
     this._equipItemWindow.setHandler('cancel', this.onEquipItemCancel.bind(this));
     this._equipItemWindow.hide();
     this.addWindow(this._equipItemWindow);
@@ -172,11 +172,60 @@ Scene_Equip.prototype.onEquipSlotDoWhatCancel = function () {
     this._equipSlotWindow.activate();
 };
 
+Scene_Equip.prototype.onEquipItemOk = function () {
+    // slot window
+    let actor = this._equipSlotWindow._actor;
+    let swapOut = actor.hasMaxItems() ? true : false;
+    let slotIndex = this._equipSlotWindow.slotIndex(); // slot index for the currently equipped item
+    let itemIndex = this._equipSlotWindow.orderInInventory()[slotIndex]; // index of item in actor inventory
+    if (itemIndex === null && swapOut) itemIndex = actor.numItems()-1; // if an actor's inventory is full & there's no item to unequip, swap the last item in inventory
+    // item window
+    let data = this._equipItemWindow.data();
+    let inBag = data.heldBy < 0;
+    if (!inBag) var otherActor = $gameParty.members()[data.heldBy];
+    let dataSlotIndex = slotIndex >= 4 ? slotIndex : actor.whichEquipSlot(data.item, this._equipSlotWindow.index()); // which slot the newly equipped item should go
+
+    // messages & dimmers
+    this.equipItemOkMessages(actor, swapOut, slotIndex, itemIndex, data, inBag, otherActor);
+
+    // if equipping item from own inventory
+    if (actor === otherActor) {
+        actor.equipItemFromInv(data.index, dataSlotIndex);
+    } else {
+        // if there's an item to unequip
+        if (itemIndex !== null) {
+            var swapItem = actor.item(itemIndex);
+            actor.unequipItem(itemIndex, !swapOut, slotIndex);
+        }
+        // other item needing to be removed/unequipped
+        if (inBag) {
+            $gameParty.loseItem(data.item, 1);
+        } else {
+            if (data.equipped) {
+                otherActor.unequipItem(data.index, false, otherActor.getSlotData()[data.index]);
+            } else {
+                otherActor.removeItemAtIndex(data.index);
+            }
+        }
+        // give actor item and equip it
+        actor.giveItems(data.item, 1);
+        actor.equipItemFromInv(actor.numItems() - 1, dataSlotIndex);
+        // swap item if needed
+        if (swapOut) {
+            if (inBag) {
+                $gameParty.gainItem(swapItem, 1);
+            } else {
+                otherActor.giveItems(swapItem, 1);
+            }
+        }
+    }
+};
+
 Scene_Equip.prototype.onEquipItemCancel = function () {
     this._equipItemWindow.setLastSelected(this._equipItemWindow.index());
     this._equipItemWindow.hideHelpWindow(1);
-    this._equipItemWindow.hide();
     this._equipSlotWindow.show();
+    this._equipItemWindow.hide();
     this._equipSlotWindow.activate();
 };
 
@@ -186,6 +235,20 @@ Scene_Equip.prototype.onEquipItemCancel = function () {
 
 Scene_Equip.prototype.noEquipItemsMessage = function () {
     return 'There are no items to equip!';
+};
+
+Scene_Equip.prototype.equipItemOkMessages = function (actor, swapOut, slotIndex, itemIndex, data, inBag, otherActor) {
+    let message = '';
+    this._equipItemWindow.showBackgroundDimmer();
+    this._equipItemWindow.showAllHelpWindowBackgroundDimmers();
+    if (inBag) {
+        if (swapOut) {
+            message = actor.tradeItemWithBagAndEquipMessage(itemIndex, data.item);
+        } else {
+
+        }
+    }
+    this.displayMessage(message, Scene_Equip.prototype.onEquipItemMessageCallback);
 };
 
 //////////////////////////////
@@ -204,5 +267,15 @@ Scene_Equip.prototype.doWhatUnequipMessageCallback = function () {
     this._equipSlotWindow.refresh();
     this._equipSlotWindow.hideBackgroundDimmer();
     this._equipSlotWindow.hideAllHelpWindowBackgroundDimmers();
+    this._equipSlotWindow.activate();
+};
+
+Scene_Equip.prototype.onEquipItemMessageCallback = function () {
+    this._equipSlotWindow.refresh();
+    this._equipItemWindow.hideHelpWindow(1);
+    this._equipSlotWindow.show();
+    this._equipItemWindow.hide();
+    this._equipItemWindow.hideBackgroundDimmer();
+    this._equipItemWindow.hideAllHelpWindowBackgroundDimmers();
     this._equipSlotWindow.activate();
 };

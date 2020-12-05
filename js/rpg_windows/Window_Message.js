@@ -183,7 +183,7 @@ Window_Message.prototype.updateMessage = function() {
                 break;
             }
             this._textSpeedCount = 0;
-            this.processCharacter(this._textState);
+            this.processCharacter(this._textState, true);
             if (!this._showFast && !this._lineShowFast && this._textSpeed !== -1) {
                 break;
             }

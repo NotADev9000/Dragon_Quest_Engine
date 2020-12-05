@@ -54,11 +54,9 @@ Window_ItemLocation.prototype.windowWidth = function () {
 //////////////////////////////
 
 Window_ItemLocation.prototype.setItem = function (equipped, location) {
-    if (this._equipped !== equipped || this._location != location) {
-        this._equipped = equipped;
-        this._location = location;
-        this.refresh();
-    }
+    this._equipped = equipped;
+    this._location = location;
+    this.refresh();
 };
 
 //////////////////////////////

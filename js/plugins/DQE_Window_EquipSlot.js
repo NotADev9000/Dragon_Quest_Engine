@@ -73,8 +73,9 @@ Window_EquipSlot.prototype.slots = function () {
 
 Window_EquipSlot.prototype.slotIndex = function () {
     let index = this.index();
-    if (this._data[index].cloned >= 0) {
-        return this._data[index].cloned;
+    let data = this._data[index];
+    if (data && data.cloned >= 0) {
+        return data.cloned;
     } else {
         return index;
     }

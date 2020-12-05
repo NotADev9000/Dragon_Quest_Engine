@@ -121,7 +121,7 @@ Game_Actor.prototype.releaseUnequippableItems = function (forcing) {
         var changed = false;
         for (var i = 0; i < equips.length; i++) {
             var item = equips[i];
-            if (item && (!this.canEquip(item) || !this.eTypeMatchesSlot(item.etypeId, slots[i]))) {
+            if (item && (!this.canEquip(item) || !this.eTypeMatchesSlot(item.etypeId, slots[i]) || this.isSecondHand(item.etypeId, i, slots[i]))) {
                 if (!forcing) {
                     this.tradeItemWithParty(null, item);
                 }
@@ -141,6 +141,22 @@ Game_Actor.prototype.eTypeMatchesSlot = function (eType, slot) {
     } else {
         return eType === slot;
     }
+};
+
+/**
+ * for dual wield equipment only
+ * is the item in slotId in the off-hand when 
+ * there is no equipment in the main hand
+ * 
+ * @param {number} etype the equipment type ID of an item
+ * @param {number} slotId the equip slot currently being checked
+ * @param {number} slot the type of slot e.g. right hand, left hand, all wield, head, etc.
+ */
+Game_Actor.prototype.isSecondHand = function (etype, slotId, slot) {
+    if (slot === 7 && etype-1 !== slotId) {
+        return !this.isSlotEquipped(etype-1);
+    }
+    return false;
 };
 
 //////////////////////////////
@@ -197,6 +213,20 @@ Game_Actor.prototype.equipmentByType = function (etype, includeEquips) {
 };
 
 /**
+ * Looks at the actor's inventory and decides which
+ * slot needs to be equipped
+ */
+Game_Actor.prototype.whichEquipSlot = function (item, selectedSlot) {
+    let etype = item.etypeId-1;
+    let slotItem = this.isSlotEquipped(etype);
+    if (!item.meta.twoHand && slotItem && !slotItem.meta.twoHand) {
+        return selectedSlot;
+    } else {
+        return etype;
+    }
+};
+
+/**
  * Returns item at index as a data item
  * 
  * @param {number} index of item in actor inventory
@@ -206,7 +236,7 @@ Game_Actor.prototype.item = function (index) {
 };
 
 Game_Actor.prototype.maxItems = function () {
-    return 16;
+    return 14;
 };
 
 Game_Actor.prototype.numEquips = function () {
@@ -273,9 +303,9 @@ Game_Actor.prototype.consumeActorItem = function (index) {
 /**
  * Equips an item from actors' own inventory
  */
-Game_Actor.prototype.equipItemFromInv = function (index) {
+Game_Actor.prototype.equipItemFromInv = function (index, slot = undefined) {
     var item = this.item(index);
-    var slotId = item.etypeId - 1;
+    var slotId = slot >= 0 && !item.meta.twoHand ? slot : item.etypeId - 1;
     var replace = new Game_Item(this.equips()[slotId]); // item in this position is being unequipped
 
     if (replace._itemId) {
@@ -490,40 +520,44 @@ Game_Actor.prototype.triedToMagicAllMessage = function (item) {
 };
 
 Game_Actor.prototype.itemUsedMessage = function (item) {
-    return `${this._name} used the ${item.name}.`;
+    return `${this._name} uses the ${item.name}.`;
 };
 
 Game_Actor.prototype.triedToUseMessage = function (item, target) {
-    return `${this._name} tried to use the ${item.name}.\\!\nBut it had no effect on ${target.name()}.`;
+    return `${this._name} tries to use the ${item.name}.\\!\nBut it has no effect on ${target.name()}.`;
 };
 
 // for items that target the whole party
 Game_Actor.prototype.triedToUseAllMessage = function (item) {
-    return `${this._name} tried to use the ${item.name}.\\!\nBut it had no effect.`;
+    return `${this._name} tries to use the ${item.name}.\\!\nBut it has no effect.`;
 };
 
 Game_Actor.prototype.giveItemToBagMessage = function (index) {
-    return `${this._name} placed the ${this.item(index).name} in the bag.`;
+    return `${this._name} places the ${this.item(index).name} in the bag.`;
 };
 
 Game_Actor.prototype.giveItemToActorMessage = function (index, actor) {
-    return `${this._name} handed the ${this.item(index).name} to ${actor._name}.`;
+    return `${this._name} hands the ${this.item(index).name} to ${actor._name}.`;
 };
 
 Game_Actor.prototype.tradeItemWithBagMessage = function (index, item) {
-    return `${this._name} swapped the ${this.item(index).name}\nwith the ${item.name} from the bag.`;
+    return `${this._name} swaps the ${this.item(index).name}\nwith the ${item.name} from the bag.`;
 };
 
 Game_Actor.prototype.tradeItemWithActorMessage = function (index, actorIndex, actor) {
-    return `${this._name} handed the ${this.item(index).name} to ${actor._name}\nand received the ${actor.item(actorIndex).name}.`;
+    return `${this._name} hands the ${this.item(index).name} to ${actor._name}\nand receives the ${actor.item(actorIndex).name}.`;
 };
 
 Game_Actor.prototype.equipItemMessage = function (index) {
-    return `${this._name} equipped the ${this.item(index).name}.`;
+    return `${this._name} equips the ${this.item(index).name}.`;
 };
 
 Game_Actor.prototype.unequipItemMessage = function (index) {
-    return `${this._name} unequipped the ${this.item(index).name}.`;
+    return `${this._name} unequips the ${this.item(index).name}.`;
+};
+
+Game_Actor.prototype.tradeItemWithBagAndEquipMessage = function (index, item) {
+    return `${this._name} swaps the ${this.item(index).name} with the ${item.name} from the bag and equips it.`;
 };
 
 Game_Actor.prototype.cantEquipMessage = function (index) {
