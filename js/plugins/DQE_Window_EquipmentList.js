@@ -139,13 +139,15 @@ Window_EquipmentList.prototype.getData = function (etype) {
     $gameParty.equipItems().filter(function (equipment) {
         return equipment.etypeId === etype && this._actor.canEquip(equipment);
     }, this).forEach((equipment) => {
-        let item = {
-            item: equipment,
-            heldBy: -1,
-            equipped: false,
-            index: 0
-        };
-        this._data.push(item);
+        for (let i = 0; i < $gameParty.numItems(equipment); i++) {
+            let item = {
+                item: equipment,
+                heldBy: -1,
+                equipped: false,
+                index: 0
+            };
+            this._data.push(item);
+        }
     });
 };
 
