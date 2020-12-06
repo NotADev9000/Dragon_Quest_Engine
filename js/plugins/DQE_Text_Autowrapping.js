@@ -81,9 +81,11 @@ Window_Base.prototype.checkWordWrap = function (textState) {
     if (textState.text[textState.index] === ' ') {
         var nextSpace = textState.text.indexOf(' ', textState.index + 1);
         var nextBreak = textState.text.indexOf('\n', textState.index + 1);
+        var nextPause = textState.text.indexOf('\!', textState.index + 1);
         var nextPage = textState.text.indexOf('\f', textState.index + 1);
         if (nextSpace < 0) nextSpace = textState.text.length + 1;
         if (nextBreak > 0) nextSpace = Math.min(nextSpace, nextBreak);
+        if (nextPause > 0) nextSpace = Math.min(nextSpace, nextPause);
         if (nextPage > 0) nextSpace = Math.min(nextSpace, nextPage);
         var word = textState.text.substring(textState.index, nextSpace);
         var size = this.textWidthEx(word);
