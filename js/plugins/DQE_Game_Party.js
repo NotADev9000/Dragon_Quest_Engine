@@ -34,11 +34,15 @@ Game_Party.prototype.giveItemToActor = function (item, actor, index, amount = 1)
 };
 
 Game_Party.prototype.giveItemToActorMessage = function (item, actor) {
-    return `${actor._name} took the ${item.name} from the bag.`;
+    return `${actor._name} takes the ${item.name} from the bag.`;
+};
+
+Game_Party.prototype.giveItemToActorAndEquipMessage = function (item, actor) {
+    return `${actor._name} takes the ${item.name} from the bag and equips it.`;
 };
 
 Game_Party.prototype.giveMultipleItemsToActorMessage = function (item, actor, amount) {
-    return `${actor._name} took ${amount} ${item.name}s from the bag.`;
+    return `${actor._name} takes ${amount} ${item.name}s from the bag.`;
 };
 
 Game_Party.prototype.onBattleStart = function () {

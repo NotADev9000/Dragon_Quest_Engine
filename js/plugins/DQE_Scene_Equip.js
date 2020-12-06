@@ -245,8 +245,16 @@ Scene_Equip.prototype.equipItemOkMessages = function (actor, swapOut, slotIndex,
         if (swapOut) {
             message = actor.tradeItemWithBagAndEquipMessage(itemIndex, data.item);
         } else {
-
+            message = $gameParty.giveItemToActorAndEquipMessage(data.item, actor);
         }
+    } else if (actor === otherActor) {
+        message = actor.equipItemMessage(data.index);
+    } else {
+        if (swapOut) {
+            message = actor.tradeItemWithActorAndEquipMessage(itemIndex, data.index, otherActor);
+        } else {
+            message = actor.getItemFromActorAndEquipMessage(data.index, otherActor);
+        } 
     }
     this.displayMessage(message, Scene_Equip.prototype.onEquipItemMessageCallback);
 };

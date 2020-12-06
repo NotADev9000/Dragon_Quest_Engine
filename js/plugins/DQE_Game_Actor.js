@@ -122,9 +122,6 @@ Game_Actor.prototype.releaseUnequippableItems = function (forcing) {
         for (var i = 0; i < equips.length; i++) {
             var item = equips[i];
             if (item && (!this.canEquip(item) || !this.eTypeMatchesSlot(item.etypeId, slots[i]) || this.isSecondHand(item.etypeId, i, slots[i]))) {
-                if (!forcing) {
-                    this.tradeItemWithParty(null, item);
-                }
                 this.unequipItem(i, !forcing);
                 changed = true;
             }
@@ -558,6 +555,14 @@ Game_Actor.prototype.unequipItemMessage = function (index) {
 
 Game_Actor.prototype.tradeItemWithBagAndEquipMessage = function (index, item) {
     return `${this._name} swaps the ${this.item(index).name} with the ${item.name} from the bag and equips it.`;
+};
+
+Game_Actor.prototype.tradeItemWithActorAndEquipMessage = function (index, actorIndex, actor) {
+    return `${this._name} swaps the ${this.item(index).name} with the ${actor.item(actorIndex).name} from ${actor._name} and equips it.`;
+};
+
+Game_Actor.prototype.getItemFromActorAndEquipMessage = function (index, actor) {
+    return `${this._name} takes the ${actor.item(index).name} from ${actor._name} and equips it.`;
 };
 
 Game_Actor.prototype.cantEquipMessage = function (index) {
