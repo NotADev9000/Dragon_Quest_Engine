@@ -61,23 +61,14 @@ BattleManager.displayStartMessages = function () {
     }
 };
 
+BattleManager.refreshSingleStatus = function (i) {
+    this._statusWindow[i].refresh();
+};
+
 BattleManager.refreshStatus = function () {
     this._statusWindow.forEach(statusWindow => {
         statusWindow.refresh();
     });
-};
-
-BattleManager.updateTurn = function () {
-    $gameParty.requestMotionRefresh();
-    if (!this._subject) {
-        this._subject = this.getNextSubject();
-    }
-    if (this._subject) {
-        this._logWindow.opacity = 255;
-        this.processTurn();
-    } else {
-        this.endTurn();
-    }
 };
 
 BattleManager.startAction = function () {
@@ -114,8 +105,101 @@ BattleManager.gainExp = function () {
     });
 };
 
+BattleManager.updateTurn = function () {
+    $gameParty.requestMotionRefresh();
+    if (!this._subject) {
+        this._subject = this.getNextSubject();
+    }
+    if (this._subject) {
+        this._logWindow.opacity = 255;
+        this.processTurn();
+    } else if (!this.isForcedTurn()) {
+        this.startPostTurn1();
+    } else {
+        this.endTurn();
+    }
+};
+
+BattleManager.endTurn = function () {
+    this._phase = 'turnEnd';
+    this.allBattleMembers().forEach(battler => {
+        battler.clearResult();
+    }, this);
+    if (this.isForcedTurn()) {
+        this._turnForced = false;
+    }
+};
+
 DQEng.Battle_Manager.updateBattleEnd = BattleManager.updateBattleEnd;
 BattleManager.updateBattleEnd = function () {
     this._logWindow.opacity = 0;
     DQEng.Battle_Manager.updateBattleEnd.call(this);
+};
+
+//////////////////////////////
+// Functions - post turn changes
+//////////////////////////////
+
+BattleManager.update = function () {
+    if (!this.isBusy() && !this.updateEvent()) {
+        switch (this._phase) {
+            case 'start':
+                this.startInput();
+                break;
+            case 'turn':
+                this.updateTurn();
+                break;
+            case 'action':
+                this.updateAction();
+                break;
+            case 'postTurn1':
+                this.updatePostTurn1();
+                break;
+            case 'turnEnd':
+                this.updateTurnEnd();
+                break;
+            case 'battleEnd':
+                this.updateBattleEnd();
+                break;
+        }
+    }
+};
+
+BattleManager.startPostTurn1 = function () {
+    this._phase = 'postTurn1';
+    this._preemptive = false;
+    this._surprise = false;
+    // this.clearActor();
+    this.allBattleMembers().forEach(function (battler) {
+        battler.onPostTurn1(); // update state/buff turn counts
+    });
+    this._actionBattlers = this.allBattleMembers();
+    // this._logWindow.startTurn();
+};
+
+BattleManager.updatePostTurn1 = function () {
+    if (!this._subject) {
+        this._subject = this.getNextSubject();
+    }
+    if (this._subject) {
+        this.processPostTurn1();
+    } else {
+        // START POST TURN 2
+        this.endTurn();
+    }
+};
+
+BattleManager.processPostTurn1 = function () {
+    let subject = this._subject;
+    let isActor = subject instanceof Game_Actor;
+    let expiredState = subject.currentExpiringState(2);
+
+    if (expiredState) {
+        subject.removeStateAuto(2, expiredState);
+        this._logWindow.displayAutoAffectedStatus(subject);
+        if (isActor) this.refreshStatus();
+        subject.clearResult();
+    } else {
+        this._subject = this.getNextSubject();
+    }
 };

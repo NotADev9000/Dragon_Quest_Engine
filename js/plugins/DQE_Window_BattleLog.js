@@ -256,6 +256,12 @@ Window_BattleLog.prototype.displayHpDamage = function (target) {
     }
 };
 
+Window_BattleLog.prototype.displayTurnEndState = function (state, target) {
+    this.push('clear');
+    this.push('addText', target.name() + state.meta.onTurnEnd);
+    this.push('waitForNewLine');
+};
+
 Window_BattleLog.prototype.displayRemovedStates = function (target) {
     target.result().removedStateObjects().forEach(function (state) {
         if (state.message4) {

@@ -67,3 +67,37 @@ Game_Battler.prototype.removeState = function (stateId) {
         this._result.pushRemovedState(stateId);
     }
 };
+
+Game_Battler.prototype.removeStateAuto = function (timing, state) {
+    if (this.isStateExpired(state.id) && state.autoRemovalTiming === timing) {
+        this.removeState(state.id);
+    }
+};
+
+Game_Battler.prototype.currentExpiringState = function (timing = 0) {
+    let expiredState = null;
+    this.states().some((state) => {
+        if (this.isStateExpired(state.id) && (timing === 0 || state.autoRemovalTiming === timing)) {
+            expiredState = state;
+            return true;   
+        }
+        return false;
+    });
+    return expiredState;
+};
+
+/**
+ * Clears result & updates the state & buff turn counts
+ */
+Game_Battler.prototype.onPostTurn1 = function () {
+    this.clearResult();
+    this.updateStateTurns();
+    this.updateBuffTurns();
+};
+
+Game_Battler.prototype.invokeStateEffects = function (state) {
+    if (state.meta.formula) {
+        let damage = -Math.max(eval(state.meta.formula),0);
+        this.gainHp(damage);
+    }
+};

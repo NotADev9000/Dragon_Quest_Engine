@@ -12,6 +12,7 @@
 * . Shop system 4
 * . Bank system 4
 * . States/Elements/Skills/Abilities 1
+*   - FIZZLE: items invoking skills needs to work even when fizzled
 * . Battle formulas (crit, evasion...) 1
 * . Battleback match terrain 3
 */
