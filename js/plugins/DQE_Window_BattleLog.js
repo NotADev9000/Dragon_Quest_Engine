@@ -72,6 +72,12 @@ Window_BattleLog.prototype.critSpeed = function () {
     return 36;
 };
 
+Window_BattleLog.prototype.clear = function (refresh = false) {
+    this._lines = [];
+    this._baseLineStack = [];
+    if (refresh) this.refresh();
+};
+
 Window_BattleLog.prototype.wait = function (waitType = 'msg') {
     switch (waitType) {
         case 'crit':
@@ -189,6 +195,13 @@ Window_BattleLog.prototype.displayAction = function (subject, item, modifiedItem
     }
 };
 
+Window_BattleLog.prototype.displayRegeneration = function (subject) {
+    this.push('pushBaseLine');
+    this.displayDamage(subject);
+    this.push('waitForNewLine');
+    this.push('popBaseLine');
+};
+
 Window_BattleLog.prototype.displayActionResults = function (subject, target) {
     if (target.result().used) {
         this.push('clear');
@@ -256,10 +269,10 @@ Window_BattleLog.prototype.displayHpDamage = function (target) {
     }
 };
 
-Window_BattleLog.prototype.displayTurnEndState = function (state, target) {
-    this.push('clear');
-    this.push('addText', target.name() + state.meta.onTurnEnd);
-    this.push('waitForNewLine');
+Window_BattleLog.prototype.displayAutoAffectedStatus = function (target) {
+    if (target.result().isStatusAffected()) {
+        this.displayAffectedStatus(target, null);
+    }
 };
 
 Window_BattleLog.prototype.displayRemovedStates = function (target) {

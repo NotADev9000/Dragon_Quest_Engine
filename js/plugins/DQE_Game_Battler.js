@@ -95,9 +95,32 @@ Game_Battler.prototype.onPostTurn1 = function () {
     this.updateBuffTurns();
 };
 
+Game_Battler.prototype.onPostTurn2 = function () {
+    // get list of all states that invoke an effect on turn end
+    this.states().filter(state => {
+        return state.meta.onTurnEnd;
+    }).forEach(state => {
+        this._actions.push(state.id);
+    });
+    // get stat regenrations
+    if (this.hrg !== 0) this._actions.push('hrg');
+    if (this.mrg !== 0) this._actions.push('mrg');
+};
+
 Game_Battler.prototype.invokeStateEffects = function (state) {
     if (state.meta.formula) {
         let damage = -Math.max(eval(state.meta.formula),0);
         this.gainHp(damage);
+    }
+};
+
+Game_Battler.prototype.invokeRegen = function (type) {
+    switch (type) {
+        case 'hrg':
+            this.regenerateHp();
+            break;
+        case 'mrg':
+            this.regenerateMp();
+            break;
     }
 };
