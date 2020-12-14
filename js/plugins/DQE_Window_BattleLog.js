@@ -269,6 +269,12 @@ Window_BattleLog.prototype.displayHpDamage = function (target) {
     }
 };
 
+Window_BattleLog.prototype.displayTurnEndState = function (target, stateId) {
+    let msg = $dataStates[stateId].meta.onTurnEnd;
+    this.push('addText', target.name() + msg);
+    this.push('waitForNewLine');
+};
+
 Window_BattleLog.prototype.displayAutoAffectedStatus = function (target) {
     if (target.result().isStatusAffected()) {
         this.displayAffectedStatus(target, null);

@@ -156,6 +156,9 @@ BattleManager.update = function () {
             case 'postTurn2':
                 this.updatePostTurn(2);
                 break;
+            case 'postTurnAction':
+                this.updatePostTurnAction();
+                break;
             case 'turnEnd':
                 this.updateTurnEnd();
                 break;
@@ -223,7 +226,7 @@ BattleManager.processPostTurn2 = function () {
 
     subject.clearResult();
     if (action > 0) { // state effect
-        // this.startPostTurnAction();
+        this.startPostTurnAction();
         subject.removeCurrentAction();
     } else if (action) { // stat regen
         subject.invokeRegen(action);
@@ -233,4 +236,26 @@ BattleManager.processPostTurn2 = function () {
     } else {
         this._subject = this.getNextSubject();
     }
+};
+
+BattleManager.startPostTurnAction = function () {
+    let subject = this._subject;
+    let action = subject.currentAction();
+    
+    this._action = action;
+    this._phase = 'postTurnAction';
+    this._logWindow.displayTurnEndState(subject, action);
+};
+
+BattleManager.updatePostTurnAction = function () {
+    let subject = this._subject;
+    let isActor = subject instanceof Game_Actor;
+
+    subject.invokeStateEffects(this._action);
+    this._logWindow.displayDamage(subject);
+    this._logWindow.displayAffectedStatus(subject);
+    this._logWindow.push('waitForNewLine');
+    this._logWindow.push('clear');
+    this._phase = 'postTurn2';
+    if (isActor) this.refreshStatus();
 };
