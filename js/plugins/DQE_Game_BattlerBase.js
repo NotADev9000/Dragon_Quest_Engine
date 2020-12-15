@@ -45,3 +45,13 @@ Game_BattlerBase.prototype.isAllWield = function () {
 Game_BattlerBase.prototype.meetsItemConditions = function (item) {
     return this.meetsUsableItemConditions(item);
 };
+
+Game_BattlerBase.prototype.mostImportantStateDisplay = function () {
+    var states = this.states();
+    for (var i = 0; i < states.length; i++) {
+        if (states[i].meta.color) {
+            return states[i];
+        }
+    }
+    return null;
+};

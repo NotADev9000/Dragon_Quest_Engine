@@ -68,17 +68,6 @@ Window_MenuStatus.prototype.windowHeight = function () {
     return 192;
 };
 
-Window_MenuStatus.prototype.refresh = function () {
-    this.contents.clear();
-    if (this._actor) {
-        this.drawActorName(this._actor, this.extraPadding(), this.extraPadding());
-        this.drawHorzLine(0, 51);
-        this.drawStatBlock(TextManager.hpA, this._actor.hp, this.extraPadding(), 66, 72);
-        this.drawStatBlock(TextManager.mpA, this._actor.mp,this.extraPadding(), 102, 72);
-        this.drawStatBlock(TextManager.levelA, this._actor.level,this.extraPadding(), 138, 72);
-    }
-};
-
 /**
  * Draws actor name limited to 10 characters
  */
@@ -102,4 +91,25 @@ Window_MenuStatus.prototype.drawStatBlock = function (statProperty, statValue, x
     this.changeTextColor(this.hpColor(this._actor));
     this.drawText(statProperty, x, y);
     this.drawActorStat(statValue, this.contentsWidth() - statWidth - this.extraPadding(), y, statWidth, 'right');
+};
+
+Window_MenuStatus.prototype.drawStateBlock = function (state, x, y) {
+    this.changeTextColor(this.textColor(state.meta.color));
+    this.drawText(state.name.toUpperCase(), x, y);
+};
+
+Window_MenuStatus.prototype.refresh = function () {
+    this.contents.clear();
+    if (this._actor) {
+        let state = this._actor.mostImportantStateDisplay();
+        this.drawActorName(this._actor, this.extraPadding(), this.extraPadding());
+        this.drawHorzLine(0, 51);
+        this.drawStatBlock(TextManager.hpA, this._actor.hp, this.extraPadding(), 66, 72);
+        this.drawStatBlock(TextManager.mpA, this._actor.mp, this.extraPadding(), 102, 72);
+        if (state) {
+            this.drawStateBlock(state, this.extraPadding(), 138);
+        } else {
+            this.drawStatBlock(TextManager.levelA, this._actor.level, this.extraPadding(), 138, 72);
+        }
+    }
 };
