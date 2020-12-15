@@ -110,8 +110,10 @@ Game_Battler.prototype.onPostTurn2 = function () {
 Game_Battler.prototype.invokeStateEffects = function (stateId) {
     let state = $dataStates[stateId];
     if (state.meta.formula) {
-        let damage = -Math.max(eval(state.meta.formula),0);
-        this.gainHp(damage);
+        let a = this;
+        let damage = Math.max(eval(state.meta.formula), 0);
+        if (state.meta.dmgCap) damage = Math.min(damage, state.meta.dmgCap);
+        this.gainHp(-damage);
     }
 };
 
