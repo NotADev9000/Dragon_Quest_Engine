@@ -28,6 +28,14 @@ DQEng.Game_BattlerBase = DQEng.Game_BattlerBase || {};
 // Game_BattlerBase
 //-----------------------------------------------------------------------------
 
+Game_BattlerBase.prototype.updateStateTurns = function (timing = 0) {
+    this.states().forEach(function (state) {
+        if (this._stateTurns[state.id] > 0 && (timing === 0 || state.autoRemovalTiming === timing)) {
+            this._stateTurns[state.id]--;
+        }
+    }, this);
+};
+
 DQEng.Game_BattlerBase.slotType = Game_BattlerBase.prototype.slotType;
 Game_BattlerBase.prototype.slotType = function () {
     let actor = this.actor();

@@ -207,10 +207,10 @@ BattleManager.updatePostTurn = function (turnNum) {
 BattleManager.processPostTurn1 = function () {
     let subject = this._subject;
     let isActor = subject instanceof Game_Actor;
-    let expiredState = subject.currentExpiringState(2);
+    let expiredState = subject.currentExpiringState();
 
     if (expiredState) {
-        subject.removeStateAuto(2, expiredState);
+        subject.removeStateAuto(0, expiredState);
         this._logWindow.displayAutoAffectedStatus(subject);
         if (isActor) this.refreshStatus();
         subject.clearResult();

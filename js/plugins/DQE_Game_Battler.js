@@ -57,6 +57,15 @@ Game_Battler.prototype.addState = function (stateId) {
     }
 };
 
+Game_Battler.prototype.isStateAddable = function (stateId) {
+    let state = $dataStates[stateId];
+    return (this.isAlive() && state &&
+        !this.isStateResist(stateId) &&
+        !this._result.isStateRemoved(stateId) &&
+        !this.isStateRestrict(stateId)) &&
+        !(this.isStateAffected(stateId) && state.meta.noOverride); // state not addable if already affected and state can't be overriden by re-instantiation
+};
+
 Game_Battler.prototype.removeState = function (stateId) {
     if (this.isStateAffected(stateId)) {
         let removeDeath = stateId === this.deathStateId();
@@ -69,15 +78,15 @@ Game_Battler.prototype.removeState = function (stateId) {
 };
 
 Game_Battler.prototype.removeStateAuto = function (timing, state) {
-    if (this.isStateExpired(state.id) && state.autoRemovalTiming === timing) {
+    if (this.isStateExpired(state.id) && (timing === 0 || state.autoRemovalTiming === timing)) {
         this.removeState(state.id);
     }
 };
 
-Game_Battler.prototype.currentExpiringState = function (timing = 0) {
+Game_Battler.prototype.currentExpiringState = function () {
     let expiredState = null;
     this.states().some((state) => {
-        if (this.isStateExpired(state.id) && (timing === 0 || state.autoRemovalTiming === timing)) {
+        if (this.isStateExpired(state.id)) {
             expiredState = state;
             return true;   
         }
@@ -86,12 +95,18 @@ Game_Battler.prototype.currentExpiringState = function (timing = 0) {
     return expiredState;
 };
 
+Game_Battler.prototype.onAllActionsEnd = function () {
+    this.clearResult();
+    this.updateStateTurns(1);
+    this.removeBuffsAuto();
+};
+
 /**
  * Clears result & updates the state & buff turn counts
  */
 Game_Battler.prototype.onPostTurn1 = function () {
     this.clearResult();
-    this.updateStateTurns();
+    this.updateStateTurns(2);
     this.updateBuffTurns();
 };
 
