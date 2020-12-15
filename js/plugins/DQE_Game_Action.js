@@ -65,6 +65,7 @@ Game_Action.prototype.setItem = function (item, itemIndex) {
         this._modifiedItem = Object.assign({}, invokedSkill);
         this._modifiedItem.mpCost = 0;
         this._modifiedItem.message1 = item.meta.message1;
+        this._modifiedItem.stypeId = 0; // skill should NOT be set as skill/ability to prevent fizzle from blocking it
     } else if (DataManager.isWeapon(item) || DataManager.isArmor(item) || item.scope === 0) {
         invokedSkill = $dataSkills[DQEng.Parameters.Game_Action.nothingHappensSkillId];
         this._modifiedItem = Object.assign({}, invokedSkill);
@@ -112,6 +113,12 @@ Game_Action.prototype.targetsForOpponents = function () {
         targets = unit.aliveMembers();
     }
     return targets;
+};
+
+Game_Action.prototype.isValid = function () {
+    return (this._forcing && this.item()) 
+        || this.subject().canUse(this.item())
+        || (this._modifiedItem && this.subject().meetsSkillConditions(this._modifiedItem));
 };
 
 Game_Action.prototype.apply = function (target) {
