@@ -281,6 +281,24 @@ Window_BattleLog.prototype.displayAutoAffectedStatus = function (target) {
     }
 };
 
+Window_BattleLog.prototype.displayChangedStates = function (target) {
+    this.displayAddedStates(target);
+    this.displayStackedStates(target);
+    this.displayRemovedStates(target);
+};
+
+Window_BattleLog.prototype.displayStackedStates = function (target) {
+    target.result().stackedStateObjects().forEach(function (state) {
+        let stateMsg = state.meta.stack;
+        if (stateMsg) {
+            this.push('popBaseLine');
+            this.push('pushBaseLine');
+            this.push('addText', target.name() + stateMsg);
+            this.push('waitForEffect');
+        }
+    }, this);
+};
+
 Window_BattleLog.prototype.displayRemovedStates = function (target) {
     target.result().removedStateObjects().forEach(function (state) {
         if (state.message4) {

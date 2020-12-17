@@ -47,13 +47,15 @@ Game_Battler.prototype.useItem = function (item, modifiedSkill, itemIndex = -1) 
 
 Game_Battler.prototype.addState = function (stateId) {
     if (this.isStateAddable(stateId)) {
-        if (!this.isStateAffected(stateId)) {
+        if (!this.isStateAffected(stateId)) { // battler is not already affected by state
             this.addNewState(stateId);
             this.refresh();
             stateId === this.deathStateId() && $gamePlayer.refresh();
+            this._result.pushAddedState(stateId);
+        } else { // state should be stacked on already existing state
+            this._result.pushStackedState(stateId);
         }
         this.resetStateCounts(stateId);
-        this._result.pushAddedState(stateId);
     }
 };
 
@@ -63,7 +65,7 @@ Game_Battler.prototype.isStateAddable = function (stateId) {
         !this.isStateResist(stateId) &&
         !this._result.isStateRemoved(stateId) &&
         !this.isStateRestrict(stateId)) &&
-        !(this.isStateAffected(stateId) && state.meta.noOverride); // state not addable if already affected and state can't be overriden by re-instantiation
+        !(this.isStateAffected(stateId) && state.meta.noStack); // state not addable if already affected and state can't be stacked
 };
 
 Game_Battler.prototype.removeState = function (stateId) {

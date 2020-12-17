@@ -12,6 +12,7 @@ var $plugins =
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Misc","status":true,"description":"Misc changes for Dragon Quest Engine - V0.1\r\nTODO: Move changes here into a more suitable file","parameters":{}},
 {"name":"DQE_Game_Action","status":true,"description":"The The game object class for an Action - V0.1","parameters":{"Nothing Happens Skill ID":"3"}},
+{"name":"DQE_Game_ActionResult","status":true,"description":"The The game object class for an Action Result - V0.1","parameters":{}},
 {"name":"DQE_Game_BattlerBase","status":true,"description":"The The game object class for the actor base - V0.1","parameters":{}},
 {"name":"DQE_Game_Battler","status":true,"description":"The superclass of Game_Actor and Game_Enemy - V0.1","parameters":{}},
 {"name":"DQE_Game_Actor","status":true,"description":"The The game object class for the party - V0.1","parameters":{}},
