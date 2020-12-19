@@ -572,3 +572,30 @@ Game_Actor.prototype.cantEquipMessage = function (index) {
 Game_Actor.prototype.inventoryFullMessage = function () {
     return `${this._name} has a full inventory.\nSelect an item to swap.`;
 };
+
+//////////////////////////////
+// Functions - actions
+//////////////////////////////
+
+Game_Actor.prototype.makeExtraConfusionActions = function () {
+    for (var i = 0; i < this.numActions(); i++) {
+        this.action(i).setExtraConfusion();
+    }
+    this.setActionState('waiting');
+};
+
+Game_Actor.prototype.makeActions = function () {
+    Game_Battler.prototype.makeActions.call(this);
+    if (this.numActions() > 0) {
+        this.setActionState('undecided');
+    } else {
+        this.setActionState('waiting');
+    }
+    if (this.isAutoBattle()) {
+        this.makeAutoBattleActions();
+    } else if (this.isConfused()) {
+        this.makeConfusionActions();
+    } else if (this.isExtraConfused()) {
+        this.makeExtraConfusionActions();
+    }
+};

@@ -37,6 +37,12 @@ DQEng.Parameters.BattleManager.defeatWait = Number(parameters["Defeat Music Wait
 // Battle_Manager
 //-----------------------------------------------------------------------------
 
+DQEng.Battle_Manager.initMembers = BattleManager.initMembers;
+BattleManager.initMembers = function () {
+    DQEng.Battle_Manager.initMembers.call(this);
+    this._preTurn = false;
+};
+
 /**
  * Displays emerge messages depending on enemy size & type
  * 
@@ -109,6 +115,7 @@ BattleManager.updateTurn = function () {
     $gameParty.requestMotionRefresh();
     if (!this._subject) {
         this._subject = this.getNextSubject();
+        this._preTurn = false;
     }
     if (this._subject) {
         this._logWindow.opacity = 255;
@@ -117,6 +124,29 @@ BattleManager.updateTurn = function () {
         this.startPostTurn(1);
     } else {
         this.endTurn();
+    }
+};
+
+BattleManager.processTurn = function () {
+    var subject = this._subject;
+    var action = subject.currentAction();
+    if (!this._preTurn) {
+        this._logWindow.displayCurrentState(subject);
+        this._preTurn = true;
+    }
+    if (action) {
+        action.prepare();
+        if (action.isValid()) {
+            this.startAction();
+        }
+        subject.removeCurrentAction();
+    } else {
+        subject.onAllActionsEnd();
+        this.refreshStatus();
+        this._logWindow.displayAutoAffectedStatus(subject);
+        this._logWindow.displayRegeneration(subject);
+        this._subject = this.getNextSubject();
+        this._preTurn = false;
     }
 };
 
