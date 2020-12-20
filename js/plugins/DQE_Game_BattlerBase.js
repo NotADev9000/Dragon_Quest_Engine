@@ -77,6 +77,50 @@ DQEng.Parameters.Game_BattlerBase.cursedDeathSkillId = Number(parameters["Cursed
 // Game_BattlerBase
 //-----------------------------------------------------------------------------
 
+Object.defineProperties(Game_BattlerBase.prototype, {
+    // Breath Damage Rate
+    bdr: { get: function () { return this.sparam(10); }, configurable: true },
+});
+
+Game_BattlerBase.prototype.allTraits = function () {
+    return this.traitObjects().reduce(function (r, obj) {
+        return r.concat(obj.traits)
+                .concat(Game_BattlerBase.prototype.metaTraits(obj.meta));
+    }, []);
+};
+
+Game_BattlerBase.prototype.metaTraits = function (meta) {
+    let traits = [];
+    if (meta.traits) {
+        let notes = meta.traits.split('/');
+        notes.forEach(trait => {
+            let properties = trait.split(' ');
+            let code;
+            let dataId;
+
+            switch (properties[0]) {
+                case 'xparam': // Ex-Parameter
+                    code = Game_BattlerBase.TRAIT_XPARAM;
+                    break;
+                default: // Sp-Parameter
+                    code = Game_BattlerBase.TRAIT_SPARAM;
+                    break;
+            }
+            switch (properties[1]) {
+                default: // Breath Damage Rate
+                    dataId = 10;
+                    break;
+            }
+            traits.push({
+                code: code,
+                dataId: dataId,
+                value: Number(properties[2])
+            });
+        });
+    }
+    return traits;
+};
+
 Game_BattlerBase.prototype.isRestricted = function () {
     return this.isAppeared() && this.restriction() > 0 && this.restriction() !== DQEng.Parameters.Game_Action.cursedRestriction;
 };
