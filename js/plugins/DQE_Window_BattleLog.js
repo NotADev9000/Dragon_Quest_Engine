@@ -258,11 +258,9 @@ Window_BattleLog.prototype.displayHpDamage = function (target) {
     if (target.result().hpAffected) {
         if (target.result().hpDamage > 0 && !target.result().drain) {
             this.push('performDamage', target);
-        }
-        if (target.result().hpDamage < 0) {
+        } else if (target.result().hpDamage < 0) {
             this.push('performRecovery', target);
-        }
-        if (target.result().hpDamage === 0) {
+        } else if (target.result().hpDamage === 0 && !target.result().recover) {
             this.push('performMiss', target);
         }
         this.push('addText', this.makeHpDamageText(target));
@@ -314,6 +312,28 @@ Window_BattleLog.prototype.targetWasRevived = function (target) {
     return target.result().removedStateObjects().some(
         state => state.id === target.deathStateId()
     )
+};
+
+Window_BattleLog.prototype.makeHpDamageText = function (target) {
+    var result = target.result();
+    var damage = result.hpDamage;
+    var isActor = target.isActor();
+    var fmt;
+    if (damage > 0 && result.drain) {
+        fmt = isActor ? TextManager.actorDrain : TextManager.enemyDrain;
+        return fmt.format(target.name(), TextManager.hp, damage);
+    } else if (damage > 0) {
+        fmt = isActor ? TextManager.actorDamage : TextManager.enemyDamage;
+        return fmt.format(target.name(), damage);
+    } else if (damage < 0) {
+        fmt = isActor ? TextManager.actorRecovery : TextManager.enemyRecovery;
+        return fmt.format(target.name(), TextManager.hp, -damage);
+    } else if (result.recover) {
+        return `${target.name()} is already full of beans!`;
+    } else {
+        fmt = isActor ? TextManager.actorNoDamage : TextManager.enemyNoDamage;
+        return fmt.format(target.name());
+    }
 };
 
 Window_BattleLog.prototype.refresh = function () {

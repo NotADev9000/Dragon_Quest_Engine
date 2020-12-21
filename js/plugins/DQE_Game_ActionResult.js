@@ -35,6 +35,7 @@ DQEng.Game_ActionResult.clear = Game_ActionResult.prototype.clear;
 Game_ActionResult.prototype.clear = function () {
     DQEng.Game_ActionResult.clear.call(this);
     this.stackedStates = [];
+    this.recover = false;
 };
 
 Game_ActionResult.prototype.stackedStateObjects = function () {

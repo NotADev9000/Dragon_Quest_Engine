@@ -39,6 +39,9 @@ DQEng.Parameters.Game_Action.cursedRestriction = Number(parameters["Cursed Restr
 //-----------------------------------------------------------------------------
 // Game_Action
 //-----------------------------------------------------------------------------
+
+Game_Action.HITTYPE_BREATH = 3;
+
 DQEng.Game_Action.clear = Game_Action.prototype.clear;
 Game_Action.prototype.clear = function () {
     DQEng.Game_Action.clear.call(this);
@@ -99,6 +102,22 @@ Game_Action.prototype.isForGroup = function () {
 
 Game_Action.prototype.needsSelection = function () {
     return this.checkItemScope([1, 7, 9, 12]);
+};
+
+Game_Action.prototype.isCertainHit = function () {
+    return !this.item().meta.hitType && (this.item().hitType === Game_Action.HITTYPE_CERTAIN);
+};
+
+Game_Action.prototype.isPhysical = function () {
+    return !this.item().meta.hitType && (this.item().hitType === Game_Action.HITTYPE_PHYSICAL);
+};
+
+Game_Action.prototype.isMagical = function () {
+    return !this.item().meta.hitType && (this.item().hitType === Game_Action.HITTYPE_MAGICAL);
+};
+
+Game_Action.prototype.isBreath = function () {
+    return Number(this.item().meta.hitType) === Game_Action.HITTYPE_BREATH;
 };
 
 Game_Action.prototype.targetsForOpponents = function () {
@@ -219,6 +238,7 @@ Game_Action.prototype.apply = function (target) {
     result.evaded = (!result.missed && Math.random() < this.itemEva(target));
     result.physical = this.isPhysical();
     result.drain = this.isDrain();
+    result.recover = this.isRecover();
     if (result.isHit()) {
         if (this.item().damage.type > 0) {
             result.critical = (Math.random() < this.itemCri(target));
@@ -230,4 +250,27 @@ Game_Action.prototype.apply = function (target) {
         }, this);
         this.applyItemUserEffect(target);
     }
+};
+
+Game_Action.prototype.makeDamageValue = function (target, critical) {
+    var item = this.item();
+    var baseValue = this.evalDamageFormula(target);
+    var value = baseValue * this.calcElementRate(target);
+    if (this.isPhysical()) {
+        value *= target.pdr;
+    } else if (this.isMagical()) {
+        value *= target.mdr;
+    } else if (this.isBreath()) {
+        value *= target.bdr;
+    }
+    if (baseValue < 0) {
+        value *= target.rec;
+    }
+    if (critical) {
+        value = this.applyCritical(value);
+    }
+    value = this.applyVariance(value, item.damage.variance);
+    value = this.applyGuard(value, target);
+    value = Math.round(value);
+    return value;
 };
