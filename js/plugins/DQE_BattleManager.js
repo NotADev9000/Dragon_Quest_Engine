@@ -144,7 +144,6 @@ BattleManager.processTurn = function () {
         subject.onAllActionsEnd();
         this.refreshStatus();
         this._logWindow.displayAutoAffectedStatus(subject);
-        this._logWindow.displayRegeneration(subject);
         this._subject = this.getNextSubject();
         this._preTurn = false;
     }

@@ -245,11 +245,63 @@ Game_Action.prototype.apply = function (target) {
             var value = this.makeDamageValue(target, result.critical);
             this.executeDamage(target, value);
         }
-        this.item().effects.forEach(function (effect) {
+        // regular effects
+        this.item().effects.forEach(effect => {
+            this.applyItemEffect(target, effect);
+        }, this);
+        // notetag effects
+        this.metaEffects(this.item().meta).forEach(effect => {
             this.applyItemEffect(target, effect);
         }, this);
         this.applyItemUserEffect(target);
     }
+};
+
+Game_Action.prototype.metaEffects = function (meta) {
+    let effects = [];
+    if (meta.effectBuffs) {
+        let notes = meta.effectBuffs.split('/');
+        notes.forEach(effect => {
+            let properties = effect.split(' ');
+            let code;
+            let dataId; // index position in Game_BattlerBase _buffs array
+
+            switch (properties[0]) {
+                case 'AddB': // Add Buff
+                    code = Game_Action.EFFECT_ADD_BUFF;
+                    break;
+                case 'AddD': // Add Debuff
+                    code = Game_Action.EFFECT_ADD_DEBUFF;
+                    break;
+                case 'RemB': // Remove Buff
+                    code = Game_Action.EFFECT_REMOVE_BUFF;
+                    break;
+                default: // Remove Debuff
+                    code = Game_Action.EFFECT_REMOVE_DEBUFF;
+            }
+            switch (properties[1]) {
+                case 'Chrm': // Charm
+                    dataId = Game_BattlerBase.BUFFLIST_PARAM_CHARM;
+                    break;
+                case 'Phys': // Physical Damage
+                    dataId = Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG;
+                    break;
+                case 'Magc': // Magic Damage
+                    dataId = Game_BattlerBase.BUFFLIST_SPARAM_MAGDMG;
+                    break;
+                default: // Breath Damage
+                    dataId = Game_BattlerBase.BUFFLIST_SPARAM_BREDMG;
+                    break;
+            }
+            effects.push({
+                code: code,
+                dataId: dataId,
+                value1: Number(properties[2]),
+                value2: 0
+            });
+        });
+    }
+    return effects;
 };
 
 Game_Action.prototype.makeDamageValue = function (target, critical) {

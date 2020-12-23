@@ -85,6 +85,28 @@ Game_Battler.prototype.removeStateAuto = function (timing, state) {
     }
 };
 
+Game_Battler.prototype.addBuff = function (paramId, turns) {
+    if (this.isAlive()) {
+        this.increaseBuff(paramId);
+        if (this.isBuffAffected(paramId)) {
+            this.overwriteBuffTurns(paramId, turns);
+        }
+        this._result.pushChangedBuff(paramId);
+        this.refresh();
+    }
+};
+
+Game_Battler.prototype.addDebuff = function (paramId, turns) {
+    if (this.isAlive()) {
+        this.decreaseBuff(paramId);
+        if (this.isDebuffAffected(paramId)) {
+            this.overwriteBuffTurns(paramId, turns);
+        }
+        this._result.pushChangedBuff(paramId);
+        this.refresh();
+    }
+};
+
 Game_Battler.prototype.currentExpiringState = function () {
     let expiredState = null;
     this.states().some((state) => {
@@ -119,7 +141,7 @@ Game_Battler.prototype.onPostTurn2 = function () {
     }).forEach(state => {
         this._actions.push(state.id);
     });
-    // get stat regenrations
+    // get stat regenerations
     if (this.hrg !== 0) this._actions.push('hrg');
     if (this.mrg !== 0) this._actions.push('mrg');
 };

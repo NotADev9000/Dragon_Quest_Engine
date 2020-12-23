@@ -36,6 +36,8 @@ Game_ActionResult.prototype.clear = function () {
     DQEng.Game_ActionResult.clear.call(this);
     this.stackedStates = [];
     this.recover = false;
+    this.changedBuffs = [];
+    this.buffDifferences = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 };
 
 Game_ActionResult.prototype.stackedStateObjects = function () {
@@ -47,7 +49,7 @@ Game_ActionResult.prototype.stackedStateObjects = function () {
 DQEng.Game_ActionResult.isStatusAffected = Game_ActionResult.prototype.isStatusAffected;
 Game_ActionResult.prototype.isStatusAffected = function () {
     return DQEng.Game_ActionResult.isStatusAffected.call(this) ||
-            this.stackedStates.length > 0;
+            this.stackedStates.length > 0 || this.changedBuffs.length > 0;
 };
 
 Game_ActionResult.prototype.isStateStacked = function (stateId) {
@@ -57,5 +59,15 @@ Game_ActionResult.prototype.isStateStacked = function (stateId) {
 Game_ActionResult.prototype.pushStackedState = function (stateId) {
     if (!this.isStateStacked(stateId)) {
         this.stackedStates.push(stateId);
+    }
+};
+
+Game_ActionResult.prototype.isBuffChanged = function (paramId) {
+    return this.changedBuffs.contains(paramId);
+};
+
+Game_ActionResult.prototype.pushChangedBuff = function (paramId) {
+    if (!this.isBuffChanged(paramId)) {
+        this.changedBuffs.push(paramId);
     }
 };

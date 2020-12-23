@@ -314,6 +314,50 @@ Window_BattleLog.prototype.targetWasRevived = function (target) {
     )
 };
 
+Window_BattleLog.prototype.displayChangedBuffs = function (target) {
+    let result = target.result();
+    let diffs = result.buffDifferences;
+    let changed = result.changedBuffs;
+    let removed = result.removedBuffs;
+
+    changed.forEach(buffListPos => {
+        this.push('popBaseLine');
+        this.push('pushBaseLine');
+        let diff = diffs[buffListPos]; // how many levels the buff/debuff has changed
+        let text = '';
+        if (diff === 0) { // no change in buff
+            text = `${target.name()}'s ${TextManager.param(buffListPos)} doesn't change.`;
+        } else if (target.buff(buffListPos) === 0) { // buff/debuff has essentially been reset
+            text = `${target.name()}'s ${TextManager.param(buffListPos)} returns to normal.`;
+        } else { // buff has increased/decreased
+            switch (diff) {
+                case -4:
+                case -3:
+                case -2:
+                    text = `${target.name()}'s ${TextManager.param(buffListPos)} decreases significantly!`;
+                    break;
+                case -1:
+                    text = `${target.name()}'s ${TextManager.param(buffListPos)} decreases slightly!`;
+                    break;
+                case 1:
+                    text = `${target.name()}'s ${TextManager.param(buffListPos)} increases slightly!`;
+                    break;
+                case 2:
+                case 3:
+                case 4:
+                    text = `${target.name()}'s ${TextManager.param(buffListPos)} increases significantly!`;
+                    break;
+            }
+        }
+        this.push('addText', text);
+    });
+    removed.forEach(buffListPos => { // buff/debuff runs out
+        this.push('popBaseLine');
+        this.push('pushBaseLine');
+        this.push('addText', TextManager.buffRemove.format(target.name(), TextManager.param(buffListPos)));
+    });
+};
+
 Window_BattleLog.prototype.makeHpDamageText = function (target) {
     var result = target.result();
     var damage = result.hpDamage;

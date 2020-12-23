@@ -77,10 +77,53 @@ DQEng.Parameters.Game_BattlerBase.cursedDeathSkillId = Number(parameters["Cursed
 // Game_BattlerBase
 //-----------------------------------------------------------------------------
 
+// position of certain sp/ex/params in buff array
+Game_BattlerBase.BUFFLIST_PARAM_CHARM = 8;
+Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG = 9;
+Game_BattlerBase.BUFFLIST_SPARAM_MAGDMG = 10;
+Game_BattlerBase.BUFFLIST_SPARAM_BREDMG = 11;
+// position of sp/ex/params in their respective lists
+Game_BattlerBase.POS_PARAM_CHARM = 8;
+Game_BattlerBase.POS_SPARAM_BREDMG = 10;
+
 Object.defineProperties(Game_BattlerBase.prototype, {
     // Breath Damage Rate
-    bdr: { get: function () { return this.sparam(10); }, configurable: true },
+    bdr: { get: function () { return this.sparam(Game_BattlerBase.POS_SPARAM_BREDMG); }, configurable: true },
 });
+
+Game_BattlerBase.prototype.clearBuffs = function () {
+    /*
+        HP, 
+        MP, 
+        Attack, 
+        Defense, 
+        Magical Might, 
+        Magical Mending, 
+        Agility, 
+        Deftness, 
+        Charm,
+
+        Physical Dmg, 
+        Magic Dmg, 
+        Breath Dmg
+    */
+    this._buffs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this._buffTurns = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,];
+};
+
+Game_BattlerBase.prototype.increaseBuff = function (paramId) {
+    if (!this.isMaxBuffAffected(paramId)) {
+        this._buffs[paramId]++;
+        this._result.buffDifferences[paramId]++;
+    }
+};
+
+Game_BattlerBase.prototype.decreaseBuff = function (paramId) {
+    if (!this.isMaxDebuffAffected(paramId)) {
+        this._buffs[paramId]--;
+        this._result.buffDifferences[paramId]--;
+    }
+};
 
 Game_BattlerBase.prototype.allTraits = function () {
     return this.traitObjects().reduce(function (r, obj) {
@@ -96,7 +139,7 @@ Game_BattlerBase.prototype.metaTraits = function (meta) {
         notes.forEach(trait => {
             let properties = trait.split(' ');
             let code;
-            let dataId;
+            let dataId; // position in sp/ex-parameter list
 
             switch (properties[0]) {
                 case 'xparam': // Ex-Parameter
@@ -108,7 +151,7 @@ Game_BattlerBase.prototype.metaTraits = function (meta) {
             }
             switch (properties[1]) {
                 default: // Breath Damage Rate
-                    dataId = 10;
+                    dataId = Game_BattlerBase.POS_SPARAM_BREDMG;
                     break;
             }
             traits.push({
@@ -149,6 +192,28 @@ Game_BattlerBase.prototype.updateStateTurns = function (timing = 0) {
             this._stateTurns[state.id]--;
         }
     }, this);
+};
+
+Game_BattlerBase.prototype.sparamBuffRate = function (sparamId) {
+    let buffId = this.sparamIdToBuffId(sparamId);
+    return buffId ? -this._buffs[buffId] * 0.25 + 1.0 : 1;
+};
+
+Game_BattlerBase.prototype.sparamIdToBuffId = function (sparamId) {
+    switch (sparamId) {
+        case 6:
+            return Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG;
+        case 7:
+            return Game_BattlerBase.BUFFLIST_SPARAM_MAGDMG;
+        case Game_BattlerBase.POS_SPARAM_BREDMG:
+            return Game_BattlerBase.BUFFLIST_SPARAM_BREDMG;
+        default:
+            return -1; // this sparam doesn't have a buff
+    }
+};
+
+Game_BattlerBase.prototype.sparam = function (sparamId) {
+    return this.traitsPi(Game_BattlerBase.TRAIT_SPARAM, sparamId) * this.sparamBuffRate(sparamId);
 };
 
 DQEng.Game_BattlerBase.slotType = Game_BattlerBase.prototype.slotType;
