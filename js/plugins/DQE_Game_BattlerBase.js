@@ -77,6 +77,9 @@ DQEng.Parameters.Game_BattlerBase.cursedDeathSkillId = Number(parameters["Cursed
 // Game_BattlerBase
 //-----------------------------------------------------------------------------
 
+// where in the _buffs array params end
+Game_BattlerBase.BUFFLIST_PARAM_END = 8;
+Game_BattlerBase.BUFFLIST_SPARAM_END = 11;
 // position of certain sp/ex/params in buff array
 Game_BattlerBase.BUFFLIST_PARAM_CHARM = 8;
 Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG = 9;
@@ -199,19 +202,6 @@ Game_BattlerBase.prototype.sparamBuffRate = function (sparamId) {
     return buffId ? -this._buffs[buffId] * 0.25 + 1.0 : 1;
 };
 
-Game_BattlerBase.prototype.sparamIdToBuffId = function (sparamId) {
-    switch (sparamId) {
-        case 6:
-            return Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG;
-        case 7:
-            return Game_BattlerBase.BUFFLIST_SPARAM_MAGDMG;
-        case Game_BattlerBase.POS_SPARAM_BREDMG:
-            return Game_BattlerBase.BUFFLIST_SPARAM_BREDMG;
-        default:
-            return -1; // this sparam doesn't have a buff
-    }
-};
-
 Game_BattlerBase.prototype.sparam = function (sparamId) {
     return this.traitsPi(Game_BattlerBase.TRAIT_SPARAM, sparamId) * this.sparamBuffRate(sparamId);
 };
@@ -284,4 +274,38 @@ Game_BattlerBase.prototype.cursedMPSkillId = function () {
 
 Game_BattlerBase.prototype.cursedDeathSkillId = function () {
     return DQEng.Parameters.Game_BattlerBase.cursedDeathSkillId;
+};
+
+//////////////////////////////
+// Functions - converting IDs
+//////////////////////////////
+
+Game_BattlerBase.prototype.sparamIdToBuffId = function (sparamId) {
+    switch (sparamId) {
+        case 6:
+            return Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG;
+        case 7:
+            return Game_BattlerBase.BUFFLIST_SPARAM_MAGDMG;
+        case Game_BattlerBase.POS_SPARAM_BREDMG:
+            return Game_BattlerBase.BUFFLIST_SPARAM_BREDMG;
+        default:
+            return 0; // this sparam doesn't have a buff
+    }
+};
+
+/**
+ * Takes the given buffId and converts it
+ * to the proper sp/ex/param ID.
+ * 
+ * @param {number} buffId index in _buffs array
+ */
+Game_BattlerBase.prototype.buffIdToParamId = function (buffId) {
+    switch (buffId) {
+        case Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG:
+            return 6;
+        case Game_BattlerBase.BUFFLIST_SPARAM_MAGDMG:
+            return 7;
+        case Game_BattlerBase.BUFFLIST_SPARAM_BREDMG:
+            return Game_BattlerBase.POS_SPARAM_BREDMG;
+    }
 };

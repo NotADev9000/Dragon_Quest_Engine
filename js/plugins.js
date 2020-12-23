@@ -24,6 +24,7 @@ var $plugins =
 {"name":"DQE_Game_Follower","status":true,"description":"The The game object class for the Follower - V0.1","parameters":{}},
 {"name":"DQE_SoundManager","status":true,"description":"The Sound Manager - V0.1","parameters":{}},
 {"name":"DQE_BattleManager","status":true,"description":"Static class for managing the battle - V0.1","parameters":{"Defeat Music Wait":"7"}},
+{"name":"DQE_TextManager","status":true,"description":"Text Manager - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Scene_Base","status":true,"description":"The scene base for menus - V0.1","parameters":{}},
 {"name":"DQE_Scene_Map","status":true,"description":"The scene for the map - V0.1","parameters":{}},

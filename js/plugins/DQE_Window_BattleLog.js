@@ -326,26 +326,26 @@ Window_BattleLog.prototype.displayChangedBuffs = function (target) {
         let diff = diffs[buffListPos]; // how many levels the buff/debuff has changed
         let text = '';
         if (diff === 0) { // no change in buff
-            text = `${target.name()}'s ${TextManager.param(buffListPos)} doesn't change.`;
+            text = `${target.name()}'s ${TextManager.paramFromBuffID(buffListPos)} doesn't change.`;
         } else if (target.buff(buffListPos) === 0) { // buff/debuff has essentially been reset
-            text = `${target.name()}'s ${TextManager.param(buffListPos)} returns to normal.`;
+            text = `${target.name()}'s ${TextManager.paramFromBuffID(buffListPos)} returns to normal.`;
         } else { // buff has increased/decreased
             switch (diff) {
                 case -4:
                 case -3:
                 case -2:
-                    text = `${target.name()}'s ${TextManager.param(buffListPos)} decreases significantly!`;
+                    text = `${target.name()}'s ${TextManager.paramFromBuffID(buffListPos)} decreases significantly!`;
                     break;
                 case -1:
-                    text = `${target.name()}'s ${TextManager.param(buffListPos)} decreases slightly!`;
+                    text = `${target.name()}'s ${TextManager.paramFromBuffID(buffListPos)} decreases slightly!`;
                     break;
                 case 1:
-                    text = `${target.name()}'s ${TextManager.param(buffListPos)} increases slightly!`;
+                    text = `${target.name()}'s ${TextManager.paramFromBuffID(buffListPos)} increases slightly!`;
                     break;
                 case 2:
                 case 3:
                 case 4:
-                    text = `${target.name()}'s ${TextManager.param(buffListPos)} increases significantly!`;
+                    text = `${target.name()}'s ${TextManager.paramFromBuffID(buffListPos)} increases significantly!`;
                     break;
             }
         }
@@ -354,7 +354,7 @@ Window_BattleLog.prototype.displayChangedBuffs = function (target) {
     removed.forEach(buffListPos => { // buff/debuff runs out
         this.push('popBaseLine');
         this.push('pushBaseLine');
-        this.push('addText', TextManager.buffRemove.format(target.name(), TextManager.param(buffListPos)));
+        this.push('addText', TextManager.buffRemove.format(target.name(), TextManager.paramFromBuffID(buffListPos)));
     });
 };
 
