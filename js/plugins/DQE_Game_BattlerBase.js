@@ -77,6 +77,30 @@ DQEng.Parameters.Game_BattlerBase.cursedDeathSkillId = Number(parameters["Cursed
 // Game_BattlerBase
 //-----------------------------------------------------------------------------
 
+// buffChangeRate Array (TODO: move to $data var)
+Game_BattlerBase.PARAM_BUFFRATES = [
+    { '-2': 0.5, '-1': 0.75, '1': 1.25, '2': 1.5 }, // Max HP
+    { '-2': 0.5, '-1': 0.75, '1': 1.25, '2': 1.5 }, // Max MP
+    { '-2': 0.5, '-1': 0.75, '1': 1.25, '2': 1.5 }, // Attack
+    { '-2': 0.25, '-1': 0.5, '1': 1.5, '2': 2 }, // Defense
+    { '-2': 0.5, '-1': 0.75, '1': 1.25, '2': 1.5 }, // Magical Might
+    { '-2': 0.5, '-1': 0.75, '1': 1.25, '2': 1.5 }, // Magical Mending
+    { '-2': 0.2, '-1': 0.4, '1': 1.2, '2': 1.4 }, // Agility
+    { '-2': 0.5, '-1': 0.75, '1': 1, '2': 1 }, // Deftness
+    { '-2': 0.5, '-1': 0.75, '1': 1.25, '2': 1.5 } // Charm
+];
+Game_BattlerBase.SPARAM_BUFFRATES = [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    { '-2': 1.5, '-1': 1.25, '1': 0.75, '2': 0.5 }, // Physical Damage
+    { '-2': 1.5, '-1': 1.25, '1': 0.5, '2': 0.25 }, // Magic Damage
+    {},
+    { '-2': 1.5, '-1': 1.25, '1': 0.5, '2': 0.25 }, // Breath Damage
+];
 // where in the _buffs array params end
 Game_BattlerBase.BUFFLIST_PARAM_END = 8;
 Game_BattlerBase.BUFFLIST_SPARAM_END = 11;
@@ -197,9 +221,17 @@ Game_BattlerBase.prototype.updateStateTurns = function (timing = 0) {
     }, this);
 };
 
+Game_BattlerBase.prototype.paramBuffRate = function (paramId) {
+    let buffAmount = this._buffs[paramId];
+    if (buffAmount === 0) return 1;
+    return Game_BattlerBase.PARAM_BUFFRATES[paramId][buffAmount];
+};
+
 Game_BattlerBase.prototype.sparamBuffRate = function (sparamId) {
     let buffId = this.sparamIdToBuffId(sparamId);
-    return buffId ? -this._buffs[buffId] * 0.25 + 1.0 : 1;
+    let buffAmount = this._buffs[buffId];
+    if (buffAmount === 0 || buffId === 0) return 1;
+    return Game_BattlerBase.SPARAM_BUFFRATES[sparamId][buffAmount];
 };
 
 Game_BattlerBase.prototype.sparam = function (sparamId) {
