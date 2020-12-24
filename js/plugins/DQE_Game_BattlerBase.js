@@ -77,6 +77,10 @@ DQEng.Parameters.Game_BattlerBase.cursedDeathSkillId = Number(parameters["Cursed
 // Game_BattlerBase
 //-----------------------------------------------------------------------------
 
+//////////////////////////////
+// Functions - data
+//////////////////////////////
+
 // buffChangeRate Array (TODO: move to $data var)
 Game_BattlerBase.PARAM_BUFFRATES = [
     { '-2': 0.5, '-1': 0.75, '1': 1.25, '2': 1.5 }, // Max HP
@@ -118,6 +122,10 @@ Object.defineProperties(Game_BattlerBase.prototype, {
     bdr: { get: function () { return this.sparam(Game_BattlerBase.POS_SPARAM_BREDMG); }, configurable: true },
 });
 
+//////////////////////////////
+// Functions - buffs
+//////////////////////////////
+
 Game_BattlerBase.prototype.clearBuffs = function () {
     /*
         HP, 
@@ -151,6 +159,31 @@ Game_BattlerBase.prototype.decreaseBuff = function (paramId) {
         this._result.buffDifferences[paramId]--;
     }
 };
+
+//////////////////////////////
+// Functions - parameters
+//////////////////////////////
+
+Game_BattlerBase.prototype.paramBuffRate = function (paramId) {
+    let buffAmount = this._buffs[paramId];
+    if (buffAmount === 0) return 1;
+    return Game_BattlerBase.PARAM_BUFFRATES[paramId][buffAmount];
+};
+
+Game_BattlerBase.prototype.sparamBuffRate = function (sparamId) {
+    let buffId = this.sparamIdToBuffId(sparamId);
+    let buffAmount = this._buffs[buffId];
+    if (buffAmount === 0 || buffId === 0) return 1;
+    return Game_BattlerBase.SPARAM_BUFFRATES[sparamId][buffAmount];
+};
+
+Game_BattlerBase.prototype.sparam = function (sparamId) {
+    return this.traitsPi(Game_BattlerBase.TRAIT_SPARAM, sparamId) * this.sparamBuffRate(sparamId);
+};
+
+//////////////////////////////
+// Functions - traits
+//////////////////////////////
 
 Game_BattlerBase.prototype.allTraits = function () {
     return this.traitObjects().reduce(function (r, obj) {
@@ -191,8 +224,18 @@ Game_BattlerBase.prototype.metaTraits = function (meta) {
     return traits;
 };
 
+//////////////////////////////
+// Functions - states
+//////////////////////////////
+
 Game_BattlerBase.prototype.isRestricted = function () {
     return this.isAppeared() && this.restriction() > 0 && this.restriction() !== DQEng.Parameters.Game_Action.cursedRestriction;
+};
+
+Game_BattlerBase.prototype.restriction = function () {
+    return Math.max.apply(null, this.states().map(function (state) {
+        return Number(state.meta.restriction) || state.restriction;
+    }).concat(0));
 };
 
 Game_BattlerBase.prototype.canMove = function () {
@@ -221,22 +264,19 @@ Game_BattlerBase.prototype.updateStateTurns = function (timing = 0) {
     }, this);
 };
 
-Game_BattlerBase.prototype.paramBuffRate = function (paramId) {
-    let buffAmount = this._buffs[paramId];
-    if (buffAmount === 0) return 1;
-    return Game_BattlerBase.PARAM_BUFFRATES[paramId][buffAmount];
+Game_BattlerBase.prototype.mostImportantStateDisplay = function () {
+    var states = this.states();
+    for (var i = 0; i < states.length; i++) {
+        if (states[i].meta.color) {
+            return states[i];
+        }
+    }
+    return null;
 };
 
-Game_BattlerBase.prototype.sparamBuffRate = function (sparamId) {
-    let buffId = this.sparamIdToBuffId(sparamId);
-    let buffAmount = this._buffs[buffId];
-    if (buffAmount === 0 || buffId === 0) return 1;
-    return Game_BattlerBase.SPARAM_BUFFRATES[sparamId][buffAmount];
-};
-
-Game_BattlerBase.prototype.sparam = function (sparamId) {
-    return this.traitsPi(Game_BattlerBase.TRAIT_SPARAM, sparamId) * this.sparamBuffRate(sparamId);
-};
+//////////////////////////////
+// Functions - equipment
+//////////////////////////////
 
 DQEng.Game_BattlerBase.slotType = Game_BattlerBase.prototype.slotType;
 Game_BattlerBase.prototype.slotType = function () {
@@ -252,25 +292,17 @@ Game_BattlerBase.prototype.isAllWield = function () {
     return this.slotType() === 2;
 };
 
-Game_BattlerBase.prototype.restriction = function () {
-    return Math.max.apply(null, this.states().map(function (state) {
-        return Number(state.meta.restriction) || state.restriction;
-    }).concat(0));
-};
+//////////////////////////////
+// Functions - items
+//////////////////////////////
 
 Game_BattlerBase.prototype.meetsItemConditions = function (item) {
     return this.meetsUsableItemConditions(item);
 };
 
-Game_BattlerBase.prototype.mostImportantStateDisplay = function () {
-    var states = this.states();
-    for (var i = 0; i < states.length; i++) {
-        if (states[i].meta.color) {
-            return states[i];
-        }
-    }
-    return null;
-};
+//////////////////////////////
+// Functions - skill ids
+//////////////////////////////
 
 Game_BattlerBase.prototype.stunSelfSkillId = function () {
     return DQEng.Parameters.Game_BattlerBase.selfStunSkillId;
