@@ -326,7 +326,8 @@ Window_BattleLog.prototype.displayChangedBuffs = function (target) {
         let diff = diffs[buffListPos]; // how many levels the buff/debuff has changed
         let text = '';
         if (diff === 0) { // no change in buff
-            text = `${target.name()}'s ${TextManager.paramFromBuffID(buffListPos)} doesn't change.`;
+            let buff = target.buff(buffListPos) > 0 ? 'increase' : 'decrease';
+            text = `${target.name()}'s ${TextManager.paramFromBuffID(buffListPos)} ${buff} is renewed!`;
         } else if (target.buff(buffListPos) === 0) { // buff/debuff has essentially been reset
             text = `${target.name()}'s ${TextManager.paramFromBuffID(buffListPos)} returns to normal.`;
         } else { // buff has increased/decreased
