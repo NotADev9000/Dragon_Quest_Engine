@@ -230,6 +230,24 @@ Game_Action.prototype.extraConfusionTarget = function () {
     }
 };
 
+Game_Action.prototype.itemEva = function (target) {
+    if (this.isPhysical()) {
+        return (1 - ((1 - this.baseEva(target.agi)) * (1 - target.eva))).toFixed(4);
+    } else if (this.isMagical()) {
+        return target.mev;
+    } else {
+        return 0;
+    }
+};
+
+/**
+ * formula: base evasion = ((1.0032^agility) + 0.5)/100;
+ * @param {number} agility of evading target
+ */
+Game_Action.prototype.baseEva = function (agility) {
+    return ((Math.pow(1.0032, agility) + 0.5) / 100);
+};
+
 Game_Action.prototype.apply = function (target) {
     var result = target.result();
     result.clear();
