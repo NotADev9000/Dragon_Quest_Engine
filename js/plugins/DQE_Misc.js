@@ -52,6 +52,19 @@ Game_System.prototype.makeDivisibleBy = function (number, div = 3) {
     return number - (number%div);
 };
 
+/**
+ * generates a random number (real) between
+ * min & max parameters. dec limits the decimal
+ * places shown
+ * 
+ * @param {number} min of random number
+ * @param {number} max of random number
+ * @param {number} dec decimal places to return
+ */
+Game_System.prototype.randomNumMinMax =  function (min, max, dec = 1) {
+    return Number((Math.random() * (max - min) + min).toFixed(dec));
+};
+
 //-----------------------------------------------------------------------------
 // SceneManager
 //-----------------------------------------------------------------------------

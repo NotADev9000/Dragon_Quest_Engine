@@ -232,7 +232,7 @@ Game_Action.prototype.extraConfusionTarget = function () {
 
 Game_Action.prototype.itemEva = function (target) {
     if (this.isPhysical()) {
-        return (1 - ((1 - this.baseEva(target.agi)) * (1 - target.eva))).toFixed(4);
+        return (1 - ((1 - this.baseEva(target.param(7))) * (1 - target.eva))).toFixed(4);
     } else if (this.isMagical()) {
         return target.mev;
     } else {
@@ -343,4 +343,30 @@ Game_Action.prototype.makeDamageValue = function (target, critical) {
     value = this.applyGuard(value, target);
     value = Math.round(value);
     return value;
+};
+
+Game_Action.prototype.applyCritical = function (damage) {
+    let attack = this.subject().param(3);
+    let item = this.item();
+    let mod = 1.2;
+    let crit1 = damage * mod;
+
+    if (item.meta.critMod) {
+        let nums = item.meta.critMod.split(' ');
+        attack = this.subject().param(nums[0]);
+        mod = $gameSystem.randomNumMinMax(Number(nums[1]), Number(nums[2]), 2);
+    } else {
+        switch (item.hitType) {
+            case Game_Action.HITTYPE_CERTAIN:
+            case Game_Action.HITTYPE_PHYSICAL:
+                mod = $gameSystem.randomNumMinMax(0.95, 1.05, 2);
+                break;
+            case Game_Action.HITTYPE_MAGICAL:
+                attack = this.subject().param(5);
+                mod = $gameSystem.randomNumMinMax(1.5, 2, 2);
+                break;
+        }
+    }
+    let crit2 = attack * mod;
+    return Math.max(crit1, crit2);
 };
