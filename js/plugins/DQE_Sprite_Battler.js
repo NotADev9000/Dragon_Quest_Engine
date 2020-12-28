@@ -34,8 +34,8 @@ Sprite_Battler.prototype.setupDamagePopup = function () {
             var sprite = new Sprite_Damage();
             sprite.setup(this._battler);
             var calcX = this.x + this.damageOffsetX();
-            var misplacedX = (calcX - Math.ceil(sprite._width / 2)) % 3; // the amount of pixels the damage is out of sync
-            sprite.x = (calcX - misplacedX) + this.damageOffsetX();
+            var misplacedX = (calcX - Math.floor(sprite._width / 2)) % 3; // the amount of pixels the damage is out of sync
+            sprite.x = (calcX + misplacedX) + this.damageOffsetX();
             sprite.y = $gameSystem.makeDivisibleBy(this.y + this.damageOffsetY());
             this._damages.push(sprite);
             this.parent.addChild(sprite);
