@@ -242,10 +242,29 @@ Game_Action.prototype.itemEva = function (target) {
 
 /**
  * formula: base evasion = ((1.0032^agility) + 0.5)/100;
+ * 
+ * base evasion returned where 1 = 100% chance of evading
+ * 
  * @param {number} agility of evading target
  */
 Game_Action.prototype.baseEva = function (agility) {
     return ((Math.pow(1.0032, agility) + 0.5) / 100);
+};
+
+/**
+ * formula: crit rate = skill modifier * (total crit rate + (deftness/20000))
+ * 
+ * skill modifier = each skill can modify the crit rate
+ * total crit rate = subject's base crit rate + any equipment/buff/etc. bonuses
+ * 
+ * crit rate is returned where 1 = 100% chance of crit
+ */
+Game_Action.prototype.itemCri = function () {
+    if (this.item().damage.critical)  {
+        let itemMod = this.item().meta.critRateMod || 1;
+        return itemMod * (this.subject().cri + (this.subject().param(7)/20000));
+    }
+    return 0;
 };
 
 Game_Action.prototype.apply = function (target) {
@@ -259,7 +278,7 @@ Game_Action.prototype.apply = function (target) {
     result.recover = this.isRecover();
     if (result.isHit()) {
         if (this.item().damage.type > 0) {
-            result.critical = (Math.random() < this.itemCri(target));
+            result.critical = (Math.random() < this.itemCri());
             var value = this.makeDamageValue(target, result.critical);
             this.executeDamage(target, value);
         }
@@ -338,7 +357,7 @@ Game_Action.prototype.makeDamageValue = function (target, critical) {
         value *= target.rec;
     }
     value = this.applyVariance(value, vari);
-    value += this.applyMetalSave();
+    if (!item.meta.noMetalSave) value += this.applyMetalSave();
     if (critical) value = this.applyCritical(value);
     value = this.applyGuard(value, target);
     value = Math.floor(value);

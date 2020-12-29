@@ -1,0 +1,6 @@
+crit rate = skill modifier * (total crit rate + (deftness/20000))
+
+skill modifier = each skill can modify the crit rate
+total crit rate = subject's base crit rate + any equipment/buff/etc. bonuses
+
+crit rate is returned where 1 = 100% chance of crit
