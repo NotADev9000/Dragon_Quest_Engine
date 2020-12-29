@@ -326,6 +326,7 @@ Game_Action.prototype.makeDamageValue = function (target, critical) {
     var item = this.item();
     var baseValue = this.evalDamageFormula(target);
     var value = baseValue * this.calcElementRate(target);
+    let vari = item.meta.variance ? item.meta.variance : item.damage.variance;
     if (this.isPhysical()) {
         value *= target.pdr;
     } else if (this.isMagical()) {
@@ -336,12 +337,11 @@ Game_Action.prototype.makeDamageValue = function (target, critical) {
     if (baseValue < 0) {
         value *= target.rec;
     }
-    if (critical) {
-        value = this.applyCritical(value);
-    }
-    value = this.applyVariance(value, item.damage.variance);
+    value = this.applyVariance(value, vari);
+    value += this.applyMetalSave();
+    if (critical) value = this.applyCritical(value);
     value = this.applyGuard(value, target);
-    value = Math.round(value);
+    value = Math.floor(value);
     return value;
 };
 
@@ -359,14 +359,28 @@ Game_Action.prototype.applyCritical = function (damage) {
         switch (item.hitType) {
             case Game_Action.HITTYPE_CERTAIN:
             case Game_Action.HITTYPE_PHYSICAL:
-                mod = $gameSystem.randomNumMinMax(0.95, 1.05, 2);
+                mod = $gameSystem.randomNumMinMax(0.95, 1.051, 2);
                 break;
             case Game_Action.HITTYPE_MAGICAL:
                 attack = this.subject().param(5);
-                mod = $gameSystem.randomNumMinMax(1.5, 2, 2);
+                mod = $gameSystem.randomNumMinMax(1.5, 2.001, 2);
                 break;
         }
     }
     let crit2 = attack * mod;
     return Math.max(crit1, crit2);
+};
+
+Game_Action.prototype.applyVariance = function (damage, vari) {
+    // vari = $gameSystem.randomNumMinMax(0, vari, 2);
+    let v = damage * (vari/100);
+    v *= Math.random() >= 0.5 ? 1 : -1;
+    return damage + v;
+};
+
+/**
+ * 50% chance to return a +1 dmg bonus (for killing metal slimes)
+ */
+Game_Action.prototype.applyMetalSave = function () {
+    return Math.random() >= 0.5 ? 1 : 0;
 };
