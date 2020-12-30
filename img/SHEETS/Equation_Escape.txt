@@ -1,0 +1,3 @@
+formula: escape chance + (deftness/2000)
+
+escape chance = 25% * (1 + times player has tried to escape)

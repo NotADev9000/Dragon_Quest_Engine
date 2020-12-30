@@ -37,10 +37,19 @@ DQEng.Parameters.BattleManager.defeatWait = Number(parameters["Defeat Music Wait
 // Battle_Manager
 //-----------------------------------------------------------------------------
 
+BattleManager.setup = function (troopId, canEscape, canLose) {
+    this.initMembers();
+    this._canEscape = canEscape;
+    this._canLose = canLose;
+    $gameTroop.setup(troopId);
+    $gameScreen.onBattleStart();
+};
+
 DQEng.Battle_Manager.initMembers = BattleManager.initMembers;
 BattleManager.initMembers = function () {
     DQEng.Battle_Manager.initMembers.call(this);
     this._preTurn = false;
+    this._escapeRatio = 0.25;
 };
 
 /**
@@ -158,6 +167,32 @@ BattleManager.endTurn = function () {
         this._turnForced = false;
     }
     this._logWindow.push('clear', true);
+};
+
+/**
+ * formula: escape chance + (deftness/2000)
+ * 
+ * escape chance = 25% * (1 + times player has tried to escape)
+ */
+BattleManager.makeEscapeRatio = function () {
+    return this._escapeRatio + ($gameParty.movableMembers()[0].param(7)/2000);
+};
+
+BattleManager.processEscape = function () {
+    $gameParty.performEscape();
+    SoundManager.playEscape();
+    var success = this._preemptive ? true : (Math.random() < this.makeEscapeRatio());
+    if (success) {
+        this.displayEscapeSuccessMessage();
+        this._escaped = true;
+        this.processAbort();
+    } else {
+        this.displayEscapeFailureMessage();
+        this._escapeRatio += 0.25;
+        $gameParty.clearActions();
+        this.startTurn();
+    }
+    return success;
 };
 
 DQEng.Battle_Manager.updateBattleEnd = BattleManager.updateBattleEnd;
