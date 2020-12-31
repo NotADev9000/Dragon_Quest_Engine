@@ -1,13 +1,12 @@
 //=============================================================================
-// Dragon Quest Engine - Game Enemy
-// DQE_Game_Enemy.js                                                             
+// Dragon Quest Engine - Data Manager
+// DQE_Data_Manager.js                                                             
 //=============================================================================
 
 /*:
 *
 * @author NotADev
-* @plugindesc The game object class for the enemy - V0.1
-*
+* @plugindesc Static class for managing the extra data - V0.1
 *
 * @help
 * N/A
@@ -19,15 +18,15 @@
 //------
 
 var Imported = Imported || {};
-Imported.DQEng_Game_Enemy = true;
+Imported.DQEng_Data_Manager = true;
 
 var DQEng = DQEng || {};
-DQEng.Game_Enemy = DQEng.Game_Enemy || {};
+DQEng.Data_Manager = DQEng.Data_Manager || {};
 
 //-----------------------------------------------------------------------------
-// Game_Enemy
+// Data_Manager
 //-----------------------------------------------------------------------------
 
-Game_Enemy.prototype.paramBase = function (paramId) {
-    return paramId <= 7 ? this.enemy().params[paramId] : this.enemy().meta.Charm || 0;
-};
+DataManager._databaseFiles = DataManager._databaseFiles.concat([
+    { name: '$DQEdataClasses', src: 'DQE_Classes.json' }
+]);

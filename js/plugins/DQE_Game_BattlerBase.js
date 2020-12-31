@@ -118,6 +118,8 @@ Game_BattlerBase.POS_PARAM_CHARM = 8;
 Game_BattlerBase.POS_SPARAM_BREDMG = 10;
 
 Object.defineProperties(Game_BattlerBase.prototype, {
+    // CHarM
+    chm: { get: function () { return this.param(Game_BattlerBase.POS_PARAM_CHARM); }, configurable: true },
     // Breath Damage Rate
     bdr: { get: function () { return this.sparam(Game_BattlerBase.POS_SPARAM_BREDMG); }, configurable: true },
 });
@@ -163,6 +165,10 @@ Game_BattlerBase.prototype.decreaseBuff = function (paramId) {
 //////////////////////////////
 // Functions - parameters
 //////////////////////////////
+
+Game_BattlerBase.prototype.clearParamPlus = function () {
+    this._paramPlus = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+};
 
 Game_BattlerBase.prototype.paramBuffRate = function (paramId) {
     let buffAmount = this._buffs[paramId];

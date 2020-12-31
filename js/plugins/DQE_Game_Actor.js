@@ -465,6 +465,34 @@ Game_Actor.prototype.tradeItemWithActor = function (index, actorIndex, actor, th
 };
 
 //////////////////////////////
+// Functions - parameters
+//////////////////////////////
+
+Game_Actor.prototype.paramBase = function (paramId) {
+    return this.currentClass(paramId > 7).params[paramId][this._level];
+};
+
+Game_Actor.prototype.paramPlus = function (paramId) {
+    var value = Game_Battler.prototype.paramPlus.call(this, paramId);
+    var equips = this.equips();
+    for (var i = 0; i < equips.length; i++) {
+        var item = equips[i];
+        if (item) {
+            value += paramId <= 7 ? item.params[paramId] : item.meta.Charm || 0;
+        }
+    }
+    return value;
+};
+
+//////////////////////////////
+// Functions - class
+//////////////////////////////
+
+Game_Actor.prototype.currentClass = function (extra = false) {
+    return extra ? $DQEdataClasses[this._classId] : $dataClasses[this._classId];
+};
+
+//////////////////////////////
 // Functions - levels
 //////////////////////////////
 
