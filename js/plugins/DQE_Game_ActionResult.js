@@ -36,6 +36,7 @@ Game_ActionResult.prototype.clear = function () {
     DQEng.Game_ActionResult.clear.call(this);
     this.stackedStates = [];
     this.recover = false;
+    this.blocked = false;
     this.changedBuffs = [];
     this.buffDifferences = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 };
@@ -70,4 +71,12 @@ Game_ActionResult.prototype.pushChangedBuff = function (paramId) {
     if (!this.isBuffChanged(paramId)) {
         this.changedBuffs.push(paramId);
     }
+};
+
+Game_ActionResult.prototype.isHit = function () {
+    return this.onTarget() && !this.blocked;
+};
+
+Game_ActionResult.prototype.onTarget = function () {
+    return this.used && !this.missed && !this.evaded;
 };

@@ -267,8 +267,31 @@ Game_Action.prototype.itemCri = function () {
     return 0;
 };
 
+/**
+ * return the chance of blocking move
+ * 
+ * @param {Game_Battler} target 
+ */
+Game_Action.prototype.itemBlock = function (target) {
+    if (this.isPhysical()) {
+        return target.blr;
+    } else {
+        return 0;
+    }
+};
+
+/**
+ * return the chance of blocking crit
+ * 
+ * @param {Game_Battler} target 
+ */
+Game_Action.prototype.itemCritBlock = function (target) {
+    return target.cbr
+};
+
 Game_Action.prototype.apply = function (target) {
     var result = target.result();
+    let doesDmg = this.item().damage.type > 0;
     result.clear();
     result.used = this.testApply(target);
     result.missed = (result.used && Math.random() >= this.itemHit(target));
@@ -276,9 +299,16 @@ Game_Action.prototype.apply = function (target) {
     result.physical = this.isPhysical();
     result.drain = this.isDrain();
     result.recover = this.isRecover();
+    if (result.onTarget() && doesDmg) {
+        result.critical = (Math.random() < this.itemCri(target)); // is action a crit?
+        let block = result.critical ? this.itemCritBlock(target) : this.itemBlock(target); // block chance depending on crit
+        if (Math.random() < block) {
+            result.blocked = true;
+            result.critical = false; // make action non-crit if it was blocked
+        }
+    }
     if (result.isHit()) {
-        if (this.item().damage.type > 0) {
-            result.critical = (Math.random() < this.itemCri());
+        if (doesDmg) {
             var value = this.makeDamageValue(target, result.critical);
             this.executeDamage(target, value);
         }

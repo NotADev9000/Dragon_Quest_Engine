@@ -235,6 +235,8 @@ Window_BattleLog.prototype.displayDamage = function (target) {
         this.displayMiss(target);
     } else if (target.result().evaded) {
         this.displayEvasion(target);
+    } else if (target.result().blocked) {
+        this.displayBlock(target);
     } else if (!this.targetWasRevived(target)) {
         this.displayHpDamage(target);
         this.displayMpDamage(target);
@@ -246,12 +248,17 @@ Window_BattleLog.prototype.displayMiss = function (target) {
     var fmt;
     if (target.result().physical) {
         fmt = target.isActor() ? TextManager.actorNoHit : TextManager.enemyNoHit;
-        this.push('performMiss', target);
     } else {
         fmt = TextManager.actionFailure;
-        this.push('performMiss', target);
     }
+    this.push('performMiss', target);
     this.push('addText', fmt.format(target.name()));
+};
+
+// TODO: Play blocking sfx/animation when attack is blocked
+Window_BattleLog.prototype.displayBlock = function (target) {
+    this.push('performMiss', target);
+    this.push('addText', `${target.name()} blocks the attack!`);
 };
 
 Window_BattleLog.prototype.displayHpDamage = function (target) {

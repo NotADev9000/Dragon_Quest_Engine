@@ -115,11 +115,17 @@ Game_BattlerBase.BUFFLIST_SPARAM_MAGDMG = 10;
 Game_BattlerBase.BUFFLIST_SPARAM_BREDMG = 11;
 // position of sp/ex/params in their respective lists
 Game_BattlerBase.POS_PARAM_CHARM = 8;
+Game_BattlerBase.POS_XPARAM_BLOCKRATE = 10;
+Game_BattlerBase.POS_XPARAM_CRITBLOCKRATE = 11;
 Game_BattlerBase.POS_SPARAM_BREDMG = 10;
 
 Object.defineProperties(Game_BattlerBase.prototype, {
     // CHarM
     chm: { get: function () { return this.param(Game_BattlerBase.POS_PARAM_CHARM); }, configurable: true },
+    // BLock Rate
+    blr: { get: function () { return this.xparam(Game_BattlerBase.POS_XPARAM_BLOCKRATE); }, configurable: true },
+    // Crit Block Rate
+    cbr: { get: function () { return this.xparam(Game_BattlerBase.POS_XPARAM_CRITBLOCKRATE); }, configurable: true },
     // Breath Damage Rate
     bdr: { get: function () { return this.sparam(Game_BattlerBase.POS_SPARAM_BREDMG); }, configurable: true },
 });
@@ -216,6 +222,12 @@ Game_BattlerBase.prototype.metaTraits = function (meta) {
                     break;
             }
             switch (properties[1]) {
+                case 'blr': // BLock Rate
+                    dataId = Game_BattlerBase.POS_XPARAM_BLOCKRATE;
+                    break;
+                case 'cbr': // Crit Block Rate
+                    dataId = Game_BattlerBase.POS_XPARAM_CRITBLOCKRATE;
+                    break;
                 default: // Breath Damage Rate
                     dataId = Game_BattlerBase.POS_SPARAM_BREDMG;
                     break;
