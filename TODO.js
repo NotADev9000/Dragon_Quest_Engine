@@ -11,7 +11,5 @@
 * . Skill tree system 4
 * . Shop system 4
 * . Bank system 4
-* . Elements/Skills/Abilities 1
-* . Battle formulas (crit, evasion...) 1
 * . Battleback match terrain 3
 */

@@ -29,6 +29,14 @@ DQEng.TextManager = DQEng.TextManager || {};
 //-----------------------------------------------------------------------------
 
 TextManager.terms = {};
+
+TextManager.terms.baseParams = [
+    "Health",       // HP
+    "Magic",        // MP
+    "Strength",     // Attack
+    "Resilience"    // Defense
+];
+
 TextManager.terms.sparams = [
     "Target Rate",
     "Guard Effect",
@@ -48,6 +56,10 @@ TextManager.terms.xparams = [
     "Evasion chance",
     "Critical chance"
 ];
+
+TextManager.baseParam = function (paramId) {
+    return TextManager.terms.baseParams[paramId];
+};
 
 TextManager.paramFromBuffID = function (buffId) {
     if (buffId <= 8) return TextManager.param(buffId); // regular param so just call param function
