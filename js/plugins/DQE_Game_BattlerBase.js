@@ -120,6 +120,10 @@ Game_BattlerBase.POS_XPARAM_CRITBLOCKRATE = 11;
 Game_BattlerBase.POS_SPARAM_BREDMG = 10;
 
 Object.defineProperties(Game_BattlerBase.prototype, {
+    // STRength
+    str: { get: function () { return this.paramBasePermPlus(2); }, configurable: true },
+    // RESilience
+    res: { get: function () { return this.paramBasePermPlus(3); }, configurable: true },
     // CHarM
     chm: { get: function () { return this.param(Game_BattlerBase.POS_PARAM_CHARM); }, configurable: true },
     // BLock Rate
@@ -174,6 +178,23 @@ Game_BattlerBase.prototype.decreaseBuff = function (paramId) {
 
 Game_BattlerBase.prototype.clearParamPlus = function () {
     this._paramPlus = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+};
+
+Game_BattlerBase.prototype.paramMax = function (paramId) {
+    return 999;
+};
+
+/**
+ * returns the absolute base of a parameter + any permanent buffs
+ * permanent buffs = seeds or skill tree boosts but NOT moves like oomph or equipment
+ * 
+ * @param {number} paramId id of parameter to return
+ */
+Game_BattlerBase.prototype.paramBasePermPlus = function (paramId) {
+    let value = this.paramBase(paramId) + Game_Battler.prototype.paramPlus.call(this, paramId);
+    var maxValue = this.paramMax(paramId);
+    var minValue = this.paramMin(paramId);
+    return Math.round(value.clamp(minValue, maxValue));
 };
 
 Game_BattlerBase.prototype.paramBuffRate = function (paramId) {
