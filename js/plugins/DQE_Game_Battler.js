@@ -80,7 +80,7 @@ Game_Battler.prototype.removeState = function (stateId) {
 };
 
 Game_Battler.prototype.removeStateAuto = function (timing, state) {
-    if (this.isStateExpired(state.id) && (timing === 0 || state.autoRemovalTiming === timing)) {
+    if (this.isStateExpired(state.id) && ((timing === 0 && state.autoRemovalTiming > 0) || state.autoRemovalTiming === timing)) {
         this.removeState(state.id);
     }
 };
