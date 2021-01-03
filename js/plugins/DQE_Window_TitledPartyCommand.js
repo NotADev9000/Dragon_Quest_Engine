@@ -38,11 +38,15 @@ Window_TitledPartyCommand.prototype = Object.create(Window_TitledCommand.prototy
 Window_TitledPartyCommand.prototype.constructor = Window_TitledPartyCommand;
 
 /**
- * @param {number} excludeActors index of actors to exclude from command list
+ * @param {array} commands extra commands in list that are below the party names
+ * @param {array} excludeActors index of actors to exclude from command list
+ * @param {String} commandType which set of actors should be included in the list
+ * @param {function} updateExtra the function to be called when an EXTRA command is currently selected
  */
-Window_TitledPartyCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands, excludeActors = [], commandType) {
+Window_TitledPartyCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands, excludeActors = [], commandType, updateExtra) {
     this._excludeActors = excludeActors;
     this._commandType = commandType;
+    this._updateExtra = updateExtra;
     this._associatedWindow = [];
     Window_TitledCommand.prototype.initialize.call(this, x, y, windowWidth, menuTitle, commands);
 };
@@ -85,6 +89,10 @@ Window_TitledPartyCommand.prototype.addPartyCommands = function () {
     });
 };
 
+//////////////////////////////
+// Functions - updates
+//////////////////////////////
+
 Window_TitledPartyCommand.prototype.setAssociatedWindow = function (window) {
     this._associatedWindow.push(window);
 };
@@ -95,5 +103,8 @@ Window_TitledPartyCommand.prototype.update = function () {
         this._associatedWindow.forEach(window => {
             window.setCategory(this.currentSymbol());
         });
+    }
+    if (this._updateExtra) {
+        this._updateExtra.call(SceneManager._scene, this.currentSymbol());
     }
 };
