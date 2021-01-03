@@ -38,11 +38,9 @@ Scene_Menu.prototype.createCommandWindow = function () {
     this._commandWindow.setHandler('item', this.commandItem.bind(this));
     this._commandWindow.setHandler('skill', this.commandSkill.bind(this));
     this._commandWindow.setHandler('equip', this.commandEquip.bind(this));
-    this._commandWindow.setHandler('status', this.commandPersonal.bind(this));
-    this._commandWindow.setHandler('formation', this.commandFormation.bind(this));
     this._commandWindow.setHandler('options', this.commandOptions.bind(this));
+    this._commandWindow.setHandler('status', this.commandStatus.bind(this));
     this._commandWindow.setHandler('save', this.commandSave.bind(this));
-    this._commandWindow.setHandler('gameEnd', this.commandGameEnd.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
 };
@@ -69,4 +67,8 @@ Scene_Menu.prototype.commandSkill = function () {
 
 Scene_Menu.prototype.commandEquip = function () {
     SceneManager.push(Scene_Equip);
+};
+
+Scene_Menu.prototype.commandStatus = function () {
+    SceneManager.push(Scene_Status);
 };

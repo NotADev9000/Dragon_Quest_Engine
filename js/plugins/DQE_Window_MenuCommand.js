@@ -53,14 +53,7 @@ Window_MenuCommand.prototype.lineGap = function () {
 };
 
 Window_MenuCommand.prototype.makeCommandList = function () {
-    this.addMainCommands();
-    this.addFormationCommand();
-    this.addOriginalCommands();
-    this.addSaveCommand();
-};
-
-Window_MenuCommand.prototype.addMainCommands = function () {
-    var enabled = this.areMainCommandsEnabled();
+    let enabled = this.areMainCommandsEnabled();
     if (this.needsCommand('item')) {
         this.addCommand(TextManager.item, 'item', enabled);
     }
@@ -75,6 +68,9 @@ Window_MenuCommand.prototype.addMainCommands = function () {
     }
     if (this.needsCommand('status')) {
         this.addCommand(TextManager.status, 'status', enabled);
+    }
+    if (this.needsCommand('save')) {
+        this.addCommand(TextManager.save, 'save', this.isSaveEnabled());
     }
 };
 
