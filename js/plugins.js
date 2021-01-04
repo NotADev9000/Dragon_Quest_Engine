@@ -57,6 +57,7 @@ var $plugins =
 {"name":"DQE_Window_BattleActorStat","status":true,"description":"The window for selecting a party member in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleEnemy","status":true,"description":"The window that displays party member status in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_Status","status":true,"description":"The simple status window - V0.1","parameters":{}},
+{"name":"DQE_Window_Stats","status":true,"description":"A window displaying actor stats - V0.1","parameters":{}},
 {"name":"DQE_Window_Message","status":true,"description":"Message window for Dragon Quest Engine - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleMessage","status":true,"description":"Battle message window for Dragon Quest Engine - V0.1","parameters":{}},
 {"name":"DQE_Window_Number","status":true,"description":"The window for selecting a numeric value - V0.1","parameters":{}},

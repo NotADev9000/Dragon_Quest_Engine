@@ -37,6 +37,7 @@ Scene_Status.prototype.create = function () {
     this.createCommandWindow();
     this.createStatusWindow();
     this.createEquipmentWindow();
+    this.createStatsWindow();
 };
 
 Scene_Status.prototype.start = function () {
@@ -70,6 +71,14 @@ Scene_Status.prototype.createEquipmentWindow = function () {
     this._commandWindow.setAssociatedWindow(this._equipmentWindow);
 };
 
+Scene_Status.prototype.createStatsWindow = function () {
+    let x = this._statusWindow.x + this._statusWindow.width;
+    let y = this._statusWindow.y;
+    this._statsWindow = new Window_Stats(x, y, 513);
+    this.addWindow(this._statsWindow);
+    this._commandWindow.setAssociatedWindow(this._statsWindow);
+};
+
 //////////////////////////////
 // Functions - selection callbacks
 //////////////////////////////
@@ -85,8 +94,10 @@ Scene_Status.prototype.changeMode = function () {
     if (Number.isInteger(this._category)) { // player mode
         this._statusWindow.show();
         this._equipmentWindow.show();
+        this._statsWindow.show();
     } else { // everyone mode
         this._statusWindow.hide();
         this._equipmentWindow.hide();
+        this._statsWindow.hide();
     }
 };

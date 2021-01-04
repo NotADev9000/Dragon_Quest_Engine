@@ -40,13 +40,21 @@ Window_SimpleEquipmentList.prototype.initialize = function (x, y, width) {
 };
 
 //////////////////////////////
+// Functions - window sizing
+//////////////////////////////
+
+Window_SimpleEquipmentList.prototype.standardPadding = function () {
+    return 24;
+};
+
+//////////////////////////////
 // Functions - draw items
 //////////////////////////////
 
 Window_SimpleEquipmentList.prototype.drawEquipment = function () {
     this._actor.equips().forEach((item, index) => {
         let text = item ? item.name : '-';
-        this.drawText(text, this.extraPadding(), this.extraPadding() + ((index)*36), 0);
+        this.drawText(text, 0, (index)*36, 0);
     });
 };
 
