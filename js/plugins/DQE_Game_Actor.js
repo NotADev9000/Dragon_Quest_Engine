@@ -468,6 +468,10 @@ Game_Actor.prototype.tradeItemWithActor = function (index, actorIndex, actor, th
 // Functions - parameters
 //////////////////////////////
 
+Game_Actor.prototype.paramMax = function (paramId) {
+    return Game_Battler.prototype.paramMax.call(this, paramId);
+};
+
 Game_Actor.prototype.paramBase = function (paramId) {
     return this.currentClass(paramId > 7).params[paramId][this._level];
 };
