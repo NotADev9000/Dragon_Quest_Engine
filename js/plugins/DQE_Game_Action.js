@@ -376,7 +376,8 @@ Game_Action.prototype.makeDamageValue = function (target, critical) {
     var baseValue = this.evalDamageFormula(target);
     var value = baseValue * this.calcElementRate(target);
     let vari = item.meta.variance ? item.meta.variance : item.damage.variance;
-    if (this.isPhysical()) {
+    let physical = this.isPhysical();
+    if (physical) {
         value *= target.pdr;
     } else if (this.isMagical()) {
         value *= target.mdr;
@@ -387,7 +388,7 @@ Game_Action.prototype.makeDamageValue = function (target, critical) {
         value *= target.rec;
     }
     value = this.applyVariance(value, vari);
-    if (!item.meta.noMetalSave) value += this.applyMetalSave();
+    if (physical && !item.meta.noMetalSave) value += this.applyMetalSave();
     if (critical) value = this.applyCritical(value);
     value = this.applyGuard(value, target);
     value = Math.floor(value);
