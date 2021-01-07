@@ -343,6 +343,34 @@ Window_Selectable.prototype.isOkTriggered = function () {
     return Input.isTriggered('ok');
 };
 
+Window_Selectable.prototype.processHandling = function () {
+    if (this.isOpenAndActive()) {
+        if (this.isOkEnabled() && this.isOkTriggered()) {
+            this.processOk();
+        } else if (this.isCancelEnabled() && this.isCancelTriggered()) {
+            this.processCancel();
+        } else if (this.isHandled('pagedown') && Input.isTriggered('pagedown')) {
+            this.processPagedown();
+        } else if (this.isHandled('pageup') && Input.isTriggered('pageup')) {
+            this.processPageup();
+        } else if (this.isHandled('sort') && Input.isTriggered('sort')) {
+            this.processSort();
+        } else if (this.isHandled('filter') && Input.isTriggered('filter')) {
+            this.processFilter();
+        }
+    }
+};
+
+Window_Selectable.prototype.processSort = function () {
+    this.updateInputData();
+    this.callHandler('sort');
+};
+
+Window_Selectable.prototype.processFilter = function () {
+    this.updateInputData();
+    this.callHandler('filter');
+};
+
 //-----------------------------------------------------------------------------
 // Window_Command
 //-----------------------------------------------------------------------------
