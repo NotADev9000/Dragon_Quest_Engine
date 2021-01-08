@@ -144,7 +144,10 @@ Window_EveryoneStats.prototype.drawPlayerBlocks = function () {
         // stats
         for (let j = 0; j < 11; j++) {
             let y = (j * this.itemHeight()) + this.blockTitleHeight();
-            if (j < 9) {
+            if (j < 2) {
+                let current = j === 0 ? actor.hp : actor.mp;
+                text = `${current}/${actor.param(j)}`;
+            } else if (j < 9) {
                 text = actor.param(j);
             } else {
                 let id = j - 7;
