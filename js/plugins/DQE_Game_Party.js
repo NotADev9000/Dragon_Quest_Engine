@@ -96,4 +96,5 @@ Game_Party.prototype.swapAll = function (list) {
         actorIds.push($gameParty.allMembers()[element]._actorId);
     });
     this._actors = actorIds;
+    $gamePlayer.refresh();
 };

@@ -665,8 +665,6 @@ Scene_Battle.prototype.onLineUpGroupConfirmOk = function () {
         this._partyCommandWindow.select(0);
         this._lineUpGroupConfirmWindow.hide();
         this._lineUpGroupConfirmWindow.hideBackgroundDimmer();
-        // this._lineUpGroupStatusWindow.hide();
-        // this._lineUpGroupStatusWindow.hideBackgroundDimmer();
         this._lineUpGroupListWindow.hide();
         this._lineUpGroupListWindow.hideBackgroundDimmer();
         this._lineUpGroupPartyWindow.hide();
