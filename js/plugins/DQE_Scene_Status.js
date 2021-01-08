@@ -38,6 +38,7 @@ Scene_Status.prototype.create = function () {
     this.createStatusWindow();
     this.createEquipmentWindow();
     this.createStatsWindow();
+    this.createEveryoneStatsWindow();
 };
 
 Scene_Status.prototype.start = function () {
@@ -50,7 +51,7 @@ Scene_Status.prototype.start = function () {
 
 Scene_Status.prototype.createCommandWindow = function () {
     this._commandWindow = new Window_TitledPartyCommand(48, 48, 354, TextManager.status, ['Everyone'], [], undefined, Scene_Status.prototype.setCategory);
-    // this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
+    this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
 };
@@ -77,6 +78,38 @@ Scene_Status.prototype.createStatsWindow = function () {
     this._statsWindow = new Window_Stats(x, y, 513);
     this.addWindow(this._statsWindow);
     this._commandWindow.setAssociatedWindow(this._statsWindow);
+};
+
+Scene_Status.prototype.createEveryoneStatsWindow = function () {
+    let x = this._commandWindow.x;
+    let y = this._commandWindow.y;
+    this._everyoneStatsWindow = new Window_EveryoneStats(x, y, 0, 573);
+    this._everyoneStatsWindow.setHandler('cancel', this.onEveryoneStatsCancel.bind(this));
+    this._everyoneStatsWindow.hide();
+    this.addWindow(this._everyoneStatsWindow);
+};
+
+//////////////////////////////
+// Functions - on handlers
+//////////////////////////////
+
+Scene_Status.prototype.onCommandOk = function () {
+    if (this._category >= 0) { // party member selected
+        this._commandWindow.activate();
+    } else { // everyone selected
+        this._everyoneStatsWindow.select(0);
+        this._everyoneStatsWindow.show();
+        this._everyoneStatsWindow.activate();
+    }
+};
+
+Scene_Status.prototype.onEveryoneStatsCancel = function () {
+    if (this._category >= 0) {
+
+    } else {
+        this._everyoneStatsWindow.hide();
+        this._commandWindow.activate();
+    }
 };
 
 //////////////////////////////

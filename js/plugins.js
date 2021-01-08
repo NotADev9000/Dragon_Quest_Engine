@@ -80,6 +80,7 @@ var $plugins =
 {"name":"DQE_Window_ItemLocation","status":true,"description":"The window for displaying an item and its location - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemActorStat","status":true,"description":"The window for displaying party members stats in the item menu - V0.1","parameters":{}},
 {"name":"DQE_Window_EquipSlot","status":true,"description":"The window for selecting actor's equipment - V0.1","parameters":{}},
+{"name":"DQE_Window_EveryoneStats","status":true,"description":"The window for displaying everyone's stats - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleSkill","status":true,"description":"The window that displays skills to use in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleItem","status":true,"description":"The window that displays skills to use in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleEquipment","status":true,"description":"The window that displays equipment to equip in battle - V0.1","parameters":{}},

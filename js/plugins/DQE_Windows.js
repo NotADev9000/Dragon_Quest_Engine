@@ -182,8 +182,8 @@ Window_Base.prototype.drawHorzLine = function (x, y, width = this.contentsWidth(
 /**
  * Draws a horizontal line across the window
  */
-Window_Base.prototype.drawVertLine = function (x, y) {
-    this.contents.fillRect(x, y, 3, this.contentsHeight(), this.normalColor());
+Window_Base.prototype.drawVertLine = function (x, y, height = this.contentsHeight()) {
+    this.contents.fillRect(x, y, 3, height, this.normalColor());
 };
 
 /**
