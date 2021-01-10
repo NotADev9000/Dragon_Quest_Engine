@@ -219,10 +219,10 @@ Window_BattleLog.prototype.displayActionResults = function (subject, target) {
 
 Window_BattleLog.prototype.displayCritical = function (target) {
     if (target.result().critical) {
+        this.push('showCriticalAnimation', [target], 3);
         if (target.isActor()) {
             this.push('addText', TextManager.criticalToActor);
         } else {
-            this.push('showCriticalAnimation', [target], 3);
             this.push('addText', TextManager.criticalToEnemy);
         }
         this.push('wait', 'crit');

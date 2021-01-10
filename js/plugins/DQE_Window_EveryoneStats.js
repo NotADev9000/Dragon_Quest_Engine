@@ -53,7 +53,7 @@ Window_EveryoneStats.prototype.lineGap = function () {
  * includes the actor name, actor level, vertical line and
  * the space between the line and first item
  */
-Window_EveryoneStats.prototype.blockTitleHeight = function () {
+Window_EveryoneStats.prototype.titleBlockHeight = function () {
     return 105;
 };
 
@@ -114,8 +114,8 @@ Window_EveryoneStats.prototype.drawAttributeBlock = function () {
     this.drawText('Attributes', 0, this.extraPadding(), this.attributeBlockWidth(), 'center');
     this.drawHorzLine(0, 87);
     let text;
-    for (var i = 0; i < 11; i++) {
-        let y = (i * this.itemHeight()) + this.blockTitleHeight();
+    for (let i = 0; i < 11; i++) {
+        let y = (i * this.itemHeight()) + this.titleBlockHeight();
         if (i < 9) {
             text = `${TextManager.param(i)}:`;
         } else {
@@ -143,7 +143,7 @@ Window_EveryoneStats.prototype.drawPlayerBlocks = function () {
         this.drawText(`Lv.${actor.level}`, x + 3, this.extraPadding() + this.itemHeight(), blockWidth, 'center');
         // stats
         for (let j = 0; j < 11; j++) {
-            let y = (j * this.itemHeight()) + this.blockTitleHeight();
+            let y = (j * this.itemHeight()) + this.titleBlockHeight();
             if (j < 2) {
                 let current = j === 0 ? actor.hp : actor.mp;
                 text = `${current}/${actor.param(j)}`;

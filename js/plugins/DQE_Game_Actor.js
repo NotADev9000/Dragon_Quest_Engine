@@ -478,9 +478,15 @@ Game_Actor.prototype.paramBase = function (paramId) {
 
 Game_Actor.prototype.paramPlus = function (paramId) {
     var value = Game_Battler.prototype.paramPlus.call(this, paramId);
-    var equips = this.equips();
-    for (var i = 0; i < equips.length; i++) {
-        var item = equips[i];
+    value += this.paramEquips(paramId);
+    return value;
+};
+
+Game_Actor.prototype.paramEquips = function (paramId) {
+    let value = 0;
+    let equips = this.equips();
+    for (let i = 0; i < equips.length; i++) {
+        let item = equips[i];
         if (item) {
             value += paramId <= 7 ? item.params[paramId] : item.meta.Charm || 0;
         }

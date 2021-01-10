@@ -30,14 +30,18 @@ DQEng.Scene_Status = DQEng.Scene_Status || {};
 Scene_Status.prototype.initialize = function () {
     Scene_MenuBase.prototype.initialize.call(this);
     this._category = 0;
+    this._activeWindow = null;
 };
 
 Scene_Status.prototype.create = function () {
     Scene_MenuBase.prototype.create.call(this);
     this.createCommandWindow();
+    // character windows
     this.createStatusWindow();
     this.createEquipmentWindow();
     this.createStatsWindow();
+    this.createStatsAttributesWindow();
+    // everyone windows
     this.createEveryoneStatsWindow();
 };
 
@@ -53,8 +57,11 @@ Scene_Status.prototype.createCommandWindow = function () {
     this._commandWindow = new Window_TitledPartyCommand(48, 48, 354, TextManager.status, ['Everyone'], [], undefined, Scene_Status.prototype.setCategory);
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
+    this._activeWindow = this._commandWindow;
     this.addWindow(this._commandWindow);
 };
+
+// character windows
 
 Scene_Status.prototype.createStatusWindow = function () {
     let x = this._commandWindow.x + this._commandWindow.width;
@@ -80,6 +87,19 @@ Scene_Status.prototype.createStatsWindow = function () {
     this._commandWindow.setAssociatedWindow(this._statsWindow);
 };
 
+Scene_Status.prototype.createStatsAttributesWindow = function () {
+    let x = this._commandWindow.x;
+    let y = this._commandWindow.y;
+    this._statsAttributesWindow = new Window_StatsAttributes(x, y, 1344, 591);
+    this._statsAttributesWindow.setHandler('cancel', this.onStatsAttributesCancel.bind(this));
+    this._statsAttributesWindow.setHandler('sort', this.previousActor.bind(this, this._statsAttributesWindow));
+    this._statsAttributesWindow.setHandler('filter', this.nextActor.bind(this, this._statsAttributesWindow));
+    this._statsAttributesWindow.hide();
+    this.addWindow(this._statsAttributesWindow);
+};
+
+// everyone windows
+
 Scene_Status.prototype.createEveryoneStatsWindow = function () {
     let x = this._commandWindow.x;
     let y = this._commandWindow.y;
@@ -95,21 +115,61 @@ Scene_Status.prototype.createEveryoneStatsWindow = function () {
 
 Scene_Status.prototype.onCommandOk = function () {
     if (this._category >= 0) { // party member selected
-        this._commandWindow.activate();
+        let actorIndex = this._commandWindow.currentSymbol();
+        $gameParty.setMenuActor($gameParty.members()[actorIndex]);
+        this.hideCharacterWindows();
+        this._statsAttributesWindow.setCategory(actorIndex);
+        this._statsAttributesWindow.show();
+        this.activateWindow(this._statsAttributesWindow);
     } else { // everyone selected
         this._everyoneStatsWindow.select(0);
         this._everyoneStatsWindow.show();
-        this._everyoneStatsWindow.activate();
+        this.activateWindow(this._everyoneStatsWindow);
     }
 };
 
-Scene_Status.prototype.onEveryoneStatsCancel = function () {
-    if (this._category >= 0) {
+Scene_Status.prototype.onStatsAttributesCancel = function () {
+    this.showCharacterWindows();
+    this._statsAttributesWindow.hide();
+    this.activateWindow(this._commandWindow);
+};
 
-    } else {
-        this._everyoneStatsWindow.hide();
-        this._commandWindow.activate();
-    }
+Scene_Status.prototype.onEveryoneStatsCancel = function () {
+    this._everyoneStatsWindow.hide();
+    this.activateWindow(this._commandWindow);
+};
+
+Scene_Status.prototype.onActorChange = function () {
+    let actorIndex = $gameParty.members().indexOf(this.actor());
+    this._activeWindow.setCategory(actorIndex);
+    this._commandWindow.select(actorIndex);
+};
+
+//////////////////////////////
+// Functions - displaying windows
+//////////////////////////////
+
+/**
+ * shows the basic character windows
+ */
+Scene_Status.prototype.showCharacterWindows = function () {
+    this._statusWindow.show();
+    this._equipmentWindow.show();
+    this._statsWindow.show();
+};
+
+/**
+ * hides the basic character windows
+ */
+Scene_Status.prototype.hideCharacterWindows = function () {
+    this._statusWindow.hide();
+    this._equipmentWindow.hide();
+    this._statsWindow.hide();
+};
+
+Scene_Status.prototype.activateWindow = function (window) {
+    window.activate();
+    this._activeWindow = window;
 };
 
 //////////////////////////////
@@ -125,12 +185,8 @@ Scene_Status.prototype.setCategory = function (category) {
 
 Scene_Status.prototype.changeMode = function () {
     if (Number.isInteger(this._category)) { // player mode
-        this._statusWindow.show();
-        this._equipmentWindow.show();
-        this._statsWindow.show();
+        this.showCharacterWindows();
     } else { // everyone mode
-        this._statusWindow.hide();
-        this._equipmentWindow.hide();
-        this._statsWindow.hide();
+        this.hideCharacterWindows();
     }
 };
