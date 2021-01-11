@@ -1,0 +1,63 @@
+
+This is a non profit fangame purely made for the love of the franchise
+
+Background 
+
+Dragon Quest Kingdom of the Clouded Conspiracy (working title) is a modern DQ SNES-styled fan-game I have been working on since August 2020. It is being developed in RPG Maker MV, where I have been adding various familiar mechanics from the Dragon Quest series. This is a learning project for myself to gain knowledge on MVs codebase while also improving my JavaScript skills and learning some game design concepts along the way. The goal for this game is a fully fledged single player story with battle mechanics from DQ11, features from previous titles and the visuals of DQ3 SNES & DQ6 SNES (and some DQ DS sprites thrown in for good measure.)
+
+The game is currently in pre-alpha; mechanics are being implemented and UI is being coded so there is no story implementation at the moment. A story is currently being written.
+
+Screenshots 
+
+Here's some screenshots of current progress; I'll update them as development progresses and upload some gameplay videos to YouTube.
+
+    
+
+    
+
+    
+
+    
+
+
+
+Features 
+
+These are a list of features that I hope to implement into the final product. Some may have already been done but I'll come back to this list to confirm what has and what hasn't at a later time.
+
+A completely new single player story with a cast of characters
+Unique Skill Trees for each character (weapons & other types)
+DQ11 battle equations (e.g. damage/skills/stats are built like DQ11)
+Gamepad and Keyboard support
+Gamepad and Keyboard configuration (for PS/XBOX/Switch controllers)
+Familiar & new items/weapons/skills
+Quest system similar to DQ11s
+Options menu to change text speed/controls
+Party formation change
+Choose the battle theme for generic encounters (DQ1 -> 11)
+Ability to dual wield (weapons of the same type) & use two-handed weapons (swords, axes, boomerangs, shields)
+Notes 
+
+The resolution of the game is 480x270 which is a significant increase when compared to the original SNES games.
+
+
+
+The window resolution is by default x3 times bigger, meaning the window is 1440x810. When the game is in fullscreen it fits nicely into 1920x1080 monitors. Other monitors will work fine but may display the game with black bars on the side. I will implement the possibility to change the window size to 480x270 (x1), 960x540 (x2), 1440x810 (x3 default) and some bigger.
+
+Team 
+
+Just me! If you are interested in helping me out, let me know on here or on Discord: NotADev#9389. Currently I am need of artists.
+
+Credits 
+
+Square Enix - It makes no difference whether I say it or not but all rights for the DQ franchise are reserved to them. This project is a non-profit fangame.
+Kadokawa - RPG Maker
+RPG Maker Irina - Anti Audio Delay plugin
+Victor Sant - Sprite font plugin
+Neon Black - Character Sprite fix plugin
+RealmOfDarkness - Various DQ sprites
+Dragon's Den - A TON of DQ information & sprites
+BehindTheWord - For this guide https://gamefaqs.gamespot.com/switch/189709-dragon-quest-xi-s-echoes-of-an-elusive-age-definitive/faqs/76680/dragon-quest-xi-game-skill-spell-pep-character-data
+KuuzokuOuGilder - For this guide https://gamefaqs.gamespot.com/boards/179347-dragon-quest-xi-echoes-of-an-elusive-age/76888622
+twitch.tv/cleartonic - For this compendium https://docs.google.com/spreadsheets/d/1whommcG5l3LcN4ZSpOuygWqLACu6Gtj6HMj-bM5vGYM/edit#gid=0
+Please let me know if I have forgotten anyone!
