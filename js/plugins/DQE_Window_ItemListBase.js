@@ -39,7 +39,6 @@ Window_ItemListBase.prototype.initialize = function (x, y, width, height) {
     Window_Pagination.prototype.initialize.call(this, x, y, width, height);
     this._category = null;
     this._data = [];
-    this._lastSelected = 0;
 };
 
 Window_ItemListBase.prototype.lineGap = function () {
@@ -63,14 +62,6 @@ Window_ItemListBase.prototype.setCategory = function (category) {
  */
 Window_ItemListBase.prototype.isCategoryActor = function () {
     return Number.isInteger(this._category);
-};
-
-/**
- * sets last selected to current index
- * used to remember the last item the user had selected
- */
-Window_ItemListBase.prototype.setLastSelected = function (index) {
-    this._lastSelected = index;
 };
 
 Window_ItemListBase.prototype.item = function () {
@@ -98,7 +89,6 @@ Window_ItemListBase.prototype.itemRect = function (index) {
 };
 
 Window_ItemListBase.prototype.refresh = function () {
-    this.setLastSelected(0);
     this.makeItemList();
     this.createContents();
     Window_Pagination.prototype.refresh.call(this);

@@ -95,24 +95,13 @@ Window_StatsAttributes.prototype.setCategory = function (category) {
     }
 };
 
+Window_StatsAttributes.prototype.updateCursor = function () {
+    // don't show cursor
+};
+
 //////////////////////////////
 // Functions - draw items
 //////////////////////////////
-
-Window_StatsAttributes.prototype.drawNameTitle = function () {
-    let actorName = this._actor.name();
-    let actorLv = this._actor.level;
-    let text = `${actorName} Lv.${actorLv}`;
-    let itemHeight = this.itemHeight();
-    let y = this.extraPadding();
-    this.drawText(text, 0, y, this.contentsWidth(), 'center');
-    y += itemHeight;
-    this.drawHorzLine(0, y);
-    y += this.lineGap() + 3;
-    this.drawText('Attributes', 0, y, this.contentsWidth(), 'center');
-    y += itemHeight;
-    this.drawHorzLine(0, y);
-};
 
 Window_StatsAttributes.prototype.drawAttributeBlock = function () {
     let y = this.titleBlockHeight() + 51;
@@ -226,7 +215,7 @@ Window_StatsAttributes.prototype.getTotalStats = function () {
 Window_StatsAttributes.prototype.refresh = function () {
     if (this._actor) {
         this.contents.clear();
-        this.drawNameTitle();
+        Window_StatsCommon.prototype.drawNameTitle.call(this, 'Attributes');
         this.drawAttributeBlock();
         this.drawStats();
     }

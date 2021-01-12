@@ -27,6 +27,9 @@ DQEng.Scene_Status = DQEng.Scene_Status || {};
 // Scene_Status
 //-----------------------------------------------------------------------------
 
+Scene_Status.WinAttribute = 'Attribute';
+Scene_Status.WinMagic = 'Magic';
+
 Scene_Status.prototype.initialize = function () {
     Scene_MenuBase.prototype.initialize.call(this);
     this._category = 0;
@@ -41,6 +44,7 @@ Scene_Status.prototype.create = function () {
     this.createEquipmentWindow();
     this.createStatsWindow();
     this.createStatsAttributesWindow();
+    this.createStatsMagicWindow();
     // everyone windows
     this.createEveryoneStatsWindow();
 };
@@ -94,8 +98,21 @@ Scene_Status.prototype.createStatsAttributesWindow = function () {
     this._statsAttributesWindow.setHandler('cancel', this.onStatsAttributesCancel.bind(this));
     this._statsAttributesWindow.setHandler('sort', this.previousActor.bind(this, this._statsAttributesWindow));
     this._statsAttributesWindow.setHandler('filter', this.nextActor.bind(this, this._statsAttributesWindow));
+    this._statsAttributesWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinMagic));
     this._statsAttributesWindow.hide();
     this.addWindow(this._statsAttributesWindow);
+};
+
+Scene_Status.prototype.createStatsMagicWindow = function () {
+    let x = this._commandWindow.x;
+    let y = this._commandWindow.y;
+    this._statsMagicWindow = new Window_StatsMagic(x, y, 1344, 714);
+    this._statsMagicWindow.setHandler('cancel', this.onStatsMagicCancel.bind(this));
+    this._statsMagicWindow.setHandler('sort', this.previousActor.bind(this, this._statsMagicWindow));
+    this._statsMagicWindow.setHandler('filter', this.nextActor.bind(this, this._statsMagicWindow));
+    this._statsMagicWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinAttribute));
+    this._statsMagicWindow.hide();
+    this.addWindow(this._statsMagicWindow);
 };
 
 // everyone windows
@@ -134,14 +151,39 @@ Scene_Status.prototype.onStatsAttributesCancel = function () {
     this.activateWindow(this._commandWindow);
 };
 
+Scene_Status.prototype.onStatsMagicCancel = function () {
+    this.showCharacterWindows();
+    this._statsMagicWindow.setLastSelected(this._statsMagicWindow.index());
+    this._statsMagicWindow.hide();
+    this.activateWindow(this._commandWindow);
+};
+
 Scene_Status.prototype.onEveryoneStatsCancel = function () {
     this._everyoneStatsWindow.hide();
     this.activateWindow(this._commandWindow);
 };
 
+Scene_Status.prototype.onNextWindow = function (windowName) {
+    this._activeWindow.hide();
+    switch (windowName) {
+        case Scene_Status.WinAttribute:
+            this._statsAttributesWindow.setCategory(this._commandWindow.currentSymbol());
+            this._statsAttributesWindow.show();
+            this.activateWindow(this._statsAttributesWindow);
+            break;
+        case Scene_Status.WinMagic:
+            this._statsMagicWindow.setCategory(this._commandWindow.currentSymbol());
+            this._statsMagicWindow.select(this._statsMagicWindow._lastSelected)
+            this._statsMagicWindow.show();
+            this.activateWindow(this._statsMagicWindow);
+            break;
+    }
+};
+
 Scene_Status.prototype.onActorChange = function () {
     let actorIndex = $gameParty.members().indexOf(this.actor());
     this._activeWindow.setCategory(actorIndex);
+    this._activeWindow.select(0);
     this._commandWindow.select(actorIndex);
 };
 

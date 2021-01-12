@@ -43,6 +43,7 @@ Window_Pagination.prototype.initialize = function (x, y, width, height) {
     this._numRows = 0;
     this._maxRows = -1;
     this._maxItemsOnPage = -1;
+    this._lastSelected = 0;
     Window_Selectable.prototype.initialize.call(this, x, y, width, height);
 };
 
@@ -85,6 +86,14 @@ Window_Pagination.prototype.topIndex = function () {
  */
 Window_Pagination.prototype.trueIndex = function (index) {
     return index - (this.maxItemsOnPage() * (this._page - 1));
+};
+
+/**
+ * sets last selected to current index
+ * used to remember the last item the user had selected
+ */
+Window_Pagination.prototype.setLastSelected = function (index) {
+    this._lastSelected = index;
 };
 
 //////////////////////////////
@@ -280,6 +289,7 @@ Window_Pagination.prototype.select = function (index) {
  * Draw all should be called after this method is called
  */
 Window_Pagination.prototype.refresh = function () {
+    this.setLastSelected(0);
     this._numPages = this.numPages();
     this._page = this.page();
     this._topIndex = this.topIndex();

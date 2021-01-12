@@ -216,7 +216,6 @@ Window_EquipmentList.prototype.itemRect = function (index) {
 };
 
 Window_EquipmentList.prototype.refresh = function () {
-    this.setLastSelected(0);
     this.makeItemList();
     this.createContents();
     Window_Pagination.prototype.refresh.call(this);
