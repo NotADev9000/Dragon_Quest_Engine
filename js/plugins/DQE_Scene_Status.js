@@ -181,10 +181,13 @@ Scene_Status.prototype.onNextWindow = function (windowName) {
 };
 
 Scene_Status.prototype.onActorChange = function () {
-    let actorIndex = $gameParty.members().indexOf(this.actor());
-    this._activeWindow.setCategory(actorIndex);
-    this._activeWindow.select(0);
-    this._commandWindow.select(actorIndex);
+    let members = $gameParty.members();
+    if (members.length > 1) {
+        let actorIndex = members.indexOf(this.actor());
+        this._activeWindow.setCategory(actorIndex);
+        this._activeWindow.select(0);
+        this._commandWindow.select(actorIndex);
+    }
 };
 
 //////////////////////////////
