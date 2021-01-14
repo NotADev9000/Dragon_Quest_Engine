@@ -252,6 +252,10 @@ Window_Base.prototype.obtainEscapeParamFunc = function (textState) {
 // Window_Selectable
 //-----------------------------------------------------------------------------
 
+Window_Selectable.prototype.column = function () {
+    return this.index() - (this.maxCols() * this.row());
+};
+
 Window_Selectable.prototype.itemRect = function (index) {
     var rect = new Rectangle();
     var maxCols = this.maxCols();
@@ -278,36 +282,26 @@ Window_Selectable.prototype.itemRectForText = function (index) {
 };
 
 Window_Selectable.prototype.cursorDown = function () {
-    var index = this.index();
-    var maxItems = this.maxItems();
-    var maxCols = this.maxCols();
-    var oddAmount = maxItems % 2;
-    if (maxItems > maxCols && maxCols === 1 || (index != 1 || maxItems != 3)) { // if there's more than one row & the cursor isn't on a row with only one item
-        if (oddAmount && index > Math.floor(maxItems / maxCols)) { // if moving from bottom of list to top
-            this.select(
-                index - (
-                maxCols * (Math.ceil(maxItems / maxCols) - 1))
-            );
-        } else {
-            this.select((index + maxCols) % maxItems);
-        }
+    let index = this.index();
+    let nextIndex = index + this.maxCols();
+    if (nextIndex < this.maxItems()) { // cursor can move down
+        this.select(nextIndex);
+    } else { // cursor must loop to top of list
+        this.select(this.column());
     }
 };
 
 Window_Selectable.prototype.cursorUp = function () {
-    var index = this.index();
-    var maxItems = this.maxItems();
-    var maxCols = this.maxCols();
-    var oddAmount = maxItems % 2;
-    if (maxItems > maxCols && maxCols === 1 || (index != 1 || maxItems != 3)) { // if there's more than one row & the cursor isn't on a row with only one item
-        if (oddAmount && index < maxCols) { // if moving from top of list to bottom
-            this.select(
-                index + (
-                maxCols * (Math.ceil(maxItems / maxCols)-1))
-            );
-        } else {
-            this.select((index - maxCols + maxItems) % maxItems);
-        }
+    let index = this.index();
+    let nextIndex = index - this.maxCols();
+    if (nextIndex > -1) { // cursor can move up
+        this.select(nextIndex);
+    } else { // cursor must loop to bottom of list
+        let cols = this.maxCols();
+        let items = this.maxItems();
+        let bottomRow = Math.ceil(items / cols) - 1;
+        nextIndex = (bottomRow * cols) + this.column(); // get index of item on bottom row (using current column)
+        this.select(nextIndex < items ? nextIndex : nextIndex - cols); // if index is too far down list, go back up one
     }
 };
 

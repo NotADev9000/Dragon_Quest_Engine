@@ -155,11 +155,9 @@ Window_Pagination.prototype.maxItemsOnPage = function () {
  * Formula: row = floor((i-rcp+rc)/c)
  */
 Window_Pagination.prototype.row = function () {
-    if (this.index() < 0) return -1;
-    var c = this.maxCols();
-    var rc = this.maxRows() * c;
-    var rcp = rc * this.page();
-    return Math.floor((this.index() - rcp + rc) / c);
+    let index = this.index();
+    if (index < 0) return -1;
+    return Math.floor(this.trueIndex(index)/this.maxCols());
 };
 
 /**
