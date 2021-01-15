@@ -79,13 +79,20 @@ Window_Pagination.prototype.topIndex = function () {
 };
 
 /**
- * The true index is the value of the passed in index
+ * the true index is the value of the passed in index
  * if it were on the first page
  * e.g. 10 items per page
  *      index = 15 -> true index = 5
  */
 Window_Pagination.prototype.trueIndex = function (index) {
     return index - (this.maxItemsOnPage() * (this._page - 1));
+};
+
+/**
+ * opposite of above
+ */
+Window_Pagination.prototype.falseIndex = function (index) {
+    return index + (this.maxItemsOnPage() * (this._page - 1));
 };
 
 /**
@@ -144,20 +151,17 @@ Window_Pagination.prototype.maxItemsOnPage = function () {
 }
 
 //////////////////////////////
-// Functions - row
+// Functions - row/column
 //////////////////////////////
 
-/**
- * Returns the current row the cursor is on
- * c -> COLUMNS
- * r -> number of ROWS
- * p -> current PAGE
- * Formula: row = floor((i-rcp+rc)/c)
- */
 Window_Pagination.prototype.row = function () {
     let index = this.index();
     if (index < 0) return -1;
     return Math.floor(this.trueIndex(index)/this.maxCols());
+};
+
+Window_Pagination.prototype.column = function () {
+    return this.trueIndex(this.index()) - (this.maxCols() * this.row());
 };
 
 /**
@@ -224,24 +228,27 @@ Window_Pagination.prototype.drawAllItems = function () {
 //////////////////////////////
 
 Window_Pagination.prototype.cursorDown = function () {
-    var index = this.index();
-    var maxCols = this.maxCols();
-
-    if (maxCols === 1 || index < this._itemsOnPage - maxCols) {
-        let select1 = (this.trueIndex(index) + maxCols) % this._itemsOnPage;
-        let select2 = (this._page - 1) * this.maxItemsOnPage();
-        this.select(select1 + select2);
+    let index = this.index();
+    let nextIndex = index + this.maxCols();
+    if (this.trueIndex(nextIndex) < this._itemsOnPage) { // cursor can move down
+        this.select(nextIndex);
+    } else { // cursor must loop to top of list
+        nextIndex = this.falseIndex(this.column());
+        this.select(nextIndex);
     }
 };
 
 Window_Pagination.prototype.cursorUp = function () {
-    var index = this.index();
-    var maxCols = this.maxCols();
-
-    if (maxCols === 1 || index < this._itemsOnPage - maxCols) {
-        let select1 = (this.trueIndex(index) - maxCols + this._itemsOnPage) % this._itemsOnPage;
-        let select2 = (this._page - 1) * this.maxItemsOnPage();
-        this.select(select1 + select2);
+    let index = this.index();
+    let nextIndex = index - this.maxCols();
+    if (this.trueIndex(nextIndex) > -1) { // cursor can move up
+        this.select(nextIndex);
+    } else { // cursor must loop to bottom of list
+        let cols = this.maxCols();
+        let items = this._itemsOnPage;
+        let bottomRow = Math.ceil(items / cols) - 1;
+        nextIndex = this.falseIndex((bottomRow * cols) + this.column()); // get index of item on bottom row (using current column)
+        this.select(nextIndex < this.maxItems() ? nextIndex : nextIndex - cols); // if index is too far down list, go back up one
     }
 };
 
