@@ -40,6 +40,7 @@ Window_StatsMagic.prototype.initialize = function (x, y, width, height) {
     this._category = -1;
     this._actor = null;
     this._data = [];
+    this._title = 'Magic';
 };
 
 //////////////////////////////
@@ -183,7 +184,7 @@ Window_StatsMagic.prototype.refresh = function () {
         this.makeItemList();
         this.contents.clear();
         Window_Pagination.prototype.refresh.call(this);
-        Window_StatsCommon.prototype.drawNameTitle.call(this, 'Magic');
+        Window_StatsCommon.prototype.drawNameTitle.call(this, this._title);
         this.drawAllItems();
         let item = this.item();
         this.drawMPCostBlock(item);

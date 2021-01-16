@@ -29,6 +29,7 @@ DQEng.Scene_Status = DQEng.Scene_Status || {};
 
 Scene_Status.WinAttribute = 'Attribute';
 Scene_Status.WinMagic = 'Magic';
+Scene_Status.WinOtherAbilities = 'OtherAbilities';
 
 Scene_Status.prototype.initialize = function () {
     Scene_MenuBase.prototype.initialize.call(this);
@@ -45,6 +46,7 @@ Scene_Status.prototype.create = function () {
     this.createStatsWindow();
     this.createStatsAttributesWindow();
     this.createStatsMagicWindow();
+    this.createStatsOtherAbilitiesWindow();
     // everyone windows
     this.createEveryoneStatsWindow();
 };
@@ -111,8 +113,21 @@ Scene_Status.prototype.createStatsMagicWindow = function () {
     this._statsMagicWindow.setHandler('sort', this.previousActor.bind(this, this._statsMagicWindow));
     this._statsMagicWindow.setHandler('filter', this.nextActor.bind(this, this._statsMagicWindow));
     this._statsMagicWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinAttribute));
+    this._statsMagicWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinOtherAbilities));
     this._statsMagicWindow.hide();
     this.addWindow(this._statsMagicWindow);
+};
+
+Scene_Status.prototype.createStatsOtherAbilitiesWindow = function () {
+    let x = this._commandWindow.x;
+    let y = this._commandWindow.y;
+    this._statsOtherAbilitiesWindow = new Window_StatsOtherAbilities(x, y, 1344, 714);
+    this._statsOtherAbilitiesWindow.setHandler('cancel', this.onStatsOtherAbilitiesCancel.bind(this));
+    this._statsOtherAbilitiesWindow.setHandler('sort', this.previousActor.bind(this, this._statsOtherAbilitiesWindow));
+    this._statsOtherAbilitiesWindow.setHandler('filter', this.nextActor.bind(this, this._statsOtherAbilitiesWindow));
+    this._statsOtherAbilitiesWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinMagic));
+    this._statsOtherAbilitiesWindow.hide();
+    this.addWindow(this._statsOtherAbilitiesWindow);
 };
 
 // everyone windows
@@ -158,6 +173,13 @@ Scene_Status.prototype.onStatsMagicCancel = function () {
     this.activateWindow(this._commandWindow);
 };
 
+Scene_Status.prototype.onStatsOtherAbilitiesCancel = function () {
+    this.showCharacterWindows();
+    this._statsOtherAbilitiesWindow.setLastSelected(this._statsOtherAbilitiesWindow.index());
+    this._statsOtherAbilitiesWindow.hide();
+    this.activateWindow(this._commandWindow);
+};
+
 Scene_Status.prototype.onEveryoneStatsCancel = function () {
     this._everyoneStatsWindow.hide();
     this.activateWindow(this._commandWindow);
@@ -176,6 +198,12 @@ Scene_Status.prototype.onNextWindow = function (windowName) {
             this._statsMagicWindow.select(this._statsMagicWindow._lastSelected)
             this._statsMagicWindow.show();
             this.activateWindow(this._statsMagicWindow);
+            break;
+        case Scene_Status.WinOtherAbilities:
+            this._statsOtherAbilitiesWindow.setCategory(this._commandWindow.currentSymbol());
+            this._statsOtherAbilitiesWindow.select(this._statsOtherAbilitiesWindow._lastSelected)
+            this._statsOtherAbilitiesWindow.show();
+            this.activateWindow(this._statsOtherAbilitiesWindow);
             break;
     }
 };
