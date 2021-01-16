@@ -132,17 +132,25 @@ Window_StatsMagic.prototype.drawItem = function (index) {
 
 Window_StatsMagic.prototype.drawMPCostBlock = function (item) {
     let y = this.titleBlockHeight() + this.itemBlockHeight();
+    let cost, requirement;
     this.drawHorzLine(0, y);
     y += this.extraPadding() + 3;
-    let cost = item ? item.mpCost : '-';
+    if (item) {
+        cost = item.mpCost;
+        requirement = item.requiredWtypeId1 ? `${$dataSystem.weaponTypes[item.requiredWtypeId1]} required` : 'No requirements';
+    } else {
+        cost = '-';
+        requirement = '';
+    }
     this.drawText(`MP Cost: ${cost}`, this.extraPadding(), y);
+    this.drawText(requirement, 0, y, this.contentsWidth() - this.extraPadding(), 'right');
 };
 
 Window_StatsMagic.prototype.drawDescriptionBlock = function (item) {
     let y = this.titleBlockHeight() + this.itemBlockHeight() + this.mpCostBlockHeight();
     this.drawHorzLine(0, y);
     y += this.extraPadding() + 3;
-    let desc = item ? item.description : 'No description';
+    let desc = item ? item.description : '-';
     this.drawTextEx(desc, this.extraPadding(), y);
 };
 
