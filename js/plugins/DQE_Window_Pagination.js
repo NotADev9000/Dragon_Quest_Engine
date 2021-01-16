@@ -75,7 +75,7 @@ Window_Pagination.prototype.pageBlockHeight = function () {
 //////////////////////////////
 
 Window_Pagination.prototype.topIndex = function () {
-    return this.maxRows() * (this._page - 1);
+    return this.maxItemsOnPage() * (this._page - 1);
 };
 
 /**
@@ -121,7 +121,7 @@ Window_Pagination.prototype.page = function () {
  */
 Window_Pagination.prototype.numPages = function () {
     return Math.max(1, Math.ceil((this.maxItems() / this.maxRows()) / this.maxCols()));
-}
+};
 
 /**
  * Returns the amount of items displayed on current page
@@ -140,7 +140,7 @@ Window_Pagination.prototype.itemsOnPage = function () {
     } else {
         return maxItemsOnPage;
     }
-}
+};
 
 /**
  * The maximum amount of items that can appear on a single page
@@ -148,7 +148,18 @@ Window_Pagination.prototype.itemsOnPage = function () {
 Window_Pagination.prototype.maxItemsOnPage = function () {
     if (this._maxItemsOnPage != -1) return this._maxItemsOnPage;
     return this.maxRows() * this.maxCols();
-}
+};
+
+/**
+ * returns the next page in the list
+ * loops to top/bottom when the end is reached
+ * 
+ * @param {number} next gets the next page if 1, previous if -1
+ */
+Window_Pagination.prototype.getNextPage = function (next = 1) {
+    let nextPage = this._page + next;
+    return nextPage <= 0 ? this._numPages : nextPage > this._numPages ? 1 : nextPage;
+};
 
 //////////////////////////////
 // Functions - row/column
@@ -253,24 +264,32 @@ Window_Pagination.prototype.cursorUp = function () {
 };
 
 Window_Pagination.prototype.cursorRight = function () {
-    var index = this.index();
-    var maxCols = this.maxCols();
-
-    if (this._numPages >= 2 && maxCols === 1) {
-        var maxItemsOnPage = this.maxItemsOnPage();
-        var notLastPage = this._page != this._numPages;
-        this.select(index % maxItemsOnPage + (maxItemsOnPage * (this._page * notLastPage)));
+    let maxCols = this.maxCols();
+    if (this._numPages > 1 || maxCols > 1) {
+        let nextCol = this.column() + 1;
+        let nextIndex = this.index() + 1;
+        let nextPage = this._page;
+        if (nextCol >= maxCols || nextIndex >= this.maxItems()) { // cursor must loop to leftmost column
+            nextCol = 0;
+            nextPage = this.getNextPage();
+            nextIndex = ((this.row() * maxCols) + nextCol) + ((nextPage - 1) * this.maxItemsOnPage());
+        }
+        this.select(nextIndex);
     }
 };
 
 Window_Pagination.prototype.cursorLeft = function () {
-    var index = this.index();
-    var maxCols = this.maxCols();
-
-    if (this._numPages >= 2 && maxCols === 1) {
-        var maxItemsOnPage = this.maxItemsOnPage();
-        var firstPage = this._page === 1;
-        this.select((index - maxItemsOnPage) + firstPage * (this._numPages * maxItemsOnPage));
+    let maxCols = this.maxCols();
+    if (this._numPages > 1 || maxCols > 1) {
+        let nextCol = this.column() - 1;
+        let nextIndex = this.index() - 1;
+        let nextPage = this._page;
+        if (nextCol < 0) { // cursor must loop to rightmost column
+            nextCol = maxCols - 1;
+            nextPage = this.getNextPage(-1); // get previous page
+            nextIndex = ((this.row() * maxCols) + nextCol) + ((nextPage - 1) * this.maxItemsOnPage());
+        }
+        this.select(nextIndex);
     }
 };
 
