@@ -41,6 +41,7 @@ Window_StatsOtherAbilities.prototype.initialize = function (x, y, width, height)
     this._actor = null;
     this._data = [];
     this._title = 'Other Abilities';
+    this._noData = 'No Abilities!';
 };
 
 //////////////////////////////
@@ -55,16 +56,4 @@ Window_StatsOtherAbilities.prototype.makeItemList = function () {
     this._data = this._actor.skills().filter(function (item) {
         return this.includes(item);
     }, this);
-};
-
-//////////////////////////////
-// Functions - draw items
-//////////////////////////////
-
-Window_StatsOtherAbilities.prototype.drawAllItems = function () {
-    if (!this._data.length) { // if actor has no abilities
-        this.drawText('No Abilities!', 0, this.extraPadding() + this.titleBlockHeight(), this.contentsWidth(), 'center');
-    } else {
-        Window_Pagination.prototype.drawAllItems.call(this);
-    }
 };

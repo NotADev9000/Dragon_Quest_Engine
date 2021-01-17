@@ -41,6 +41,7 @@ Window_StatsMagic.prototype.initialize = function (x, y, width, height) {
     this._actor = null;
     this._data = [];
     this._title = 'Magic';
+    this._noData = 'No Spells!';
 };
 
 //////////////////////////////
@@ -116,17 +117,17 @@ Window_StatsMagic.prototype.maxCols = function () {
 
 Window_StatsMagic.prototype.drawAllItems = function () {
     if (!this._data.length) { // if actor has no spells
-        this.drawText('No Spells!', 0, this.extraPadding() + this.titleBlockHeight(), this.contentsWidth(), 'center');
+        this.drawText(this._noData, 0, this.extraPadding() + this.titleBlockHeight(), this.contentsWidth(), 'center');
     } else {
         Window_Pagination.prototype.drawAllItems.call(this);
     }
 };
 
 Window_StatsMagic.prototype.drawItem = function (index) {
-    var item = this._data[index];
+    let item = this._data[index];
     if (item) {
-        var rect = this.itemRectForText(index);
-        var width = this.contentsWidth() - (this.extraPadding() * 2);
+        let rect = this.itemRectForText(index);
+        let width = this.contentsWidth() - (this.extraPadding() * 2);
         this.drawText(item.name, rect.x, rect.y, width);
     }
 };

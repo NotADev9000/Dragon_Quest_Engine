@@ -113,7 +113,7 @@ Window_StatsAttributes.prototype.drawAttributeBlock = function () {
             text = `${TextManager.param(i)}:`;
         } else {
             let id = i - 7;
-            text = `${TextManager.terms.baseParams[id]}:`;
+            text = `${TextManager.baseparam(id)}:`;
         }
         this.drawText(text, this.extraPadding(), y);
         y += this.itemHeight();

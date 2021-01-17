@@ -30,14 +30,44 @@ DQEng.TextManager = DQEng.TextManager || {};
 
 TextManager.terms = {};
 
-TextManager.terms.baseParams = [
+TextManager.terms.baseparam = [
     "Health",       // HP
     "Magic",        // MP
     "Strength",     // Attack
     "Resilience"    // Defense
 ];
 
-TextManager.terms.sparams = [
+TextManager.terms.xparam = [
+    "Hit Chance",
+    "Evasion Chance",
+    "Critical Rate",
+    "",
+    "",
+    "",
+    "",
+    "HP Regeneration Rate",
+    "MP Regeneration Rate",
+    "",
+    "Block Chance",
+    "Critical Block Chance"
+];
+
+TextManager.terms.xparamDescription = [
+    "",
+    "The chance of evading an incoming attack.",
+    "The chance of an attack landing a critical hit.",
+    "",
+    "",
+    "",
+    "",
+    "The amount of HP regenerated at the end of each turn.\ne.g. 10% -> 10% of maximum HP will be recovered.",
+    "The amount of MP regenerated at the end of each turn.\ne.g. 10% -> 10% of maximum MP will be recovered.",
+    "",
+    "The chance of blocking an incoming physical attack. Not including critical hits.",
+    "The chance of blocking an incoming critical hit."
+];
+
+TextManager.terms.sparam = [
     "Target Rate",
     "Guard Effect",
     "Recovery Effect",
@@ -51,20 +81,50 @@ TextManager.terms.sparams = [
     "Breath Resistance"
 ];
 
-TextManager.terms.xparams = [
-    "Hit chance",
-    "Evasion chance",
-    "Critical chance"
+TextManager.terms.sparamDescription = [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
 ];
 
-TextManager.baseParam = function (paramId) {
-    return TextManager.terms.baseParams[paramId];
+/**
+ * base versions of parameters
+ * 
+ * @param {number} paramId 
+ */
+TextManager.baseparam = function (paramId) {
+    return TextManager.terms.baseparam[paramId];
+};
+
+TextManager.xparam = function (paramId) {
+    return TextManager.terms.xparam[paramId];
+};
+
+TextManager.xparamDescription = function (paramId) {
+    return TextManager.terms.xparamDescription[paramId];
+};
+
+TextManager.sparam = function (paramId) {
+    return TextManager.terms.sparam[paramId];
+};
+
+TextManager.sparamDescription = function (paramId) {
+    return TextManager.terms.sparamDescription[paramId];
 };
 
 TextManager.paramFromBuffID = function (buffId) {
     if (buffId <= 8) return TextManager.param(buffId); // regular param so just call param function
-    let paramType = buffId <= Game_BattlerBase.BUFFLIST_SPARAM_END ? 1 : 2; // is it sparam or xparam?
+    let paramType = buffId <= Game_BattlerBase.BUFFLIST_SPARAM_END ? 2 : 1; // is it sparam or xparam?
     let paramId = Game_BattlerBase.prototype.buffIdToParamId(buffId);
 
-    return paramType === 1 ? TextManager.terms.sparams[paramId] : TextManager.terms.xparams[paramId] ;
+    return paramType === 2 ? TextManager.sparam(paramId) : TextManager.xparam(paramId);
 };

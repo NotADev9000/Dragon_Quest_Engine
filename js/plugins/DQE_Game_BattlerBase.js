@@ -214,6 +214,37 @@ Game_BattlerBase.prototype.sparam = function (sparamId) {
     return this.traitsPi(Game_BattlerBase.TRAIT_SPARAM, sparamId) * this.sparamBuffRate(sparamId);
 };
 
+/**
+ * returns the type and id of parameters that are changed for battler
+ */
+Game_BattlerBase.prototype.changedEffects = function () {
+    let effects = [];
+    // xparam
+    for (let i = 1; i < 11; i++) {
+        if (this.xparam(i) !== 0) effects.push([1, i]);
+    }
+    // sparam
+    for (let i = 0; i < 10; i++) {
+        if (this.sparam(i) !== 1) effects.push([2, i]); 
+    }
+    return effects;
+};
+
+/**
+ * return the values of parameters but in a displayable format
+ * e.g. if battler evasion is 0.05 then this function returns 5 (%)
+ */
+Game_BattlerBase.prototype.displayEffects = function (type, index) {
+    switch (type) {
+        case 1: // xparams
+            return this.xparam(index) * 100;
+        case 2: // sparams
+            return 1 - this.sparam(index);
+        default: // params
+            break;
+    }
+};
+
 //////////////////////////////
 // Functions - traits
 //////////////////////////////

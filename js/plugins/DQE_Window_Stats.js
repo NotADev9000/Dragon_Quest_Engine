@@ -65,7 +65,7 @@ Window_Stats.prototype.drawStats = function () {
             value = this._actor.param(i);
         } else {
             let id = i - 7;
-            text = `${TextManager.terms.baseParams[id]}:`;
+            text = `${TextManager.baseparam(id)}:`;
             value = this._actor.paramBasePermPlus(id);
         }
         this.drawText(text, 0, y);

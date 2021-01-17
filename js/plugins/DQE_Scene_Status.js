@@ -30,6 +30,7 @@ DQEng.Scene_Status = DQEng.Scene_Status || {};
 Scene_Status.WinAttribute = 'Attribute';
 Scene_Status.WinMagic = 'Magic';
 Scene_Status.WinOtherAbilities = 'OtherAbilities';
+Scene_Status.WinEffects = 'Effects';
 
 Scene_Status.prototype.initialize = function () {
     Scene_MenuBase.prototype.initialize.call(this);
@@ -47,6 +48,7 @@ Scene_Status.prototype.create = function () {
     this.createStatsAttributesWindow();
     this.createStatsMagicWindow();
     this.createStatsOtherAbilitiesWindow();
+    this.createStatsEffectsWindow();
     // everyone windows
     this.createEveryoneStatsWindow();
 };
@@ -126,8 +128,21 @@ Scene_Status.prototype.createStatsOtherAbilitiesWindow = function () {
     this._statsOtherAbilitiesWindow.setHandler('sort', this.previousActor.bind(this, this._statsOtherAbilitiesWindow));
     this._statsOtherAbilitiesWindow.setHandler('filter', this.nextActor.bind(this, this._statsOtherAbilitiesWindow));
     this._statsOtherAbilitiesWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinMagic));
+    this._statsOtherAbilitiesWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinEffects));
     this._statsOtherAbilitiesWindow.hide();
     this.addWindow(this._statsOtherAbilitiesWindow);
+};
+
+Scene_Status.prototype.createStatsEffectsWindow = function () {
+    let x = this._commandWindow.x;
+    let y = this._commandWindow.y;
+    this._statsEffectsWindow = new Window_StatsEffects(x, y, 1344, 714);
+    this._statsEffectsWindow.setHandler('cancel', this.onStatsEffectsCancel.bind(this));
+    this._statsEffectsWindow.setHandler('sort', this.previousActor.bind(this, this._statsEffectsWindow));
+    this._statsEffectsWindow.setHandler('filter', this.nextActor.bind(this, this._statsEffectsWindow));
+    this._statsEffectsWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinOtherAbilities));
+    this._statsEffectsWindow.hide();
+    this.addWindow(this._statsEffectsWindow);
 };
 
 // everyone windows
@@ -180,6 +195,13 @@ Scene_Status.prototype.onStatsOtherAbilitiesCancel = function () {
     this.activateWindow(this._commandWindow);
 };
 
+Scene_Status.prototype.onStatsEffectsCancel = function () {
+    this.showCharacterWindows();
+    this._statsEffectsWindow.setLastSelected(this._statsEffectsWindow.index());
+    this._statsEffectsWindow.hide();
+    this.activateWindow(this._commandWindow);
+};
+
 Scene_Status.prototype.onEveryoneStatsCancel = function () {
     this._everyoneStatsWindow.hide();
     this.activateWindow(this._commandWindow);
@@ -204,6 +226,12 @@ Scene_Status.prototype.onNextWindow = function (windowName) {
             this._statsOtherAbilitiesWindow.select(this._statsOtherAbilitiesWindow._lastSelected)
             this._statsOtherAbilitiesWindow.show();
             this.activateWindow(this._statsOtherAbilitiesWindow);
+            break;
+        case Scene_Status.WinEffects:
+            this._statsEffectsWindow.setCategory(this._commandWindow.currentSymbol());
+            this._statsEffectsWindow.select(this._statsEffectsWindow._lastSelected)
+            this._statsEffectsWindow.show();
+            this.activateWindow(this._statsEffectsWindow);
             break;
     }
 };
