@@ -76,7 +76,21 @@ Window_StatsEffects.prototype.drawItem = function (index) {
     let item = this._data[index];
     if (item) {
         // effect name
-        let text = item[0] === 1 ? TextManager.xparam(item[1]) : TextManager.sparam(item[1]);
+        let text; 
+        switch (item[0]) {
+            case 0:
+                // UNIMPLEMENTED
+                break;
+            case 1:
+                text = TextManager.xparam(item[1]);
+                break;
+            case 2:
+                text = TextManager.sparam(item[1]);
+                break;
+            case 3:
+                text = $dataStates[item[1]].meta.resistName;
+                break;
+        }
         let rect = this.itemRectForText(index);
         let width = this.itemWidth();
         this.drawText(text, rect.x, rect.y, width);
@@ -93,7 +107,20 @@ Window_StatsEffects.prototype.drawDescriptionBlock = function () {
     this.drawHorzLine(0, y);
     y += this.extraPadding() + 3;
     if (item) {
-        desc = item[0] === 1 ? TextManager.xparamDescription(item[1]) : TextManager.sparamDescription(item[1]);
+        switch (item[0]) {
+            case 0:
+                // UNIMPLEMENTED
+                break;
+            case 1:
+                desc = TextManager.xparamDescription(item[1]);
+                break;
+            case 2:
+                desc = TextManager.sparamDescription(item[1]);
+                break;
+            case 3:
+                desc = TextManager.stateResistDescription(item[1]);
+                break;
+        }
     }
     this.drawTextEx(desc, this.extraPadding(), y);
 };

@@ -60,8 +60,8 @@ TextManager.terms.xparamDescription = [
     "",
     "",
     "",
-    "The amount of HP regenerated at the end of each turn.\ne.g. 10% -> 10% of maximum HP will be recovered.",
-    "The amount of MP regenerated at the end of each turn.\ne.g. 10% -> 10% of maximum MP will be recovered.",
+    "The amount of HP regenerated at the end of each turn.<BR>e.g. 10% -> 10% of maximum HP will be recovered.",
+    "The amount of MP regenerated at the end of each turn.<BR>e.g. 10% -> 10% of maximum MP will be recovered.",
     "",
     "The chance of blocking an incoming physical attack. Not including critical hits.",
     "The chance of blocking an incoming critical hit."
@@ -88,12 +88,32 @@ TextManager.terms.sparamDescription = [
     "",
     "",
     "",
+    "Resistance against physical attacks.",
+    "Resistance against magical attacks.",
     "",
     "",
     "",
+    "Resistance against breath attacks."
+];
+
+TextManager.terms.stateResistDescription = [
+    "", // ALWAYS EMPTY
+    "The chance of resisting instant death attacks.<BR>e.g. Whack",
     "",
     "",
-    ""
+    "Resistance against being put to sleep.",
+    "Resistance against being paralysed.",
+    "Resistance against being confused.",
+    "Resistance against being Beguiled.",
+    "Resistance against being Dazzled.",
+    "Resistance against spells being sealed.",
+    "Resistance against abilities being sealed.",
+    "Resistance against being poisoned.",
+    "Resistance against being envenomated.",
+    "Resistance against being cursed",
+    "", // CURSE EFFECT
+    "Resistance against laughing uncontrollably.",
+    "Resistance against boogieing."
 ];
 
 /**
@@ -119,6 +139,10 @@ TextManager.sparam = function (paramId) {
 
 TextManager.sparamDescription = function (paramId) {
     return TextManager.terms.sparamDescription[paramId];
+};
+
+TextManager.stateResistDescription = function (stateId) {
+    return TextManager.terms.stateResistDescription[stateId];
 };
 
 TextManager.paramFromBuffID = function (buffId) {

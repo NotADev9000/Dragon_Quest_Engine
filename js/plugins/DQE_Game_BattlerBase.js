@@ -215,17 +215,21 @@ Game_BattlerBase.prototype.sparam = function (sparamId) {
 };
 
 /**
- * returns the type and id of parameters that are changed for battler
+ * returns the type and id of parameters/state rates that are changed for battler
  */
 Game_BattlerBase.prototype.changedEffects = function () {
     let effects = [];
     // xparam
-    for (let i = 1; i < 11; i++) {
+    for (i = 1; i < 11; i++) {
         if (this.xparam(i) !== 0) effects.push([1, i]);
     }
     // sparam
-    for (let i = 0; i < 10; i++) {
+    for (i = 0; i < 10; i++) {
         if (this.sparam(i) !== 1) effects.push([2, i]); 
+    }
+    // state rates
+    for (i = 1; i < $dataStates.length; i++) {
+        if (this.stateRate(i) !== 1) effects.push([3, i]);
     }
     return effects;
 };
@@ -239,7 +243,9 @@ Game_BattlerBase.prototype.displayEffects = function (type, index) {
         case 1: // xparams
             return this.xparam(index) * 100;
         case 2: // sparams
-            return 1 - this.sparam(index);
+            return ((1 - this.sparam(index)) * 100).toFixed(0);
+        case 3: // states
+            return ((1 - this.stateRate(index)) * 100).toFixed(0);
         default: // params
             break;
     }
