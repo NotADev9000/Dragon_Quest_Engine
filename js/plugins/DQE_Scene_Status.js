@@ -102,6 +102,7 @@ Scene_Status.prototype.createStatsAttributesWindow = function () {
     this._statsAttributesWindow.setHandler('cancel', this.onStatsAttributesCancel.bind(this));
     this._statsAttributesWindow.setHandler('sort', this.previousActor.bind(this, this._statsAttributesWindow));
     this._statsAttributesWindow.setHandler('filter', this.nextActor.bind(this, this._statsAttributesWindow));
+    this._statsAttributesWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinEffects));
     this._statsAttributesWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinMagic));
     this._statsAttributesWindow.hide();
     this.addWindow(this._statsAttributesWindow);
@@ -141,6 +142,7 @@ Scene_Status.prototype.createStatsEffectsWindow = function () {
     this._statsEffectsWindow.setHandler('sort', this.previousActor.bind(this, this._statsEffectsWindow));
     this._statsEffectsWindow.setHandler('filter', this.nextActor.bind(this, this._statsEffectsWindow));
     this._statsEffectsWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinOtherAbilities));
+    this._statsEffectsWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinAttribute));
     this._statsEffectsWindow.hide();
     this.addWindow(this._statsEffectsWindow);
 };
