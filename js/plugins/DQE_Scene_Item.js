@@ -7,8 +7,6 @@
 *
 * @author NotADev
 * @plugindesc The scene for the item menu - V0.1
-* TODO: Equipment Details window when cursor is on an equipment piece
-* TODO: Filter and Sort options
 *
 * @help
 * N/A

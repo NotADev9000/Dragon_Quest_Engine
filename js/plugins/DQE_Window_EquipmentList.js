@@ -200,8 +200,9 @@ Window_EquipmentList.prototype.updateHelp = function () {
 
 Window_EquipmentList.prototype.setHelpWindowItem = function (data) {
     if (data) {
-        this._helpWindow[0].setItem(data.item);
-        this._helpWindow[1].setItem(data.equipped, data.heldBy);
+        this._helpWindow[0].setItem(data.item); // equipment description window
+        this._helpWindow[1].setItem(data.equipped, data.heldBy); // equipment location window
+        this._helpWindow[2].setItem(data.item, false, this._slot); // equipment stats window
     }
 };
 

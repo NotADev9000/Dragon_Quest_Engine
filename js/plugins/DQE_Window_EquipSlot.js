@@ -177,7 +177,6 @@ Window_EquipSlot.prototype.drawItem = function (index) {
 
 Window_EquipSlot.prototype.itemRect = function (index) {
     var rect = new Rectangle();
-
     rect.width = this.itemWidth();
     rect.height = this.itemHeight() + this.lineGap();
     rect.x = this.extraPadding();
@@ -187,12 +186,22 @@ Window_EquipSlot.prototype.itemRect = function (index) {
 };
 
 //////////////////////////////
-// Functions - refresh
+// Functions - help windows
 //////////////////////////////
 
 Window_EquipSlot.prototype.updateHelp = function () {
     this.setHelpWindowItem(this.dataItem());
 };
+
+Window_EquipSlot.prototype.setHelpWindowItem = function (item) {
+    this._helpWindow.forEach(helpWindow => {
+        helpWindow.setItem(item, true);
+    });
+};
+
+//////////////////////////////
+// Functions - refresh
+//////////////////////////////
 
 Window_EquipSlot.prototype.refresh = function () {
     if (this._actor && this.contents) {

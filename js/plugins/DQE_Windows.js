@@ -44,7 +44,7 @@ DQEng.Windows = DQEng.Windows || {};
 var parameters = PluginManager.parameters('DQE_Windows');
 DQEng.Parameters = DQEng.Parameters || {};
 DQEng.Parameters.Windows = {};
-DQEng.Parameters.Windows.Base_LineGap = Number(parameters["Base Line Gap"]) || 8;
+DQEng.Parameters.Windows.Base_LineGap = Number(parameters["Base Line Gap"]) || 15;
 DQEng.Parameters.Windows.ChoiceList_LineGap = Number(parameters["Choice Line Gap"]) || 18;
 DQEng.Parameters.Windows.ChoiceList_ChoiceYOffset = Number(parameters["Choice Y Offset"]) || 48;
 DQEng.Parameters.Windows.MaskWindow = Number(parameters["Mask Window Size"]) || 3;
@@ -96,6 +96,18 @@ Window_Base.prototype.deathColor = function () {
 
 Window_Base.prototype.disabledColor = function () {
     return this.textColor(16);
+};
+
+Window_Base.prototype.itemColor = function () {
+    return this.textColor(10);
+};
+
+Window_Base.prototype.powerUpColor = function () {
+    return this.textColor(8);
+};
+
+Window_Base.prototype.powerDownColor = function () {
+    return this.textColor(2);
 };
 
 Window_Base.prototype.extraPadding = function () {

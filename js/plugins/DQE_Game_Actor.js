@@ -488,7 +488,7 @@ Game_Actor.prototype.paramEquips = function (paramId) {
     for (let i = 0; i < equips.length; i++) {
         let item = equips[i];
         if (item) {
-            value += paramId <= 7 ? item.params[paramId] : item.meta.Charm || 0;
+            value += paramId <= 7 ? item.params[paramId] : Number(item.meta.charm) || 0;
         }
     }
     return value;

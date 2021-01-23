@@ -238,15 +238,15 @@ Game_BattlerBase.prototype.changedEffects = function () {
  * return the values of parameters but in a displayable format
  * e.g. if battler evasion is 0.05 then this function returns 5 (%)
  */
-Game_BattlerBase.prototype.displayEffects = function (type, index) {
+Game_BattlerBase.prototype.displayEffects = function (type, id) {
     switch (type) {
         case 1: // xparams
-            return this.xparam(index) * 100;
+            return this.xparam(id) * 100;
         case 2: // sparams
-            return ((1 - this.sparam(index)) * 100).toFixed(0);
+            return ((1 - this.sparam(id)) * 100).toFixed(0);
         case 3: // states
-            return ((1 - this.stateRate(index)) * 100).toFixed(0);
-        default: // params
+            return ((1 - this.stateRate(id)) * 100).toFixed(0);
+        default: // param rates
             break;
     }
 };

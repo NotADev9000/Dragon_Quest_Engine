@@ -35,6 +35,7 @@ Scene_Equip.prototype.create = function () {
     this.createEquipSlotDoWhatWindow();
     this.createEquipItemWindow();
     this.createEquipLocationWindow();
+    this.createEquipStatsWindow();
     this.createMessageWindow();
 };
 
@@ -99,6 +100,17 @@ Scene_Equip.prototype.createEquipLocationWindow = function () {
     this._equipItemWindow.setHelpWindow(this._equipLocationWindow);
 };
 
+Scene_Equip.prototype.createEquipStatsWindow = function () {
+    let x = this._equipSlotWindow.x + this._equipSlotWindow.width;
+    let y = this._equipSlotWindow.y;
+    this._equipStatsWindow = new Window_EquipmentStats(x, y, 420, 450);
+    this._equipStatsWindow.hide();
+    this.addWindow(this._equipStatsWindow);
+    this._commandWindow.setAssociatedWindow(this._equipStatsWindow);
+    this._equipSlotWindow.setHelpWindow(this._equipStatsWindow);
+    this._equipItemWindow.setHelpWindow(this._equipStatsWindow);
+};
+
 /**
  * Always call this window last so it's at front
  */
@@ -114,7 +126,7 @@ Scene_Equip.prototype.createMessageWindow = function () {
 Scene_Equip.prototype.onCommandOk = function () {
     this._commandWindow.showBackgroundDimmer();
     this._equipSlotWindow.select(0);
-    this._equipSlotWindow.showHelpWindow();
+    this._equipSlotWindow.showAllHelpWindows();
     this._equipSlotWindow.activate();
 };
 
@@ -133,7 +145,7 @@ Scene_Equip.prototype.onEquipSlotOk = function () {
 Scene_Equip.prototype.onEquipSlotCancel = function () {
     this._commandWindow.hideBackgroundDimmer();
     this._equipSlotWindow.deselect();
-    this._equipSlotWindow.hideHelpWindow();
+    this._equipSlotWindow.hideAllHelpWindows();
     this._commandWindow.activate();
 };
 

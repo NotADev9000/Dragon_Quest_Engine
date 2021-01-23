@@ -29,5 +29,5 @@ DQEng.Game_Enemy = DQEng.Game_Enemy || {};
 //-----------------------------------------------------------------------------
 
 Game_Enemy.prototype.paramBase = function (paramId) {
-    return paramId <= 7 ? this.enemy().params[paramId] : this.enemy().meta.Charm || 0;
+    return paramId <= 7 ? this.enemy().params[paramId] : this.enemy().meta.charm || 0;
 };
