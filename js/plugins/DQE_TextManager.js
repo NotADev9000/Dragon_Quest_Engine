@@ -67,6 +67,7 @@ TextManager.terms.xparamDescription = [
     "The chance of blocking an incoming critical hit."
 ];
 
+// full sparam names (used in battle)
 TextManager.terms.sparam = [
     "Target Rate",
     "Guard Effect",
@@ -79,6 +80,21 @@ TextManager.terms.sparam = [
     "Floor Damage",
     "Experience Rate",
     "Breath Resistance"
+];
+
+// abbreviated sparam names (used in some UI)
+TextManager.terms.sparamAbbr = [
+    "Target Rate",
+    "Guard Effect",
+    "Recovery Effect",
+    "Pharmacology",
+    "MP Cost",
+    "TP Charge Rate",
+    "Physical Resist",
+    "Spell Resist",
+    "Floor Damage",
+    "Exp Rate",
+    "Breath Resist"
 ];
 
 TextManager.terms.sparamDescription = [
@@ -97,7 +113,7 @@ TextManager.terms.sparamDescription = [
 ];
 
 TextManager.terms.stateResistDescription = [
-    "", // ALWAYS EMPTY
+    "", // <-- ALWAYS EMPTY
     "The chance of resisting instant death attacks.<BR>e.g. Whack",
     "",
     "",
@@ -111,7 +127,7 @@ TextManager.terms.stateResistDescription = [
     "Resistance against being poisoned.",
     "Resistance against being envenomated.",
     "Resistance against being cursed",
-    "", // CURSE EFFECT
+    "", // <-- CURSE EFFECT
     "Resistance against laughing uncontrollably.",
     "Resistance against boogieing."
 ];
@@ -135,6 +151,10 @@ TextManager.xparamDescription = function (paramId) {
 
 TextManager.sparam = function (paramId) {
     return TextManager.terms.sparam[paramId];
+};
+
+TextManager.sparamAbbr = function (paramId) {
+    return TextManager.terms.sparamAbbr[paramId];
 };
 
 TextManager.sparamDescription = function (paramId) {

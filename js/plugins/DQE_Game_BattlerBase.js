@@ -211,7 +211,7 @@ Game_BattlerBase.prototype.sparamBuffRate = function (sparamId) {
 };
 
 Game_BattlerBase.prototype.sparam = function (sparamId) {
-    return this.traitsPi(Game_BattlerBase.TRAIT_SPARAM, sparamId) * this.sparamBuffRate(sparamId);
+    return this.traitsSub(Game_BattlerBase.TRAIT_SPARAM, sparamId) * this.sparamBuffRate(sparamId);
 };
 
 /**
@@ -254,6 +254,12 @@ Game_BattlerBase.prototype.displayEffects = function (type, id) {
 //////////////////////////////
 // Functions - traits
 //////////////////////////////
+
+Game_BattlerBase.prototype.traitsSub = function (code, id) {
+    return this.traitsWithId(code, id).reduce(function (r, trait) {
+        return r - (1 - trait.value);
+    }, 1);
+};
 
 Game_BattlerBase.prototype.allTraits = function () {
     return this.traitObjects().reduce(function (r, obj) {

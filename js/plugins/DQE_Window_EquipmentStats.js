@@ -61,7 +61,7 @@ Window_EquipmentStats.prototype.titleBlockHeight = function () {
 };
 
 Window_EquipmentStats.prototype.numberOfItems = function () {
-    return (this.contentsHeight() - this.titleBlockHeight()) / (this.itemHeight() * 2);
+    return Math.floor((this.contentsHeight() - this.titleBlockHeight()) / (this.itemHeight() * 2));
 };
 
 Window_EquipmentStats.prototype.itemHeight = function () {
@@ -86,7 +86,7 @@ Window_EquipmentStats.prototype.setItem = function (item, equipped, slot) {
     this.refresh();
 };
 
-Window_EquipmentStats.prototype.makeItemStats = function (item) {
+Window_EquipmentStats.prototype.makeItemStats = function (item, equipped = false) {
     stats = [];
     if (item) {
         // default params
@@ -111,32 +111,35 @@ Window_EquipmentStats.prototype.makeItemStats = function (item) {
                 trait.code === Game_BattlerBase.TRAIT_SPARAM
         })).concat(this._actor.metaTraits(item.meta));
     }
+    // equipped check
+    stats.forEach(stat => stat.equipped = equipped);
     return stats;
 };
 
 Window_EquipmentStats.prototype.combineItemStats = function (stats, equippedStats) {
-    let result = [];
-    let dupe;
+    let result = {};
+    let unequipped = [], equipped = [];
+    stats = stats.concat(equippedStats);
     stats.forEach(stat => {
-        // get stat from equipped item that is the same as checked item stat
-        dupe = equippedStats.filter(eStat => {
-            return eStat.code === stat.code && eStat.dataId === stat.dataId;
-        });
-        // get the difference in value for the items stat (stat taken from checked item if equipped item doesn't affect current stat)
-        stat.diff = dupe.length ? stat.value - dupe[0].value : stat.code === Game_BattlerBase.TRAIT_SPARAM ? stat.value - 1 : stat.value;
-        result.push(stat);
-        // remove duplicate stat from equippedStats array (so it's not checked again within this forEach loop)
-        equippedStats = equippedStats.filter(eStat => {
-            return eStat.code !== stat.code || eStat.dataId !== stat.dataId;
-        });
+        let isSparam = stat.code === Game_BattlerBase.TRAIT_SPARAM;
+        let thisStat = `${stat.code}/${stat.dataId}`;
+        if (result[thisStat]) {
+            result[thisStat].diff -= isSparam ? 1 - stat.value : stat.value;
+        } else {
+            result[thisStat] = stat;
+             // init difference value
+            if (result[thisStat].equipped) {
+                result[thisStat].diff = isSparam ? -(1 - stat.value) : -stat.value;
+            } else {
+                result[thisStat].diff = isSparam ? 1 - stat.value : stat.value;
+            }
+        }
     });
-    // any stats remaining in equippedStats will also need to be added
-    equippedStats.forEach(stat => {
-        stat.diff = stat.code === Game_BattlerBase.TRAIT_SPARAM ? 1 - stat.value : -stat.value;
-        stat.value = stat.code === Game_BattlerBase.TRAIT_SPARAM ? 1 : 0;
-        result.push(stat);
-    });
-    return result;
+    for (const [key, value] of Object.entries(result)) {
+        value.equipped ? equipped.push(value) : unequipped.push(value);
+    }
+
+    return unequipped.concat(equipped);
 };
 
 //////////////////////////////
@@ -156,7 +159,18 @@ Window_EquipmentStats.prototype.drawStats = function () {
     if (this._item) {
         let stats = this.makeItemStats(this._item); // stats for the hovered over item (in slot and list windows)
         if (!this._equipped) {
-            let otherStats = this.makeItemStats(JsonEx.makeDeepCopy(this._actor.equips()[this._slot])); // the stats for the current equipped item
+            let replaceEquipment = []; // holds the equipment that would be swapped out
+            if (this._item.meta.twoHand) { // if new item is two-handed then get items in both slots it occupies
+                replaceEquipment.push(JsonEx.makeDeepCopy(this._actor.equips()[0]));
+                replaceEquipment.push(JsonEx.makeDeepCopy(this._actor.equips()[1]));
+            } else { // if new item isn't two-handed then just get the item that would be replaced
+                replaceEquipment.push(JsonEx.makeDeepCopy(this._actor.getItemInSlot(this._slot)));
+            }
+
+            let otherStats = [];
+            replaceEquipment.forEach(equipment => {
+               otherStats = otherStats.concat(this.makeItemStats(equipment, true)); // the stats for the current equipped items
+            });
             stats = this.combineItemStats(stats, otherStats);
         }
         let noItems = Math.min(this.numberOfItems(), stats.length);
@@ -168,22 +182,22 @@ Window_EquipmentStats.prototype.drawStats = function () {
             switch (stats[i].code) {
                 case Game_BattlerBase.TRAIT_PARAM:
                     name = TextManager.param(stats[i].dataId);
-                    value = stats[i].value;
+                    value = stats[i].equipped ? 0 : stats[i].value;
                     actorValue = this._actor.param(stats[i].dataId);
                     if (!this._equipped) actorNewValue = actorValue + stats[i].diff;
                     break;
                 case Game_BattlerBase.TRAIT_XPARAM:
                     name = TextManager.xparam(stats[i].dataId);
-                    value = stats[i].value * 100;
+                    value = stats[i].equipped ? 0 : stats[i].value * 100;
                     actorValue = this._actor.displayEffects(1, stats[i].dataId);
                     if (!this._equipped) actorNewValue = actorValue + (stats[i].diff * 100);
                     percent = '%';
                     break;
                 case Game_BattlerBase.TRAIT_SPARAM:
-                    name = TextManager.sparam(stats[i].dataId);
-                    value = ((1 - stats[i].value) * 100).toFixed(0);
+                    name = TextManager.sparamAbbr(stats[i].dataId);
+                    value = stats[i].equipped ? 0 : ((1 - stats[i].value) * 100).toFixed(0);
                     actorValue = this._actor.displayEffects(2, stats[i].dataId);
-                    if (!this._equipped) actorNewValue = Number(actorValue) - Number((stats[i].diff * 100).toFixed(0));
+                    if (!this._equipped) actorNewValue = Number(actorValue) + Number((stats[i].diff * 100).toFixed(0));
                     percent = '%';
                     break;
             }

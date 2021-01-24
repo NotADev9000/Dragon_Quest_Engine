@@ -1,5 +1,5 @@
 [
 null,
-{"id":1,"animationId":1,"description":"A large sword once wielded by a warrior king.","etypeId":1,"traits":[{"code":31,"dataId":1,"value":0},{"code":23,"dataId":7,"value":0.8}],"iconIndex":0,"name":"Big Sword","note":"<skillId:9>\n<message1: raises the Big Sword!>\n<twoHand:true>\n<traits:xparam blr 0.05> #block 5%\n<charm:10>","params":[0,0,12,0,0,0,0,0],"price":0,"wtypeId":2},
-{"id":2,"animationId":2,"description":"A huge Axe that could cut a mountain in two.","etypeId":1,"traits":[{"code":31,"dataId":1,"value":0}],"iconIndex":0,"name":"Beautiful Axe","note":"","params":[0,5,9,0,0,0,0,0],"price":0,"wtypeId":10}
+{"id":1,"animationId":1,"description":"A large sword once wielded by a warrior king.","etypeId":1,"traits":[{"code":31,"dataId":1,"value":0}],"iconIndex":0,"name":"Big Sword","note":"<skillId:9>\n<message1: raises the Big Sword!>\n<twoHand:true>\n<traits:xparam blr 0.05> #block 5%","params":[0,0,12,0,0,0,0,0],"price":0,"wtypeId":2},
+{"id":2,"animationId":2,"description":"A huge Axe that could cut a mountain in two.","etypeId":1,"traits":[{"code":31,"dataId":1,"value":0}],"iconIndex":0,"name":"Beautiful Axe","note":"<charm:5>","params":[0,0,9,0,0,0,0,0],"price":0,"wtypeId":10}
 ]

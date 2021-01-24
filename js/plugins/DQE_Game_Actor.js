@@ -156,6 +156,27 @@ Game_Actor.prototype.isSecondHand = function (etype, slotId, slot) {
     return false;
 };
 
+/**
+ * retrieves equipped item in certain slot but also takes 2h weapons into consideration
+ * e.g. if slotId === 1 and a two-handed sword is equipped, then return item in slot[0]
+ */
+Game_Actor.prototype.getItemInSlot = function (slotId) {
+    let equip = this.equips()[slotId];
+    if (!equip) { // no equipment in slot
+        let pairedSlotEquip = null;
+        switch (slotId) {
+            case 0:
+                pairedSlotEquip = this.equips()[1];
+                break;
+            case 1:
+                pairedSlotEquip = this.equips()[0];
+                break; 
+        }
+        return pairedSlotEquip?.meta.twoHand ? pairedSlotEquip : null;
+    }
+    return equip;
+};
+
 //////////////////////////////
 // Functions - item queries
 //////////////////////////////
