@@ -310,6 +310,10 @@ Game_BattlerBase.prototype.metaTraits = function (meta) {
 // Functions - states
 //////////////////////////////
 
+Game_BattlerBase.prototype.stateRate = function (stateId) {
+    return this.traitsSub(Game_BattlerBase.TRAIT_STATE_RATE, stateId);
+};
+
 Game_BattlerBase.prototype.isRestricted = function () {
     return this.isAppeared() && this.restriction() > 0 && this.restriction() !== DQEng.Parameters.Game_Action.cursedRestriction;
 };

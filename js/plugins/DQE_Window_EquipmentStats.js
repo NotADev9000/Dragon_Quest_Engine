@@ -121,7 +121,7 @@ Window_EquipmentStats.prototype.combineItemStats = function (stats, equippedStat
     let unequipped = [], equipped = [];
     stats = stats.concat(equippedStats);
     stats.forEach(stat => {
-        let isSparam = stat.code === Game_BattlerBase.TRAIT_SPARAM;
+        let isSparam = stat.code === Game_BattlerBase.TRAIT_SPARAM || stat.code === Game_BattlerBase.TRAIT_STATE_RATE;
         let thisStat = `${stat.code}/${stat.dataId}`;
         if (result[thisStat]) {
             result[thisStat].diff -= isSparam ? 1 - stat.value : stat.value;
@@ -178,27 +178,32 @@ Window_EquipmentStats.prototype.drawStats = function () {
         let y = this.titleBlockHeight() + this.extraPadding();
         for (let i = 0; i < noItems; i++) {
             let name, value, actorValue, actorNewValue;
-            let percent = '';
+            let percent = '%';
             switch (stats[i].code) {
                 case Game_BattlerBase.TRAIT_PARAM:
                     name = TextManager.param(stats[i].dataId);
                     value = stats[i].equipped ? 0 : stats[i].value;
                     actorValue = this._actor.param(stats[i].dataId);
                     if (!this._equipped) actorNewValue = actorValue + stats[i].diff;
+                    percent = '';
                     break;
                 case Game_BattlerBase.TRAIT_XPARAM:
                     name = TextManager.xparam(stats[i].dataId);
                     value = stats[i].equipped ? 0 : stats[i].value * 100;
                     actorValue = this._actor.displayEffects(1, stats[i].dataId);
                     if (!this._equipped) actorNewValue = actorValue + (stats[i].diff * 100);
-                    percent = '%';
                     break;
                 case Game_BattlerBase.TRAIT_SPARAM:
                     name = TextManager.sparamAbbr(stats[i].dataId);
                     value = stats[i].equipped ? 0 : ((1 - stats[i].value) * 100).toFixed(0);
                     actorValue = this._actor.displayEffects(2, stats[i].dataId);
                     if (!this._equipped) actorNewValue = Number(actorValue) + Number((stats[i].diff * 100).toFixed(0));
-                    percent = '%';
+                    break;
+                case Game_BattlerBase.TRAIT_STATE_RATE:
+                    name = $dataStates[stats[i].dataId].meta.resistName;
+                    value = stats[i].equipped ? 0 : ((1 - stats[i].value) * 100).toFixed(0);
+                    actorValue = this._actor.displayEffects(3, stats[i].dataId);
+                    if (!this._equipped) actorNewValue = Number(actorValue) + Number((stats[i].diff * 100).toFixed(0));
                     break;
             }
             let sign = value < 0 ? '' : '+';
