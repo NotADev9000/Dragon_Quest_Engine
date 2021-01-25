@@ -44,6 +44,7 @@ DQEng.Game_Actor.initMembers = Game_Actor.prototype.initMembers;
 Game_Actor.prototype.initMembers = function () {
     DQEng.Game_Actor.initMembers.call(this);
     this._items = [];
+    this._checkSecondHand = true;
 };
 
 /**
@@ -121,7 +122,10 @@ Game_Actor.prototype.releaseUnequippableItems = function (forcing) {
         var changed = false;
         for (var i = 0; i < equips.length; i++) {
             var item = equips[i];
-            if (item && (!this.canEquip(item) || !this.eTypeMatchesSlot(item.etypeId, slots[i]) || this.isSecondHand(item.etypeId, i, slots[i]))) {
+            if (item && (!this.canEquip(item) || 
+                         !this.eTypeMatchesSlot(item.etypeId, slots[i]) || 
+                         (this._checkSecondHand && this.isSecondHand(item.etypeId, i, slots[i]))
+                        )) {
                 this.unequipItem(i, !forcing);
                 changed = true;
             }
@@ -387,6 +391,10 @@ Game_Actor.prototype.removeItemAtIndex = function (index, slot = undefined) {
         }
     }
     this._items.splice(index, 1);
+};
+
+Game_Actor.prototype.setCheckSecondHand = function (check) {
+    this._checkSecondHand = check;
 };
 
 /**

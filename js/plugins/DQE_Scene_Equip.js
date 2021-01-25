@@ -204,6 +204,7 @@ Scene_Equip.prototype.onEquipItemOk = function () {
     if (actor === otherActor) {
         actor.equipItemFromInv(data.index, dataSlotIndex);
     } else {
+        actor.setCheckSecondHand(false);
         // if there's an item to unequip
         if (itemIndex !== null) {
             var swapItem = actor.item(itemIndex);
@@ -221,6 +222,7 @@ Scene_Equip.prototype.onEquipItemOk = function () {
         }
         // give actor item and equip it
         actor.giveItems(data.item, 1);
+        actor.setCheckSecondHand(true);
         actor.equipItemFromInv(actor.numItems() - 1, dataSlotIndex);
         // swap item if needed
         if (swapOut) {
