@@ -75,7 +75,7 @@ Window_EquipmentStats.prototype.itemHeight = function () {
 Window_EquipmentStats.prototype.setCategory = function (category) {
     if (this._category !== category) {
         this._category = category;
-        this._actor = $gameParty.members()[this._category];
+        this._actor = category > -1 ? $gameParty.members()[this._category] : null;
     }
 };
 
@@ -109,7 +109,7 @@ Window_EquipmentStats.prototype.makeItemStats = function (item, equipped = false
                 trait.code === Game_BattlerBase.TRAIT_PARAM ||
                 trait.code === Game_BattlerBase.TRAIT_XPARAM ||
                 trait.code === Game_BattlerBase.TRAIT_SPARAM
-        })).concat(this._actor.metaTraits(item.meta));
+        })).concat(Game_Actor.prototype.metaTraits.call(this, item.meta));
     }
     // equipped check
     stats.forEach(stat => stat.equipped = equipped);
@@ -158,7 +158,7 @@ Window_EquipmentStats.prototype.drawTitle = function () {
 Window_EquipmentStats.prototype.drawStats = function () {
     if (this._item) {
         let stats = this.makeItemStats(this._item); // stats for the hovered over item (in slot and list windows)
-        if (!this._equipped) {
+        if (!this._equipped && this._actor) {
             let replaceEquipment = []; // holds the equipment that would be swapped out
             if (this._item.meta.twoHand) { // if new item is two-handed then get items in both slots it occupies
                 replaceEquipment.push(JsonEx.makeDeepCopy(this._actor.equips()[0]));
@@ -183,27 +183,27 @@ Window_EquipmentStats.prototype.drawStats = function () {
                 case Game_BattlerBase.TRAIT_PARAM:
                     name = TextManager.param(stats[i].dataId);
                     value = stats[i].equipped ? 0 : stats[i].value;
-                    actorValue = this._actor.param(stats[i].dataId);
-                    if (!this._equipped) actorNewValue = actorValue + stats[i].diff;
+                    actorValue = this._actor?.param(stats[i].dataId);
+                    if (!this._equipped && this._actor) actorNewValue = actorValue + stats[i].diff;
                     percent = '';
                     break;
                 case Game_BattlerBase.TRAIT_XPARAM:
                     name = TextManager.xparam(stats[i].dataId);
                     value = stats[i].equipped ? 0 : stats[i].value * 100;
-                    actorValue = this._actor.displayEffects(1, stats[i].dataId);
-                    if (!this._equipped) actorNewValue = actorValue + (stats[i].diff * 100);
+                    actorValue = this._actor?.displayEffects(1, stats[i].dataId);
+                    if (!this._equipped && this._actor) actorNewValue = actorValue + (stats[i].diff * 100);
                     break;
                 case Game_BattlerBase.TRAIT_SPARAM:
                     name = TextManager.sparamAbbr(stats[i].dataId);
                     value = stats[i].equipped ? 0 : ((1 - stats[i].value) * 100).toFixed(0);
-                    actorValue = this._actor.displayEffects(2, stats[i].dataId);
-                    if (!this._equipped) actorNewValue = Number(actorValue) + Number((stats[i].diff * 100).toFixed(0));
+                    actorValue = this._actor?.displayEffects(2, stats[i].dataId);
+                    if (!this._equipped && this._actor) actorNewValue = Number(actorValue) + Number((stats[i].diff * 100).toFixed(0));
                     break;
                 case Game_BattlerBase.TRAIT_STATE_RATE:
                     name = $dataStates[stats[i].dataId].meta.resistName;
                     value = stats[i].equipped ? 0 : ((1 - stats[i].value) * 100).toFixed(0);
-                    actorValue = this._actor.displayEffects(3, stats[i].dataId);
-                    if (!this._equipped) actorNewValue = Number(actorValue) + Number((stats[i].diff * 100).toFixed(0));
+                    actorValue = this._actor?.displayEffects(3, stats[i].dataId);
+                    if (!this._equipped && this._actor) actorNewValue = Number(actorValue) + Number((stats[i].diff * 100).toFixed(0));
                     break;
             }
             let sign = value < 0 ? '' : '+';
@@ -215,7 +215,7 @@ Window_EquipmentStats.prototype.drawStats = function () {
             if (this._equipped) { // the item being looked at is equipped by actor
                 text = `${sign}${value}${percent}(E ${actorValue}${percent})`;
                 this.drawText(text, x, y);
-            } else {
+            } else if (this._actor) {
                 text = `${sign}${value}${percent}(${actorValue}${percent} > `;
                 this.drawText(text, x, y);
                 x += this.contents.measureTextWidth(text);
@@ -228,6 +228,9 @@ Window_EquipmentStats.prototype.drawStats = function () {
                 let text3 = `)`;
                 this.resetTextColor();
                 this.drawText(text3, x, y);
+            } else { // looking in equipment bag
+                text = `${sign}${value}${percent}`;
+                this.drawText(text, x, y);
             }
             x = this.extraPadding();
             y += this.itemHeight();
@@ -240,9 +243,7 @@ Window_EquipmentStats.prototype.drawStats = function () {
 //////////////////////////////
 
 Window_EquipmentStats.prototype.refresh = function () {
-    if (this._actor) {
-        this.contents.clear();
-        this.drawTitle();
-        this.drawStats();
-    }
+    this.contents.clear();
+    this.drawTitle();
+    this.drawStats();
 };

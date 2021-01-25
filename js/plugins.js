@@ -78,6 +78,7 @@ var $plugins =
 {"name":"DQE_Window_ItemCommand","status":true,"description":"The item menu command list - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemListBase","status":true,"description":"The superclass window for displaying items/skills - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemList","status":true,"description":"The window for displaying items - V0.1","parameters":{}},
+{"name":"DQE_Window_ItemList_EquipStat","status":true,"description":"The window for displaying items and shows/hides the equip stat help window - V0.1","parameters":{}},
 {"name":"DQE_Window_EquipmentList","status":true,"description":"The window for displaying equipments - V0.1","parameters":{}},
 {"name":"DQE_Window_SimpleEquipmentList","status":true,"description":"The window for displaying equipments but without selection - V0.1","parameters":{}},
 {"name":"DQE_Window_SkillList","status":true,"description":"The window for displaying skills - V0.1","parameters":{}},
