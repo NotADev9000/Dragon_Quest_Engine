@@ -136,23 +136,23 @@ Window_BattleItem.prototype.updateHelp = function () {
 };
 
 Window_BattleItem.prototype.showBackgroundDimmer = function () {
-    this.showHelpWindowBackgroundDimmer();
+    this.showAllHelpWindowBackgroundDimmers();
     Window_Pagination.prototype.showBackgroundDimmer.call(this);
 };
 
 Window_BattleItem.prototype.hideBackgroundDimmer = function () {
-    this.hideHelpWindowBackgroundDimmer();
+    this.hideAllHelpWindowBackgroundDimmers();
     Window_Pagination.prototype.hideBackgroundDimmer.call(this);
 };
 
 Window_BattleItem.prototype.show = function () {
     this.select(0);
-    this.showHelpWindow();
+    this.showAllHelpWindows();
     Window_Pagination.prototype.show.call(this);
 };
 
 Window_BattleItem.prototype.hide = function () {
-    this.hideHelpWindow();
+    this.hideAllHelpWindows();
     Window_Pagination.prototype.hide.call(this);
 };
 

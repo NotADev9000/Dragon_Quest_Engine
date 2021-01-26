@@ -45,6 +45,7 @@ Scene_Battle.prototype.createAllWindows = function () {
     // equipment windows
     this.createEquipmentHelpWindow();
     this.createEquipmentWindow();
+    this.createEquipStatsWindow();
     this.createEquipmentDoWhatWindow();
     // target windows
     this.createActorWindow();
@@ -150,6 +151,15 @@ Scene_Battle.prototype.createEquipmentWindow = function () {
     this._equipmentWindow.setHandler('ok', this.onEquipmentOk.bind(this));
     this._equipmentWindow.setHandler('cancel', this.onEquipmentCancel.bind(this));
     this.addWindow(this._equipmentWindow);
+};
+
+Scene_Battle.prototype.createEquipStatsWindow = function () {
+    let x = this._equipmentHelpWindow.x;
+    this._equipStatsWindow = new Window_EquipmentStats(x, 0, 672, 450);
+    this._equipStatsWindow.y = this._equipmentHelpWindow.y - this._equipStatsWindow.height;
+    this._equipStatsWindow.hide();
+    this.addWindow(this._equipStatsWindow);
+    this._equipmentWindow.setHelpWindow(this._equipStatsWindow);
 };
 
 Scene_Battle.prototype.createEquipmentDoWhatWindow = function () {
@@ -393,7 +403,7 @@ Scene_Battle.prototype.commandItem = function () {
 
 Scene_Battle.prototype.commandEquipment = function () {
     this._equipmentWindow.setActor(BattleManager.actor());
-    this._equipmentWindow.refresh();
+    this._equipStatsWindow.setActor(BattleManager.actor());
     this._equipmentWindow.show();
     this._equipmentWindow.activate();
     this._enemyWindow.hide();
@@ -514,7 +524,6 @@ Scene_Battle.prototype.onEquipmentOk = function () {
     this._equipmentDoWhatWindow.makeCommandList();
     this._equipmentDoWhatWindow.updateWindowDisplay();
     this._equipmentWindow.showBackgroundDimmer();
-    this._equipmentWindow.showHelpWindowBackgroundDimmer();
     this._equipmentDoWhatWindow.select(0);
     this._equipmentDoWhatWindow.show();
     this._equipmentDoWhatWindow.activate();
@@ -861,7 +870,6 @@ Scene_Battle.prototype.actorCommandDisabledCallback = function () {
 Scene_Battle.prototype.doWhatEquipMessage = function () {
     this._equipmentDoWhatWindow.hide();
     this._equipmentWindow.hideBackgroundDimmer();
-    this._equipmentWindow.hideHelpWindowBackgroundDimmer();
     this._equipmentWindow.refresh();
     this._equipmentWindow.activate();
 };

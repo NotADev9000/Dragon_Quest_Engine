@@ -72,6 +72,20 @@ Window_BattleEquipment.prototype.slotIndex = function () {
     return this._slotData[this.index()];
 };
 
+//////////////////////////////
+// Functions - help windows
+//////////////////////////////
+
+Window_BattleEquipment.prototype.setHelpWindowItem = function (item) {
+    this._helpWindow.forEach(helpWindow => {
+        helpWindow.setItem(item, this.isEquippedItem(this.index()), item.etypeId - 1);
+    });
+};
+
+//////////////////////////////
+// Functions - draw
+//////////////////////////////
+
 Window_BattleEquipment.prototype.drawItem = function (index) {
     var item = this._data[index];
     if (item) {

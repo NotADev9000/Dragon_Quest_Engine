@@ -79,6 +79,13 @@ Window_EquipmentStats.prototype.setCategory = function (category) {
     }
 };
 
+// used in scene_battle
+Window_EquipmentStats.prototype.setActor = function (actor) {
+    if (this._actor !== actor) {
+        this._actor = actor;
+    }
+};
+
 Window_EquipmentStats.prototype.setItem = function (item, equipped, slot) {
     this._item = JsonEx.makeDeepCopy(item);
     this._equipped = equipped;
