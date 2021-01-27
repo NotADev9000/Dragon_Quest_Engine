@@ -93,6 +93,19 @@ Window_EquipmentStats.prototype.setItem = function (item, equipped, slot) {
     this.refresh();
 };
 
+/**
+ * used in scene_battle
+ * 
+ * changes values but not the item property
+ * this will be kept from a previous windows selection
+ * e.g. in battle, the battleEquipment window sets the item and the EquipSlot_Weapons changes these values
+ */
+Window_EquipmentStats.prototype.setEquippedPlusSlot = function (equipped, slot) {
+    this._equipped = equipped;
+    this._slot = slot;
+    this.refresh();
+};
+
 Window_EquipmentStats.prototype.makeItemStats = function (item, equipped = false) {
     stats = [];
     if (item) {

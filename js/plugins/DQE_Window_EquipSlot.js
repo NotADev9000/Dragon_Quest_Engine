@@ -100,7 +100,6 @@ Window_EquipSlot.prototype.orderInInventory = function () {
     let count = 0;
     let order = [];
     this._data.forEach((item, index) => {
-        // let position = item ? item.cloned >= 0 ? item.cloned : index : null;
         if (!item) {
             order.push(null);
         } else if (item.cloned >= 0) {

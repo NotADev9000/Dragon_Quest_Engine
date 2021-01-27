@@ -299,6 +299,14 @@ Game_Actor.prototype.indexIsEquip = function (index) {
     return index < this.numEquips();
 };
 
+/**
+ * Does actor have 2h weapon equipped
+ */
+Game_Actor.prototype.hasTwoHandedEquipped = function () {
+    let e = this.equips();
+    return e[0]?.meta.twoHand || e[1]?.meta.twoHand;
+};
+
 Game_Actor.prototype.getSlotData = function () {
     var slotData = [];
     this._equips.forEach((item, index) => {

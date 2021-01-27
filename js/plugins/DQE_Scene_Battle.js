@@ -47,6 +47,7 @@ Scene_Battle.prototype.createAllWindows = function () {
     this.createEquipmentWindow();
     this.createEquipStatsWindow();
     this.createEquipmentDoWhatWindow();
+    this.createEquipmentSlotWindow();
     // target windows
     this.createActorWindow();
     this.createActorStatWindow();
@@ -163,7 +164,7 @@ Scene_Battle.prototype.createEquipStatsWindow = function () {
 };
 
 Scene_Battle.prototype.createEquipmentDoWhatWindow = function () {
-    let x = this._equipmentWindow.x + this._equipmentWindow._width;
+    let x = this._equipmentWindow.x;
     let y = this._equipmentWindow.y;
     this._equipmentDoWhatWindow = new Window_TitledCommand(x, y, 282, 'Do What?');
     this._equipmentDoWhatWindow.deactivate();
@@ -173,6 +174,17 @@ Scene_Battle.prototype.createEquipmentDoWhatWindow = function () {
     this._equipmentDoWhatWindow.setHandler('Cancel', this.onEquipmentDoWhatCancel.bind(this));
     this._equipmentDoWhatWindow.hide();
     this.addWindow(this._equipmentDoWhatWindow);
+};
+
+Scene_Battle.prototype.createEquipmentSlotWindow = function () {
+    let x = this._equipmentWindow.x;
+    let y = this._equipmentWindow.y;
+    this._equipmentSlotWindow = new Window_EquipSlot_Weapons(x, y, this._equipmentWindow.width, 237);
+    this._equipmentSlotWindow.deactivate();
+    this._equipmentSlotWindow.setHandler('cancel', this.onEquipmentSlotCancel.bind(this));
+    this._equipmentSlotWindow.hide();
+    this._equipmentSlotWindow.setHelpWindow(this._equipStatsWindow);
+    this.addWindow(this._equipmentSlotWindow);
 };
 
 // target windows
@@ -404,6 +416,7 @@ Scene_Battle.prototype.commandItem = function () {
 Scene_Battle.prototype.commandEquipment = function () {
     this._equipmentWindow.setActor(BattleManager.actor());
     this._equipStatsWindow.setActor(BattleManager.actor());
+    this._equipmentSlotWindow.setActor(BattleManager.actor());
     this._equipmentWindow.show();
     this._equipmentWindow.activate();
     this._enemyWindow.hide();
@@ -543,14 +556,27 @@ Scene_Battle.prototype.itemWindowClosed = function () {
 Scene_Battle.prototype.onEquipmentDoWhatEquip = function () {
     var actor = BattleManager.actor();
     var index = this._equipmentWindow._trueIndexes[this._equipmentWindow.index()];
-    var item = this._equipmentWindow.item();
+    var item = this._equipmentWindow.item(); // item requested to equip
 
     if (actor.canEquip(item)) {
-        this.displayMessage(actor.equipItemMessage(index), Scene_Battle.prototype.doWhatEquipMessage);
-        actor.equipItemFromInv(index);
+        if (DataManager.isWeapon(item) &&
+            !(item.meta.twoHand || actor.hasTwoHandedEquipped()) &&
+            (actor.isDualWield() || actor.isAllWield())) { // player needs to select slot to equip item into
+            this._equipmentSlotWindow.select(0);
+            this._equipmentSlotWindow.show();
+            this._equipStatsWindow.hideBackgroundDimmer();
+            this._equipmentSlotWindow.activate();
+        } else { // item is auto equipped into a slot
+            this.equipItem(actor, index);
+        }
     } else {
         this.displayMessage(actor.cantEquipMessage(index), Scene_Battle.prototype.doWhatEquipMessage);
     }
+};
+
+Scene_Battle.prototype.equipItem = function (actor, index) {
+    this.displayMessage(actor.equipItemMessage(index), Scene_Battle.prototype.doWhatEquipMessage);
+    actor.equipItemFromInv(index);
 };
 
 Scene_Battle.prototype.onEquipmentDoWhatUnequip = function () {
@@ -566,6 +592,11 @@ Scene_Battle.prototype.onEquipmentDoWhatCancel = function () {
     this._equipmentWindow.hideBackgroundDimmer();
     this._equipmentDoWhatWindow.hide();
     this._equipmentWindow.activate();
+};
+
+Scene_Battle.prototype.onEquipmentSlotCancel = function () {
+    this._equipmentSlotWindow.hide();
+    this.onEquipmentDoWhatCancel();
 };
 
 Scene_Battle.prototype.onLineUpCommandIndividual = function () {
@@ -805,6 +836,7 @@ DQEng.Scene_Battle.isAnyInputWindowActive = Scene_Battle.prototype.isAnyInputWin
 Scene_Battle.prototype.isAnyInputWindowActive = function () {
     return this._equipmentWindow.active ||
            this._equipmentDoWhatWindow.active ||
+           this._equipmentSlotWindow.active ||
            this._lineUpCommandWindow.active ||
            this._lineUpIndivPartyWindow.active ||
            this._lineUpIndivWithWhoWindow.active ||
@@ -871,6 +903,7 @@ Scene_Battle.prototype.doWhatEquipMessage = function () {
     this._equipmentDoWhatWindow.hide();
     this._equipmentWindow.hideBackgroundDimmer();
     this._equipmentWindow.refresh();
+    this._equipmentSlotWindow.refresh();
     this._equipmentWindow.activate();
 };
 
