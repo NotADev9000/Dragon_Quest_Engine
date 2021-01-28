@@ -181,6 +181,7 @@ Scene_Battle.prototype.createEquipmentSlotWindow = function () {
     let y = this._equipmentWindow.y;
     this._equipmentSlotWindow = new Window_EquipSlot_Weapons(x, y, this._equipmentWindow.width, 237);
     this._equipmentSlotWindow.deactivate();
+    this._equipmentSlotWindow.setHandler('ok', this.onEquipmentSlotOk.bind(this));
     this._equipmentSlotWindow.setHandler('cancel', this.onEquipmentSlotCancel.bind(this));
     this._equipmentSlotWindow.hide();
     this._equipmentSlotWindow.setHelpWindow(this._equipStatsWindow);
@@ -594,6 +595,15 @@ Scene_Battle.prototype.onEquipmentDoWhatCancel = function () {
     this._equipmentWindow.activate();
 };
 
+Scene_Battle.prototype.onEquipmentSlotOk = function () {
+    let actor = BattleManager.actor();
+    let index = this._equipmentWindow._trueIndexes[this._equipmentWindow.index()];
+    let slot = this._equipmentSlotWindow.index();
+
+    this.displayMessage(actor.equipItemMessage(index), Scene_Battle.prototype.doWhatEquipMessage);
+    actor.equipItemFromInv(index, slot);
+};
+
 Scene_Battle.prototype.onEquipmentSlotCancel = function () {
     this._equipmentSlotWindow.hide();
     this.onEquipmentDoWhatCancel();
@@ -901,6 +911,7 @@ Scene_Battle.prototype.actorCommandDisabledCallback = function () {
 
 Scene_Battle.prototype.doWhatEquipMessage = function () {
     this._equipmentDoWhatWindow.hide();
+    this._equipmentSlotWindow.hide();
     this._equipmentWindow.hideBackgroundDimmer();
     this._equipmentWindow.refresh();
     this._equipmentSlotWindow.refresh();
