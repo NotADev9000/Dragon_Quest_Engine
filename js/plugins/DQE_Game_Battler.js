@@ -50,7 +50,7 @@ Game_Battler.prototype.addState = function (stateId) {
         if (!this.isStateAffected(stateId)) { // battler is not already affected by state
             this.addNewState(stateId);
             this.refresh();
-            stateId === this.deathStateId() && $gamePlayer.refresh();
+            stateId === this.deathStateId() && this.isActor() && $gamePlayer.refresh();
             this._result.pushAddedState(stateId);
         } else { // state should be stacked on already existing state
             this._result.pushStackedState(stateId);
@@ -73,7 +73,7 @@ Game_Battler.prototype.removeState = function (stateId) {
         let removeDeath = stateId === this.deathStateId();
         removeDeath && this.revive();
         this.eraseState(stateId);
-        $gamePlayer.refresh();
+        this.isActor() && $gamePlayer.refresh();
         removeDeath && this.refresh();
         this._result.pushRemovedState(stateId);
     }
