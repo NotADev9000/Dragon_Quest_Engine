@@ -39,6 +39,10 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
             case 'GiveActorsItemsSilent':
                 this.giveActorsItems(args[1], args[2], args[3], false);
                 break;
+            case 'SetRestorePoint': // mapId, x, y, direction (2=down, 4=left, 6=right, 8=up)
+                args = args.map(arg => Number(arg));
+                $gameParty.setRestorePoint(args[1], args[2], args[3], args[4]);
+                break;
             default:
                 console.error('INVALID Dragon Quest Engine Command');
         }
@@ -100,4 +104,4 @@ Game_Interpreter.prototype.giveActorsItemsMessage = function (amount, amountGive
     }
 
     $gameMessage.add(message);
-}
+};

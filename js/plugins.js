@@ -12,6 +12,7 @@ var $plugins =
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Input","status":true,"description":"The static class that handles input data from the keyboard and gamepads - V0.1","parameters":{}},
 {"name":"DQE_Misc","status":true,"description":"Misc changes for Dragon Quest Engine - V0.1\r\nTODO: Move changes here into a more suitable file","parameters":{}},
+{"name":"DQE_Game_RestorePoint","status":true,"description":"the game object class for storing restore point data (where player is teleported to upon wipe out) - V0.1","parameters":{"Default Restore Point - Map ID":"2","Default Restore Point - X":"15","Default Restore Point - Y":"11","Default Restore Point - Direction":"8"}},
 {"name":"DQE_Game_Action","status":true,"description":"The The game object class for an Action - V0.1","parameters":{"Nothing Happens Skill ID":"3"}},
 {"name":"DQE_Game_ActionResult","status":true,"description":"The The game object class for an Action Result - V0.1","parameters":{}},
 {"name":"DQE_Game_BattlerBase","status":true,"description":"The superclass of Game_Battler. It mainly contains parameters calculation. - V0.1","parameters":{"Self Stun Skill ID":"18","Stare Skill ID":"19","Whistle Skill ID":"20","Laugh Skill ID":"21","Grin Skill ID":"22"}},

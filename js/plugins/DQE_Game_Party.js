@@ -8,6 +8,9 @@
 * @author NotADev
 * @plugindesc The The game object class for the party - V0.1
 *
+* @param Preferred Member
+* @desc Actor ID of party member who is given priority in certain situations. e.g. revived when party is wiped out, chosen as the leader in cutscenes
+* @default 1
 *
 * @help
 * N/A
@@ -24,9 +27,24 @@ Imported.DQEng_Game_Party = true;
 var DQEng = DQEng || {};
 DQEng.Game_Party = DQEng.Game_Party || {};
 
+var parameters = PluginManager.parameters('DQE_Game_Party');
+DQEng.Parameters = DQEng.Parameters || {};
+DQEng.Parameters.Game_Party = {};
+DQEng.Parameters.Game_Party.PreferredMember = Number(parameters["Preferred Member"]) || 1;
+
 //-----------------------------------------------------------------------------
 // Game_Party
 //-----------------------------------------------------------------------------
+
+DQEng.Game_Party.initialize = Game_Party.prototype.initialize;
+Game_Party.prototype.initialize = function () {
+    DQEng.Game_Party.initialize.call(this);
+    this._restorePoint = new Game_RestorePoint();
+};
+
+//////////////////////////////
+// Functions - items
+//////////////////////////////
 
 Game_Party.prototype.giveItemToActor = function (item, actor, index, amount = 1) {
     actor.giveItems(item, amount, index);
@@ -44,6 +62,10 @@ Game_Party.prototype.giveItemToActorAndEquipMessage = function (item, actor) {
 Game_Party.prototype.giveMultipleItemsToActorMessage = function (item, actor, amount) {
     return `${actor._name} takes ${amount} ${item.name}s from the bag.`;
 };
+
+//////////////////////////////
+// Functions - battle
+//////////////////////////////
 
 Game_Party.prototype.onBattleStart = function () {
     this.allMembers().forEach(function (member) {
@@ -64,6 +86,10 @@ Game_Party.prototype.makeActions = function () {
         member.makeActions();
     });
 };
+
+//////////////////////////////
+// Functions - line-up
+//////////////////////////////
 
 Game_Party.prototype.attemptSwap = function (index1, index2) {
     let frontline = Object.assign([], $gameParty.frontline());
@@ -97,4 +123,32 @@ Game_Party.prototype.swapAll = function (list) {
     });
     this._actors = actorIds;
     $gamePlayer.refresh();
+};
+
+//////////////////////////////
+// Functions - actors
+//////////////////////////////
+
+Game_Party.prototype.revivePreferredMember = function () {
+    let preferId = DQEng.Parameters.Game_Party.PreferredMember;
+    this.allMembers().forEach(actor => {
+        if (actor.actorId() === preferId && actor.isDead()) actor.setHp(1);
+    });
+    $gamePlayer.refresh();
+};
+
+//////////////////////////////
+// Functions - restore point
+//////////////////////////////
+
+Game_Party.prototype.restorePoint = function () {
+    return this._restorePoint;
+};
+
+Game_Party.prototype.setRestorePoint = function (mapId, x, y, dir) {
+    let restorePoint = this.restorePoint();
+    restorePoint.mapId = mapId;
+    restorePoint.x = x;
+    restorePoint.y = y;
+    restorePoint.direction = dir;
 };
