@@ -39,6 +39,7 @@ var $plugins =
 {"name":"DQE_Scene_Equip","status":true,"description":"The scene for the equip menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_Battle","status":true,"description":"The scene for the battle - V0.1","parameters":{}},
 {"name":"DQE_Scene_Status","status":true,"description":"The scene for the status menu - V0.1","parameters":{}},
+{"name":"DQE_Scene_Gameover","status":true,"description":"The scene for gameover; sends player to restore point and takes half off gold - V0.1","parameters":{"Wipe Out Switch":"1"}},
 {"name":"DQE_Spriteset_Battle","status":true,"description":"The sprites used in a battle - V0.1","parameters":{}},
 {"name":"DQE_Sprite_Damage","status":true,"description":"The sprite object class for the Damage - V0.1","parameters":{}},
 {"name":"DQE_Sprite_Battler","status":true,"description":"The sprite object class for the battler - V0.1","parameters":{}},
