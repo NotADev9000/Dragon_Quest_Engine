@@ -29,6 +29,7 @@ DQEng.Scene_Battle = DQEng.Scene_Battle || {};
 //-----------------------------------------------------------------------------
 
 Scene_Battle.prototype.createAllWindows = function () {
+    this._lastActiveWindow = null;
     // text windows 1
     this.createLogWindow();
     // party status
@@ -61,6 +62,8 @@ Scene_Battle.prototype.createAllWindows = function () {
     this.createLineUpGroupListWindow();
     this.createLineUpGroupStatusWindow();
     this.createLineUpGroupConfirmWindow();
+    // ailments/buffs windows
+    this.createAilmentsBuffsWindow();
     // text windows 2
     this.createMessageWindow();
     this.createScrollTextWindow();
@@ -90,6 +93,7 @@ Scene_Battle.prototype.createPartyCommandWindow = function () {
     this._partyCommandWindow.setHandler('Line-Up', this.commandLineUp.bind(this));
     this._partyCommandWindow.setHandler('Escape', this.commandEscape.bind(this));
     this._partyCommandWindow.setHandler('Disabled', this.commandPartyDisabled.bind(this));
+    this.setAilmentsBuffsHandler(this._partyCommandWindow);
     this._partyCommandWindow.deselect();
     this.addWindow(this._partyCommandWindow);
 };
@@ -103,6 +107,7 @@ Scene_Battle.prototype.createActorCommandWindow = function () {
     this._actorCommandWindow.setHandler('Equipment', this.commandEquipment.bind(this));
     this._actorCommandWindow.setHandler('Disabled', this.commandActorDisabled.bind(this));
     this._actorCommandWindow.setHandler('cancel', this.selectPreviousCommand.bind(this));
+    this.setAilmentsBuffsHandler(this._actorCommandWindow);
     this.addWindow(this._actorCommandWindow);
 };
 
@@ -119,6 +124,7 @@ Scene_Battle.prototype.createSkillWindow = function () {
     this._skillWindow.setHelpWindow(this._skillHelpWindow);
     this._skillWindow.setHandler('ok', this.onSkillOk.bind(this));
     this._skillWindow.setHandler('cancel', this.onSkillCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._skillWindow);
     this.addWindow(this._skillWindow);
 };
 
@@ -135,6 +141,7 @@ Scene_Battle.prototype.createItemWindow = function () {
     this._itemWindow.setHelpWindow(this._itemHelpWindow);
     this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
     this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._itemWindow);
     this.addWindow(this._itemWindow);
 };
 
@@ -151,6 +158,7 @@ Scene_Battle.prototype.createEquipmentWindow = function () {
     this._equipmentWindow.setHelpWindow(this._equipmentHelpWindow);
     this._equipmentWindow.setHandler('ok', this.onEquipmentOk.bind(this));
     this._equipmentWindow.setHandler('cancel', this.onEquipmentCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._equipmentWindow);
     this.addWindow(this._equipmentWindow);
 };
 
@@ -172,6 +180,7 @@ Scene_Battle.prototype.createEquipmentDoWhatWindow = function () {
     this._equipmentDoWhatWindow.setHandler('Unequip', this.onEquipmentDoWhatUnequip.bind(this));
     this._equipmentDoWhatWindow.setHandler('cancel', this.onEquipmentDoWhatCancel.bind(this));
     this._equipmentDoWhatWindow.setHandler('Cancel', this.onEquipmentDoWhatCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._equipmentDoWhatWindow);
     this._equipmentDoWhatWindow.hide();
     this.addWindow(this._equipmentDoWhatWindow);
 };
@@ -183,6 +192,7 @@ Scene_Battle.prototype.createEquipmentSlotWindow = function () {
     this._equipmentSlotWindow.deactivate();
     this._equipmentSlotWindow.setHandler('ok', this.onEquipmentSlotOk.bind(this));
     this._equipmentSlotWindow.setHandler('cancel', this.onEquipmentSlotCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._equipmentSlotWindow);
     this._equipmentSlotWindow.hide();
     this._equipmentSlotWindow.setHelpWindow(this._equipStatsWindow);
     this.addWindow(this._equipmentSlotWindow);
@@ -195,6 +205,7 @@ Scene_Battle.prototype.createActorWindow = function () {
     this._actorWindow = new Window_BattleActor(x, 0);
     this._actorWindow.setHandler('ok', this.onActorOk.bind(this));
     this._actorWindow.setHandler('cancel', this.onActorCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._actorWindow);
     this.addWindow(this._actorWindow);
 };
 
@@ -210,6 +221,7 @@ Scene_Battle.prototype.createEnemyWindow = function () {
     this._enemyWindow = new Window_BattleEnemy(0, 0);
     this._enemyWindow.setHandler('ok', this.onEnemyOk.bind(this));
     this._enemyWindow.setHandler('cancel', this.onEnemyCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._enemyWindow);
     this.addWindow(this._enemyWindow);
 };
 
@@ -222,6 +234,7 @@ Scene_Battle.prototype.createLineUpCommandWindow = function () {
     this._lineUpCommandWindow.setHandler('Individual', this.onLineUpCommandIndividual.bind(this));
     this._lineUpCommandWindow.setHandler('Group', this.onLineUpCommandGroup.bind(this));
     this._lineUpCommandWindow.setHandler('cancel', this.onLineUpCommandCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._lineUpCommandWindow);
     this._lineUpCommandWindow.hide();
     this.addWindow(this._lineUpCommandWindow);
 };
@@ -233,6 +246,7 @@ Scene_Battle.prototype.createLineUpIndividualPartyWindow = function () {
     this._lineUpIndivPartyWindow.deactivate();
     this._lineUpIndivPartyWindow.setHandler('ok', this.onLineUpIndivPartyOk.bind(this));
     this._lineUpIndivPartyWindow.setHandler('cancel', this.onLineUpIndivPartyCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._lineUpIndivPartyWindow);
     this._lineUpIndivPartyWindow.hide();
     this.addWindow(this._lineUpIndivPartyWindow);
 };
@@ -244,6 +258,7 @@ Scene_Battle.prototype.createLineUpIndividualWithWhoWindow = function () {
     this._lineUpIndivWithWhoWindow.deactivate();
     this._lineUpIndivWithWhoWindow.setHandler('ok', this.onLineUpIndivWithWhoOk.bind(this));
     this._lineUpIndivWithWhoWindow.setHandler('cancel', this.onLineUpIndivWithWhoCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._lineUpIndivWithWhoWindow);
     this._lineUpIndivWithWhoWindow.hide();
     this.addWindow(this._lineUpIndivWithWhoWindow);
 };
@@ -264,6 +279,7 @@ Scene_Battle.prototype.createLineUpGroupPartyWindow = function () {
     this._lineUpGroupPartyWindow.deactivate();
     this._lineUpGroupPartyWindow.setHandler('ok', this.onLineUpGroupPartyOk.bind(this));
     this._lineUpGroupPartyWindow.setHandler('cancel', this.onLineUpGroupPartyCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._lineUpGroupPartyWindow);
     this._lineUpGroupPartyWindow.hide();
     this.addWindow(this._lineUpGroupPartyWindow);
 };
@@ -294,11 +310,26 @@ Scene_Battle.prototype.createLineUpGroupConfirmWindow = function () {
     this._lineUpGroupConfirmWindow.setHandler('Confirm', this.onLineUpGroupConfirmOk.bind(this));
     this._lineUpGroupConfirmWindow.setHandler('Cancel', this.onLineUpGroupConfirmCancel.bind(this));
     this._lineUpGroupConfirmWindow.setHandler('cancel', this.onLineUpGroupConfirmCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._lineUpGroupConfirmWindow);
     this._lineUpGroupConfirmWindow.deactivate();
     this._lineUpGroupConfirmWindow.hide();
     this.addWindow(this._lineUpGroupConfirmWindow);
 };
 
+// ailments/buffs windows
+
+Scene_Battle.prototype.createAilmentsBuffsWindow = function () {
+    let x = 144;
+    let y = this._statusWindow[0].y + this._statusWindow[0].height;
+    this._ailmentsBuffsWindow = new Window_AilmentsBuffs(x, y, 1152, 618);
+    this._ailmentsBuffsWindow.setHandler('sort', this.onCloseAilmentsBuffsWindow.bind(this));
+    this._ailmentsBuffsWindow.hide();
+    this.addWindow(this._ailmentsBuffsWindow);
+};
+
+Scene_Battle.prototype.setAilmentsBuffsHandler = function (window) {
+    window.setHandler('sort', this.onOpenAilmentsBuffsWindow.bind(this, window));
+};
 
 // text windows 2
 
@@ -742,6 +773,20 @@ Scene_Battle.prototype.onLineUpGroupConfirmCancel = function () {
     this._lineUpGroupStatusWindow.show();
 };
 
+Scene_Battle.prototype.onOpenAilmentsBuffsWindow = function (window) {
+    this._lastActiveWindow = window;
+    window.deactivate();
+    this._ailmentsBuffsWindow.setCategory(0);
+    this._ailmentsBuffsWindow.show();
+    this._ailmentsBuffsWindow.activate();
+};
+
+Scene_Battle.prototype.onCloseAilmentsBuffsWindow = function () {
+    this._ailmentsBuffsWindow.hide();
+    this._ailmentsBuffsWindow.deactivate();
+    this._lastActiveWindow.activate();
+};
+
 //////////////////////////////
 // Functions - change input
 //////////////////////////////
@@ -852,6 +897,7 @@ Scene_Battle.prototype.isAnyInputWindowActive = function () {
            this._lineUpIndivWithWhoWindow.active ||
            this._lineUpGroupPartyWindow.active ||
            this._lineUpGroupConfirmWindow.active ||
+           this._ailmentsBuffsWindow.active || 
            DQEng.Scene_Battle.isAnyInputWindowActive.call(this);
 }
 

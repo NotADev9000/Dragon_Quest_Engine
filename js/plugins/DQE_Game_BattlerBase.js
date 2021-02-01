@@ -450,6 +450,7 @@ Game_BattlerBase.prototype.sparamIdToBuffId = function (sparamId) {
  * @param {number} buffId index in _buffs array
  */
 Game_BattlerBase.prototype.buffIdToParamId = function (buffId) {
+    if (buffId <= Game_BattlerBase.BUFFLIST_PARAM_END) return buffId;
     switch (buffId) {
         case Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG:
             return 6;
@@ -457,5 +458,20 @@ Game_BattlerBase.prototype.buffIdToParamId = function (buffId) {
             return 7;
         case Game_BattlerBase.BUFFLIST_SPARAM_BREDMG:
             return Game_BattlerBase.POS_SPARAM_BREDMG;
+    }
+};
+
+/**
+ * Takes the given buffId and returns the type of param
+ * 
+ * @param {number} buffId index in _buffs array
+ */
+Game_BattlerBase.prototype.buffIdToParamType = function (buffId) {
+    if (buffId <= Game_BattlerBase.BUFFLIST_PARAM_END) {
+        return Game_BattlerBase.TRAIT_PARAM;
+    } else if (buffId <= Game_BattlerBase.BUFFLIST_SPARAM_END) {
+        return Game_BattlerBase.TRAIT_SPARAM;
+    } else {
+        return Game_BattlerBase.TRAIT_XPARAM;
     }
 };

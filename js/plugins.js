@@ -99,6 +99,7 @@ var $plugins =
 {"name":"DQE_Window_BattleItemHelp","status":true,"description":"The window for displaying the skill description/cost - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleLog","status":true,"description":"The window for displaying battle progress - V0.1","parameters":{}},
 {"name":"DQE_Window_CustomCommand","status":true,"description":"Window for selecting some commands passed as parameters on initialization - V0.1","parameters":{}},
+{"name":"DQE_Window_AilmentsBuffs","status":true,"description":"A window breaking down a battlers ailments & buffs - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}}
 ];

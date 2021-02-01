@@ -166,9 +166,14 @@ TextManager.stateResistDescription = function (stateId) {
 };
 
 TextManager.paramFromBuffID = function (buffId) {
-    if (buffId <= 8) return TextManager.param(buffId); // regular param so just call param function
-    let paramType = buffId <= Game_BattlerBase.BUFFLIST_SPARAM_END ? 2 : 1; // is it sparam or xparam?
+    let paramType = Game_BattlerBase.prototype.buffIdToParamType(buffId);
     let paramId = Game_BattlerBase.prototype.buffIdToParamId(buffId);
-
-    return paramType === 2 ? TextManager.sparam(paramId) : TextManager.xparam(paramId);
+    switch (paramType) {
+        case Game_BattlerBase.TRAIT_PARAM:
+            return TextManager.param(paramId);
+        case Game_BattlerBase.TRAIT_SPARAM:
+            return TextManager.sparam(paramId);
+        case Game_BattlerBase.TRAIT_XPARAM:
+            return TextManager.xparam(paramId);
+    }
 };
