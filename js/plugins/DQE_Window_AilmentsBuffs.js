@@ -79,7 +79,7 @@ Window_AilmentsBuffs.prototype.titleBlockHeight = function () {
 //////////////////////////////
 
 Window_AilmentsBuffs.prototype.battlerData = function () {
-    return BattleManager.allBattleMembers().concat($gameParty.backline());
+    return BattleManager.allBattleMembers();
 };
 
 Window_AilmentsBuffs.prototype.setCategory = function (category) {
@@ -88,6 +88,25 @@ Window_AilmentsBuffs.prototype.setCategory = function (category) {
         this._battler = this._data[this._category];
     }
     this.refresh();
+};
+
+Window_AilmentsBuffs.prototype.nextBattler = function (forward) {
+    this.activate(); // so pressing pgdwn/pgup doesn't deactivate window
+    let nextCat = this._category;
+    if (forward) { // next battler
+        if (nextCat >= (this._data.length - 1)) {
+            nextCat = 0;
+        } else {
+            nextCat++;
+        }
+    } else { // previous battler
+        if (nextCat <= 0) {
+            nextCat = this._data.length - 1;
+        } else {
+            nextCat--;
+        }
+    }
+    this.setCategory(nextCat); 
 };
 
 Window_AilmentsBuffs.prototype.updateCursor = function () {

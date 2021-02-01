@@ -323,6 +323,8 @@ Scene_Battle.prototype.createAilmentsBuffsWindow = function () {
     let y = this._statusWindow[0].y + this._statusWindow[0].height;
     this._ailmentsBuffsWindow = new Window_AilmentsBuffs(x, y, 1152, 618);
     this._ailmentsBuffsWindow.setHandler('sort', this.onCloseAilmentsBuffsWindow.bind(this));
+    this._ailmentsBuffsWindow.setHandler('pagedown', this._ailmentsBuffsWindow.nextBattler.bind(this._ailmentsBuffsWindow, false));
+    this._ailmentsBuffsWindow.setHandler('pageup', this._ailmentsBuffsWindow.nextBattler.bind(this._ailmentsBuffsWindow, true));
     this._ailmentsBuffsWindow.hide();
     this.addWindow(this._ailmentsBuffsWindow);
 };
