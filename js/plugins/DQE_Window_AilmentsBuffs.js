@@ -126,7 +126,7 @@ Window_AilmentsBuffs.prototype.drawAilmentsBuffs = function () {
     let numBuffs = battler.buffLength(); // how many buffs in the game NOT how many buffs battler has
     let text, value;
     // buffs
-    for (let i = 0; i < numBuffs; i++) {
+    for (var i = 0; i < numBuffs; i++) {
         x = ep + (itemDiff * (i%2));
         y = yZero + (itemHeight * Math.floor(i/2));
 
@@ -140,6 +140,17 @@ Window_AilmentsBuffs.prototype.drawAilmentsBuffs = function () {
         this.resetTextColor();
     }
     // ailments
+    battler.states().forEach(state => {
+        if (state.priority > 0) {
+            x = ep + (itemDiff * (i % 2));
+            y = yZero + (itemHeight * Math.floor(i / 2));
+            
+            this.changeTextColor(this.textColor(state.meta.color));
+            this.drawText(state.name, x, y);
+            this.resetTextColor();
+            i++;
+        }
+    });
 };
 
 //////////////////////////////

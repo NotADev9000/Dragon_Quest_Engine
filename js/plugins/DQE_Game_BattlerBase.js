@@ -310,6 +310,10 @@ Game_BattlerBase.prototype.metaTraits = function (meta) {
 // Functions - states
 //////////////////////////////
 
+Game_BattlerBase.prototype.numStates = function () {
+    return this._states.length;
+};
+
 Game_BattlerBase.prototype.stateRate = function (stateId) {
     return this.traitsSub(Game_BattlerBase.TRAIT_STATE_RATE, stateId);
 };
