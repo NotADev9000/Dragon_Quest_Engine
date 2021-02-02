@@ -52,7 +52,7 @@ Window_PartyCommand.prototype.lineGap = function () {
 
 Window_PartyCommand.prototype.makeCommandList = function () {
     this.addCommand(TextManager.fight, 'Fight');
-    this.addCommand('Misc.', 'Misc.');
+    this.addCommand('Misc.', 'Misc');
     this.addCommand('Line-Up', 'Line-Up');
     this.addCommand(TextManager.escape, 'Escape', BattleManager.canEscape());
 };

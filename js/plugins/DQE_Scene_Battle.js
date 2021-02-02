@@ -62,6 +62,8 @@ Scene_Battle.prototype.createAllWindows = function () {
     this.createLineUpGroupListWindow();
     this.createLineUpGroupStatusWindow();
     this.createLineUpGroupConfirmWindow();
+    // misc. windows
+    this.createMiscWindow();
     // ailments/buffs windows
     this.createAilmentsBuffsWindow();
     // text windows 2
@@ -91,6 +93,7 @@ Scene_Battle.prototype.createPartyCommandWindow = function () {
     this._partyCommandWindow = new Window_PartyCommand(144, 621);
     this._partyCommandWindow.setHandler('Fight', this.commandFight.bind(this));
     this._partyCommandWindow.setHandler('Line-Up', this.commandLineUp.bind(this));
+    this._partyCommandWindow.setHandler('Misc', this.commandMisc.bind(this));
     this._partyCommandWindow.setHandler('Escape', this.commandEscape.bind(this));
     this._partyCommandWindow.setHandler('Disabled', this.commandPartyDisabled.bind(this));
     this.setAilmentsBuffsHandler(this._partyCommandWindow);
@@ -316,6 +319,19 @@ Scene_Battle.prototype.createLineUpGroupConfirmWindow = function () {
     this.addWindow(this._lineUpGroupConfirmWindow);
 };
 
+// misc windows
+
+Scene_Battle.prototype.createMiscWindow = function () {
+    let x = this._partyCommandWindow.x + this._partyCommandWindow.width;
+    let y = this._partyCommandWindow.y;
+    this._miscWindow = new Window_BattleSettings(x, y, this._enemyWindow.width);
+    this._miscWindow.setHandler('cancel', this.onMiscCancel.bind(this));
+    this.setAilmentsBuffsHandler(this._miscWindow);
+    this._miscWindow.deactivate();
+    this._miscWindow.hide();
+    this.addWindow(this._miscWindow);
+};
+
 // ailments/buffs windows
 
 Scene_Battle.prototype.createAilmentsBuffsWindow = function () {
@@ -406,6 +422,13 @@ Scene_Battle.prototype.showActorWindow = function (pos) {
 //////////////////////////////
 // Functions - command handlers
 //////////////////////////////
+
+Scene_Battle.prototype.commandMisc = function () {
+    this._miscWindow.select(0);
+    this._miscWindow.show();
+    this._partyCommandWindow.showBackgroundDimmer();
+    this._miscWindow.activate();
+};
 
 Scene_Battle.prototype.commandLineUp = function () {
     this._lineUpCommandWindow.select(0);
@@ -789,6 +812,13 @@ Scene_Battle.prototype.onCloseAilmentsBuffsWindow = function () {
     this._lastActiveWindow.activate();
 };
 
+Scene_Battle.prototype.onMiscCancel = function () {
+    ConfigManager.save();
+    this._miscWindow.hide();
+    this._partyCommandWindow.hideBackgroundDimmer();
+    this._partyCommandWindow.activate();
+};
+
 //////////////////////////////
 // Functions - change input
 //////////////////////////////
@@ -900,6 +930,7 @@ Scene_Battle.prototype.isAnyInputWindowActive = function () {
            this._lineUpGroupPartyWindow.active ||
            this._lineUpGroupConfirmWindow.active ||
            this._ailmentsBuffsWindow.active || 
+           this._miscWindow.active || 
            DQEng.Scene_Battle.isAnyInputWindowActive.call(this);
 }
 
