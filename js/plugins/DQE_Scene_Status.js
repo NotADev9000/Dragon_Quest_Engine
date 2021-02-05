@@ -36,6 +36,7 @@ Scene_Status.prototype.initialize = function () {
     Scene_MenuBase.prototype.initialize.call(this);
     this._category = 0;
     this._activeWindow = null;
+    this._windowsCreated = false; // have all windows in scene been created?
 };
 
 Scene_Status.prototype.create = function () {
@@ -51,6 +52,8 @@ Scene_Status.prototype.create = function () {
     this.createStatsEffectsWindow();
     // everyone windows
     this.createEveryoneStatsWindow();
+    // set windows created
+    this._windowsCreated = true;
 };
 
 Scene_Status.prototype.start = function () {
@@ -62,7 +65,7 @@ Scene_Status.prototype.start = function () {
 //////////////////////////////
 
 Scene_Status.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_TitledPartyCommand(48, 48, 354, TextManager.status, ['Everyone'], [], undefined, Scene_Status.prototype.setCategory);
+    this._commandWindow = new Window_TitledPartyCommand(48, 48, 354, TextManager.status, ['Everyone'], Scene_Status.prototype.setCategory);
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this._activeWindow = this._commandWindow;
@@ -280,7 +283,7 @@ Scene_Status.prototype.activateWindow = function (window) {
 //////////////////////////////
 
 Scene_Status.prototype.setCategory = function (category) {
-    if (!(Number.isInteger(category) && Number.isInteger(this._category)) && this._category !== category) {
+    if (this._windowsCreated) {
         this._category = category;
         this.changeMode();
     }

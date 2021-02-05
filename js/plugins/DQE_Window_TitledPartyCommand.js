@@ -43,12 +43,11 @@ Window_TitledPartyCommand.prototype.constructor = Window_TitledPartyCommand;
  * @param {String} commandType which set of actors should be included in the list
  * @param {function} updateExtra the function to be called when an EXTRA command is currently selected
  */
-Window_TitledPartyCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands, excludeActors = [], commandType, updateExtra) {
+Window_TitledPartyCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands, selectCallback, excludeActors = [], commandType) {
     this._excludeActors = excludeActors;
     this._commandType = commandType;
-    this._updateExtra = updateExtra;
     this._associatedWindow = [];
-    Window_TitledCommand.prototype.initialize.call(this, x, y, windowWidth, menuTitle, commands);
+    Window_TitledCommand.prototype.initialize.call(this, x, y, windowWidth, menuTitle, commands, selectCallback);
 };
 
 //////////////////////////////
@@ -103,8 +102,5 @@ Window_TitledPartyCommand.prototype.update = function () {
         this._associatedWindow.forEach(window => {
             window.setCategory(this.currentSymbol());
         });
-    }
-    if (this._updateExtra) {
-        this._updateExtra.call(SceneManager._scene, this.currentSymbol());
     }
 };

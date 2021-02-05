@@ -29,6 +29,18 @@ DQEng.Config_Manager = DQEng.Config_Manager || {};
 
 ConfigManager.battleTextSpeed = 3; // 1 = very slow, 2 = slow, 3 = medium, 4 = fast, 5 = very fast
 
+// BGM Volume = ME Volume
+Object.defineProperty(ConfigManager, 'bgmVolume', {
+    get: function () {
+        return AudioManager._bgmVolume;
+    },
+    set: function (value) {
+        AudioManager.bgmVolume = value;
+        AudioManager.meVolume = value;
+    },
+    configurable: true
+});
+
 ConfigManager.makeData = function () {
     var config = {};
     config.alwaysDash = this.alwaysDash;

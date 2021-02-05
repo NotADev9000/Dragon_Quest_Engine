@@ -257,7 +257,7 @@ Scene_Battle.prototype.createLineUpIndividualPartyWindow = function () {
 Scene_Battle.prototype.createLineUpIndividualWithWhoWindow = function () {
     let x = this._lineUpIndivPartyWindow.x + this._lineUpIndivPartyWindow.windowWidth();
     let y = this._lineUpIndivPartyWindow.y - 54;
-    this._lineUpIndivWithWhoWindow = new Window_TitledPartyCommand(x, y, 354, 'With Who?', undefined, [], 'backline');
+    this._lineUpIndivWithWhoWindow = new Window_TitledPartyCommand(x, y, 354, 'With Who?', undefined, undefined, [], 'backline');
     this._lineUpIndivWithWhoWindow.deactivate();
     this._lineUpIndivWithWhoWindow.setHandler('ok', this.onLineUpIndivWithWhoOk.bind(this));
     this._lineUpIndivWithWhoWindow.setHandler('cancel', this.onLineUpIndivWithWhoCancel.bind(this));
@@ -324,7 +324,7 @@ Scene_Battle.prototype.createLineUpGroupConfirmWindow = function () {
 Scene_Battle.prototype.createMiscWindow = function () {
     let x = this._partyCommandWindow.x + this._partyCommandWindow.width;
     let y = this._partyCommandWindow.y;
-    this._miscWindow = new Window_BattleSettings(x, y, this._enemyWindow.width);
+    this._miscWindow = new Window_SettingsBattle(x, y, this._enemyWindow.width);
     this._miscWindow.setHandler('cancel', this.onMiscCancel.bind(this));
     this.setAilmentsBuffsHandler(this._miscWindow);
     this._miscWindow.deactivate();

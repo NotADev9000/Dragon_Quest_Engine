@@ -40,11 +40,13 @@ Window_TitledCommand.prototype.constructor = Window_TitledCommand;
 /**
  * @param {String} menuTitle the displayed title of the window
  * @param {Array} commands commands that will be displayed below the title
+ * @param {Function} selectCallback function to call when the select function is called (when player moves cursor)
  */
-Window_TitledCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands = []) {
+Window_TitledCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands = [], selectCallback) {
     this._width = windowWidth;
     this._menuTitle = menuTitle;
     this._commands = commands;
+    this._selectCallback = selectCallback;
     Window_Command.prototype.initialize.call(this, x, y);
 };
 
@@ -93,10 +95,6 @@ Window_TitledCommand.prototype.extraPadding = function () {
     return 15;
 };
 
-Window_TitledCommand.prototype.lineGap = function () {
-    return 15;
-};
-
 //////////////////////////////
 // Functions - commands
 //////////////////////////////
@@ -134,6 +132,15 @@ Window_TitledCommand.prototype.itemRect = function (index) {
     rect.x += this.extraPadding();
     rect.y += this.extraPadding() + this.titleBlockHeight();
     return rect;
+};
+
+//////////////////////////////
+// Functions - cursor movement
+//////////////////////////////
+
+Window_TitledCommand.prototype.select = function (index) {
+    Window_Command.prototype.select.call(this, index);
+    if (this._selectCallback) this._selectCallback.call(SceneManager._scene, this.currentSymbol());
 };
 
 //////////////////////////////

@@ -40,6 +40,7 @@ var $plugins =
 {"name":"DQE_Scene_Equip","status":true,"description":"The scene for the equip menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_Battle","status":true,"description":"The scene for the battle - V0.1","parameters":{}},
 {"name":"DQE_Scene_Status","status":true,"description":"The scene for the status menu - V0.1","parameters":{}},
+{"name":"DQE_Scene_Settings","status":true,"description":"The scene for the settings menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_Gameover","status":true,"description":"The scene for gameover; sends player to restore point and takes half off gold - V0.1","parameters":{"Wipe Out Switch":"1"}},
 {"name":"DQE_Spriteset_Battle","status":true,"description":"The sprites used in a battle - V0.1","parameters":{}},
 {"name":"DQE_Sprite_Damage","status":true,"description":"The sprite object class for the Damage - V0.1","parameters":{}},
@@ -92,7 +93,6 @@ var $plugins =
 {"name":"DQE_Window_EquipSlot_Weapons","status":true,"description":"The window for selecting actor's equipment (displays weapons only) - V0.1","parameters":{}},
 {"name":"DQE_Window_EquipmentStats","status":true,"description":"The window for displaying equipment stats - V0.1","parameters":{}},
 {"name":"DQE_Window_EveryoneStats","status":true,"description":"The window for displaying everyone's stats - V0.1","parameters":{}},
-{"name":"DQE_Window_BattleSettings","status":true,"description":"A window for changing battle settings - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleSkill","status":true,"description":"The window that displays skills to use in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleItem","status":true,"description":"The window that displays skills to use in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleEquipment","status":true,"description":"The window that displays equipment to equip in battle - V0.1","parameters":{}},
@@ -102,6 +102,12 @@ var $plugins =
 {"name":"DQE_Window_BattleLog","status":true,"description":"The window for displaying battle progress - V0.1","parameters":{}},
 {"name":"DQE_Window_CustomCommand","status":true,"description":"Window for selecting some commands passed as parameters on initialization - V0.1","parameters":{}},
 {"name":"DQE_Window_AilmentsBuffs","status":true,"description":"A window breaking down a battlers ailments & buffs - V0.1","parameters":{}},
+{"name":"DQE_Window_Settings","status":true,"description":"The parent window for various settings windows - V0.1","parameters":{}},
+{"name":"DQE_Window_SettingsBattle","status":true,"description":"A window for changing battle settings - V0.1","parameters":{}},
+{"name":"DQE_Window_SettingsAudio","status":true,"description":"A window for changing audio settings - V0.1","parameters":{}},
+{"name":"DQE_Window_SettingsText","status":true,"description":"A window for changing text settings - V0.1","parameters":{}},
+{"name":"DQE_Window_SettingsWindow","status":true,"description":"A window for changing window settings - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
-{"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}}
+{"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}},
+{"name":"YEP_CoreEngine","status":false,"description":"v1.32 Needed for the majority of Yanfly Engine Scripts. Also\r\ncontains bug fixes found inherently in RPG Maker.","parameters":{"---Screen---":"","Screen Width":"816","Screen Height":"624","Scale Battlebacks":"true","Scale Title":"true","Scale Game Over":"true","Open Console":"false","Reposition Battlers":"true","GameFont Load Timer":"0","Update Real Scale":"true","Collection Clear":"true","---Gold---":"","Gold Max":"99999999","Gold Font Size":"20","Gold Icon":"313","Gold Overlap":"A lotta","---Items---":"","Default Max":"99","Quantity Text Size":"20","---Parameters---":"","Max Level":"99","Actor MaxHP":"9999","Actor MaxMP":"9999","Actor Parameter":"999","Enemy MaxHP":"999999","Enemy MaxMP":"9999","Enemy Parameter":"999","---Battle---":"","Animation Rate":"4","Flash Target":"false","Show Events Transition":"true","Show Events Snapshot":"true","---Map Optimization---":"","Refresh Update HP":"true","Refresh Update MP":"true","Refresh Update TP":"false","---Font---":"","Chinese Font":"SimHei, Heiti TC, sans-serif","Korean Font":"Dotum, AppleGothic, sans-serif","Default Font":"GameFont, Verdana, Arial, Courier New","Font Size":"28","Text Align":"left","---Windows---":"","Digit Grouping":"true","Line Height":"36","Icon Width":"32","Icon Height":"32","Face Width":"144","Face Height":"144","Window Padding":"18","Text Padding":"6","Window Opacity":"192","Gauge Outline":"true","Gauge Height":"18","Menu TP Bar":"true","---Window Colors---":"","Color: Normal":"0","Color: System":"16","Color: Crisis":"17","Color: Death":"18","Color: Gauge Back":"19","Color: HP Gauge 1":"20","Color: HP Gauge 2":"21","Color: MP Gauge 1":"22","Color: MP Gauge 2":"23","Color: MP Cost":"23","Color: Power Up":"24","Color: Power Down":"25","Color: TP Gauge 1":"28","Color: TP Gauge 2":"29","Color: TP Cost Color":"29"}}
 ];
