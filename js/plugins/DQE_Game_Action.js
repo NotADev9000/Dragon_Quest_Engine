@@ -260,9 +260,14 @@ Game_Action.prototype.baseEva = function (agility) {
  * crit rate is returned where 1 = 100% chance of crit
  */
 Game_Action.prototype.itemCri = function () {
-    if (this.item().damage.critical)  {
-        let itemMod = this.item().meta.critRateMod || 1;
-        return itemMod * (this.subject().cri + (this.subject().param(7)/20000));
+    let item = this.item();
+    if (item.damage.critical)  {
+        if (item.meta.critRate) { // if skill has its own critical hit chance
+            return item.meta.critRate;
+        } else {
+            let itemMod = item.meta.critRateMod || 1;
+            return itemMod * (this.subject().cri + (this.subject().param(7)/20000));
+        }
     }
     return 0;
 };
@@ -401,8 +406,8 @@ Game_Action.prototype.applyCritical = function (damage) {
     let mod = 1.2;
     let crit1 = damage * mod;
 
-    if (item.meta.critMod) {
-        let nums = item.meta.critMod.split(' ');
+    if (item.meta.critDmgMod) {
+        let nums = item.meta.critDmgMod.split(' ');
         attack = this.subject().param(nums[0]);
         mod = $gameSystem.randomNumMinMax(Number(nums[1]), Number(nums[2]), 2);
     } else {
