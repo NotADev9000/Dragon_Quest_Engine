@@ -82,6 +82,19 @@ Window_Base.prototype.standardBackOpacity = function () {
     return 255;
 };
 
+Window_Base.prototype.currencyColor = function (unit) {
+    switch (unit) {
+        case TextManager.medalUnit:
+            return this.medalColor();
+        default:
+            return this.goldColor();
+    }
+}
+
+Window_Base.prototype.medalColor = function () {
+    return this.textColor(4);
+}
+
 Window_Base.prototype.goldColor = function () {
     return this.textColor(6);
 }
@@ -108,6 +121,10 @@ Window_Base.prototype.powerUpColor = function () {
 
 Window_Base.prototype.powerDownColor = function () {
     return this.textColor(2);
+};
+
+Window_Base.prototype.standardPadding = function () {
+    return 24;
 };
 
 Window_Base.prototype.extraPadding = function () {

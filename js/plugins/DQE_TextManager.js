@@ -165,6 +165,11 @@ TextManager.stateResistDescription = function (stateId) {
     return TextManager.terms.stateResistDescription[stateId];
 };
 
+Object.defineProperty(TextManager, 'medalUnit', {
+    get: function () { return 'M'; },
+    configurable: true
+});
+
 TextManager.paramFromBuffID = function (buffId) {
     let paramType = Game_BattlerBase.prototype.buffIdToParamType(buffId);
     let paramId = Game_BattlerBase.prototype.buffIdToParamId(buffId);

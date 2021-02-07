@@ -43,6 +43,12 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
                 args = args.map(arg => Number(arg));
                 $gameParty.setRestorePoint(args[1], args[2], args[3], args[4]);
                 break;
+            case 'GainMiniMedal': // amount
+                $gameParty.gainMedal(Number(args[1]));
+                break;
+            case 'LoseMiniMedal': // amount
+                $gameParty.loseMedal(Number(args[1]));
+                break;
             default:
                 console.error('INVALID Dragon Quest Engine Command');
         }

@@ -17,9 +17,6 @@
 // Imported and namespace
 //------
 
-var Imported = Imported || {};
-Imported.DQEng_Window_Gold = true;
-
 var DQEng = DQEng || {};
 DQEng.Window_Gold = DQEng.Window_Gold || {};
 
@@ -30,37 +27,70 @@ DQEng.Window_Gold = DQEng.Window_Gold || {};
 /**
  * Format Gold amount when displayed in a window
  * e.g. 10000 becomes 10,000
- *
- * @gameMatch custom
  */
 Window_Base.prototype.drawCurrencyValue = function (value, unit, x, y, width) {
-    var unitWidth = Math.min(80, this.textWidth(unit));
-    var currencyUnitX = width - unitWidth;
+    let unitWidth = 24;
+    let currencyUnitX = width - unitWidth;
 
     if (value > 9999) value = value.toLocaleString();
-    this.resetTextColor();
     this.drawText(value, x, y, currencyUnitX - 24, 'right');
-    this.changeTextColor(this.goldColor());
+    this.changeTextColor(this.currencyColor(unit));
     this.drawText(unit, currencyUnitX, y, unitWidth, 'right');
+    this.resetTextColor();
 };
 
 //-----------------------------------------------------------------------------
 // Window_Gold
 //-----------------------------------------------------------------------------
 
+DQEng.Window_Gold.initialize = Window_Gold.prototype.initialize;
+Window_Gold.prototype.initialize = function (x, y) {
+    this._hasMedal = !!$gameParty.medalTotal();     // has player collected any medals
+    DQEng.Window_Gold.initialize.call(this, x, y);
+};
+
+//////////////////////////////
+// Functions - window sizing
+//////////////////////////////
+
 Window_Gold.prototype.windowWidth = function () {
     return 306;
 };
 
 Window_Gold.prototype.windowHeight = function () {
-    return this.lineHeight() + (this.standardPadding() * 2);
+    return this._hasMedal ? 105 : 69;
 };
 
-Window_Gold.prototype.standardPadding = function () {
-    return 24;
+//////////////////////////////
+// Functions - data
+//////////////////////////////
+
+Window_Gold.prototype.value = function (currency = 0) {
+    switch (currency) {
+        case 1:
+            return $gameParty.medalCurrent();
+        default:
+            return $gameParty.gold();
+    }
 };
+
+Window_Gold.prototype.currencyUnit = function (currency = 0) {
+    switch (currency) {
+        case 1:
+            return TextManager.medalUnit;
+        default:
+            return TextManager.currencyUnit;
+    }
+};
+
+//////////////////////////////
+// Functions - refresh
+//////////////////////////////
 
 Window_Gold.prototype.refresh = function () {
     this.contents.clear();
     this.drawCurrencyValue(this.value(), this.currencyUnit(), 0, 0, this.contents.width);
+    if (this._hasMedal) {
+        this.drawCurrencyValue(this.value(1), this.currencyUnit(1), 0, this.lineHeight() + this.lineGap(), this.contents.width);
+    }
 };

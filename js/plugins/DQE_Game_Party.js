@@ -40,6 +40,8 @@ DQEng.Game_Party.initialize = Game_Party.prototype.initialize;
 Game_Party.prototype.initialize = function () {
     DQEng.Game_Party.initialize.call(this);
     this._restorePoint = new Game_RestorePoint();
+    this._medalTotal = 0;       // total mini medals collected
+    this._medalCurrent = 0;     // currently held mini medals
 };
 
 //////////////////////////////
@@ -61,6 +63,27 @@ Game_Party.prototype.giveItemToActorAndEquipMessage = function (item, actor) {
 
 Game_Party.prototype.giveMultipleItemsToActorMessage = function (item, actor, amount) {
     return `${actor._name} takes ${amount} ${item.name}s from the bag.`;
+};
+
+//////////////////////////////
+// Functions - mini medals
+//////////////////////////////
+
+Game_Party.prototype.medalTotal = function () {
+    return this._medalTotal;
+};
+
+Game_Party.prototype.medalCurrent = function () {
+    return this._medalCurrent;
+};
+
+Game_Party.prototype.gainMedal = function (amount) {
+    this._medalTotal += amount;
+    this._medalCurrent += amount;
+};
+
+Game_Party.prototype.loseMedal = function (amount) {
+    this._medalCurrent -= amount;
 };
 
 //////////////////////////////
