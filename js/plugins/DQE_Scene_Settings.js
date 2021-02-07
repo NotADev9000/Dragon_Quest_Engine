@@ -118,20 +118,27 @@ Scene_Settings.prototype.commandWindow = function () {
 
 Scene_Settings.prototype.onAudioCancel = function () {
     this._audioWindow.deselect();
-    this._commandWindow.hideBackgroundDimmer();
-    this._commandWindow.activate();
+    this.submenuCancel();
 };
 
 Scene_Settings.prototype.onTextCancel = function () {
     this._textWindow.deselect();
-    this._commandWindow.hideBackgroundDimmer();
-    this._commandWindow.activate();
+    this.submenuCancel();
 };
 
 Scene_Settings.prototype.onWindowCancel = function () {
     this._windowWindow.deselect();
+    this.submenuCancel();
+};
+
+Scene_Settings.prototype.submenuCancel = function () {
+    ConfigManager.save();
     this._commandWindow.hideBackgroundDimmer();
     this._commandWindow.activate();
+};
+
+Scene_Settings.prototype.onFullscreenChange = function () {
+    this._windowWindow.refresh();
 };
 
 //////////////////////////////

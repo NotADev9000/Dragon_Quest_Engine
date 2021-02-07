@@ -61,7 +61,7 @@ Window_SettingsWindow.prototype.fittingHeight = function (numLines) {
 //////////////////////////////
 
 Window_SettingsWindow.prototype.makeCommandList = function () {
-    this.addCommand('Window Scale', 'windowScale', Window_Settings.COMMAND_TYPE_SCALE);
+    this.addCommand('Window Scale', 'windowScale', Window_Settings.COMMAND_TYPE_SCALE, !ConfigManager.fullscreen);
     this.addCommand('Fullscreen', 'fullscreen', Window_Settings.COMMAND_TYPE_BOOL_ONOFF);
 };
 
@@ -74,6 +74,28 @@ Window_SettingsWindow.prototype.select = function (index) {
     this.refresh();
 };
 
+Window_SettingsWindow.prototype.cursorRight = function () {
+    let index = this.index();
+    if (this.isCommandEnabled(index)) {
+        Window_Settings.prototype.cursorRight.call(this);
+    }
+};
+
+Window_SettingsWindow.prototype.cursorLeft = function () {
+    let index = this.index();
+    if (this.isCommandEnabled(index)) {
+        Window_Settings.prototype.cursorLeft.call(this);
+    }
+};
+
+Window_SettingsWindow.prototype.changeValue = function (symbol, value) {
+    let lastValue = this.getConfigValue(symbol);
+    if (lastValue !== value) {
+        this.setConfigValue(symbol, value);
+        this.refresh();
+    }
+};
+
 //////////////////////////////
 // Functions - draw items
 //////////////////////////////
@@ -81,8 +103,10 @@ Window_SettingsWindow.prototype.select = function (index) {
 Window_SettingsWindow.prototype.drawItem = function (index) {
     let rect = this.itemRectForText(index);
     let textWidth = this.contentsWidth() - this.textPadding() - (this.extraPadding()*2);
+    if (!this.isCommandEnabled(index)) this.changeTextColor(this.disabledColor());
     this.drawText(this.commandName(index), rect.x, rect.y);
     this.drawText(this.statusText(index), rect.x, rect.y, textWidth, 'right');
+    this.resetTextColor();
 };
 
 Window_SettingsWindow.prototype.drawDescription = function () {
@@ -111,6 +135,10 @@ Window_SettingsWindow.prototype.itemRect = function (index) {
     rect.y += this.extraPadding();
     return rect;
 };
+
+//////////////////////////////
+// Functions - refresh
+//////////////////////////////
 
 Window_SettingsWindow.prototype.refresh = function () {
     Window_Settings.prototype.refresh.call(this);

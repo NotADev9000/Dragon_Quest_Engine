@@ -93,7 +93,7 @@ Window_Settings.prototype.statusText = function (index) {
             value = this.volumeText(value).padStart(4, ' ');
             break;
         case Window_Settings.COMMAND_TYPE_BOOL_ONOFF:
-            value = this.onOffText(value).padEnd(3, ' ');
+            value = this.onOffText(value).padStart(3, ' ');
             break;
         case Window_Settings.COMMAND_TYPE_TEXT_SPEED:
             value = this.speedText(value).padStart(6, ' ');
@@ -156,7 +156,7 @@ Window_Settings.prototype.cursorRight = function () {
             value = value.clamp(0, 100);
             break;
         case Window_Settings.COMMAND_TYPE_BOOL_ONOFF:
-            value = value === 1 ? 0 : 1;
+            value = value ? 0 : 1;
             break;
         case Window_Settings.COMMAND_TYPE_TEXT_SPEED:
         case Window_Settings.COMMAND_TYPE_SCALE:
@@ -181,7 +181,7 @@ Window_Settings.prototype.cursorLeft = function () {
             value = value.clamp(0, 100);
             break;
         case Window_Settings.COMMAND_TYPE_BOOL_ONOFF:
-            value = value === 1 ? 0 : 1;
+            value = value ? 0 : 1;
             break;
         case Window_Settings.COMMAND_TYPE_TEXT_SPEED:
         case Window_Settings.COMMAND_TYPE_SCALE:
