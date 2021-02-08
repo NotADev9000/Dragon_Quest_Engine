@@ -114,6 +114,10 @@ Game_Party.prototype.makeActions = function () {
 // Functions - line-up
 //////////////////////////////
 
+/**
+ * swaps actors at given indexes and returns false if the frontline
+ * does not have 1 alive party member after the swap
+ */
 Game_Party.prototype.attemptSwap = function (index1, index2) {
     let frontline = Object.assign([], $gameParty.frontline());
     let swapWith = $gameParty.allMembers()[index2];
@@ -123,7 +127,7 @@ Game_Party.prototype.attemptSwap = function (index1, index2) {
 };
 
 /**
- * Checks if the passed array of actor indexes have at least
+ * checks if the passed array of actor indexes have at least
  * one living actor in the frontline
  */
 Game_Party.prototype.checkGroupOrder = function (array) {
@@ -139,12 +143,25 @@ Game_Party.prototype.checkGroupOrder = function (array) {
  * 
  * @param {array} list an array of character positions
  */
-Game_Party.prototype.swapAll = function (list) {
+Game_Party.prototype.newOrder = function (list) {
     var actorIds = [];
     list.forEach((element) => {
         actorIds.push($gameParty.allMembers()[element]._actorId);
     });
     this._actors = actorIds;
+    $gamePlayer.refresh();
+};
+
+/**
+ * swaps the frontline and backline members
+ */
+Game_Party.prototype.swapFlWithBl = function () {
+    fl = this.frontline();
+    bl = this.backline();
+    let actors = this._actors = [];
+    bl.concat(fl).forEach(member => {
+        actors.push(member._actorId);
+    });
     $gamePlayer.refresh();
 };
 
@@ -158,6 +175,16 @@ Game_Party.prototype.revivePreferredMember = function () {
         if (actor.actorId() === preferId && actor.isDead()) actor.setHp(1);
     });
     $gamePlayer.refresh();
+};
+
+Game_Party.prototype.isAllDead = function () {
+    return this.allAliveMembers().length === 0;
+};
+
+Game_Party.prototype.allAliveMembers = function () {
+    return this.allMembers().filter(function (member) {
+        return member.isAlive();
+    });
 };
 
 //////////////////////////////

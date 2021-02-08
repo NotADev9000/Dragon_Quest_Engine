@@ -766,7 +766,7 @@ Scene_Battle.prototype.onLineUpGroupPartyCancel = function () {
 
 Scene_Battle.prototype.onLineUpGroupConfirmOk = function () {
     if ($gameParty.checkGroupOrder(this._lineUpGroupListWindow._list)) {
-        $gameParty.swapAll(this._lineUpGroupListWindow._list);
+        $gameParty.newOrder(this._lineUpGroupListWindow._list);
         this.refreshAllStatusIndex();
         this._partyCommandWindow.select(0);
         this._lineUpGroupConfirmWindow.hide();

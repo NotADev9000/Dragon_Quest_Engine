@@ -233,6 +233,24 @@ BattleManager.update = function () {
     }
 };
 
+BattleManager.updateEventMain = function () {
+    $gameTroop.updateInterpreter();
+    $gameParty.requestMotionRefresh();
+    if ($gameTroop.isEventRunning() || this.checkBattleEnd()) {
+        return true;
+    }
+    $gameTroop.setupBattleEvent();
+    if ($gameTroop.isEventRunning() || SceneManager.isSceneChanging()) {
+        return true;
+    }
+    if ($gameParty.aliveFrontline().length === 0) {
+        $gameParty.swapFlWithBl();
+        SceneManager._scene.refreshAllStatusIndex();
+        this._logWindow.displayBackup();
+    }
+    return false;
+};
+
 //////////////////////////////
 // Functions - post turn
 //////////////////////////////

@@ -165,9 +165,9 @@ TextManager.stateResistDescription = function (stateId) {
     return TextManager.terms.stateResistDescription[stateId];
 };
 
-Object.defineProperty(TextManager, 'medalUnit', {
-    get: function () { return 'M'; },
-    configurable: true
+Object.defineProperties(TextManager, {
+    medalUnit: { get: function () { return 'M'; }, configurable: true },
+    backup: { get: function () { return 'The frontline has fallen but backup has arrived!' }, configurable: true }
 });
 
 TextManager.paramFromBuffID = function (buffId) {
