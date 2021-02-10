@@ -35,12 +35,23 @@ Window_StatsCommon.prototype.drawNameTitle = function (title) {
     let actorLv = this._actor.level;
     let text = `${actorName} Lv.${actorLv}`;
     let itemHeight = this.lineHeight() + this.lineGap();
+    let rightIconX = this.contentsWidth() - Window_Base._iconWidth - this.textWidth(' ');
     let y = this.extraPadding();
+    // icons (switching actors)
+    this.drawTextEx(' \\i[1]', 0, y);
+    this.drawTextEx('\\i[2] ', rightIconX, y);
+    // actor name & level
     this.drawText(text, 0, y, this.contentsWidth(), 'center');
     y += itemHeight;
+    // horizontal rule
     this.drawHorzLine(0, y);
     y += this.lineGap() + 3;
+    // icons (switching windows)
+    this.drawTextEx(' \\i[1]', 0, y);
+    this.drawTextEx('\\i[2] ', rightIconX, y, this.contentsWidth(), 'right');
+    // window name
     this.drawText(title, 0, y, this.contentsWidth(), 'center');
     y += itemHeight;
+    // horizontal rule
     this.drawHorzLine(0, y);
 };

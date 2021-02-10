@@ -72,6 +72,9 @@ WindowLayer.prototype._maskWindow = function (window, shift) {
 // Window_Base
 //-----------------------------------------------------------------------------
 
+Window_Base._iconWidth  = 45;
+Window_Base._iconHeight = 45;
+
 /**
  * Make windows opaque
  *
@@ -192,6 +195,18 @@ Window_Base.prototype.updateClose = function () {
  */
 Window_Base.prototype.calcTextHeight = function () {
     return this.lineHeight() + this.lineGap();
+};
+
+/**
+ * calculates where on the y-axis icon should sit
+ */
+Window_Base.prototype.calcIconCentre = function () {
+    return (Window_Base._iconHeight - this.lineHeight())/2;
+};
+
+Window_Base.prototype.processDrawIcon = function (iconIndex, textState) {
+    this.drawIcon(iconIndex, textState.x, textState.y - this.calcIconCentre());
+    textState.x += Window_Base._iconWidth + 4;
 };
 
 /**
