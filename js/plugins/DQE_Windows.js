@@ -387,26 +387,34 @@ Window_Selectable.prototype.processHandling = function () {
             this.processOk();
         } else if (this.isCancelEnabled() && this.isCancelTriggered()) {
             this.processCancel();
-        } else if (this.isHandled('pagedown') && Input.isTriggered('pagedown')) {
-            this.processPagedown();
-        } else if (this.isHandled('pageup') && Input.isTriggered('pageup')) {
-            this.processPageup();
-        } else if (this.isHandled('sort') && Input.isTriggered('sort')) {
-            this.processSort();
-        } else if (this.isHandled('filter') && Input.isTriggered('filter')) {
-            this.processFilter();
+        } else {
+            let handles = [
+                ['help', true], 
+                ['sort', false], 
+                ['filter', false], 
+                ['previous', false], 
+                ['next', false], 
+                ['pagedown', true], 
+                ['pageup', true]
+            ];
+            handles.some(handle => {
+                let type = handle[0];
+                if (this.isHandled(type) && Input.isTriggered(type)) {
+                    this.processHandler(type, handle[1]);
+                }
+            });
         }
     }
 };
 
-Window_Selectable.prototype.processSort = function () {
+/**
+ * @param {string} handler name of the handler to call
+ * @param {boolean} deactivate should this handler deactivate the window
+ */
+Window_Selectable.prototype.processHandler = function (handler, deactivate) {
     this.updateInputData();
-    this.callHandler('sort');
-};
-
-Window_Selectable.prototype.processFilter = function () {
-    this.updateInputData();
-    this.callHandler('filter');
+    if (deactivate) this.deactivate();
+    this.callHandler(handler);
 };
 
 //-----------------------------------------------------------------------------

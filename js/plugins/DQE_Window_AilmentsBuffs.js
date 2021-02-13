@@ -91,7 +91,6 @@ Window_AilmentsBuffs.prototype.setCategory = function (category) {
 };
 
 Window_AilmentsBuffs.prototype.nextBattler = function (forward) {
-    this.activate(); // so pressing pgdwn/pgup doesn't deactivate window
     let nextCat = this._category;
     if (forward) { // next battler
         if (nextCat >= (this._data.length - 1)) {

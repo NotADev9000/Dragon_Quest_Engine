@@ -40,8 +40,8 @@ Window_StatsCommon.prototype.drawNameTitle = function (title) {
     // icons (switching actors)
     this.drawTextEx(' \\i[1]', 0, y);
     this.drawTextEx('\\i[2] ', rightIconX, y);
-    // actor name & level
-    this.drawText(text, 0, y, this.contentsWidth(), 'center');
+    // window name
+    this.drawText(title, 0, y, this.contentsWidth(), 'center');
     y += itemHeight;
     // horizontal rule
     this.drawHorzLine(0, y);
@@ -49,8 +49,8 @@ Window_StatsCommon.prototype.drawNameTitle = function (title) {
     // icons (switching windows)
     this.drawTextEx(' \\i[1]', 0, y);
     this.drawTextEx('\\i[2] ', rightIconX, y, this.contentsWidth(), 'right');
-    // window name
-    this.drawText(title, 0, y, this.contentsWidth(), 'center');
+    // actor name & level
+    this.drawText(text, 0, y, this.contentsWidth(), 'center');
     y += itemHeight;
     // horizontal rule
     this.drawHorzLine(0, y);

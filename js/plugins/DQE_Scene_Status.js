@@ -103,8 +103,8 @@ Scene_Status.prototype.createStatsAttributesWindow = function () {
     let y = this._commandWindow.y;
     this._statsAttributesWindow = new Window_StatsAttributes(x, y, 1344, 591);
     this._statsAttributesWindow.setHandler('cancel', this.onStatsAttributesCancel.bind(this));
-    this._statsAttributesWindow.setHandler('sort', this.previousActor.bind(this, this._statsAttributesWindow));
-    this._statsAttributesWindow.setHandler('filter', this.nextActor.bind(this, this._statsAttributesWindow));
+    this._statsAttributesWindow.setHandler('previous', this.previousActor.bind(this, this._statsAttributesWindow));
+    this._statsAttributesWindow.setHandler('next', this.nextActor.bind(this, this._statsAttributesWindow));
     this._statsAttributesWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinEffects));
     this._statsAttributesWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinMagic));
     this._statsAttributesWindow.hide();
@@ -116,8 +116,8 @@ Scene_Status.prototype.createStatsMagicWindow = function () {
     let y = this._commandWindow.y;
     this._statsMagicWindow = new Window_StatsMagic(x, y, 1344, 714);
     this._statsMagicWindow.setHandler('cancel', this.onStatsMagicCancel.bind(this));
-    this._statsMagicWindow.setHandler('sort', this.previousActor.bind(this, this._statsMagicWindow));
-    this._statsMagicWindow.setHandler('filter', this.nextActor.bind(this, this._statsMagicWindow));
+    this._statsMagicWindow.setHandler('previous', this.previousActor.bind(this, this._statsMagicWindow));
+    this._statsMagicWindow.setHandler('next', this.nextActor.bind(this, this._statsMagicWindow));
     this._statsMagicWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinAttribute));
     this._statsMagicWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinOtherAbilities));
     this._statsMagicWindow.hide();
@@ -129,8 +129,8 @@ Scene_Status.prototype.createStatsOtherAbilitiesWindow = function () {
     let y = this._commandWindow.y;
     this._statsOtherAbilitiesWindow = new Window_StatsOtherAbilities(x, y, 1344, 714);
     this._statsOtherAbilitiesWindow.setHandler('cancel', this.onStatsOtherAbilitiesCancel.bind(this));
-    this._statsOtherAbilitiesWindow.setHandler('sort', this.previousActor.bind(this, this._statsOtherAbilitiesWindow));
-    this._statsOtherAbilitiesWindow.setHandler('filter', this.nextActor.bind(this, this._statsOtherAbilitiesWindow));
+    this._statsOtherAbilitiesWindow.setHandler('previous', this.previousActor.bind(this, this._statsOtherAbilitiesWindow));
+    this._statsOtherAbilitiesWindow.setHandler('next', this.nextActor.bind(this, this._statsOtherAbilitiesWindow));
     this._statsOtherAbilitiesWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinMagic));
     this._statsOtherAbilitiesWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinEffects));
     this._statsOtherAbilitiesWindow.hide();
@@ -142,8 +142,8 @@ Scene_Status.prototype.createStatsEffectsWindow = function () {
     let y = this._commandWindow.y;
     this._statsEffectsWindow = new Window_StatsEffects(x, y, 1344, 714);
     this._statsEffectsWindow.setHandler('cancel', this.onStatsEffectsCancel.bind(this));
-    this._statsEffectsWindow.setHandler('sort', this.previousActor.bind(this, this._statsEffectsWindow));
-    this._statsEffectsWindow.setHandler('filter', this.nextActor.bind(this, this._statsEffectsWindow));
+    this._statsEffectsWindow.setHandler('previous', this.previousActor.bind(this, this._statsEffectsWindow));
+    this._statsEffectsWindow.setHandler('next', this.nextActor.bind(this, this._statsEffectsWindow));
     this._statsEffectsWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinOtherAbilities));
     this._statsEffectsWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinAttribute));
     this._statsEffectsWindow.hide();
