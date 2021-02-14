@@ -145,6 +145,10 @@ Window_Settings.prototype.volumeOffset = function () {
 // Functions - cursor movement
 //////////////////////////////
 
+Window_Settings.prototype.processOk = function () {
+    this.cursorRight();
+};
+
 Window_Settings.prototype.cursorRight = function () {
     let index = this.index();
     let symbol = this.commandSymbol(index);

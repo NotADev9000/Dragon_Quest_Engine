@@ -1,0 +1,29 @@
+gamepads:
+- up
+- down
+- left
+- right
+- confirm			'ok'
+- cancel
+- menu
+- help
+- sort items		'sort'
+- filter items		'filter'
+- previous actor	'previous'
+- next actor		'next'
+- previous category	'pagedown'
+- next category		'pageup'
+
+icon selection
+reset to default
+
+if vendor = 057e || nintendo || pro || switch
+	give NINTENDO mapping, give SWITCH icons
+else 
+	give STANDARD mapping
+	if vendor = 054c || playstation || sony || PS || PS3 || PS4 || dualshock
+		give PS icons
+	else if vendor = 045e || xbox || x-box || 360 || microsoft
+		give XBOX icons
+	else
+		give GENERIC icons

@@ -57,7 +57,7 @@ Window_StatsMagic.prototype.titleBlockHeight = function () {
 };
 
 Window_StatsMagic.prototype.itemBlockHeight = function () {
-    return 396;
+    return 390;
 };
 
 Window_StatsMagic.prototype.mpCostBlockHeight = function () {
@@ -65,7 +65,7 @@ Window_StatsMagic.prototype.mpCostBlockHeight = function () {
 };
 
 Window_StatsMagic.prototype.descriptionBlockHeight = function () {
-    return 84;
+    return 90;
 };
 
 //////////////////////////////

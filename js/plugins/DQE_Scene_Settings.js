@@ -45,6 +45,7 @@ Scene_Settings.prototype.create = function () {
     this.createAudioWindow();
     this.createTextWindow();
     this.createWindowWindow();
+    this.createControlsWindow();
     // set windows created
     this._windowsCreated = true;
 };
@@ -58,6 +59,7 @@ Scene_Settings.prototype.createCommandWindow = function () {
     this._commandWindow.setHandler('Audio', this.commandAudio.bind(this));
     this._commandWindow.setHandler('Text', this.commandText.bind(this));
     this._commandWindow.setHandler('Window', this.commandWindow.bind(this));
+    this._commandWindow.setHandler('Controls', this.commandControls.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
 };
@@ -94,6 +96,18 @@ Scene_Settings.prototype.createWindowWindow = function () {
     this.addWindow(this._windowWindow);
 };
 
+Scene_Settings.prototype.createControlsWindow = function () {
+    let x = this._commandWindow.x + this._commandWindow.width;
+    let y = this._commandWindow.y;
+    this._controlsWindow = new Window_CustomCommand(x, y, 840, ['Keyboard Configuration', 'Gamepad Configuration']);
+    // this._controlsWindow.setHandler('ok', this.onControlsOk.bind(this));
+    this._controlsWindow.setHandler('cancel', this.onControlsCancel.bind(this));
+    this._controlsWindow.hide();
+    this._controlsWindow.deselect();
+    this._controlsWindow.deactivate();
+    this.addWindow(this._controlsWindow);
+};
+
 //////////////////////////////
 // Functions - on handlers
 //////////////////////////////
@@ -116,6 +130,12 @@ Scene_Settings.prototype.commandWindow = function () {
     this._windowWindow.activate();
 };
 
+Scene_Settings.prototype.commandControls = function () {
+    this._commandWindow.showBackgroundDimmer();
+    this._controlsWindow.select(0);
+    this._controlsWindow.activate();
+};
+
 Scene_Settings.prototype.onAudioCancel = function () {
     this._audioWindow.deselect();
     this.submenuCancel();
@@ -128,6 +148,11 @@ Scene_Settings.prototype.onTextCancel = function () {
 
 Scene_Settings.prototype.onWindowCancel = function () {
     this._windowWindow.deselect();
+    this.submenuCancel();
+};
+
+Scene_Settings.prototype.onControlsCancel = function () {
+    this._controlsWindow.deselect();
     this.submenuCancel();
 };
 
@@ -155,18 +180,22 @@ Scene_Settings.prototype.changeWindows = function (symbol) {
                 this._audioWindow.show();
                 this._textWindow.hide();
                 this._windowWindow.hide();
+                this._controlsWindow.hide();
                 break;
             case 'Text':
                 this._textWindow.show();
                 this._audioWindow.hide();
                 this._windowWindow.hide();
+                this._controlsWindow.hide();
                 break;
             case 'Window':
                 this._windowWindow.show();
                 this._audioWindow.hide();
                 this._textWindow.hide();
+                this._controlsWindow.hide();
                 break;
             case 'Controls':
+                this._controlsWindow.show();
                 this._audioWindow.hide();
                 this._textWindow.hide();
                 this._windowWindow.hide();
