@@ -31,6 +31,8 @@ function Scene_Settings() {
     this.initialize.apply(this, arguments);
 }
 
+Scene_Settings._lastCommandSymbol = null; // the last symbol selected before the scene was changed
+
 Scene_Settings.prototype = Object.create(Scene_MenuBase.prototype);
 Scene_Settings.prototype.constructor = Scene_Settings;
 
@@ -48,6 +50,7 @@ Scene_Settings.prototype.create = function () {
     this.createControlsWindow();
     // set windows created
     this._windowsCreated = true;
+    this.selectLastCommand();
 };
 
 //////////////////////////////
@@ -152,6 +155,7 @@ Scene_Settings.prototype.onWindowCancel = function () {
 };
 
 Scene_Settings.prototype.onControlsOk = function () {
+    this.setLastCommand(this._commandWindow.currentSymbol());
     SceneManager.push(Scene_Config);
 };
 
@@ -166,8 +170,27 @@ Scene_Settings.prototype.submenuCancel = function () {
     this._commandWindow.activate();
 };
 
+/**
+ * Called by Graphics when fullscreen is toggled
+ */
 Scene_Settings.prototype.onFullscreenChange = function () {
     this._windowWindow.refresh();
+};
+
+//////////////////////////////
+// Functions - data
+//////////////////////////////
+
+Scene_Settings.prototype.selectLastCommand = function () {
+    this._commandWindow.selectSymbol(Scene_Settings._lastCommandSymbol);
+    // clear last command
+    this.setLastCommand(null);
+};
+/**
+ * @param {String} symbol of last command selected in _commandWindow
+ */
+Scene_Settings.prototype.setLastCommand = function (symbol) {
+    Scene_Settings._lastCommandSymbol = symbol;
 };
 
 //////////////////////////////
