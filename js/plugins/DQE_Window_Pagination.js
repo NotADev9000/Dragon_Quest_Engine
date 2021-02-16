@@ -323,17 +323,19 @@ Window_Pagination.prototype.refresh = function () {
 };
 
 Window_Pagination.prototype.itemRect = function (index) {
-    var rect = new Rectangle();
-    var maxCols = this.maxCols();
-    var row = this.row();
-    var isBottomRow = row === this.bottomRow();
-    var lineGap = this.lineGap();
+    let rect = new Rectangle();
+    let maxCols = this.maxCols();
+    let row = this.row();
+    let isBottomRow = row === this.bottomRow();
+    let lineGap = this.lineGap();
+    let ep = this.extraPadding();
 
     rect.width = this.itemWidth();
     rect.height = isBottomRow ? this.itemHeight() : this.itemHeight() + lineGap;
 
-    rect.x = index % maxCols * (rect.width + this.spacing()) - this._scrollX;
-    var rectHeightOffset = isBottomRow ? rect.height + lineGap : rect.height;
-    rect.y = Math.floor(this.trueIndex(index) / maxCols) * rectHeightOffset - this._scrollY;
+    rect.x = (index % maxCols * (rect.width + this.spacing()) - this._scrollX) + ep;
+    let rectHeightOffset = isBottomRow ? rect.height + lineGap : rect.height;
+    rect.y = (Math.floor(this.trueIndex(index) / maxCols) * rectHeightOffset - this._scrollY) + ep;
+    rect.width -= (ep*2);
     return rect;
 };

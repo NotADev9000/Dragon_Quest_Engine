@@ -27,6 +27,30 @@ DQEng.Input = DQEng.Input || {};
 // Input
 //-----------------------------------------------------------------------------
 
+Input.ICON_GENERIC = 1;
+Input.ICON_XBOX = 2;
+Input.ICON_PLAYSTATION = 3;
+Input.ICON_SWITCH = 4;
+
+// contains action handlers
+// handler[0] = ID, handler[1] = display name, handler[2] = gamepad button
+Input.handlers = [
+    ['ok',       'Confirm',            0],
+    ['cancel',   'Cancel',             1],
+    ['up',       'Move Up',            12],
+    ['down',     'Move Down',          13],
+    ['left',     'Move Left',          14],
+    ['right',    'Move Right',         15],
+    ['menu',     'Menu',               3],
+    ['help',     'Help',               2],
+    ['sort',     'Sort Items',         2],
+    ['filter',   'Filter Items',       3],
+    ['pagedown', 'Previous Category',  6],
+    ['pageup',   'Next Category',      7],
+    ['previous', 'Previous Member',    4],
+    ['next',     'Next Member',        5]
+];
+
 /**
  * A hash table to convert from a virtual key code to a mapped key name.
  *
@@ -60,17 +84,39 @@ Input.keyMapper = {
  * @type Object
  */
 Input.gamepadMapper = {
-                                        // GENERIC CONTROLLER EXAMPLE
+                                        // XBOX CONTROLLER EXAMPLE
     0: ['ok'],                          // A
     1: ['cancel'],                      // B
-    2: ['help', 'sort', 'pagedown'],    // X
-    3: ['menu', 'filter', 'pageup'],    // Y
+    2: ['help', 'sort'],                // X
+    3: ['menu', 'filter'],              // Y
     4: ['previous'],                    // LB
     5: ['next'],                        // RB
+    6: ['pagedown'],                    // LT
+    7: ['pageup'],                      // RT
+    8: [],                              // Back
+    9: [],                              // Start
+    10: [],                             // Left Stick IN
+    11: [],                             // Right Stick IN
     12: ['up'],                         // D-pad up
     13: ['down'],                       // D-pad down
     14: ['left'],                       // D-pad left
-    15: ['right'],                      // D-pad right
+    15: ['right']                       // D-pad right
+};
+
+/**
+ * Gets the gamepad button associated with the given handle
+ * 
+ * @static
+ * @method getGamepadButton
+ * @param {String} handle 
+ */
+Input.getGamepadButton = function (handle) {
+    for (let i = 0; i < 16; i++) {
+        for (const currentHandle of Input.gamepadMapper[i]) {
+            if (handle === currentHandle) return i;
+        }
+    }
+    return -1;
 };
 
 /**

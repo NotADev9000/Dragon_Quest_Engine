@@ -158,9 +158,7 @@ Window_StatsMagic.prototype.drawDescriptionBlock = function (item) {
 
 Window_StatsMagic.prototype.itemRect = function (index) {
     var rect = Window_Pagination.prototype.itemRect.call(this, index);
-    rect.x += this.extraPadding();
-    rect.y += this.extraPadding() + this.titleBlockHeight();
-    rect.width -= this.extraPadding() * 2;
+    rect.y += this.titleBlockHeight();
     return rect;
 };
 

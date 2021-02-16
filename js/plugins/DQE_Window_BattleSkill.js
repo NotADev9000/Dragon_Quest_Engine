@@ -143,14 +143,6 @@ Window_BattleSkill.prototype.drawItem = function (index) {
     }
 };
 
-Window_BattleSkill.prototype.itemRect = function (index) {
-    var rect = Window_Pagination.prototype.itemRect.call(this, index);
-    rect.x += this.extraPadding();
-    rect.y += this.extraPadding();
-    rect.width -= this.extraPadding() * 2;
-    return rect;
-};
-
 //////////////////////////////
 // Functions - cursor movement
 //////////////////////////////

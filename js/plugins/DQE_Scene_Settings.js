@@ -100,7 +100,7 @@ Scene_Settings.prototype.createControlsWindow = function () {
     let x = this._commandWindow.x + this._commandWindow.width;
     let y = this._commandWindow.y;
     this._controlsWindow = new Window_CustomCommand(x, y, 840, ['Keyboard Configuration', 'Gamepad Configuration']);
-    // this._controlsWindow.setHandler('ok', this.onControlsOk.bind(this));
+    this._controlsWindow.setHandler('ok', this.onControlsOk.bind(this));
     this._controlsWindow.setHandler('cancel', this.onControlsCancel.bind(this));
     this._controlsWindow.hide();
     this._controlsWindow.deselect();
@@ -149,6 +149,10 @@ Scene_Settings.prototype.onTextCancel = function () {
 Scene_Settings.prototype.onWindowCancel = function () {
     this._windowWindow.deselect();
     this.submenuCancel();
+};
+
+Scene_Settings.prototype.onControlsOk = function () {
+    SceneManager.push(Scene_Config);
 };
 
 Scene_Settings.prototype.onControlsCancel = function () {

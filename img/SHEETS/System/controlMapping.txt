@@ -1,18 +1,18 @@
 gamepads:
+- confirm			'ok'
+- cancel
 - up
 - down
 - left
 - right
-- confirm			'ok'
-- cancel
 - menu
 - help
 - sort items		'sort'
 - filter items		'filter'
-- previous actor	'previous'
-- next actor		'next'
 - previous category	'pagedown'
 - next category		'pageup'
+- previous actor	'previous'
+- next actor		'next'
 
 icon selection
 reset to default

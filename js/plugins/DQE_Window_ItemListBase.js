@@ -77,17 +77,6 @@ Window_ItemListBase.prototype.updateHelp = function () {
     this.setHelpWindowItem(this.item());
 };
 
-/**
- * extraPadding is added to properly adjust commands
- */
-Window_ItemListBase.prototype.itemRect = function (index) {
-    var rect = Window_Pagination.prototype.itemRect.call(this, index);
-    rect.x += this.extraPadding();
-    rect.y += this.extraPadding();
-    rect.width -= this.extraPadding() * 2;
-    return rect;
-};
-
 Window_ItemListBase.prototype.refresh = function () {
     this.makeItemList();
     this.createContents();

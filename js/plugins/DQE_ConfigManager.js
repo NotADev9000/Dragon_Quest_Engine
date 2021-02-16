@@ -28,6 +28,7 @@ DQEng.Config_Manager = DQEng.Config_Manager || {};
 //-----------------------------------------------------------------------------
 
 ConfigManager.battleTextSpeed = 3; // 1 = very slow, 2 = slow, 3 = medium, 4 = fast, 5 = very fast
+ConfigManager.iconType = Input.ICON_GENERIC; // button icons displayed in-game
 
 // BGM Volume = ME Volume
 Object.defineProperty(ConfigManager, 'bgmVolume', {
@@ -80,6 +81,10 @@ ConfigManager.makeData = function () {
     config.battleTextSpeed = this.battleTextSpeed;
     config.windowScale = this.windowScale;
     config.fullscreen = this.fullscreen;
+    config.iconType = this.iconType;
+    config.handlers = Input.handlers;
+    config.keyMapper = Input.keyMapper;
+    config.gamepadMapper = Input.gamepadMapper;
     return config;
 };
 
@@ -92,6 +97,8 @@ ConfigManager.applyData = function (config) {
     this.battleTextSpeed = this.readSpeed(config, 'battleTextSpeed');
     this.windowScale = this.readScale(config, 'windowScale');
     this.fullscreen = this.readFullscreen(config, 'fullscreen');
+    this.iconType = this.readFullscreen(config, 'iconType');
+    this.readInput(config); // controls
 };
 
 ConfigManager.readSpeed = function (config, name) {
@@ -107,4 +114,17 @@ ConfigManager.readFullscreen = function (config, name) {
 ConfigManager.readScale = function (config, name) {
     let value = config[name];
     return value !== undefined ? value : 3;
+};
+
+ConfigManager.readInput = function (config) {
+    let handlers = config['handlers'];
+    let keyInputs = config['keyMapper'];
+    let padInputs = config['gamepadMapper'];
+    if (!handlers || !keyInputs || !padInputs) {
+        // do gamepad inits
+    } else {
+        Input.handlers = handlers;
+        Input.keyMapper = keyInputs;
+        Input.gamepadMapper = padInputs;
+    }
 };

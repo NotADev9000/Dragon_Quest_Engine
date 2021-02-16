@@ -73,6 +73,7 @@ Window_Settings.COMMAND_TYPE_VOLUME = 0;
 Window_Settings.COMMAND_TYPE_BOOL_ONOFF = 1;
 Window_Settings.COMMAND_TYPE_TEXT_SPEED = 2;
 Window_Settings.COMMAND_TYPE_SCALE = 3;
+Window_Settings.COMMAND_TYPE_ICON = 4;
 
 Window_Settings.prototype.addCommand = function (name, symbol, type, enabled = true, ext = null) {
     this._list.push({ 
@@ -102,8 +103,7 @@ Window_Settings.prototype.statusText = function (index) {
             value = this.scaleText(value).padStart(2, ' ');
             break;
         default:
-            console.error(`1: INVALID command type in ${this}`);
-            return '???';
+            return '';
     }
     return `< ${value} >`;
 };
@@ -168,8 +168,7 @@ Window_Settings.prototype.cursorRight = function () {
             value = value.clamp(1, 5);
             break;
         default:
-            console.error(`2: INVALID command type in ${this}`);
-            return '???';
+            return '';
     }
     this.changeValue(symbol, value);
 };
@@ -193,8 +192,7 @@ Window_Settings.prototype.cursorLeft = function () {
             value = value.clamp(1, 5);
             break;
         default:
-            console.error(`3: INVALID command type in ${this}`);
-            return '???';
+            return '';
     }
     this.changeValue(symbol, value);
 };

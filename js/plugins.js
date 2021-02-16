@@ -44,6 +44,7 @@ var $plugins =
 {"name":"DQE_Scene_Battle","status":true,"description":"The scene for the battle - V0.1","parameters":{}},
 {"name":"DQE_Scene_Status","status":true,"description":"The scene for the status menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_Settings","status":true,"description":"The scene for the settings menu - V0.1","parameters":{}},
+{"name":"DQE_Scene_Config","status":true,"description":"The scene for the config menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_Gameover","status":true,"description":"The scene for gameover; sends player to restore point and takes half off gold - V0.1","parameters":{"Wipe Out Switch":"1"}},
 {"name":"DQE_Spriteset_Battle","status":true,"description":"The sprites used in a battle - V0.1","parameters":{}},
 {"name":"DQE_Sprite_Damage","status":true,"description":"The sprite object class for the Damage - V0.1","parameters":{}},
@@ -110,6 +111,8 @@ var $plugins =
 {"name":"DQE_Window_SettingsAudio","status":true,"description":"A window for changing audio settings - V0.1","parameters":{}},
 {"name":"DQE_Window_SettingsText","status":true,"description":"A window for changing text settings - V0.1","parameters":{}},
 {"name":"DQE_Window_SettingsWindow","status":true,"description":"A window for changing window settings - V0.1","parameters":{}},
+{"name":"DQE_Window_SettingsControls","status":true,"description":"A command window for accessing control config changes - V0.1","parameters":{}},
+{"name":"DQE_Window_Controls","status":true,"description":"The window for changing the controls for game actions - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}}
 ];

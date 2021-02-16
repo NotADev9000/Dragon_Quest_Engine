@@ -148,7 +148,9 @@ Window_Base.prototype.lineGap = function () {
 };
 
 Window_Base.prototype.fittingHeight = function (numLines) {
-    return numLines * this.lineHeight() + this.standardPadding() * 2 + (this.lineGap() * Math.max(numLines - 1, 0));
+    return numLines * this.lineHeight() 
+        + (this.standardPadding() + this.extraPadding()) * 2 
+        + (this.lineGap() * Math.max(numLines - 1, 0));
 };
 
 /**
@@ -210,6 +212,16 @@ Window_Base.prototype.processDrawIcon = function (iconIndex, textState) {
 };
 
 /**
+ * returns the index of the icon for the given button
+ * 
+ * @param {number} button the gamepad button
+ */
+Window_Base.prototype.getGamepadIcon = function (button) {
+    let type = ConfigManager.iconType * 16;
+    return type + button;
+};
+
+/**
  * Stats are drawn the same so this method can be called to draw any of them
  */
 Window_Base.prototype.drawActorStat = function (statValue, x, y, width, align) {
@@ -224,7 +236,7 @@ Window_Base.prototype.drawHorzLine = function (x, y, width = this.contentsWidth(
 };
 
 /**
- * Draws a horizontal line across the window
+ * Draws a vertical line across the window
  */
 Window_Base.prototype.drawVertLine = function (x, y, height = this.contentsHeight()) {
     this.contents.fillRect(x, y, 3, height, this.normalColor());
@@ -298,6 +310,13 @@ Window_Base.prototype.obtainEscapeParamFunc = function (textState) {
 
 Window_Selectable.prototype.column = function () {
     return this.index() - (this.maxCols() * this.row());
+};
+
+Window_Selectable.prototype.maxPageRows = function () {
+    let pageHeight = this.height 
+            - (this.padding + this.extraPadding()) * 2
+            - ((this.maxRows() - 1) * this.lineGap());
+    return Math.floor(pageHeight / this.lineHeight());
 };
 
 Window_Selectable.prototype.itemRect = function (index) {
