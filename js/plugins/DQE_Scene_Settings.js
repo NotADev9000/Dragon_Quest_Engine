@@ -161,11 +161,11 @@ Scene_Settings.prototype.onControlsOk = function () {
 
 Scene_Settings.prototype.onControlsCancel = function () {
     this._controlsWindow.deselect();
-    this.submenuCancel();
+    this.submenuCancel(false);
 };
 
-Scene_Settings.prototype.submenuCancel = function () {
-    ConfigManager.save();
+Scene_Settings.prototype.submenuCancel = function (save = true) {
+    if (save) ConfigManager.save();
     this._commandWindow.hideBackgroundDimmer();
     this._commandWindow.activate();
 };
@@ -186,6 +186,7 @@ Scene_Settings.prototype.selectLastCommand = function () {
     // clear last command
     this.setLastCommand(null);
 };
+
 /**
  * @param {String} symbol of last command selected in _commandWindow
  */

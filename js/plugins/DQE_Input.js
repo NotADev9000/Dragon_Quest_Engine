@@ -120,6 +120,28 @@ Input.getGamepadButton = function (handle) {
 };
 
 /**
+ * Gets the currently pressed button on the gamepad
+ * 
+ * @static
+ * @method getPressedGamepadButton
+ */
+Input.getPressedGamepadButton = function () {
+    let gamepads = navigator.getGamepads();
+    if (gamepads) {
+        for (let i = 0; i < gamepads.length; i++) {
+            let gamepad = gamepads[i];
+            if (gamepad?.connected) {
+                let buttons = gamepad.buttons;
+                for (let j = 0; j < buttons.length; j++) {
+                    if (buttons[j].pressed) return j;
+                }
+            }
+        }
+    }
+    return -1;
+};
+
+/**
  * Clears all the input data.
  *
  * @static

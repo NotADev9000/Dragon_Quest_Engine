@@ -113,6 +113,7 @@ var $plugins =
 {"name":"DQE_Window_SettingsWindow","status":true,"description":"A window for changing window settings - V0.1","parameters":{}},
 {"name":"DQE_Window_SettingsControls","status":true,"description":"A command window for accessing control config changes - V0.1","parameters":{}},
 {"name":"DQE_Window_Controls","status":true,"description":"The window for changing the controls for game actions - V0.1","parameters":{}},
+{"name":"DQE_Window_ControlsPress","status":true,"description":"Displays information about changing buttons - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}}
 ];

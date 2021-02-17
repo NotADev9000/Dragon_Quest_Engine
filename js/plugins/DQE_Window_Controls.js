@@ -104,16 +104,35 @@ Window_Controls.prototype.drawGrids = function () {
     }
 };
 
-Window_Controls.prototype.drawItem = function (index) {
+Window_Controls.prototype.drawItem = function (index, drawIcons = true) {
     let rect = this.itemRectForText(index);
     let iconX = rect.x + (rect.width - Window_Base._iconWidth);
     let handle = Input.handlers[index];
     let text = handle[1];
-    let icon = this.getGamepadIcon(handle[2]);
-    icon = `\\i[${icon}]`;
-
     this.drawText(text, rect.x, rect.y);
-    this.drawTextEx(icon, iconX, rect.y);
+
+    if (drawIcons) {
+        let icon = this.getGamepadIcon(handle[2]);
+        icon = `\\i[${icon}]`;
+        this.drawTextEx(icon, iconX, rect.y);
+    }
+};
+
+/**
+ * adjusts rect y and height to account for the icon
+ * 
+ * @param {number} index of item to clear
+ */
+Window_Controls.prototype.clearItem = function (index) {
+    let rect = this.itemRect(index);
+    rect.y -= this.calcIconCentre();
+    rect.height = Window_Base._iconHeight;
+    this.contents.clearRect(rect.x, rect.y, rect.width, rect.height);
+};
+
+Window_Controls.prototype.clearIcon = function (index) {
+    this.clearItem(index);
+    this.drawItem(index, false);
 };
 
 Window_Controls.prototype.itemRect = function (index) {
