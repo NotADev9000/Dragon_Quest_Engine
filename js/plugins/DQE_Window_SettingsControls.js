@@ -59,13 +59,13 @@ Window_SettingsControls.prototype.statusText = function (index) {
 Window_SettingsControls.prototype.iconText = function (value) {
     switch (value) {
         case Input.ICON_XBOX:
-            return 'Xbox';
+            return Input.GAMEPAD_NAME_XBOX;
         case Input.ICON_PLAYSTATION:
-            return 'PlayStation';
+            return Input.GAMEPAD_NAME_PLAYSTATION;
         case Input.ICON_SWITCH:
-            return 'Switch';
+            return Input.GAMEPAD_NAME_SWITCH;
         default:
-            return 'Generic';
+            return Input.GAMEPAD_NAME_GENERIC;
     }
 };
 

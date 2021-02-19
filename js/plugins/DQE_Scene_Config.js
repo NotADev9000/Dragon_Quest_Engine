@@ -43,6 +43,7 @@ Scene_Config.prototype.create = function () {
     this.createCommandWindow();
     this.createPressWindow();
     this.createControlsWindow();
+    this.createResetWindow();
 };
 
 //////////////////////////////
@@ -52,6 +53,7 @@ Scene_Config.prototype.create = function () {
 Scene_Config.prototype.createCommandWindow = function () {
     this._commandWindow = new Window_SettingsControls(48, 48, 1344);
     this._commandWindow.setHandler('config', this.commandConfig.bind(this));
+    this._commandWindow.setHandler('reset', this.commandReset.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
 };
@@ -74,6 +76,19 @@ Scene_Config.prototype.createControlsWindow = function () {
     this.addWindow(this._controlsWindow);
 };
 
+Scene_Config.prototype.createResetWindow = function () {
+    this._resetWindow = new Window_TitledCommand(48, 48, 431, 'Controller Style', 
+       [Input.GAMEPAD_NAME_GENERIC,
+        Input.GAMEPAD_NAME_XBOX, 
+        Input.GAMEPAD_NAME_PLAYSTATION, 
+        Input.GAMEPAD_NAME_NINTENDO]);
+    this._resetWindow.setHandler('ok', this.onResetOk.bind(this));
+    this._resetWindow.setHandler('cancel', this.onResetCancel.bind(this));
+    this._resetWindow.deactivate();
+    this._resetWindow.hide();
+    this.addWindow(this._resetWindow);
+};
+
 //////////////////////////////
 // Functions - on handlers
 //////////////////////////////
@@ -84,6 +99,32 @@ Scene_Config.prototype.commandConfig = function () {
     this._controlsWindow.activate();
 };
 
+Scene_Config.prototype.commandReset = function () {
+    this._commandWindow.showBackgroundDimmer();
+    this._controlsWindow.showBackgroundDimmer();
+    this._resetWindow.select(0);
+    this._resetWindow.show();
+    this._resetWindow.activate();
+};
+
+Scene_Config.prototype.onResetOk = function () {
+    let index = this._resetWindow.index();
+    ConfigManager.iconType = index + 1;
+    Input.resetGamepadMapper(index === 3);
+    Input.clear();
+    Input.update();
+    this._commandWindow.refresh();
+    this._controlsWindow.refresh();
+    this.onResetCancel();
+};
+
+Scene_Config.prototype.onResetCancel = function () {
+    this._commandWindow.hideBackgroundDimmer();
+    this._controlsWindow.hideBackgroundDimmer();
+    this._resetWindow.hide();
+    this._commandWindow.activate();
+};
+
 Scene_Config.prototype.onControlsOk = function () {
     let index = this._controlsWindow.index();
     this._controlsWindow.clearIcon(index);
@@ -91,7 +132,6 @@ Scene_Config.prototype.onControlsOk = function () {
     this._pressWindow.show();
     this._editMode = 1;
     this._buttonDelay = 12;
-
 };
 
 Scene_Config.prototype.onControlsCancel = function () {

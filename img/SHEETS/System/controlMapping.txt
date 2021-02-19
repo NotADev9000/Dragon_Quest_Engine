@@ -1,22 +1,17 @@
-gamepads:
-- confirm			'ok'
-- cancel
-- up
-- down
-- left
-- right
-- menu
-- help
-- sort items		'sort'
-- filter items		'filter'
-- previous category	'pagedown'
-- next category		'pageup'
-- previous actor	'previous'
-- next actor		'next'
+TODO:
+- help window
+- keyboard configuration
+- default gamepad mapping*
+	+ change icons
+	+ if nintendo controller -> change Input.gamepadMapper to Nintendo buttons
+		. Only 'ok' and 'cancel' need swapping
+	+ if nintendo controller -> function to update Input.handlers 
+		. Only 'ok' and 'cancel' need swapping
+- load keyboard/gamepad mapping
+	+ function to update Input.handlers
+		. Loop through array and replace item[2]
 
-icon selection
-reset to default
-
+* = pseudocode below for detecting controller
 if vendor = 057e || nintendo || pro || switch
 	give NINTENDO mapping, give SWITCH icons
 else 
