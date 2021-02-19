@@ -44,6 +44,7 @@ Scene_Config.prototype.create = function () {
     this.createPressWindow();
     this.createControlsWindow();
     this.createResetWindow();
+    this.createHelpWindow();
 };
 
 //////////////////////////////
@@ -89,6 +90,14 @@ Scene_Config.prototype.createResetWindow = function () {
     this.addWindow(this._resetWindow);
 };
 
+Scene_Config.prototype.createHelpWindow = function () {
+    let y = this._controlsWindow.y + this._controlsWindow.height;
+    this._helpWindow = new Window_Help(48, y, 1344, 3);
+    this.addWindow(this._helpWindow);
+    this._commandWindow.setHelpWindow(this._helpWindow);
+    this._controlsWindow.setHelpWindow(this._helpWindow);
+};
+
 //////////////////////////////
 // Functions - on handlers
 //////////////////////////////
@@ -102,6 +111,7 @@ Scene_Config.prototype.commandConfig = function () {
 Scene_Config.prototype.commandReset = function () {
     this._commandWindow.showBackgroundDimmer();
     this._controlsWindow.showBackgroundDimmer();
+    this._helpWindow.showBackgroundDimmer();
     this._resetWindow.select(0);
     this._resetWindow.show();
     this._resetWindow.activate();
@@ -121,6 +131,7 @@ Scene_Config.prototype.onResetOk = function () {
 Scene_Config.prototype.onResetCancel = function () {
     this._commandWindow.hideBackgroundDimmer();
     this._controlsWindow.hideBackgroundDimmer();
+    this._helpWindow.hideBackgroundDimmer();
     this._resetWindow.hide();
     this._commandWindow.activate();
 };

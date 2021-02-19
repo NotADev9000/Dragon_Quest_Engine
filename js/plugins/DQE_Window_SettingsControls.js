@@ -114,3 +114,24 @@ Window_SettingsControls.prototype.drawItem = function (index) {
     this.drawText(this.commandName(index), rect.x, rect.y);
     if (this._cmdType[index]) this.drawText(this.statusText(index), rect.x, rect.y, textWidth, 'right');
 };
+
+//////////////////////////////
+// Functions - help windows
+//////////////////////////////
+
+Window_SettingsControls.prototype.updateHelp = function () {
+    const index = this.index();
+    let text = '';
+    switch (index) {
+        case 1:
+            text = 'Change the icons displayed in menus.<BR>This choice does not affect the actual controls.';
+            break;
+        case 2:
+            text = 'Reset the controls back to a default setting.<BR>You can choose from various gamepad styles.';
+            break;
+        default:
+            text = 'Change the controls for the connected gamepad.<BR>Use the mouse buttons if you get stuck.'
+            break;
+    }
+    this.setHelpWindowItem(text);
+};

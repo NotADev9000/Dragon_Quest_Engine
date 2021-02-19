@@ -151,6 +151,60 @@ Window_Controls.prototype.itemRect = function (index) {
 };
 
 //////////////////////////////
+// Functions - help windows
+//////////////////////////////
+
+Window_Controls.prototype.updateHelp = function () {
+    const index = this.index();
+    let text = '';
+    switch (index) {
+        case 1:
+            text = 'Cancel/Go back/Close menu';
+            break;
+        case 2:
+            text = 'Move cursor up/Move character up';
+            break;
+        case 3:
+            text = 'Move cursor down/Move character down';
+            break;
+        case 4:
+            text = 'Move cursor left/Move character left';
+            break;
+        case 5:
+            text = 'Move cursor right/Move character right';
+            break;
+        case 6:
+            text = 'Open the main menu';
+            break;
+        case 7:
+            text = 'Open various help menus';
+            break;
+        case 8:
+            text = 'Sort items by category';
+            break;
+        case 9:
+            text = 'Filter items out of player inventory and into the bag';
+            break;
+        case 10:
+            text = 'Go to previous category in menu';
+            break;
+        case 11:
+            text = 'Go to next category in menu';
+            break;
+        case 12:
+            text = 'Go to previous party member in menu';
+            break;
+        case 13:
+            text = 'Go to next party member in menu';
+            break;
+        default:
+            text = 'Confirm/Talk'
+            break;
+    }
+    this.setHelpWindowItem(text);
+};
+
+//////////////////////////////
 // Functions - refresh
 //////////////////////////////
 

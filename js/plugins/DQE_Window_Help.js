@@ -42,6 +42,10 @@ Window_Help.prototype.standardPadding = function () {
     return 24;
 };
 
+Window_Help.prototype.setItem = function (item) {
+    this.setText(item ? item.description || item : '');
+};
+
 Window_Help.prototype.refresh = function () {
     this.contents.clear();
     this.drawTextEx(this._text, 0, 0);
