@@ -35,9 +35,10 @@ function Window_Controls() {
 Window_Controls.prototype = Object.create(Window_Selectable.prototype);
 Window_Controls.prototype.constructor = Window_Controls;
 
-Window_Controls.prototype.initialize = function (x, y, width) {
+Window_Controls.prototype.initialize = function (x, y, width, mode) {
     let height = this.windowHeight();
     Window_Selectable.prototype.initialize.call(this, x, y, width, height);
+    this._mode = mode; // 0 = keyboard, 1 = gamepad
     this.refresh();
 };
 
@@ -112,7 +113,7 @@ Window_Controls.prototype.drawItem = function (index, drawIcons = true) {
     this.drawText(text, rect.x, rect.y);
 
     if (drawIcons) {
-        let icon = this.getGamepadIcon(handle[2]);
+        let icon = this._mode ? this.getGamepadIcon(handle[2]) : this.getKeyIcon(handle[3]);
         icon = `\\i[${icon}]`;
         this.drawTextEx(icon, iconX, rect.y);
     }

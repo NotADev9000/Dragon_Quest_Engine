@@ -156,7 +156,8 @@ Scene_Settings.prototype.onWindowCancel = function () {
 
 Scene_Settings.prototype.onControlsOk = function () {
     this.setLastCommand(this._commandWindow.currentSymbol());
-    SceneManager.push(Scene_Config);
+    const scene = this._controlsWindow.index() ? Scene_ConfigGamepad : Scene_ConfigKeyboard;
+    SceneManager.push(scene);
 };
 
 Scene_Settings.prototype.onControlsCancel = function () {

@@ -212,6 +212,16 @@ Window_Base.prototype.processDrawIcon = function (iconIndex, textState) {
 };
 
 /**
+ * returns the index of the icon for the given key
+ * 
+ * @param {number} key the key
+ */
+Window_Base.prototype.getKeyIcon = function (key) {
+    let type = 5 * 16;
+    return type + key;
+};
+
+/**
  * returns the index of the icon for the given button
  * 
  * @param {number} button the gamepad button

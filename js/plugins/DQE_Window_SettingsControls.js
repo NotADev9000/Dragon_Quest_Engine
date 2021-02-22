@@ -35,13 +35,18 @@ function Window_SettingsControls() {
 Window_SettingsControls.prototype = Object.create(Window_Settings.prototype);
 Window_SettingsControls.prototype.constructor = Window_SettingsControls;
 
+Window_SettingsControls.prototype.initialize = function (x, y, width, mode) {
+    this._mode = mode; // 0 = keyboard, 1 = gamepad
+    Window_Settings.prototype.initialize.call(this, x, y, width);
+};
+
 //////////////////////////////
 // Functions - commands
 //////////////////////////////
 
 Window_SettingsControls.prototype.makeCommandList = function () {
     this.addCommand('Change Configuration', 'config');
-    this.addCommand('Icon Type', 'iconType', Window_Settings.COMMAND_TYPE_ICON);
+    if (this._mode === 1) this.addCommand('Icon Type', 'iconType', Window_Settings.COMMAND_TYPE_ICON);
     this.addCommand('Reset to Default', 'reset');
 };
 

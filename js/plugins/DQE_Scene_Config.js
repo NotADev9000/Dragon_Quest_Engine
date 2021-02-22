@@ -6,7 +6,7 @@
 /*:
 *
 * @author NotADev
-* @plugindesc The scene for the controls config menu - V0.1
+* @plugindesc The scene for the control config menus - V0.1
 *
 * @help
 * N/A
@@ -38,26 +38,9 @@ Scene_Config.prototype.initialize = function () {
     Scene_MenuBase.prototype.initialize.call(this);
 };
 
-Scene_Config.prototype.create = function () {
-    Scene_MenuBase.prototype.create.call(this);
-    this.createCommandWindow();
-    this.createPressWindow();
-    this.createControlsWindow();
-    this.createResetWindow();
-    this.createHelpWindow();
-};
-
 //////////////////////////////
 // Functions - create windows
 //////////////////////////////
-
-Scene_Config.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_SettingsControls(48, 48, 1344);
-    this._commandWindow.setHandler('config', this.commandConfig.bind(this));
-    this._commandWindow.setHandler('reset', this.commandReset.bind(this));
-    this._commandWindow.setHandler('cancel', this.popScene.bind(this));
-    this.addWindow(this._commandWindow);
-};
 
 Scene_Config.prototype.createPressWindow = function () {
     let width = 504;
@@ -67,27 +50,6 @@ Scene_Config.prototype.createPressWindow = function () {
     this._pressWindow = new Window_ControlsPress(x, y, width, height);
     this._pressWindow.hide();
     this.addWindow(this._pressWindow);
-};
-
-Scene_Config.prototype.createControlsWindow = function () {
-    let y = this._commandWindow.y + this._commandWindow.height;
-    this._controlsWindow = new Window_Controls(48, y, 1344);
-    this._controlsWindow.setHandler('ok', this.onControlsOk.bind(this));
-    this._controlsWindow.setHandler('cancel', this.onControlsCancel.bind(this));
-    this.addWindow(this._controlsWindow);
-};
-
-Scene_Config.prototype.createResetWindow = function () {
-    this._resetWindow = new Window_TitledCommand(48, 48, 431, 'Controller Style', 
-       [Input.GAMEPAD_NAME_GENERIC,
-        Input.GAMEPAD_NAME_XBOX, 
-        Input.GAMEPAD_NAME_PLAYSTATION, 
-        Input.GAMEPAD_NAME_NINTENDO]);
-    this._resetWindow.setHandler('ok', this.onResetOk.bind(this));
-    this._resetWindow.setHandler('cancel', this.onResetCancel.bind(this));
-    this._resetWindow.deactivate();
-    this._resetWindow.hide();
-    this.addWindow(this._resetWindow);
 };
 
 Scene_Config.prototype.createHelpWindow = function () {
@@ -108,34 +70,6 @@ Scene_Config.prototype.commandConfig = function () {
     this._controlsWindow.activate();
 };
 
-Scene_Config.prototype.commandReset = function () {
-    this._commandWindow.showBackgroundDimmer();
-    this._controlsWindow.showBackgroundDimmer();
-    this._helpWindow.showBackgroundDimmer();
-    this._resetWindow.select(0);
-    this._resetWindow.show();
-    this._resetWindow.activate();
-};
-
-Scene_Config.prototype.onResetOk = function () {
-    let index = this._resetWindow.index();
-    ConfigManager.iconType = index + 1;
-    Input.resetGamepadMapper(index === 3);
-    Input.clear();
-    Input.update();
-    this._commandWindow.refresh();
-    this._controlsWindow.refresh();
-    this.onResetCancel();
-};
-
-Scene_Config.prototype.onResetCancel = function () {
-    this._commandWindow.hideBackgroundDimmer();
-    this._controlsWindow.hideBackgroundDimmer();
-    this._helpWindow.hideBackgroundDimmer();
-    this._resetWindow.hide();
-    this._commandWindow.activate();
-};
-
 Scene_Config.prototype.onControlsOk = function () {
     let index = this._controlsWindow.index();
     this._controlsWindow.clearIcon(index);
@@ -149,57 +83,6 @@ Scene_Config.prototype.onControlsCancel = function () {
     this._controlsWindow.deselect();
     this._commandWindow.hideBackgroundDimmer();
     this._commandWindow.activate();
-};
-
-//////////////////////////////
-// Functions - data
-//////////////////////////////
-
-/**
- * Checks for gamepad button pressed
- * (and Esc key for canceling)
- */
-Scene_Config.prototype.checkButtonPress = function () {
-    if (Input.isTriggered('escape')) {
-        this.cancelButtonChange();
-        return;
-    }
-    let button = Input.getPressedGamepadButton();
-    if (button >= 0 && button <= 15) this.applyButtonChange(button);
-};
-
-/**
- * 
- * @param {number} button ID of pressed gamepad button
- */
-Scene_Config.prototype.applyButtonChange = function (button) {
-    let index = this._controlsWindow.index();
-    let handle = Input.handlers[index];
-    let handleId = handle[0]; // handle ID e.g. 'ok'
-    // remove former button from mapper
-    let formerButton = Input.gamepadMapper[handle[2]];
-    let removeAt = formerButton.indexOf(handleId);
-    if (removeAt > -1) formerButton.splice(removeAt, 1);
-    // add new button to mapper
-    let newButton = Input.gamepadMapper[button];
-    newButton.push(handleId);
-    // add new button to Input.handlers array
-    handle[2] = button;
-    // refresh input
-    Input.update();
-    Input.clear();
-    this._controlsWindow.redrawItem(index);
-    this._pressWindow.hide();
-    // reset button delay
-    this._editMode = 2;
-    this._buttonDelay = 12;
-};
-
-Scene_Config.prototype.cancelButtonChange = function () {
-    let index = this._controlsWindow.index();
-    this._controlsWindow.redrawItem(index);
-    this._pressWindow.hide();
-    this.buttonChangeUpdateWindows();
 };
 
 //////////////////////////////

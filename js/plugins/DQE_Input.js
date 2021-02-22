@@ -41,41 +41,121 @@ Input.GAMEPAD_NAME_SWITCH = 'Switch';
 Input.GAMEPAD_NAME_NINTENDO = 'Nintendo';
 Input.GAMEPAD_NAME_GENERIC = 'Generic';
 
+// [0] = ID, [1] = display name, [2] = gamepad button, [3] = keyboard button
+Input.handlers = [
+    ['ok',       'Confirm',              0, 0],
+    ['cancel',   'Cancel',               0, 0],
+    ['up',       'Move Up',              0, 0],
+    ['down',     'Move Down',            0, 0],
+    ['left',     'Move Left',            0, 0],
+    ['right',    'Move Right',           0, 0],
+    ['menu',     'Menu',                 0, 0],
+    ['help',     'Help',                 0, 0],
+    ['sort',     'Sort Items',           0, 0],
+    ['filter',   'Filter Items',         0, 0],
+    ['pagedown', 'Previous Category',    0, 0],
+    ['pageup',   'Next Category',        0, 0],
+    ['previous', 'Previous Member',      0, 0],
+    ['next',     'Next Member',          0, 0]
+];
+
+Input.keyDown = null;
+
 /**
- * A hash table to convert from a virtual key code to a mapped key name.
+ * Resets keyboard controls
  *
  * @static
- * @property keyMapper
- * @type Object
+ * @method resetKeyMapper
  */
-Input.keyMapper = {
-    13: ['ok'],       // enter
-    17: ['control'],  // control
-    27: ['escape'],   // escape
-    32: ['ok'],       // space
-    37: ['left'],     // left arrow
-    38: ['up'],       // up arrow
-    39: ['right'],    // right arrow
-    40: ['down'],     // down arrow
-    65: ['sort', 'help', 'previous'],     // A
-    83: ['filter', 'next'],   // S
-    81: ['pagedown'], // Q
-    87: ['pageup'],   // W
-    88: ['menu', 'cancel'],   // X
-    90: ['ok'],       // Z
-    120: ['debug']    // F9
-};
+Input.resetKeyMapper = function () {
+    // A hash table to convert from a virtual key code to a mapped key name.
+    Input.keyMapper = {
+        8:  [],                             // backspace
+        9:  [],                             // tab
+        13: [],                             // enter
+        16: [],                             // Shift
+        17: ['control'],                    // control
+        18: [],                             // Alt
+        27: ['escape'],                     // escape
+        32: ['ok'],                         // space
+        37: ['left'],                       // left arrow
+        38: ['up'],                         // up arrow
+        39: ['right'],                      // right arrow
+        40: ['down'],                       // down arrow
+        48: [],                             // 0
+        49: [],                             // 1
+        50: [],                             // 2
+        51: [],                             // 3
+        52: [],                             // 4
+        53: [],                             // 5
+        54: [],                             // 6
+        55: [],                             // 7
+        56: [],                             // 8
+        57: [],                             // 9
+        65: ['sort', 'help', 'previous'],   // A
+        66: [],                             // B
+        67: [],                             // C
+        68: [],                             // D
+        69: [],                             // E
+        70: [],                             // F
+        71: [],                             // G
+        72: [],                             // H
+        73: [],                             // I
+        74: [],                             // J
+        75: [],                             // K
+        76: [],                             // L
+        77: [],                             // M
+        78: [],                             // N
+        79: [],                             // O
+        80: [],                             // P
+        81: ['pagedown'],                   // Q
+        82: [],                             // R
+        83: ['filter', 'next'],             // S
+        84: [],                             // T
+        85: [],                             // U
+        86: [],                             // V
+        87: ['pageup'],                     // W
+        88: ['menu', 'cancel'],             // X
+        89: [],                             // Y
+        90: [],                             // Z
+        120: ['debug'],                     // F9
+        186: [],                            // Semicolon
+        187: [],                            // =
+        188: [],                            // Comma
+        189: [],                            // -
+        190: [],                            // Period
+        191: [],                            // Slash
+        192: [],                            // Backtick (A.K.A Grave, also the same key as the tilde on US keyboards)
+        219: [],                            // Open brace
+        220: [],                            // Backslash
+        221: [],                            // Closing brace
+        222: []                             // Quote
+    };
 
-//////////////////////////////
-// Functions - config
-//////////////////////////////
+    let handles = Input.handlers;
+    handles[0][3] = 32;
+    handles[1][3] = 88;
+    handles[2][3] = 38;
+    handles[3][3] = 40;
+    handles[4][3] = 37;
+    handles[5][3] = 39;
+    handles[6][3] = 88;
+    handles[7][3] = 65;
+    handles[8][3] = 65;
+    handles[9][3] = 83;
+    handles[10][3] = 81;
+    handles[11][3] = 87;
+    handles[12][3] = 65;
+    handles[13][3] = 83;
+};
+Input.resetKeyMapper();
 
 /**
  * Resets gamepad controls to standard or nintendo style
  * 
  * @static
  * @method resetGamepadMapper
- * @param {Boolean} nintendoMap
+ * @param {Boolean} nintendoMap should the controller be mapped to the Nintendo buttons
  */
 Input.resetGamepadMapper = function (nintendoMap) {
     // A hash table to convert from a gamepad button to a mapped key name.
@@ -98,23 +178,23 @@ Input.resetGamepadMapper = function (nintendoMap) {
         14: ['left'],                       // D-pad left
         15: ['right']                       // D-pad right
     };
-    // handler[0] = ID, handler[1] = display name, handler[2] = gamepad button
-    Input.handlers = [
-        ['ok', 'Confirm', 0],
-        ['cancel', 'Cancel', 1],
-        ['up', 'Move Up', 12],
-        ['down', 'Move Down', 13],
-        ['left', 'Move Left', 14],
-        ['right', 'Move Right', 15],
-        ['menu', 'Menu', 3],
-        ['help', 'Help', 2],
-        ['sort', 'Sort Items', 2],
-        ['filter', 'Filter Items', 3],
-        ['pagedown', 'Previous Category', 6],
-        ['pageup', 'Next Category', 7],
-        ['previous', 'Previous Member', 4],
-        ['next', 'Next Member', 5]
-    ];
+
+    let handles = Input.handlers;
+    handles[0][2] = 0;
+    handles[1][2] = 1;
+    handles[2][2] = 12;
+    handles[3][2] = 13;
+    handles[4][2] = 14;
+    handles[5][2] = 15;
+    handles[6][2] = 3;
+    handles[7][2] = 2;
+    handles[8][2] = 2;
+    handles[9][2] = 3;
+    handles[10][2] = 6;
+    handles[11][2] = 7;
+    handles[12][2] = 4;
+    handles[13][2] = 5;
+
     // nintendo styled controller
     if (nintendoMap) {
         // button 0 = cancel
@@ -128,8 +208,11 @@ Input.resetGamepadMapper = function (nintendoMap) {
         Input.handlers[1][2] = 0;
     }
 };
-
 Input.resetGamepadMapper(false);
+
+//////////////////////////////
+// Functions - config
+//////////////////////////////
 
 /**
  * Gets the currently pressed button on the gamepad
@@ -169,6 +252,19 @@ Input.getGamepadButton = function (handle) {
     return -1;
 };
 
+Input.checkKey = function () {
+    return this._checkKey;
+};
+
+Input.setCheckKey = function (check) {
+    return this._checkKey = check;
+};
+
+Input.resetChecks = function () {
+    this.setCheckKey(false);
+    this.keyDown = null;
+};
+
 //////////////////////////////
 // Functions - inputs
 //////////////////////////////
@@ -189,6 +285,7 @@ Input.clear = function () {
     this._dir8 = 0;
     this._preferredAxis = '';
     this._date = 0;
+    this._checkKey = false; // is config mode on and key is being checked?
 };
 
 /**
@@ -282,6 +379,7 @@ Input._onKeyDown = function (event) {
     if (event.keyCode === 144) {    // Numlock
         this.clear();
     }
+    if (this._checkKey) Input.keyDown = event.keyCode;
     let buttonNames = this.keyMapper[event.keyCode];
     if (ResourceHandler.exists() && buttonNames.contains('ok')) {
         ResourceHandler.retry();

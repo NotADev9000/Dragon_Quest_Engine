@@ -1,5 +1,4 @@
 TODO:
-- keyboard configuration
 - default gamepad mapping*
 	+ change icons
 	+ if nintendo controller -> change Input.gamepadMapper to Nintendo buttons
