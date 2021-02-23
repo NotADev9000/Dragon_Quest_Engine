@@ -214,7 +214,7 @@ Window_Base.prototype.processDrawIcon = function (iconIndex, textState) {
 /**
  * returns the index of the icon for the given key
  * 
- * @param {number} key the key
+ * @param {number} key the key mapper value
  */
 Window_Base.prototype.getKeyIcon = function (key) {
     let type = 5 * 16;
@@ -224,11 +224,22 @@ Window_Base.prototype.getKeyIcon = function (key) {
 /**
  * returns the index of the icon for the given button
  * 
- * @param {number} button the gamepad button
+ * @param {number} button the gamepad mapper button value
  */
 Window_Base.prototype.getGamepadIcon = function (button) {
     let type = ConfigManager.iconType * 16;
     return type + button;
+};
+
+/**
+ * returns the index of the icon for the given handle
+ * returns a gamepad icon if a gamepad is connected
+ * 
+ * @param {String} handle the action handle e.g. 'ok'
+ */
+Window_Base.prototype.getHandlerIcon = function (handle) {
+    let inputHandle = Input.handlers.find(arr => arr[0] === handle);
+    return Input.getConnectedGamepad() ? this.getGamepadIcon(inputHandle[2]) : this.getKeyIcon(inputHandle[3]);
 };
 
 /**

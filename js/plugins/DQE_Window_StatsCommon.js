@@ -37,18 +37,22 @@ Window_StatsCommon.prototype.drawNameTitle = function (title) {
     let itemHeight = this.lineHeight() + this.lineGap();
     let rightIconX = this.contentsWidth() - Window_Base._iconWidth - this.textWidth(' ');
     let y = this.extraPadding();
-    // icons (switching actors)
-    // this.drawTextEx(' \\i[1]', 0, y);
-    // this.drawTextEx('\\i[2] ', rightIconX, y);
+    // icons (switching windows)
+    let icon = this.getHandlerIcon('pagedown');
+    this.drawTextEx(` \\i[${icon}]`, 0, y);
+    icon = this.getHandlerIcon('pageup');
+    this.drawTextEx(`\\i[${icon}] `, rightIconX, y);
     // window name
     this.drawText(title, 0, y, this.contentsWidth(), 'center');
     y += itemHeight;
     // horizontal rule
     this.drawHorzLine(0, y);
     y += this.lineGap() + 3;
-    // icons (switching windows)
-    // this.drawTextEx(' \\i[1]', 0, y);
-    // this.drawTextEx('\\i[2] ', rightIconX, y, this.contentsWidth(), 'right');
+    // icons (switching actors)
+    icon = this.getHandlerIcon('previous');
+    this.drawTextEx(` \\i[${icon}]`, 0, y);
+    icon = this.getHandlerIcon('next');
+    this.drawTextEx(`\\i[${icon}] `, rightIconX, y, this.contentsWidth(), 'right');
     // actor name & level
     this.drawText(text, 0, y, this.contentsWidth(), 'center');
     y += itemHeight;
