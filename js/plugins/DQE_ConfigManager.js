@@ -120,11 +120,10 @@ ConfigManager.readInput = function (config) {
     let handlers = config['handlers'];
     let keyInputs = config['keyMapper'];
     let padInputs = config['gamepadMapper'];
-    if (!handlers || !keyInputs || !padInputs) {
-        // do gamepad inits
-    } else {
+    if (handlers && keyInputs && padInputs) {
         Input.handlers = handlers;
         Input.keyMapper = keyInputs;
         Input.gamepadMapper = padInputs;
+        ConfigManager.savedGamepadMap = true;
     }
 };

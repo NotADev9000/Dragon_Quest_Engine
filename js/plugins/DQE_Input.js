@@ -214,6 +214,40 @@ Input.resetGamepadMapper(false);
 // Functions - config
 //////////////////////////////
 
+Input.getConnectedGamepad = function () {
+    if (navigator.getGamepads) {
+        var gamepads = navigator.getGamepads();
+        if (gamepads) {
+            for (let i = 0; i < gamepads.length; i++) {
+                let gamepad = gamepads[i];
+                if (gamepad?.connected) return gamepad;
+            }
+        }
+    }
+    return null;
+};
+
+Input.autoMapConnectedGamepad = function (event) {
+    if (ConfigManager.savedGamepadMap) return; // don't auto-map controller if a configuration has already been saved
+    const connectedPad = this.getConnectedGamepad();
+    const gamepad = event.gamepad;
+    // make sure that the connected gamepad matches the one in the first slot
+    if (connectedPad.index === gamepad.index) {
+        const id = gamepad.id.toLowerCase();
+        const nintendoIds = ['0547e', 'nintendo', 'switch', 'pro'];
+        const playstationIds = ['054c', 'playstation', 'sony', 'ps3', 'ps4', 'ps5', 'dualshock'];
+        const xboxIds = ['045e', 'xbox', 'x-box', '360', 'microsoft'];
+        if (nintendoIds.some(ninId => id.includes(ninId))) {
+            ConfigManager.iconType = Input.ICON_SWITCH;
+            this.resetGamepadMapper(true);
+        } else if (playstationIds.some(psId => id.includes(psId))) {
+            ConfigManager.iconType = Input.ICON_PLAYSTATION;
+        } else if (xboxIds.some(xboxIds => id.includes(xboxIds))) {
+            ConfigManager.iconType = Input.ICON_XBOX;
+        }
+    }
+};
+
 /**
  * Gets the currently pressed button on the gamepad
  * 
@@ -231,22 +265,6 @@ Input.getPressedGamepadButton = function () {
                     if (buttons[j].pressed) return j;
                 }
             }
-        }
-    }
-    return -1;
-};
-
-/**
- * Gets the gamepad button associated with the given handle
- * 
- * @static
- * @method getGamepadButton
- * @param {String} handle 
- */
-Input.getGamepadButton = function (handle) {
-    for (let i = 0; i < 16; i++) {
-        for (const currentHandle of Input.gamepadMapper[i]) {
-            if (handle === currentHandle) return i;
         }
     }
     return -1;
@@ -364,6 +382,17 @@ Input.isLongPressed = function (keyName) {
         return (this._latestButton.contains(keyName) &&
             this._pressedTime >= this.keyRepeatWait);
     }
+};
+
+/**
+ * @static
+ * @method _setupEventHandlers
+ * @private
+ */
+DQEng.Input._setupEventHandlers = Input._setupEventHandlers;
+Input._setupEventHandlers = function () {
+    DQEng.Input._setupEventHandlers.call(this);
+    window.addEventListener('gamepadconnected', this.autoMapConnectedGamepad.bind(this));
 };
 
 /**
