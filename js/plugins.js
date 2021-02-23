@@ -108,6 +108,7 @@ var $plugins =
 {"name":"DQE_Window_BattleLog","status":true,"description":"The window for displaying battle progress - V0.1","parameters":{}},
 {"name":"DQE_Window_CustomCommand","status":true,"description":"Window for selecting some commands passed as parameters on initialization - V0.1","parameters":{}},
 {"name":"DQE_Window_AilmentsBuffs","status":true,"description":"A window breaking down a battlers ailments & buffs - V0.1","parameters":{}},
+{"name":"DQE_Window_ShowBuffs","status":true,"description":"Displays information about opening buff window - V0.1","parameters":{}},
 {"name":"DQE_Window_Settings","status":true,"description":"The parent window for various settings windows - V0.1","parameters":{}},
 {"name":"DQE_Window_SettingsBattle","status":true,"description":"A window for changing battle settings - V0.1","parameters":{}},
 {"name":"DQE_Window_SettingsAudio","status":true,"description":"A window for changing audio settings - V0.1","parameters":{}},

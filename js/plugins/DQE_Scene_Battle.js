@@ -34,6 +34,8 @@ Scene_Battle.prototype.createAllWindows = function () {
     this.createLogWindow();
     // party status
     this.createStatusWindow();
+    // ailments/buffs windows 1
+    this.createShowBuffsWindow();
     // command windows
     this.createPartyCommandWindow();
     this.createActorCommandWindow();
@@ -64,7 +66,7 @@ Scene_Battle.prototype.createAllWindows = function () {
     this.createLineUpGroupConfirmWindow();
     // misc. windows
     this.createMiscWindow();
-    // ailments/buffs windows
+    // ailments/buffs windows 2
     this.createAilmentsBuffsWindow();
     // text windows 2
     this.createMessageWindow();
@@ -85,6 +87,14 @@ Scene_Battle.prototype.createStatusWindow = function () {
         this._statusWindow[i] = new Window_BattleStatus(144 + (Window_MenuStatus.prototype.windowWidth() * i), -12, partyMembers[i]);
         this.addWindow(this._statusWindow[i]);
     }
+};
+
+// ailments/buffs windows 1
+
+Scene_Battle.prototype.createShowBuffsWindow = function () {
+    let y = this._statusWindow[0].y + this._statusWindow[0].height;
+    this._showBuffsWindow = new Window_ShowBuffs(144, y, 343, 75);
+    this.addWindow(this._showBuffsWindow);
 };
 
 // command windows
@@ -332,7 +342,7 @@ Scene_Battle.prototype.createMiscWindow = function () {
     this.addWindow(this._miscWindow);
 };
 
-// ailments/buffs windows
+// ailments/buffs windows 2
 
 Scene_Battle.prototype.createAilmentsBuffsWindow = function () {
     let x = 144;
@@ -839,11 +849,13 @@ Scene_Battle.prototype.startPartyCommandSelection = function () {
     this.refreshStatus();
     this._actorCommandWindow.close();
     this._partyCommandWindow.setup();
+    this._showBuffsWindow.show();
     this.showEnemyWindow(0, Window_BattleEnemy.STATE_GROUP);
 };
 
 Scene_Battle.prototype.startActorCommandSelection = function () {
     this._partyCommandWindow.close();
+    this._showBuffsWindow.hide();
     this._actorCommandWindow.setup(BattleManager.actor());
     this.showEnemyWindow(1, Window_BattleEnemy.STATE_GROUP);
 };
@@ -914,6 +926,7 @@ Scene_Battle.prototype.onSelectAction = function () {
 
 Scene_Battle.prototype.endCommandSelection = function () {
     this._partyCommandWindow.close();
+    this._showBuffsWindow.hide();
     this._actorCommandWindow.close();
     this._enemyWindow.hide();
 };
@@ -1043,6 +1056,7 @@ Scene_Battle.prototype.stop = function () {
         this.startFadeOut(this.fadeSpeed(), false);
     }
     this._partyCommandWindow.close();
+    this._showBuffsWindow.hide();
     this._actorCommandWindow.close();
 };
 
