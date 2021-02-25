@@ -717,6 +717,8 @@ Scene_Battle.prototype.onLineUpIndivWithWhoOk = function () {
     if ($gameParty.attemptSwap(swapWho, swapWith)) {
         $gameParty.swapOrder(swapWho, swapWith);
         this.refreshStatusIndex(swapWho, swapWho);
+        this._ailmentsBuffsWindow.updateData();
+        this._ailmentsBuffsWindow.updateBattler();
         this._partyCommandWindow.select(0);
         this._lineUpIndivStatusWindow.hide();
         this._lineUpIndivStatusWindow.hideBackgroundDimmer();
@@ -778,6 +780,8 @@ Scene_Battle.prototype.onLineUpGroupConfirmOk = function () {
     if ($gameParty.checkGroupOrder(this._lineUpGroupListWindow._list)) {
         $gameParty.newOrder(this._lineUpGroupListWindow._list);
         this.refreshAllStatusIndex();
+        this._ailmentsBuffsWindow.updateData();
+        this._ailmentsBuffsWindow.updateBattler();
         this._partyCommandWindow.select(0);
         this._lineUpGroupConfirmWindow.hide();
         this._lineUpGroupConfirmWindow.hideBackgroundDimmer();

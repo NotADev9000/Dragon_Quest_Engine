@@ -52,6 +52,10 @@ BattleManager.initMembers = function () {
     this._escapeRatio = 0.25;
 };
 
+BattleManager.allMembers = function () {
+    return $gameParty.allMembers().concat($gameTroop.members());
+};
+
 /**
  * Displays emerge messages depending on enemy size & type
  * 

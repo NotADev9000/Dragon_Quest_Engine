@@ -37,7 +37,7 @@ Window_AilmentsBuffs.prototype.constructor = Window_AilmentsBuffs;
 
 Window_AilmentsBuffs.prototype.initialize = function (x, y, width, height) {
     Window_Selectable.prototype.initialize.call(this, x, y, width, height);
-    this._data = this.battlerData();
+    this.updateData();
     this._category = -1;
     this._battler = null;
 };
@@ -79,7 +79,16 @@ Window_AilmentsBuffs.prototype.titleBlockHeight = function () {
 //////////////////////////////
 
 Window_AilmentsBuffs.prototype.battlerData = function () {
-    return BattleManager.allBattleMembers();
+    return BattleManager.allMembers();
+};
+
+Window_AilmentsBuffs.prototype.updateData = function () {
+    this._data = this.battlerData();
+};
+
+// called when line-up is changed in battle
+Window_AilmentsBuffs.prototype.updateBattler = function () {
+    this._battler = this._data[0];
 };
 
 Window_AilmentsBuffs.prototype.setCategory = function (category) {
