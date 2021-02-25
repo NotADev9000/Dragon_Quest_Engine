@@ -72,3 +72,7 @@ Scene_Menu.prototype.commandEquip = function () {
 Scene_Menu.prototype.commandStatus = function () {
     SceneManager.push(Scene_Status);
 };
+
+Scene_Menu.prototype.commandSave = function () {
+    SceneManager.push(Scene_Misc);
+};

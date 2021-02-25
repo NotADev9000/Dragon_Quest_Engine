@@ -43,6 +43,7 @@ var $plugins =
 {"name":"DQE_Scene_Equip","status":true,"description":"The scene for the equip menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_Battle","status":true,"description":"The scene for the battle - V0.1","parameters":{}},
 {"name":"DQE_Scene_Status","status":true,"description":"The scene for the status menu - V0.1","parameters":{}},
+{"name":"DQE_Scene_Misc","status":true,"description":"The scene for the misc menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_Settings","status":true,"description":"The scene for the settings menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_Config","status":true,"description":"The scene for the config menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_ConfigKeyboard","status":true,"description":"The scene for the keyboard config menus - V0.1","parameters":{}},
