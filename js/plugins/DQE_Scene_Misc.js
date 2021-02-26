@@ -48,6 +48,8 @@ Scene_Misc.prototype.create = function () {
     this.createLineUpPartyWindow();
     this.createLineUpListWindow();
     this.createLineUpStatusWindow();
+    this.createLineUpConfirmWindow();
+    this.createMessageWindow();
     // set windows created
     this._windowsCreated = true;
     this.selectLastCommand();
@@ -77,7 +79,7 @@ Scene_Misc.prototype.createLineUpPartyWindow = function () {
     this._lineUpPartyWindow = new Window_PartyOrder(x, 48, 354);
     this._lineUpPartyWindow.deactivate();
     this._lineUpPartyWindow.deselect();
-    // this._lineUpPartyWindow.setHandler('ok', this.onLineUpGroupPartyOk.bind(this));
+    this._lineUpPartyWindow.setHandler('ok', this.onLineUpPartyOk.bind(this));
     this._lineUpPartyWindow.setHandler('cancel', this.onLineUpPartyCancel.bind(this));
     this._lineUpPartyWindow.hide();
     this.addWindow(this._lineUpPartyWindow);
@@ -100,6 +102,23 @@ Scene_Misc.prototype.createLineUpStatusWindow = function () {
     this.addWindow(this._lineUpStatusWindow);
 };
 
+Scene_Misc.prototype.createLineUpConfirmWindow = function () {
+    let x = this._lineUpPartyWindow.x;
+    let y = this._lineUpPartyWindow.y;
+    this._lineUpConfirmWindow = new Window_CustomCommand(x, y, 354, ['Confirm', 'Cancel']);
+    this._lineUpConfirmWindow.setHandler('Confirm', this.onLineUpConfirmOk.bind(this));
+    this._lineUpConfirmWindow.setHandler('Cancel', this.onLineUpConfirmCancel.bind(this));
+    this._lineUpConfirmWindow.setHandler('cancel', this.onLineUpConfirmCancel.bind(this));
+    this._lineUpConfirmWindow.deactivate();
+    this._lineUpConfirmWindow.hide();
+    this.addWindow(this._lineUpConfirmWindow);
+};
+
+Scene_Misc.prototype.createMessageWindow = function () {
+    this._messageWindow = new Window_Message();
+    this.addWindow(this._messageWindow);
+};
+
 //////////////////////////////
 // Functions - on handlers
 //////////////////////////////
@@ -116,6 +135,21 @@ Scene_Misc.prototype.commandSettings = function () {
     SceneManager.push(Scene_Settings);
 };
 
+Scene_Misc.prototype.onLineUpPartyOk = function () {
+    if (this._lineUpListWindow._list.length < this._lineUpListWindow._rows) { // if there's room in the list window
+        this._lineUpPartyWindow.updateAssociatedWindow(this._lineUpPartyWindow.currentSymbol());
+        this._lineUpPartyWindow.activate();
+    }
+    if (this._lineUpListWindow._list.length >= this._lineUpListWindow._rows) {
+        this._lineUpStatusWindow.hide();
+        this._lineUpPartyWindow.showBackgroundDimmer();
+        this._lineUpPartyWindow.deactivate();
+        this._lineUpConfirmWindow.select(0);
+        this._lineUpConfirmWindow.show();
+        this._lineUpConfirmWindow.activate();
+    }
+};
+
 Scene_Misc.prototype.onLineUpPartyCancel = function () {
     if (this._lineUpListWindow._list.length) { // if there's items to remove from the list window
         this._lineUpPartyWindow.updateAssociatedWindow(this._lineUpPartyWindow.currentSymbol(), false);
@@ -126,6 +160,31 @@ Scene_Misc.prototype.onLineUpPartyCancel = function () {
         this._lineUpStatusWindow.hide();
         this._commandWindow.activate();
     }
+};
+
+Scene_Misc.prototype.onLineUpConfirmOk = function () {
+    if ($gameParty.checkGroupOrder(this._lineUpListWindow._list)) {
+        $gameParty.newOrder(this._lineUpListWindow._list);
+        this._lineUpConfirmWindow.hide();
+        this._lineUpConfirmWindow.hideBackgroundDimmer();
+        this._lineUpListWindow.hideBackgroundDimmer();
+        this._lineUpPartyWindow.hideBackgroundDimmer();
+        this._commandWindow.hideBackgroundDimmer();
+        this._lineUpPartyWindow.clearAssociatedWindow();
+        this._lineUpPartyWindow.deselect();
+        this._commandWindow.activate();
+    } else {
+        this._lineUpListWindow.showBackgroundDimmer();
+        this._lineUpConfirmWindow.showBackgroundDimmer();
+        this.displayMessage(this.lineUpSwapFailed(), Scene_Misc.prototype.lineUpSwapFailedMessage);
+    }
+};
+
+Scene_Misc.prototype.onLineUpConfirmCancel = function () {
+    this._lineUpPartyWindow.hideBackgroundDimmer();
+    this._lineUpConfirmWindow.hide();
+    this.onLineUpPartyCancel();
+    this._lineUpStatusWindow.show();
 };
 
 //////////////////////////////
@@ -143,6 +202,27 @@ Scene_Misc.prototype.selectLastCommand = function () {
  */
 Scene_Misc.prototype.setLastCommand = function (symbol) {
     Scene_Misc._lastCommandSymbol = symbol;
+};
+
+//////////////////////////////
+// Functions - messages
+//////////////////////////////
+
+Scene_Misc.prototype.lineUpSwapFailed = function () {
+    return `A party full of coffins doesn't make for much of a fight!`
+};
+
+//////////////////////////////
+// Functions - message callbacks
+//////////////////////////////
+
+Scene_Misc.prototype.lineUpSwapFailedMessage = function () {
+    this._lineUpConfirmWindow.hide();
+    this._lineUpConfirmWindow.hideBackgroundDimmer();
+    this._lineUpListWindow.hideBackgroundDimmer();
+    this._lineUpPartyWindow.hideBackgroundDimmer();
+    this.onLineUpPartyCancel();
+    this._lineUpStatusWindow.show();
 };
 
 //////////////////////////////
