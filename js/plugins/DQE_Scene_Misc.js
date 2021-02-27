@@ -49,6 +49,7 @@ Scene_Misc.prototype.create = function () {
     this.createLineUpListWindow();
     this.createLineUpStatusWindow();
     this.createLineUpConfirmWindow();
+    this.createBattleMusicWindow();
     this.createMessageWindow();
     // set windows created
     this._windowsCreated = true;
@@ -63,6 +64,7 @@ Scene_Misc.prototype.createCommandWindow = function () {
     this._commandWindow = new Window_TitledCommand(48, 48, 354, 'Misc.', ['Heal All', 'Line-up', 'Battle Music', 'Settings'], Scene_Misc.prototype.changeWindows);
     // this._commandWindow.setHandler('Heal All', this.commandHealAll.bind(this));
     this._commandWindow.setHandler('Line-up', this.commandLineUp.bind(this));
+    this._commandWindow.setHandler('Battle Music', this.commandBattleMusic.bind(this));
     this._commandWindow.setHandler('Settings', this.commandSettings.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
@@ -114,6 +116,16 @@ Scene_Misc.prototype.createLineUpConfirmWindow = function () {
     this.addWindow(this._lineUpConfirmWindow);
 };
 
+Scene_Misc.prototype.createBattleMusicWindow = function () {
+    let x = this._commandWindow.x + this._commandWindow.width;
+    this._battleMusicWindow = new Window_MiscBattleMusic(x, 48, 840);
+    this._battleMusicWindow.setHandler('cancel', this.onBattleMusicCancel.bind(this));
+    this._battleMusicWindow.deactivate();
+    this._battleMusicWindow.deselect();
+    this._battleMusicWindow.hide();
+    this.addWindow(this._battleMusicWindow);
+};
+
 Scene_Misc.prototype.createMessageWindow = function () {
     this._messageWindow = new Window_Message();
     this.addWindow(this._messageWindow);
@@ -128,6 +140,12 @@ Scene_Misc.prototype.commandLineUp = function () {
     this._lineUpPartyWindow.select(0);
     this._lineUpPartyWindow.activate();
     this._lineUpStatusWindow.show();
+};
+
+Scene_Misc.prototype.commandBattleMusic = function () {
+    this._commandWindow.showBackgroundDimmer();
+    this._battleMusicWindow.select(0);
+    this._battleMusicWindow.activate();
 };
 
 Scene_Misc.prototype.commandSettings = function () {
@@ -187,6 +205,12 @@ Scene_Misc.prototype.onLineUpConfirmCancel = function () {
     this._lineUpStatusWindow.show();
 };
 
+Scene_Misc.prototype.onBattleMusicCancel = function () {
+    this._commandWindow.hideBackgroundDimmer();
+    this._battleMusicWindow.deselect();
+    this._commandWindow.activate();
+};
+
 //////////////////////////////
 // Functions - data
 //////////////////////////////
@@ -239,13 +263,16 @@ Scene_Misc.prototype.changeWindows = function (symbol) {
                 this._helpWindow.setItem('Quickly and easily restore all your party members to full health.');
                 this._helpWindow.show();
                 this._lineUpPartyWindow.hide();
+                this._battleMusicWindow.hide();
                 break;
             case 'Line-up':
                 this._lineUpPartyWindow.show();
                 this._lineUpStatusWindow.hide();
                 this._helpWindow.hide();
+                this._battleMusicWindow.hide();
                 break;
             case 'Battle Music':
+                this._battleMusicWindow.show();
                 this._helpWindow.hide();
                 this._lineUpPartyWindow.hide();
                 break;
@@ -253,6 +280,7 @@ Scene_Misc.prototype.changeWindows = function (symbol) {
                 this._helpWindow.setItem('Configure various game settings.');
                 this._helpWindow.show();
                 this._lineUpPartyWindow.hide();
+                this._battleMusicWindow.hide();
                 break;
         }
     }
