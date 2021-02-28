@@ -62,7 +62,7 @@ Scene_Misc.prototype.create = function () {
 
 Scene_Misc.prototype.createCommandWindow = function () {
     this._commandWindow = new Window_TitledCommand(48, 48, 354, 'Misc.', ['Heal All', 'Line-up', 'Battle Music', 'Settings'], Scene_Misc.prototype.changeWindows);
-    // this._commandWindow.setHandler('Heal All', this.commandHealAll.bind(this));
+    this._commandWindow.setHandler('Heal All', this.commandHealAll.bind(this));
     this._commandWindow.setHandler('Line-up', this.commandLineUp.bind(this));
     this._commandWindow.setHandler('Battle Music', this.commandBattleMusic.bind(this));
     this._commandWindow.setHandler('Settings', this.commandSettings.bind(this));
@@ -134,6 +134,10 @@ Scene_Misc.prototype.createMessageWindow = function () {
 //////////////////////////////
 // Functions - on handlers
 //////////////////////////////
+
+Scene_Misc.prototype.commandHealAll = function () {
+    this._commandWindow.activate();
+};
 
 Scene_Misc.prototype.commandLineUp = function () {
     this._commandWindow.showBackgroundDimmer();
