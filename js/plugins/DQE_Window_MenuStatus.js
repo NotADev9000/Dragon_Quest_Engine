@@ -68,6 +68,14 @@ Window_MenuStatus.prototype.windowHeight = function () {
     return 192;
 };
 
+Window_MenuStatus.prototype.setCategory = function (category, force = false) {
+    if ((this._actorIndex !== category) || force) {
+        this._actorIndex = category;
+        this._actor = $gameParty.allMembers()[this._actorIndex];
+        this.refresh();
+    }
+};
+
 /**
  * Draws actor name limited to 10 characters
  */
