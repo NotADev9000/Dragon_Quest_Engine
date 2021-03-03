@@ -1,0 +1,12 @@
+Heal		3mp		30-40			(35)
+Midheal 	6mp		75-95			(85)
+Moreheal	12mp	174-360			(267)
+Fullheal	24mp	all
+Multiheal	32mp	100-340 multi	(220)
+Omniheal	64mp	all multi
+
+total HP missing
+no. members to heal
+
+available spells
+MP available

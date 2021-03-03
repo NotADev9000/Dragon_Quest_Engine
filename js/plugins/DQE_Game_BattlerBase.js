@@ -310,6 +310,27 @@ Game_BattlerBase.prototype.metaTraits = function (meta) {
 // Functions - states
 //////////////////////////////
 
+Game_BattlerBase.prototype.needsPurifying = function () {
+    return this.isAppeared() && 
+    (this.isStateAffected(this.poisonStateId()) || this.isStateAffected(this.envenomStateId()));
+};
+
+Game_BattlerBase.prototype.needsBenediction = function () {
+    return this.isAppeared() && this.isStateAffected(this.cursedStateId());
+};
+
+Game_BattlerBase.prototype.poisonStateId = function () {
+    return 11;
+};
+
+Game_BattlerBase.prototype.envenomStateId = function () {
+    return 12;
+};
+
+Game_BattlerBase.prototype.cursedStateId = function () {
+    return 13;
+};
+
 Game_BattlerBase.prototype.numStates = function () {
     return this._states.length;
 };

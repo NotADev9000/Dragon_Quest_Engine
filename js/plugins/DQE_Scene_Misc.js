@@ -237,7 +237,7 @@ Scene_Misc.prototype.setLastCommand = function (symbol) {
 //////////////////////////////
 
 Scene_Misc.prototype.lineUpSwapFailed = function () {
-    return `A party full of coffins doesn't make for much of a fight!`
+    return `A party full of coffins doesn't make for much of an adventure!`;
 };
 
 //////////////////////////////
