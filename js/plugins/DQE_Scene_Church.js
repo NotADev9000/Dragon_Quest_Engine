@@ -37,7 +37,7 @@ Scene_Church.prototype.initialize = function () {
     this._chosenCommand = Scene_Church.RESURRECTION; // identifies which action to take when actor is selected in _onWho window
     this._goldCost = 0; // how much the task costs
     this._actor = undefined;
-    this._wait; // wait time for playing ME
+    this._wait = null; // wait time for playing ME
 };
 
 Scene_Church.CONFESSION =   'Confession';
@@ -193,8 +193,10 @@ Scene_Church.prototype.onOnWhoCancel = function () {
 Scene_Church.prototype.onChoiceYes = function () {
     let msg = '';
     this._choiceWindow.close();
+    this._messageWindow.setInput(true);
     if ($gameParty.gold() >= this._goldCost) { // can afford gold contribution
         $gameParty.loseGold(this._goldCost);
+        this._goldWindow.refresh();
         switch (this._chosenCommand) {
             case Scene_Church.RESURRECTION:
                 msg = this.startResurrectionMessage(this._actor.name());
@@ -206,10 +208,10 @@ Scene_Church.prototype.onChoiceYes = function () {
                 msg = this.startBenedictionMessage(this._actor.name());
                 break;
         }
-        this._messageWindow.setInput(true);
         this.displayMessage(msg, Scene_Church.prototype.doTaskMessageCallback);
     } else {
-        // You can't afford the costs, BLAH BLAH BLAH!
+        msg = this.cantAffordMessage();
+        this.displayMessage(msg, Scene_Church.prototype.unaffectedMessageCallback);
     }
 };
 
@@ -338,6 +340,10 @@ Scene_Church.prototype.startBenedictionMessage = function (name) {
 
 Scene_Church.prototype.goldCostMessage = function () {
     return `In order to carry out this task, I shall require a contribution of \\c[7]${this._goldCost}\\c[1] gold coins. Will you oblige, my child?`;
+};
+
+Scene_Church.prototype.cantAffordMessage = function () {
+    return `It seems that you cannot afford to make this humble donation.`;
 };
 
 Scene_Church.prototype.unaffectedMessage = function (name, type) {
