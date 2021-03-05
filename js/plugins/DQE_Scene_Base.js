@@ -53,7 +53,7 @@ Scene_Base.prototype.manageMessageCallback = function () {
     if (this._activeMessage) {
         let msg = this._activeMessage; // stored here so it can be checked if the active message changed
         this._activeMessage.call(this);
-        if (msg === this._activeMessage) {
+        if (msg === this._activeMessage) { // if != then another message with a callback has been requested
             this._activeMessage = null;
         }
     }

@@ -35,9 +35,10 @@ function Window_CustomCommand() {
 Window_CustomCommand.prototype = Object.create(Window_Command.prototype);
 Window_CustomCommand.prototype.constructor = Window_CustomCommand;
 
-Window_CustomCommand.prototype.initialize = function (x, y, width, commands = []) {
+Window_CustomCommand.prototype.initialize = function (x, y, width, commands = [], animateOpen = false) {
     this._width = width;
     this._commands = commands;
+    this._animateOpen = animateOpen;
     Window_Command.prototype.initialize.call(this, x, y);
 };
 
@@ -63,4 +64,13 @@ Window_CustomCommand.prototype.lineGap = function () {
 
 Window_CustomCommand.prototype.makeCommandList = function () {
     this._commands.forEach(command => this.addCommand(command, command));
+};
+
+Window_CustomCommand.prototype.updateOpen = function () {
+    if (this._opening) {
+        this._animateOpen ? this.openness += 32: this.openness = 255;
+        if (this.isOpen()) {
+            this._opening = false;
+        }
+    }
 };

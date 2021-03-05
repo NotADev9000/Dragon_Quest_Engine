@@ -36,6 +36,8 @@ Scene_Church.prototype.initialize = function () {
     this._windowsCreated = false; // have all windows in scene been created?
     this._chosenCommand = Scene_Church.RESURRECTION; // identifies which action to take when actor is selected in _onWho window
     this._goldCost = 0; // how much the task costs
+    this._actor = undefined;
+    this._wait; // wait time for playing ME
 };
 
 Scene_Church.CONFESSION =   'Confession';
@@ -51,6 +53,7 @@ Scene_Church.prototype.create = function () {
     this.createGoldWindow();
     this.createOnWhoWindow();
     this.createStatusWindow();
+    this.createChoiceWindow();
     this.createMessageWindow();
     // set windows created
     this._windowsCreated = true;
@@ -118,8 +121,20 @@ Scene_Church.prototype.createStatusWindow = function () {
     this.addWindow(this._statusWindow);
 };
 
+Scene_Church.prototype.createChoiceWindow = function () {
+    this._choiceWindow = new Window_CustomCommand(0, 0, 156, ['Yes', 'No'], true);
+    this._choiceWindow.setHandler('Yes', this.onChoiceYes.bind(this));
+    this._choiceWindow.setHandler('No', this.onChoiceCancel.bind(this));
+    this._choiceWindow.setHandler('cancel', this.onChoiceCancel.bind(this));
+    this._choiceWindow.openness = 0;
+    this._choiceWindow.deactivate();
+    this.addWindow(this._choiceWindow);
+};
+
 Scene_Church.prototype.createMessageWindow = function () {
     this._messageWindow = new Window_MessageInputToggle();
+    this._choiceWindow.x = (this._messageWindow.x + this._messageWindow.width) - this._choiceWindow.width;
+    this._choiceWindow.y = this._messageWindow.y - this._choiceWindow.height - DQEng.Parameters.Windows.ChoiceList_ChoiceYOffset;
     this.addWindow(this._messageWindow);
 };
 
@@ -156,7 +171,7 @@ Scene_Church.prototype.commandBenediction = function () {
 };
 
 Scene_Church.prototype.onOnWhoOk = function () {
-    const actor = $gameParty.members()[this._onWhoWindow.index()];
+    const actor = this._actor = $gameParty.members()[this._onWhoWindow.index()];
     const chosen = this._chosenCommand;
     this._onWhoWindow.hide();
     this._statusWindow.hide();
@@ -165,13 +180,41 @@ Scene_Church.prototype.onOnWhoOk = function () {
         this.displayMessage(this.goldCostMessage(), Scene_Church.prototype.confirmChoiceMessageCallback);
     } else {
         this._messageWindow.setInput(true);
-        this.displayMessage(this.unaffectedMessage(actor, chosen), Scene_Church.prototype.unaffectedMessageCallback)
+        this.displayMessage(this.unaffectedMessage(actor.name(), chosen), Scene_Church.prototype.unaffectedMessageCallback)
     }
 };
 
 Scene_Church.prototype.onOnWhoCancel = function () {
     this._onWhoWindow.hide();
     this._statusWindow.hide();
+    this.displayMessage(this.restartSceneMessage(), Scene_Church.prototype.backToMainMessageCallback);
+};
+
+Scene_Church.prototype.onChoiceYes = function () {
+    let msg = '';
+    this._choiceWindow.close();
+    if ($gameParty.gold() >= this._goldCost) { // can afford gold contribution
+        $gameParty.loseGold(this._goldCost);
+        switch (this._chosenCommand) {
+            case Scene_Church.RESURRECTION:
+                msg = this.startResurrectionMessage(this._actor.name());
+                break;
+            case Scene_Church.PURIFICATION:
+                msg = this.startPurificationMessage(this._actor.name());
+                break;
+            case Scene_Church.BENEDICTION:
+                msg = this.startBenedictionMessage(this._actor.name());
+                break;
+        }
+        this._messageWindow.setInput(true);
+        this.displayMessage(msg, Scene_Church.prototype.doTaskMessageCallback);
+    } else {
+        // You can't afford the costs, BLAH BLAH BLAH!
+    }
+};
+
+Scene_Church.prototype.onChoiceCancel = function () {
+    this._choiceWindow.close();
     this.displayMessage(this.restartSceneMessage(), Scene_Church.prototype.backToMainMessageCallback);
 };
 
@@ -200,7 +243,7 @@ Scene_Church.prototype.isActorAffected = function (actor, type) {
 
 Scene_Church.prototype.generateGoldCost = function (actor, type) {
     const lv = actor.level;
-    let pow = 1.25;
+    let pow = 1.25; // defaults to benediction cost
     switch (type) {
         case Scene_Church.RESURRECTION:
             pow = 2;
@@ -210,6 +253,22 @@ Scene_Church.prototype.generateGoldCost = function (actor, type) {
             break;
     }
     this._goldCost = Math.max(2, Math.floor(Math.pow(lv, pow)));
+};
+
+Scene_Church.prototype.healActor = function (actor) {
+    switch (this._chosenCommand) {
+        case Scene_Church.RESURRECTION:
+            actor.removeState(this._actor.deathStateId());
+            break;
+        case Scene_Church.PURIFICATION:
+            actor.removeState(this._actor.poisonStateId());
+            actor.removeState(this._actor.envenomStateId());
+            break;
+        case Scene_Church.BENEDICTION:
+            actor.removeState(this._actor.cursedStateId());
+            break;
+    }
+    this._statusWindow.refresh();
 };
 
 //////////////////////////////
@@ -257,20 +316,31 @@ Scene_Church.prototype.resurrectionMessage = function () {
     return `Whom do you wish brought back to the world of the living?`;
 };
 
+Scene_Church.prototype.startResurrectionMessage = function (name) {
+    return `O great and benevolent Goddess!\nI beseech you to breathe life once more into your faithful servant, ${name}!`;
+};
+
 Scene_Church.prototype.purificationMessage = function () {
     return `Whom shall I treat for poison?`;
+};
+
+Scene_Church.prototype.startPurificationMessage = function (name) {
+    return `O great and benevolent Goddess!\nPlease rid your faithful servant ${name} of this unholy poison!`;
 };
 
 Scene_Church.prototype.benedictionMessage = function () {
     return `Who needs a curse lifted?`;
 };
 
+Scene_Church.prototype.startBenedictionMessage = function (name) {
+    return `O great and benevolent Goddess!\nPlease rid your faithful servant ${name} of this wretched curse!`;
+};
+
 Scene_Church.prototype.goldCostMessage = function () {
     return `In order to carry out this task, I shall require a contribution of \\c[7]${this._goldCost}\\c[1] gold coins. Will you oblige, my child?`;
 };
 
-Scene_Church.prototype.unaffectedMessage = function (actor, type) {
-    const name = actor.name();
+Scene_Church.prototype.unaffectedMessage = function (name, type) {
     switch (type) {
         case Scene_Church.RESURRECTION:
             return `Surely you jest?\n${name} looks very much alive to me!`;
@@ -305,7 +375,9 @@ Scene_Church.prototype.commonMessageCallback = function () {
 };
 
 Scene_Church.prototype.confirmChoiceMessageCallback = function () {
-    
+    this._choiceWindow.open();
+    this._choiceWindow.select(0);
+    this._choiceWindow.activate();
 };
 
 Scene_Church.prototype.unaffectedMessageCallback = function () {
@@ -313,8 +385,27 @@ Scene_Church.prototype.unaffectedMessageCallback = function () {
     this.displayMessage(this.restartSceneMessage(), Scene_Church.prototype.backToMainMessageCallback);
 };
 
+Scene_Church.prototype.doTaskMessageCallback = function () {
+    this._wait = 300;
+    this._messageWindow.setInput(false);
+    SoundManager.playMeByName('Resurrection');
+};
+
 Scene_Church.prototype.backToMainMessageCallback = function () {
     this._commandWindow.show();
     this._helpWindow.show();
     this._commandWindow.activate();
+};
+
+//////////////////////////////
+// Functions - refresh
+//////////////////////////////
+
+Scene_Church.prototype.update = function () {
+    Scene_MenuBase.prototype.update.call(this);
+    if (this._wait !== null && this._wait-- <= 0)  {
+        this._wait = null
+        this.healActor(this._actor);
+        this.displayMessage(this.restartSceneMessage(), Scene_Church.prototype.backToMainMessageCallback);
+    }
 };
