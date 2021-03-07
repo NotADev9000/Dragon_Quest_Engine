@@ -51,6 +51,7 @@ Scene_Church.prototype.create = function () {
     this.createCommandWindow();
     this.createHelpWindow();
     this.createGoldWindow();
+    this.createSavefileList();
     this.createOnWhoWindow();
     this.createStatusWindow();
     this.createChoiceWindow();
@@ -81,6 +82,7 @@ Scene_Church.prototype.createCommandWindow = function () {
         'Cancel'], 
         Scene_Church.prototype.changeHelp
     );
+    this._commandWindow.setHandler(Scene_Church.CONFESSION, this.commandConfession.bind(this));
     this._commandWindow.setHandler(Scene_Church.RESURRECTION, this.commandResurrection.bind(this));
     this._commandWindow.setHandler(Scene_Church.PURIFICATION, this.commandPurification.bind(this));
     this._commandWindow.setHandler(Scene_Church.BENEDICTION, this.commandBenediction.bind(this));
@@ -102,6 +104,15 @@ Scene_Church.prototype.createGoldWindow = function () {
     this._goldWindow = new Window_Gold(0, 48);
     this._goldWindow.x = (Graphics.boxWidth - this._goldWindow.width) - 48;
     this.addWindow(this._goldWindow);
+};
+
+Scene_Church.prototype.createSavefileList = function () {
+    let x = this._commandWindow.x + this._commandWindow.width;
+    this._saveWindow = new Window_SavefileList(x, 48, 924);
+    this._saveWindow.setHandler('ok', this.onSaveOk.bind(this));
+    this._saveWindow.setHandler('cancel', this.onSaveCancel.bind(this));
+    this._saveWindow.hide();
+    this.addWindow(this._saveWindow);
 };
 
 Scene_Church.prototype.createOnWhoWindow = function () {
@@ -149,6 +160,13 @@ Scene_Church.prototype.commandCancel = function () {
     this.displayMessage(this.leaveMessage(), Scene_Church.prototype.popScene);
 };
 
+Scene_Church.prototype.commandConfession = function () {
+    this._chosenCommand = Scene_Church.CONFESSION;
+    this._helpWindow.hide();
+    this._goldWindow.hide();
+    this.displayMessage(this.saveMessage(), Scene_Church.prototype.confessionMessageCallback);
+};
+
 Scene_Church.prototype.commandResurrection = function () {
     this._chosenCommand = Scene_Church.RESURRECTION;
     this._commandWindow.hide();
@@ -168,6 +186,17 @@ Scene_Church.prototype.commandBenediction = function () {
     this._commandWindow.hide();
     this._helpWindow.hide();
     this.displayMessage(this.benedictionMessage(), Scene_Church.prototype.commonMessageCallback);
+};
+
+Scene_Church.prototype.onSaveOk = function () {
+    this._saveWindow.showBackgroundDimmer();
+    this.displayMessage(this.saveHereMessage(), Scene_Church.prototype.confirmChoiceMessageCallback);
+};
+
+Scene_Church.prototype.onSaveCancel = function () {
+    this._saveWindow.hide();
+    this._commandWindow.hideBackgroundDimmer();
+    this.displayMessage(this.restartSceneMessage(), Scene_Church.prototype.backToMainMessageCallback);
 };
 
 Scene_Church.prototype.onOnWhoOk = function () {
@@ -193,6 +222,10 @@ Scene_Church.prototype.onOnWhoCancel = function () {
 Scene_Church.prototype.onChoiceYes = function () {
     let msg = '';
     this._choiceWindow.close();
+    if (this._chosenCommand === Scene_Church.CONFESSION) {
+        this.onChoiceSave();
+        return;
+    }
     this._messageWindow.setInput(true);
     if ($gameParty.gold() >= this._goldCost) { // can afford gold contribution
         $gameParty.loseGold(this._goldCost);
@@ -215,14 +248,37 @@ Scene_Church.prototype.onChoiceYes = function () {
     }
 };
 
+Scene_Church.prototype.onChoiceSave = function () {
+    SoundManager.playMeByName('Save');
+    this.displayMessage(this.startSaveMessage(), Scene_Church.prototype.startSave)
+};
+
 Scene_Church.prototype.onChoiceCancel = function () {
     this._choiceWindow.close();
-    this.displayMessage(this.restartSceneMessage(), Scene_Church.prototype.backToMainMessageCallback);
+    if (this._chosenCommand === Scene_Church.CONFESSION) {
+        this._saveWindow.hideBackgroundDimmer();
+        this.displayMessage(this.saveMessage(), Scene_Church.prototype.activateSaveWindowCallback);
+    } else {
+        this.displayMessage(this.restartSceneMessage(), Scene_Church.prototype.backToMainMessageCallback);
+    }
 };
 
 //////////////////////////////
 // Functions - data
 //////////////////////////////
+
+Scene_Church.prototype.startSave = function () {
+    const timeStart = Date.now();
+    this._messageWindow.setInput(true);
+    $gameSystem.onBeforeSave();
+    if (DataManager.saveGame(this._saveWindow.savefileId())) {
+        let timeTaken = Math.floor((Date.now() - timeStart) / 1000);
+        this._wait = 330 - timeTaken;
+    } else { // save failed
+        AudioManager.stopMe();
+        this.displayMessage(this.saveFailedMessage(), Scene_Church.prototype.popScene);
+    }
+};
 
 /**
  * Is given actor affected by selected status condition
@@ -307,60 +363,80 @@ Scene_Church.prototype.changeHelp = function (symbol) {
 //////////////////////////////
 
 Scene_Church.prototype.introMessage = function () {
-    return `Welcome to our church, my child.\nHow may I help you?`;
+    return `*: Welcome to our church, my child.\nHow may I help you?`;
 };
 
 Scene_Church.prototype.leaveMessage = function () {
-    return `Great Goddess, may you watch over\nand protect this child!`;
+    return `*: Great Goddess, may you watch over\nand protect this child!`;
+};
+
+Scene_Church.prototype.saveMessage = function () {
+    return `*: Confess all that you have done before the almighty Goddess, child.`;
+};
+
+Scene_Church.prototype.saveHereMessage = function () {
+    return `*: Do you wish me to make a record in this adventure log?`;
+};
+
+Scene_Church.prototype.startSaveMessage = function () {
+    return `Saving adventure log...`;
+};
+
+Scene_Church.prototype.saveSuccessfulMessage = function () {
+    return `*: I have successfully recorded your adventure log.`;
+};
+
+Scene_Church.prototype.saveFailedMessage = function () {
+    return `SAVE FAILED! Please try again...\nIf the problem persists, please contact the developer.`;
 };
 
 Scene_Church.prototype.resurrectionMessage = function () {
-    return `Whom do you wish brought back to the world of the living?`;
+    return `*: Whom do you wish brought back to the world of the living?`;
 };
 
 Scene_Church.prototype.startResurrectionMessage = function (name) {
-    return `O great and benevolent Goddess!\nI beseech you to breathe life once more into your faithful servant, ${name}!`;
+    return `*: O great and benevolent Goddess!\nI beseech you to breathe life once more into your faithful servant, ${name}!`;
 };
 
 Scene_Church.prototype.purificationMessage = function () {
-    return `Whom shall I treat for poison?`;
+    return `*: Whom shall I treat for poison?`;
 };
 
 Scene_Church.prototype.startPurificationMessage = function (name) {
-    return `O great and benevolent Goddess!\nPlease rid your faithful servant ${name} of this unholy poison!`;
+    return `*: O great and benevolent Goddess!\nPlease rid your faithful servant ${name} of this unholy poison!`;
 };
 
 Scene_Church.prototype.benedictionMessage = function () {
-    return `Who needs a curse lifted?`;
+    return `*: Who needs a curse lifted?`;
 };
 
 Scene_Church.prototype.startBenedictionMessage = function (name) {
-    return `O great and benevolent Goddess!\nPlease rid your faithful servant ${name} of this wretched curse!`;
+    return `*: O great and benevolent Goddess!\nPlease rid your faithful servant ${name} of this wretched curse!`;
 };
 
 Scene_Church.prototype.goldCostMessage = function () {
-    return `In order to carry out this task, I shall require a contribution of \\c[7]${this._goldCost}\\c[1] gold coins. Will you oblige, my child?`;
+    return `*: In order to carry out this task, I shall require a contribution of \\c[7]${this._goldCost}\\c[1] gold coins. Will you oblige, my child?`;
 };
 
 Scene_Church.prototype.cantAffordMessage = function () {
-    return `It seems that you cannot afford to make this humble donation.`;
+    return `*: It seems that you cannot afford to make this humble donation.`;
 };
 
 Scene_Church.prototype.unaffectedMessage = function (name, type) {
     switch (type) {
         case Scene_Church.RESURRECTION:
-            return `Surely you jest?\n${name} looks very much alive to me!`;
+            return `*: Surely you jest?\n${name} looks very much alive to me!`;
         case Scene_Church.PURIFICATION:
-            return `${name} doesn't seem to have a trace of poison in their system!`;
+            return `*: ${name} doesn't seem to have a trace of poison in their system!`;
         case Scene_Church.BENEDICTION:
-            return `${name} may look tired but that doesn't mean they are cursed!`;
+            return `*: ${name} may look tired but that doesn't mean they are cursed!`;
         default:
             return ``;
     }
 };
 
 Scene_Church.prototype.restartSceneMessage = function () {
-    return `Is there any other way we can be of assistance?`;
+    return `*: Is there any other way we can be of assistance?`;
 };
 
 //////////////////////////////
@@ -371,6 +447,23 @@ Scene_Church.prototype.introMessageCallback = function () {
     this._commandWindow.show();
     this._helpWindow.show();
     this._commandWindow.activate();
+};
+
+Scene_Church.prototype.confessionMessageCallback = function () {
+    this._commandWindow.showBackgroundDimmer();
+    this._saveWindow.select(0);
+    this.activateSaveWindowCallback();
+};
+
+Scene_Church.prototype.activateSaveWindowCallback = function () {
+    this._saveWindow.show();
+    this._saveWindow.activate();
+};
+
+Scene_Church.prototype.saveEndMessageCallback = function () {
+    this._commandWindow.hide();
+    this._saveWindow.hide();
+    this.displayMessage(this.leaveMessage(), Scene_Church.prototype.popScene);
 };
 
 Scene_Church.prototype.commonMessageCallback = function () {
@@ -400,6 +493,7 @@ Scene_Church.prototype.doTaskMessageCallback = function () {
 Scene_Church.prototype.backToMainMessageCallback = function () {
     this._commandWindow.show();
     this._helpWindow.show();
+    this._goldWindow.show();
     this._commandWindow.activate();
 };
 
@@ -411,7 +505,13 @@ Scene_Church.prototype.update = function () {
     Scene_MenuBase.prototype.update.call(this);
     if (this._wait !== null && this._wait-- <= 0)  {
         this._wait = null
-        this.healActor(this._actor);
-        this.displayMessage(this.restartSceneMessage(), Scene_Church.prototype.backToMainMessageCallback);
+        if (this._chosenCommand === Scene_Church.CONFESSION) {
+            this._saveWindow.refresh();
+            this._saveWindow.hideBackgroundDimmer();
+            this.displayMessage(this.saveSuccessfulMessage(), Scene_Church.prototype.saveEndMessageCallback);
+        } else {
+            this.healActor(this._actor);
+            this.displayMessage(this.restartSceneMessage(), Scene_Church.prototype.backToMainMessageCallback);
+        }
     }
 };
