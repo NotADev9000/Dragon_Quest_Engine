@@ -28,6 +28,12 @@ function Scene_Church() {
     this.initialize.apply(this, arguments);
 }
 
+Scene_Church.CONFESSION =   'Confession';
+Scene_Church.RESURRECTION = 'Resurrection';
+Scene_Church.PURIFICATION = 'Purification';
+Scene_Church.BENEDICTION =  'Benediction';
+Scene_Church.TEXTSTYLE =    'generic';      // the messages to display when in the scene (check DQE_TextManager for more, check DQE_Plugin_Commands for changing style)
+
 Scene_Church.prototype = Object.create(Scene_MenuBase.prototype);
 Scene_Church.prototype.constructor = Scene_Church;
 
@@ -35,16 +41,10 @@ Scene_Church.prototype.initialize = function () {
     Scene_MenuBase.prototype.initialize.call(this);
     this._windowsCreated = false; // have all windows in scene been created?
     this._chosenCommand = Scene_Church.RESURRECTION; // identifies which action to take when actor is selected in _onWho window
-    this._goldCost = 0; // how much the task costs
+    this._goldCost = 0; // how much a task costs
     this._actor = undefined;
     this._wait = null; // wait time for playing ME
 };
-
-Scene_Church.CONFESSION =   'Confession';
-Scene_Church.RESURRECTION = 'Resurrection';
-Scene_Church.PURIFICATION = 'Purification';
-Scene_Church.BENEDICTION =  'Benediction';
-
 
 Scene_Church.prototype.create = function () {
     Scene_MenuBase.prototype.create.call(this);
@@ -316,14 +316,14 @@ Scene_Church.prototype.generateGoldCost = function (actor, type) {
 Scene_Church.prototype.healActor = function (actor) {
     switch (this._chosenCommand) {
         case Scene_Church.RESURRECTION:
-            actor.removeState(this._actor.deathStateId());
+            actor.removeState(actor.deathStateId());
             break;
         case Scene_Church.PURIFICATION:
-            actor.removeState(this._actor.poisonStateId());
-            actor.removeState(this._actor.envenomStateId());
+            actor.removeState(actor.poisonStateId());
+            actor.removeState(actor.envenomStateId());
             break;
         case Scene_Church.BENEDICTION:
-            actor.removeState(this._actor.cursedStateId());
+            actor.removeState(actor.cursedStateId());
             break;
     }
     this._statusWindow.refresh();
@@ -363,80 +363,80 @@ Scene_Church.prototype.changeHelp = function (symbol) {
 //////////////////////////////
 
 Scene_Church.prototype.introMessage = function () {
-    return `*: Welcome to our church, my child.\nHow may I help you?`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][0];
 };
 
 Scene_Church.prototype.leaveMessage = function () {
-    return `*: Great Goddess, may you watch over\nand protect this child!`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][1];
 };
 
 Scene_Church.prototype.saveMessage = function () {
-    return `*: Confess all that you have done before the almighty Goddess, child.`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][2];
 };
 
 Scene_Church.prototype.saveHereMessage = function () {
-    return `*: Do you wish me to make a record in this adventure log?`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][3];
 };
 
 Scene_Church.prototype.startSaveMessage = function () {
-    return `Saving adventure log...`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][4];
 };
 
 Scene_Church.prototype.saveSuccessfulMessage = function () {
-    return `*: I have successfully recorded your adventure log.`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][5];
 };
 
 Scene_Church.prototype.saveFailedMessage = function () {
-    return `SAVE FAILED! Please try again...\nIf the problem persists, please contact the developer.`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][6];
 };
 
 Scene_Church.prototype.resurrectionMessage = function () {
-    return `*: Whom do you wish brought back to the world of the living?`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][7];
 };
 
 Scene_Church.prototype.startResurrectionMessage = function (name) {
-    return `*: O great and benevolent Goddess!\nI beseech you to breathe life once more into your faithful servant, ${name}!`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][8].format(name);
 };
 
 Scene_Church.prototype.purificationMessage = function () {
-    return `*: Whom shall I treat for poison?`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][9];
 };
 
 Scene_Church.prototype.startPurificationMessage = function (name) {
-    return `*: O great and benevolent Goddess!\nPlease rid your faithful servant ${name} of this unholy poison!`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][10].format(name);
 };
 
 Scene_Church.prototype.benedictionMessage = function () {
-    return `*: Who needs a curse lifted?`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][11];
 };
 
 Scene_Church.prototype.startBenedictionMessage = function (name) {
-    return `*: O great and benevolent Goddess!\nPlease rid your faithful servant ${name} of this wretched curse!`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][12].format(name);
 };
 
 Scene_Church.prototype.goldCostMessage = function () {
-    return `*: In order to carry out this task, I shall require a contribution of \\c[7]${this._goldCost}\\c[1] gold coins. Will you oblige, my child?`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][13].format(this._goldCost);
 };
 
 Scene_Church.prototype.cantAffordMessage = function () {
-    return `*: It seems that you cannot afford to make this humble donation.`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][14];
 };
 
 Scene_Church.prototype.unaffectedMessage = function (name, type) {
     switch (type) {
         case Scene_Church.RESURRECTION:
-            return `*: Surely you jest?\n${name} looks very much alive to me!`;
+            return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][15].format(name);
         case Scene_Church.PURIFICATION:
-            return `*: ${name} doesn't seem to have a trace of poison in their system!`;
+            return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][16].format(name);
         case Scene_Church.BENEDICTION:
-            return `*: ${name} may look tired but that doesn't mean they are cursed!`;
+            return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][17].format(name);
         default:
             return ``;
     }
 };
 
 Scene_Church.prototype.restartSceneMessage = function () {
-    return `*: Is there any other way we can be of assistance?`;
+    return TextManager.terms.churchText[Scene_Church.TEXTSTYLE][18];
 };
 
 //////////////////////////////

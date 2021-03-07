@@ -28,7 +28,40 @@ DQEng.TextManager = DQEng.TextManager || {};
 // TextManager
 //-----------------------------------------------------------------------------
 
+Object.defineProperties(TextManager, {
+    medalUnit: { get: function () { return 'M'; }, configurable: true },
+    backup: { get: function () { return 'The frontline has fallen but backup has arrived!' }, configurable: true }
+});
+
 TextManager.terms = {};
+
+// Church
+
+TextManager.terms.churchText = {};
+
+TextManager.terms.churchText.generic = [
+    `*: Welcome to our church, my child.\nHow may I help you?`,
+    `*: O great Goddess, may you watch over and protect this child!`,
+    `*: Confess all that you have done before the almighty Goddess, child.`,
+    `*: Do you wish me to make a record in this adventure log?`,
+    `Saving adventure log...`,
+    `*: I have successfully recorded your adventure log.`,
+    `SAVE FAILED! Please try again...\nIf the problem persists, please contact the developer.`,
+    `*: Whom do you wish brought back to the world of the living?`,
+    `*: O great and benevolent Goddess!\nI beseech you to breathe life once more into your faithful servant, %1!`,
+    `*: Whom shall I treat for poison?`,
+    `*: O great and benevolent Goddess!\nPlease rid your faithful servant %1 of this unholy poison!`,
+    `*: Who needs a curse lifted?`,
+    `*: O great and benevolent Goddess!\nPlease rid your faithful servant %1 of this wretched curse!`,
+    `*: In order to carry out this task, I shall require a contribution of \\c[7]%1\\c[1] gold coins. Will you oblige, my child?`,
+    `*: It seems that you cannot afford to make this humble donation.`,
+    `*: Surely you jest?\n%1 looks very much alive to me!`,
+    `*: %1 doesn't seem to have a trace of poison in their system!`,
+    `*: %1 may look tired but that doesn't mean they are cursed!`,
+    `*: Is there any other way we can be of assistance?`
+];
+
+// Parameters
 
 TextManager.terms.baseparam = [
     "Health",       // HP
@@ -164,11 +197,6 @@ TextManager.sparamDescription = function (paramId) {
 TextManager.stateResistDescription = function (stateId) {
     return TextManager.terms.stateResistDescription[stateId];
 };
-
-Object.defineProperties(TextManager, {
-    medalUnit: { get: function () { return 'M'; }, configurable: true },
-    backup: { get: function () { return 'The frontline has fallen but backup has arrived!' }, configurable: true }
-});
 
 TextManager.paramFromBuffID = function (buffId) {
     let paramType = Game_BattlerBase.prototype.buffIdToParamType(buffId);

@@ -49,6 +49,9 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
             case 'LoseMiniMedal': // amount
                 $gameParty.loseMedal(Number(args[1]));
                 break;
+            case 'SetChurchStyle': // style
+                Scene_Church.TEXTSTYLE = args[1].toLowerCase();
+                break;
             default:
                 console.error('INVALID Dragon Quest Engine Command');
         }
