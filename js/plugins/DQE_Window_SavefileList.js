@@ -25,9 +25,10 @@ DQEng.Window_SavefileList = DQEng.Window_SavefileList || {};
 // Window_SavefileList
 //-----------------------------------------------------------------------------
 
-Window_SavefileList.prototype.initialize = function (x, y, width) {
+Window_SavefileList.prototype.initialize = function (x, y, width, mode = 0) {
     const height = this.windowHeight();
     Window_Selectable.prototype.initialize.call(this, x, y, width, height);
+    this._mode = mode;
     this.refresh();
 };
 
@@ -68,6 +69,10 @@ Window_SavefileList.prototype.maxItems = function () {
 
 Window_SavefileList.prototype.savefileId = function () {
     return this.index() + 1;
+};
+
+Window_SavefileList.prototype.isCurrentItemEnabled = function () {
+    return this._mode === 0 ? true : DataManager.isThisGameFile(this.savefileId());
 };
 
 //////////////////////////////

@@ -28,6 +28,17 @@ DQEng.Scene_Map = DQEng.Scene_Map || {};
 // Scene_Map
 //-----------------------------------------------------------------------------
 
+Scene_Map.prototype.needsFadeIn = function () {
+    return (SceneManager.isPreviousScene(Scene_Battle) ||
+            SceneManager.isPreviousScene(Scene_File));
+};
+
+Scene_Map.prototype.needsSlowFadeOut = function () {
+    return (SceneManager.isNextScene(Scene_Title) ||
+            SceneManager.isNextScene(Scene_File) ||
+            SceneManager.isNextScene(Scene_Gameover));
+};
+
 /**
  * battle background is snapped here so that
  * events are included in the snapshot
