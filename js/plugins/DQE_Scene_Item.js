@@ -35,6 +35,7 @@ Scene_Item.prototype.create = function () {
     this.createEquipStatsWindow();
     this.createDoWhatWindow();
     this.createUseOnWhoWindow();
+    this.createItemStatusWindow();
     this.createItemStatWindow();
     this.createTransferToWhoWindow();
     this.createTransferItemWindow();
@@ -99,15 +100,6 @@ Scene_Item.prototype.createUseOnWhoWindow = function () {
     this._useOnWhoWindow.setHandler('cancel', this.onUseOnWhoCancel.bind(this));
     this._useOnWhoWindow.hide();
     this.addWindow(this._useOnWhoWindow);
-};
-
-Scene_Item.prototype.createItemStatWindow = function () {
-    let x = this._useOnWhoWindow.x + this._useOnWhoWindow.windowWidth();
-    let y = this._useOnWhoWindow.y;
-    this._itemStatWindow = new Window_ItemActorStat(x, y);
-    this._itemStatWindow.hide();
-    this.addWindow(this._itemStatWindow);
-    this._useOnWhoWindow.setAssociatedWindow(this._itemStatWindow);
 };
 
 Scene_Item.prototype.createTransferToWhoWindow = function () {
@@ -187,8 +179,9 @@ Scene_Item.prototype.onDoWhatUse = function () {
         this._doWhatWindow.showBackgroundDimmer();
         this._useOnWhoWindow.select(0);
         this._useOnWhoWindow.show();
-        this._itemStatWindow.setAction(this.action());
-        this._itemStatWindow.show();
+        this._itemStatusWindow.show();
+        // this._itemStatWindow.setAction(this.action());
+        // this._itemStatWindow.show();
         this._useOnWhoWindow.activate();
     }
 };
@@ -270,6 +263,7 @@ Scene_Item.prototype.startItemUse = function (forAll = false) {
 Scene_Item.prototype.onUseOnWhoCancel = function () {
     this._doWhatWindow.hideBackgroundDimmer();
     this._useOnWhoWindow.hide();
+    this._itemStatusWindow.hide();
     this._itemStatWindow.hide();
     this._doWhatWindow.activate();
 };
@@ -411,6 +405,7 @@ Scene_Item.prototype.actionResolvedMessage = function () {
     this.checkCommonEvent();
     this.checkGameover();
     this._useOnWhoWindow.hide();
+    this._itemStatusWindow.hide();
     this._itemStatWindow.hide();
     this._itemWindow.hideBackgroundDimmer();
     this._itemWindow.hideAllHelpWindowBackgroundDimmers();
@@ -489,6 +484,7 @@ Scene_Item.prototype.inBag = function (selectionWindow) {
     return !Number.isInteger(selectionWindow.commandSymbol(selectionWindow.index()));
 };
 
-Scene_Item.prototype.refreshItemStatWindow = function () {
+Scene_Item.prototype.refreshItemStatWindows = function () {
+    this._itemStatusWindow.refresh();
     this._itemStatWindow.refresh();
 };

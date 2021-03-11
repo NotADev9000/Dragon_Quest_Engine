@@ -69,7 +69,6 @@ var $plugins =
 {"name":"DQE_Multi_HelpWindows","status":true,"description":"Allows for windows to contain multiple help windows - V0.1","parameters":{}},
 {"name":"DQE_Window_MenuCommand","status":true,"description":"The main menu command list - V0.1","parameters":{}},
 {"name":"DQE_Window_MenuStatus","status":true,"description":"The status window for each actor - V0.1","parameters":{}},
-{"name":"DQE_Window_BattleStatus","status":true,"description":"The window that displays party member status in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleActor","status":true,"description":"The window that displays party member status in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleActorStat","status":true,"description":"The window for selecting a party member in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleEnemy","status":true,"description":"The window that displays party member status in battle - V0.1","parameters":{}},

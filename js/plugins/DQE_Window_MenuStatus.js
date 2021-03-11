@@ -36,11 +36,13 @@ function Window_MenuStatus() {
 Window_MenuStatus.prototype = Object.create(Window_Base.prototype);
 Window_MenuStatus.prototype.constructor = Window_MenuStatus;
 
-Window_MenuStatus.prototype.initialize = function(x, y, actor, titleAlign = 'left') {
-    var width = this.windowWidth();
-    var height = this.windowHeight();
+Window_MenuStatus.prototype.initialize = function(x, y, actor, titleAlign = 'center', maxStat = false) {
+    const width = this.windowWidth();
+    const height = this.windowHeight();
     this._actor = actor;
+    this._actorIndex = -1;
     this._titleAlign = titleAlign;
+    this._maxStat = maxStat; // should the maximum of the stat be displayed
     Window_Base.prototype.initialize.call(this, x, y, width, height);
     this.refresh();
 };
@@ -91,14 +93,16 @@ Window_MenuStatus.prototype.drawActorName = function (actor, x, y, width) {
  * 
  * @param {String} statProperty the name of the stat e.g. HP
  * @param {Number} statValue the value of the stat e.g. 120
+ * @param {Number} statMaxValue the maximum value of the stat
  * @param {Number} x x position of stat block
  * @param {Number} y y position of stat block
  * @param {Number} statWidth width of stat text (just the value)
  */
-Window_MenuStatus.prototype.drawStatBlock = function (statProperty, statValue, x, y, statWidth) {
+Window_MenuStatus.prototype.drawStatBlock = function (statProperty, statValue, statMaxValue, x, y) {
+    if (this._maxStat && statMaxValue) statValue += `/${statMaxValue}`;
     this.changeTextColor(this.hpColor(this._actor));
     this.drawText(statProperty, x, y);
-    this.drawActorStat(statValue, this.contentsWidth() - statWidth - this.extraPadding(), y, statWidth, 'right');
+    this.drawActorStat(statValue, x, y, this.contentsWidth() - (this.extraPadding() * 2), 'right');
 };
 
 Window_MenuStatus.prototype.drawStateBlock = function (state, x, y) {
@@ -109,15 +113,16 @@ Window_MenuStatus.prototype.drawStateBlock = function (state, x, y) {
 Window_MenuStatus.prototype.refresh = function () {
     this.contents.clear();
     if (this._actor) {
-        let state = this._actor.mostImportantStateDisplay();
+        const state = this._actor.mostImportantStateDisplay();
+        const ep = this.extraPadding();
         this.drawActorName(this._actor, this.extraPadding(), this.extraPadding());
         this.drawHorzLine(0, 51);
-        this.drawStatBlock(TextManager.hpA, this._actor.hp, this.extraPadding(), 66, 72);
-        this.drawStatBlock(TextManager.mpA, this._actor.mp, this.extraPadding(), 102, 72);
+        this.drawStatBlock(TextManager.hpA, this._actor.hp, this._actor.mhp, ep, 66);
+        this.drawStatBlock(TextManager.mpA, this._actor.mp, this._actor.mmp, ep, 102);
         if (state) {
-            this.drawStateBlock(state, this.extraPadding(), 138);
+            this.drawStateBlock(state, ep, 138);
         } else {
-            this.drawStatBlock(TextManager.levelA, this._actor.level, this.extraPadding(), 138, 72);
+            this.drawStatBlock(TextManager.levelA, this._actor.level, undefined, ep, 138);
         }
     }
 };

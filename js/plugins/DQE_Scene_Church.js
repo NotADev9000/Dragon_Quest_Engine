@@ -126,7 +126,7 @@ Scene_Church.prototype.createOnWhoWindow = function () {
 
 Scene_Church.prototype.createStatusWindow = function () {
     let x = this._onWhoWindow.x + this._onWhoWindow.width;
-    this._statusWindow = new Window_BattleStatus(x, 48, undefined, 'center');
+    this._statusWindow = new Window_MenuStatus(x, 48, undefined);
     this._statusWindow.hide();
     this._onWhoWindow.setAssociatedWindow(this._statusWindow);
     this.addWindow(this._statusWindow);

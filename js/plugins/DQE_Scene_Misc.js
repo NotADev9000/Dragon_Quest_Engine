@@ -98,7 +98,7 @@ Scene_Misc.prototype.createLineUpListWindow = function () {
 
 Scene_Misc.prototype.createLineUpStatusWindow = function () {
     let x = this._lineUpListWindow.x + this._lineUpListWindow.width;
-    this._lineUpStatusWindow = new Window_BattleStatus(x, 48, undefined, 'center');
+    this._lineUpStatusWindow = new Window_MenuStatus(x, 48, undefined);
     this._lineUpStatusWindow.hide();
     this._lineUpPartyWindow.setStatusWindow(this._lineUpStatusWindow);
     this.addWindow(this._lineUpStatusWindow);

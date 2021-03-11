@@ -84,7 +84,7 @@ Scene_Battle.prototype.createStatusWindow = function () {
     var partyMembers = $gameParty.members();
 
     for (let i = 0; i < Math.min(partyMembers.length, 4); i++) {
-        this._statusWindow[i] = new Window_BattleStatus(144 + (Window_MenuStatus.prototype.windowWidth() * i), -12, partyMembers[i]);
+        this._statusWindow[i] = new Window_MenuStatus(144 + (Window_MenuStatus.prototype.windowWidth() * i), -12, partyMembers[i]);
         this.addWindow(this._statusWindow[i]);
     }
 };
@@ -223,7 +223,7 @@ Scene_Battle.prototype.createActorWindow = function () {
 };
 
 Scene_Battle.prototype.createActorStatWindow = function () {
-    var x = this._actorWindow.x + this._actorWindow.windowWidth();
+    var x = this._actorWindow.x + this._actorWindow.width;
     var y = this._actorWindow.y;
     this._actorStatWindow = new Window_BattleActorStat(x, y);
     this._actorStatWindow.hide();
@@ -279,7 +279,7 @@ Scene_Battle.prototype.createLineUpIndividualWithWhoWindow = function () {
 Scene_Battle.prototype.createLineUpIndividualStatusWindow = function () {
     let x = this._lineUpIndivWithWhoWindow.x + this._lineUpIndivWithWhoWindow.windowWidth();
     let y = this._lineUpIndivWithWhoWindow.y;
-    this._lineUpIndivStatusWindow = new Window_BattleStatus(x, y, undefined, 'center');
+    this._lineUpIndivStatusWindow = new Window_MenuStatus(x, y, undefined);
     this._lineUpIndivStatusWindow.hide();
     this._lineUpIndivWithWhoWindow.setAssociatedWindow(this._lineUpIndivStatusWindow);
     this.addWindow(this._lineUpIndivStatusWindow);
@@ -310,7 +310,7 @@ Scene_Battle.prototype.createLineUpGroupListWindow = function () {
 Scene_Battle.prototype.createLineUpGroupStatusWindow = function () {
     let x = this._lineUpGroupListWindow.x + this._lineUpGroupListWindow.windowWidth();
     let y = this._lineUpGroupListWindow.y;
-    this._lineUpGroupStatusWindow = new Window_BattleStatus(x, y, undefined, 'center');
+    this._lineUpGroupStatusWindow = new Window_MenuStatus(x, y, undefined);
     this._lineUpGroupStatusWindow.hide();
     this._lineUpGroupPartyWindow.setStatusWindow(this._lineUpGroupStatusWindow);
     this.addWindow(this._lineUpGroupStatusWindow);

@@ -46,6 +46,10 @@ Window_ItemActorStat.prototype.initialize = function (x, y) {
     this._actorIndex = -1;
 };
 
+//////////////////////////////
+// Functions - window sizing
+//////////////////////////////
+
 Window_ItemActorStat.prototype.windowWidth = function () {
     return 264;
 };
@@ -66,6 +70,10 @@ Window_ItemActorStat.prototype.textWidth = function () {
     return this.windowWidth() - (this.standardPadding() + this.extraPadding()) * 2;
 };
 
+//////////////////////////////
+// Functions - data
+//////////////////////////////
+
 Window_ItemActorStat.prototype.setCategory = function (category) {
     if (this._actorIndex !== category) {
         this._actorIndex = category;
@@ -85,6 +93,10 @@ Window_ItemActorStat.prototype.setStat = function (action) {
         this._stat = Window_ItemActorStat.STAT_MP;
     }
 };
+
+//////////////////////////////
+// Functions - draw items
+//////////////////////////////
 
 Window_ItemActorStat.prototype.drawStat = function () {
     var text = '';
@@ -121,14 +133,9 @@ Window_ItemActorStat.prototype.drawStatValue = function () {
     this.drawText(text, this.extraPadding(), y, this.textWidth(), 'center');
 };
 
-Window_ItemActorStat.prototype.show = function () {
-    this._stat >= 0 && Window_Base.prototype.show.call(this);
-};
-
-Window_ItemActorStat.prototype.hide = function () {
-    this._stat = -1;
-    Window_Base.prototype.hide.call(this);
-};
+//////////////////////////////
+// Functions - refresh
+//////////////////////////////
 
 Window_ItemActorStat.prototype.refresh = function () {
     if (this._stat >= 0) {

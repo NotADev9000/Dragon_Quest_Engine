@@ -33,6 +33,32 @@ Scene_ItemBase.prototype.initialize = function () {
     DQEng.Scene_ItemBase.initialize.call(this);
 };
 
+//////////////////////////////
+// Functions - create windows
+//////////////////////////////
+
+Scene_ItemBase.prototype.createItemStatusWindow = function () {
+    const x = this._useOnWhoWindow.x + this._useOnWhoWindow.width;
+    const y = this._useOnWhoWindow.y;
+    this._itemStatusWindow = new Window_MenuStatus(x, y, undefined, undefined, true);
+    this._itemStatusWindow.hide();
+    this.addWindow(this._itemStatusWindow);
+    this._useOnWhoWindow.setAssociatedWindow(this._itemStatusWindow);
+};
+
+Scene_ItemBase.prototype.createItemStatWindow = function () {
+    const x = this._itemStatusWindow.x + this._itemStatusWindow.width;
+    const y = this._itemStatusWindow.y;
+    this._itemStatWindow = new Window_ItemActorStat(x, y);
+    this._itemStatWindow.hide();
+    this.addWindow(this._itemStatWindow);
+    this._useOnWhoWindow.setAssociatedWindow(this._itemStatWindow);
+};
+
+//////////////////////////////
+// Functions - item use
+//////////////////////////////
+
 /**
  * Returns false if item is not useable in menu
  */
@@ -70,7 +96,7 @@ Scene_ItemBase.prototype.itemTargetActors = function () {
 //////////////////////////////
 
 Scene_ItemBase.prototype.addToMessage = function (text) {
-    let refresh = '\\func[SceneManager._scene.refreshItemStatWindow]';
+    let refresh = '\\func[SceneManager._scene.refreshItemStatWindows]';
     $gameMessage.add(refresh + text);
 };
 

@@ -34,14 +34,13 @@ Scene_Skill.prototype.create = function () {
     this.createSkillWindow();
     this.createSkillStatWindow();
     this.createUseOnWhoWindow();
+    this.createItemStatusWindow();
     this.createItemStatWindow();
-    this.createStatusWindow();
     this.createMessageWindow();
 };
 
 Scene_Skill.prototype.start = function () {
     Scene_ItemBase.prototype.start.call(this);
-    this.refreshStatusWindow();
 };
 
 //////////////////////////////
@@ -94,19 +93,6 @@ Scene_Skill.prototype.createUseOnWhoWindow = function () {
     this.addWindow(this._useOnWhoWindow);
 };
 
-Scene_Skill.prototype.createItemStatWindow = function () {
-    let x = this._useOnWhoWindow.x + this._useOnWhoWindow.windowWidth();
-    let y = this._useOnWhoWindow.y;
-    this._itemStatWindow = new Window_ItemActorStat(x, y);
-    this._itemStatWindow.hide();
-    this.addWindow(this._itemStatWindow);
-    this._useOnWhoWindow.setAssociatedWindow(this._itemStatWindow);
-};
-
-Scene_Skill.prototype.createStatusWindow = function () {
-    Scene_MenuBase.prototype.createStatusWindow.call(this);
-};
-
 /**
  * Always call this window last so it's at front
  */
@@ -132,8 +118,9 @@ Scene_Skill.prototype.onSkillOk = function () {
     } else if (this.action().isForOne()) {
         this._useOnWhoWindow.select(0);
         this._useOnWhoWindow.show();
-        this._itemStatWindow.setAction(this.action());
-        this._itemStatWindow.show();
+        this._itemStatusWindow.show();
+        // this._itemStatWindow.setAction(this.action());
+        // this._itemStatWindow.show();
         this._skillWindow.showBackgroundDimmer();
         this._skillWindow.showAllHelpWindowBackgroundDimmers();
         this._useOnWhoWindow.activate();
@@ -158,7 +145,6 @@ Scene_Skill.prototype.startItemUse = function (forAll = false) {
     var item = this.item();
     var user = this.user();
 
-    this.showStatusWindowBackgroundDimmers();
     if (this.isItemEffectsValid()) {
         user.useItem(item);
         $gameMessage.add(user.magicUsedMessage(item));
@@ -174,6 +160,7 @@ Scene_Skill.prototype.startItemUse = function (forAll = false) {
 
 Scene_Skill.prototype.onUseOnWhoCancel = function () {
     this._useOnWhoWindow.hide();
+    this._itemStatusWindow.hide();
     this._itemStatWindow.hide();
     this._skillWindow.hideBackgroundDimmer();
     this._skillWindow.hideAllHelpWindowBackgroundDimmers();
@@ -188,10 +175,10 @@ Scene_Skill.prototype.actionResolvedMessage = function () {
     this.checkCommonEvent();
     this.checkGameover();
     this._useOnWhoWindow.hide();
+    this._itemStatusWindow.hide();
     this._itemStatWindow.hide();
     this._skillWindow.hideBackgroundDimmer();
     this._skillWindow.hideAllHelpWindowBackgroundDimmers();
-    this.hideStatusWindowBackgroundDimmers();
     this._skillWindow.refresh();
     this._skillWindow.activate();
 };
@@ -201,12 +188,10 @@ Scene_Skill.prototype.triedToMagicMessage = function () {
 };
 
 Scene_Skill.prototype.triedToUseMessage = function () {
-    this.hideStatusWindowBackgroundDimmers();
     this._useOnWhoWindow.activate();
 };
 
 Scene_Skill.prototype.triedToUseAllMessage = function () {
-    this.hideStatusWindowBackgroundDimmers();
     this._skillWindow.activate();
 };
 
@@ -218,7 +203,7 @@ Scene_Skill.prototype.user = function () {
     return $gameParty.members()[this._commandWindow.currentSymbol()];
 };
 
-Scene_Skill.prototype.refreshItemStatWindow = function () {
+Scene_Skill.prototype.refreshItemStatWindows = function () {
+    this._itemStatusWindow.refresh();
     this._itemStatWindow.refresh();
-    this.refreshStatusWindow();
 };
