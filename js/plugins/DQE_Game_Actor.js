@@ -509,14 +509,16 @@ Game_Actor.prototype.paramMax = function (paramId) {
     return Game_Battler.prototype.paramMax.call(this, paramId);
 };
 
-Game_Actor.prototype.paramBase = function (paramId) {
+Game_Actor.prototype.paramDefault = function (paramId) {
     return this.currentClass(paramId > 7).params[paramId][this._level];
 };
 
+Game_Actor.prototype.paramBase = function (paramId) {
+    return Game_Battler.prototype.paramBase.call(this, paramId);
+};
+
 Game_Actor.prototype.paramPlus = function (paramId) {
-    var value = Game_Battler.prototype.paramPlus.call(this, paramId);
-    value += this.paramEquips(paramId);
-    return value;
+    return Game_Battler.prototype.paramPlus.call(this, paramId);
 };
 
 Game_Actor.prototype.paramEquips = function (paramId) {

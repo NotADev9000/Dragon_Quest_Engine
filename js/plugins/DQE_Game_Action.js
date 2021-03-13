@@ -83,6 +83,10 @@ Game_Action.prototype.setItem = function (item, itemIndex) {
     this._itemIndex = itemIndex;
 };
 
+//////////////////////////////
+// Functions - action scope
+//////////////////////////////
+
 Game_Action.prototype.checkItemScope = function (list) {
     var scope = this.item().meta.scope ? Number(this.item().meta.scope) : this.item().scope;
     return list.contains(scope);
@@ -104,6 +108,18 @@ Game_Action.prototype.needsSelection = function () {
     return this.checkItemScope([1, 7, 9, 12]);
 };
 
+Game_Action.prototype.statRelatedCodes = function () {
+    return [Game_Action.EFFECT_ADD_BUFF, 
+            Game_Action.EFFECT_ADD_DEBUFF,
+            Game_Action.EFFECT_REMOVE_BUFF,
+            Game_Action.EFFECT_REMOVE_DEBUFF,
+            Game_Action.EFFECT_GROW];
+};
+
+Game_Action.prototype.isEffectBuffGrow = function (effect) {
+    return this.statRelatedCodes().contains(effect.code);
+};
+
 Game_Action.prototype.isCertainHit = function () {
     return !this.item().meta.hitType && (this.item().hitType === Game_Action.HITTYPE_CERTAIN);
 };
@@ -119,6 +135,10 @@ Game_Action.prototype.isMagical = function () {
 Game_Action.prototype.isBreath = function () {
     return Number(this.item().meta.hitType) === Game_Action.HITTYPE_BREATH;
 };
+
+//////////////////////////////
+// Functions - other
+//////////////////////////////
 
 Game_Action.prototype.targetsForOpponents = function () {
     var targets = [];
@@ -331,6 +351,7 @@ Game_Action.prototype.apply = function (target) {
 
 Game_Action.prototype.metaEffects = function (meta) {
     let effects = [];
+    // buffs
     if (meta.effectBuffs) {
         let notes = meta.effectBuffs.split('/');
         notes.forEach(effect => {
@@ -369,6 +390,26 @@ Game_Action.prototype.metaEffects = function (meta) {
                 code: code,
                 dataId: dataId,
                 value1: Number(properties[2]),
+                value2: 0
+            });
+        });
+    }
+    // grow
+    if (meta.effectGrow) {
+        let notes = meta.effectGrow.split('/');
+        notes.forEach(effect => {
+            let properties = effect.split(' ');
+            let dataId;
+
+            switch (properties[0]) {
+                case 'Chrm': // Charm
+                    dataId = Game_BattlerBase.POS_PARAM_CHARM;
+                    break;
+            }
+            effects.push({
+                code: Game_Action.EFFECT_GROW,
+                dataId: dataId,
+                value1: Number(properties[1]),
                 value2: 0
             });
         });

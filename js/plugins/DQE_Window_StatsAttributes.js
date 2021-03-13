@@ -164,7 +164,7 @@ Window_StatsAttributes.prototype.getBaseStats = function () {
         if (i < 9) {
             stats.push(this._actor.paramBase(i));
         } else {
-            stats.push(this._actor.paramBase(i - 7));
+            stats.push(this._actor.paramDefault(i - 7));
         }
     }
     return stats;
@@ -173,13 +173,7 @@ Window_StatsAttributes.prototype.getBaseStats = function () {
 Window_StatsAttributes.prototype.getOtherStats = function () {
     let stats = [];
     for (let i = 0; i < 11; i++) {
-        if (i === 2 || i === 3) {
-            stats.push('-');
-        } else if (i < 9) {
-            stats.push(Game_Battler.prototype.paramPlus.call(this._actor, i) || '-');
-        } else {
-            stats.push(Game_Battler.prototype.paramPlus.call(this._actor, i - 7) || '-');
-        }
+            stats.push(this._actor.paramPlus(i) || '-');
     }
     return stats;
 };
@@ -202,7 +196,7 @@ Window_StatsAttributes.prototype.getTotalStats = function () {
         if (i < 9) {
             stats.push(this._actor.param(i));
         } else {
-            stats.push(this._actor.paramBasePermPlus(i - 7));
+            stats.push(this._actor.uparam(i - 7, i));
         }
     }
     return stats;

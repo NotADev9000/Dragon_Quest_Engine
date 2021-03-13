@@ -119,8 +119,8 @@ Scene_Skill.prototype.onSkillOk = function () {
         this._useOnWhoWindow.select(0);
         this._useOnWhoWindow.show();
         this._itemStatusWindow.show();
-        // this._itemStatWindow.setAction(this.action());
-        // this._itemStatWindow.show();
+        this._itemStatWindow.setAction(this.action());
+        this._itemStatWindow.show();
         this._skillWindow.showBackgroundDimmer();
         this._skillWindow.showAllHelpWindowBackgroundDimmers();
         this._useOnWhoWindow.activate();

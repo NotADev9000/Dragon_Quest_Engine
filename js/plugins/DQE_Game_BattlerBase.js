@@ -81,7 +81,7 @@ DQEng.Parameters.Game_BattlerBase.cursedDeathSkillId = Number(parameters["Cursed
 // Functions - data
 //////////////////////////////
 
-// buffChangeRate Array (TODO: move to $data var)
+// buffChangeRate Array
 Game_BattlerBase.PARAM_BUFFRATES = [
     { '-2': 0.5, '-1': 0.75, '1': 1.25, '2': 1.5 }, // Max HP
     { '-2': 0.5, '-1': 0.75, '1': 1.25, '2': 1.5 }, // Max MP
@@ -105,27 +105,29 @@ Game_BattlerBase.SPARAM_BUFFRATES = [
     {},
     { '-2': 1.5, '-1': 1.25, '1': 0.5, '2': 0.25 }, // Breath Damage
 ];
-// where in the _buffs array params end
-Game_BattlerBase.BUFFLIST_PARAM_END = 8;
-Game_BattlerBase.BUFFLIST_SPARAM_END = 11;
-// position of certain sp/ex/params in buff array
-Game_BattlerBase.BUFFLIST_PARAM_CHARM = 8;
-Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG = 9;
-Game_BattlerBase.BUFFLIST_SPARAM_MAGDMG = 10;
-Game_BattlerBase.BUFFLIST_SPARAM_BREDMG = 11;
 // position of sp/ex/params in their respective lists
 Game_BattlerBase.POS_PARAM_CHARM = 8;
+Game_BattlerBase.POS_UPARAM_STRENGTH = 9;
+Game_BattlerBase.POS_UPARAM_RESILIENCE = 10;
 Game_BattlerBase.POS_XPARAM_BLOCKRATE = 10;
 Game_BattlerBase.POS_XPARAM_CRITBLOCKRATE = 11;
 Game_BattlerBase.POS_SPARAM_BREDMG = 10;
+// where in the _buffs array params end
+Game_BattlerBase.BUFFLIST_PARAM_END = 10;
+Game_BattlerBase.BUFFLIST_SPARAM_END = 13;
+// position of certain sp/ex/params in buff array
+Game_BattlerBase.BUFFLIST_PARAM_CHARM = Game_BattlerBase.POS_PARAM_CHARM;
+Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG = 11;
+Game_BattlerBase.BUFFLIST_SPARAM_MAGDMG = 12;
+Game_BattlerBase.BUFFLIST_SPARAM_BREDMG = 13;
 
 Object.defineProperties(Game_BattlerBase.prototype, {
-    // STRength
-    str: { get: function () { return this.paramBasePermPlus(2); }, configurable: true },
-    // RESilience
-    res: { get: function () { return this.paramBasePermPlus(3); }, configurable: true },
     // CHarM
     chm: { get: function () { return this.param(Game_BattlerBase.POS_PARAM_CHARM); }, configurable: true },
+    // STRength
+    str: { get: function () { return this.uparam(2, Game_BattlerBase.POS_UPARAM_STRENGTH); }, configurable: true },
+    // RESilience
+    res: { get: function () { return this.uparam(3, Game_BattlerBase.POS_UPARAM_RESILIENCE); }, configurable: true },
     // BLock Rate
     blr: { get: function () { return this.xparam(Game_BattlerBase.POS_XPARAM_BLOCKRATE); }, configurable: true },
     // Crit Block Rate
@@ -140,7 +142,7 @@ Object.defineProperties(Game_BattlerBase.prototype, {
 
 Game_BattlerBase.prototype.clearBuffs = function () {
     /*
-        HP, 
+        HP,             <-- PARAMs
         MP, 
         Attack, 
         Defense, 
@@ -149,13 +151,14 @@ Game_BattlerBase.prototype.clearBuffs = function () {
         Agility, 
         Deftness, 
         Charm,
-
-        Physical Dmg, 
+        Strength,       (Buff may not be used yet)
+        Resilience,     (Buff may not be used yet)
+        Physical Dmg,   <-- SPARAMs
         Magic Dmg, 
         Breath Dmg
     */
-    this._buffs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    this._buffTurns = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,];
+    this._buffs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this._buffTurns = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 };
 
 Game_BattlerBase.prototype.increaseBuff = function (paramId) {
@@ -177,23 +180,43 @@ Game_BattlerBase.prototype.decreaseBuff = function (paramId) {
 //////////////////////////////
 
 Game_BattlerBase.prototype.clearParamPlus = function () {
-    this._paramPlus = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    // HP, MP, Attack, Defense, Magical Might, Magical Mending, Agility, Deftness, Charm, Strength, Resilience
+    this._paramPlus = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 };
 
 Game_BattlerBase.prototype.paramMax = function (paramId) {
     return 999;
 };
 
+Game_BattlerBase.prototype.paramBase = function (paramId) {
+    return paramId === 2 || paramId === 3 ? this.uparam(paramId, paramId + 7) : this.paramDefault(paramId);
+};
+
 /**
- * returns the absolute base of a parameter + any permanent buffs
+ * returns the absolute base of a parameter + underlying parameter perm buffs
  * permanent buffs = seeds or skill tree boosts but NOT moves like oomph or equipment
+ * (STRENGTH is the underlying parameter to ATTACK)
  * 
- * @param {number} paramId id of parameter to return
+ * @param {number} uparamId ID of the underlying stat
+ * @param {number} paramId ID of the overall stat
  */
-Game_BattlerBase.prototype.paramBasePermPlus = function (paramId) {
-    let value = this.paramBase(paramId) + Game_Battler.prototype.paramPlus.call(this, paramId);
-    var maxValue = this.paramMax(paramId);
-    var minValue = this.paramMin(paramId);
+Game_BattlerBase.prototype.uparam = function (paramId, uparamId) {
+    let value = this.paramDefault(paramId) + this.paramPlus(uparamId);
+    const maxValue = this.paramMax(paramId);
+    const minValue = this.paramMin(paramId);
+    return Math.round(value.clamp(minValue, maxValue));
+};
+
+Game_BattlerBase.prototype.paramEquips = function (paramId) {
+    return 0;
+};
+
+Game_BattlerBase.prototype.param = function (paramId) {
+    let value = this.paramBase(paramId);
+    value += this.paramPlus(paramId) + this.paramEquips(paramId);
+    value *= this.paramRate(paramId) * this.paramBuffRate(paramId);
+    const maxValue = this.paramMax(paramId);
+    const minValue = this.paramMin(paramId);
     return Math.round(value.clamp(minValue, maxValue));
 };
 

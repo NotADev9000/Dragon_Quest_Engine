@@ -28,6 +28,10 @@ DQEng.Game_Enemy = DQEng.Game_Enemy || {};
 // Game_Enemy
 //-----------------------------------------------------------------------------
 
-Game_Enemy.prototype.paramBase = function (paramId) {
+Game_Enemy.prototype.paramDefault = function (paramId) {
     return paramId <= 7 ? this.enemy().params[paramId] : this.enemy().meta.charm || 0;
+};
+
+Game_Enemy.prototype.paramBase = function (paramId) {
+    return Game_Battler.prototype.paramBase.call(this, paramId);
 };
