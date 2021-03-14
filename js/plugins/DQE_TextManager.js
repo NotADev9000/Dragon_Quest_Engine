@@ -204,6 +204,8 @@ TextManager.paramFromBuffID = function (buffId) {
     switch (paramType) {
         case Game_BattlerBase.TRAIT_PARAM:
             return TextManager.param(paramId);
+        case Game_BattlerBase.TRAIT_UPARAM:
+            return TextManager.baseparam(paramId - 7);
         case Game_BattlerBase.TRAIT_SPARAM:
             return TextManager.sparam(paramId);
         case Game_BattlerBase.TRAIT_XPARAM:

@@ -105,6 +105,7 @@ Game_BattlerBase.SPARAM_BUFFRATES = [
     {},
     { '-2': 1.5, '-1': 1.25, '1': 0.5, '2': 0.25 }, // Breath Damage
 ];
+Game_BattlerBase.TRAIT_UPARAM = 24; // underlying params
 // position of sp/ex/params in their respective lists
 Game_BattlerBase.POS_PARAM_CHARM = 8;
 Game_BattlerBase.POS_UPARAM_STRENGTH = 9;
@@ -113,10 +114,13 @@ Game_BattlerBase.POS_XPARAM_BLOCKRATE = 10;
 Game_BattlerBase.POS_XPARAM_CRITBLOCKRATE = 11;
 Game_BattlerBase.POS_SPARAM_BREDMG = 10;
 // where in the _buffs array params end
-Game_BattlerBase.BUFFLIST_PARAM_END = 10;
+Game_BattlerBase.BUFFLIST_PARAM_END = 8;
+Game_BattlerBase.BUFFLIST_UPARAM_END = 10;
 Game_BattlerBase.BUFFLIST_SPARAM_END = 13;
 // position of certain sp/ex/params in buff array
 Game_BattlerBase.BUFFLIST_PARAM_CHARM = Game_BattlerBase.POS_PARAM_CHARM;
+Game_BattlerBase.BUFFLIST_UPARAM_STRENGTH = Game_BattlerBase.POS_UPARAM_STRENGTH;
+Game_BattlerBase.BUFFLIST_UPARAM_RESILIENCE = Game_BattlerBase.POS_UPARAM_RESILIENCE;
 Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG = 11;
 Game_BattlerBase.BUFFLIST_SPARAM_MAGDMG = 12;
 Game_BattlerBase.BUFFLIST_SPARAM_BREDMG = 13;
@@ -125,9 +129,9 @@ Object.defineProperties(Game_BattlerBase.prototype, {
     // CHarM
     chm: { get: function () { return this.param(Game_BattlerBase.POS_PARAM_CHARM); }, configurable: true },
     // STRength
-    str: { get: function () { return this.uparam(2, Game_BattlerBase.POS_UPARAM_STRENGTH); }, configurable: true },
+    str: { get: function () { return this.uparam(Game_BattlerBase.POS_UPARAM_STRENGTH); }, configurable: true },
     // RESilience
-    res: { get: function () { return this.uparam(3, Game_BattlerBase.POS_UPARAM_RESILIENCE); }, configurable: true },
+    res: { get: function () { return this.uparam(Game_BattlerBase.POS_UPARAM_RESILIENCE); }, configurable: true },
     // BLock Rate
     blr: { get: function () { return this.xparam(Game_BattlerBase.POS_XPARAM_BLOCKRATE); }, configurable: true },
     // Crit Block Rate
@@ -151,8 +155,8 @@ Game_BattlerBase.prototype.clearBuffs = function () {
         Agility, 
         Deftness, 
         Charm,
-        Strength,       (Buff may not be used yet)
-        Resilience,     (Buff may not be used yet)
+        Strength,       <-- UPARAMs (Buff may not be used yet)
+        Resilience,                 (Buff may not be used yet)
         Physical Dmg,   <-- SPARAMs
         Magic Dmg, 
         Breath Dmg
@@ -189,7 +193,7 @@ Game_BattlerBase.prototype.paramMax = function (paramId) {
 };
 
 Game_BattlerBase.prototype.paramBase = function (paramId) {
-    return paramId === 2 || paramId === 3 ? this.uparam(paramId, paramId + 7) : this.paramDefault(paramId);
+    return paramId === 2 || paramId === 3 ? this.uparam(paramId + 7) : this.paramDefault(paramId);
 };
 
 /**
@@ -198,11 +202,11 @@ Game_BattlerBase.prototype.paramBase = function (paramId) {
  * (STRENGTH is the underlying parameter to ATTACK)
  * 
  * @param {number} uparamId ID of the underlying stat
- * @param {number} paramId ID of the overall stat
  */
-Game_BattlerBase.prototype.uparam = function (paramId, uparamId) {
+Game_BattlerBase.prototype.uparam = function (uparamId) {
+    let paramId = uparamId - 7;
     let value = this.paramDefault(paramId) + this.paramPlus(uparamId);
-    const maxValue = this.paramMax(paramId);
+    const maxValue = this.paramMax();
     const minValue = this.paramMin(paramId);
     return Math.round(value.clamp(minValue, maxValue));
 };
@@ -215,7 +219,7 @@ Game_BattlerBase.prototype.param = function (paramId) {
     let value = this.paramBase(paramId);
     value += this.paramPlus(paramId) + this.paramEquips(paramId);
     value *= this.paramRate(paramId) * this.paramBuffRate(paramId);
-    const maxValue = this.paramMax(paramId);
+    const maxValue = this.paramMax();
     const minValue = this.paramMin(paramId);
     return Math.round(value.clamp(minValue, maxValue));
 };
@@ -498,7 +502,7 @@ Game_BattlerBase.prototype.sparamIdToBuffId = function (sparamId) {
  * @param {number} buffId index in _buffs array
  */
 Game_BattlerBase.prototype.buffIdToParamId = function (buffId) {
-    if (buffId <= Game_BattlerBase.BUFFLIST_PARAM_END) return buffId;
+    if (buffId <= Game_BattlerBase.BUFFLIST_UPARAM_END) return buffId;
     switch (buffId) {
         case Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG:
             return 6;
@@ -517,6 +521,8 @@ Game_BattlerBase.prototype.buffIdToParamId = function (buffId) {
 Game_BattlerBase.prototype.buffIdToParamType = function (buffId) {
     if (buffId <= Game_BattlerBase.BUFFLIST_PARAM_END) {
         return Game_BattlerBase.TRAIT_PARAM;
+    } else if (buffId <= Game_BattlerBase.BUFFLIST_UPARAM_END) {
+        return Game_BattlerBase.TRAIT_UPARAM;
     } else if (buffId <= Game_BattlerBase.BUFFLIST_SPARAM_END) {
         return Game_BattlerBase.TRAIT_SPARAM;
     } else {

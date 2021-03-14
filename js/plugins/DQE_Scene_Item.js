@@ -180,8 +180,8 @@ Scene_Item.prototype.onDoWhatUse = function () {
         this._useOnWhoWindow.select(0);
         this._useOnWhoWindow.show();
         this._itemStatusWindow.show();
-        // this._itemStatWindow.setAction(this.action());
-        // this._itemStatWindow.show();
+        this._itemStatWindow.setAction(this.action());
+        this._itemStatWindow.show();
         this._useOnWhoWindow.activate();
     }
 };

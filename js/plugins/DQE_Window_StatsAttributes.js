@@ -196,7 +196,7 @@ Window_StatsAttributes.prototype.getTotalStats = function () {
         if (i < 9) {
             stats.push(this._actor.param(i));
         } else {
-            stats.push(this._actor.uparam(i - 7, i));
+            stats.push(this._actor.uparam(i));
         }
     }
     return stats;

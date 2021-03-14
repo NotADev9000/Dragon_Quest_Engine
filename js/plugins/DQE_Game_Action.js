@@ -376,6 +376,12 @@ Game_Action.prototype.metaEffects = function (meta) {
                 case 'Chrm': // Charm
                     dataId = Game_BattlerBase.BUFFLIST_PARAM_CHARM;
                     break;
+                case 'Stre': // Strength
+                    dataId = Game_BattlerBase.BUFFLIST_UPARAM_STRENGTH;
+                    break;
+                case 'Resi': // Resilience
+                    dataId = Game_BattlerBase.BUFFLIST_UPARAM_RESILIENCE;
+                    break;
                 case 'Phys': // Physical Damage
                     dataId = Game_BattlerBase.BUFFLIST_SPARAM_PHYDMG;
                     break;
@@ -404,6 +410,12 @@ Game_Action.prototype.metaEffects = function (meta) {
             switch (properties[0]) {
                 case 'Chrm': // Charm
                     dataId = Game_BattlerBase.POS_PARAM_CHARM;
+                    break;
+                case 'Stre': // Strength
+                    dataId = Game_BattlerBase.POS_UPARAM_STRENGTH;
+                    break;
+                case 'Resi': // Resilience
+                    dataId = Game_BattlerBase.POS_UPARAM_RESILIENCE;
                     break;
             }
             effects.push({

@@ -107,7 +107,6 @@ Window_EveryoneStats.prototype.updateCursor = function () {
 Window_EveryoneStats.prototype.sizeWindow = function () {
     this._playerBlocks = Math.min($gameParty.members().length - (this.startFrom()), this.maxPlayerBlocks());
     this.width = this.attributeBlockWidth() + (this._playerBlocks * this.playerBlockWidth()) + (this.standardPadding() * 2);
-    this._refreshAllParts();
 };
 
 Window_EveryoneStats.prototype.drawAttributeBlock = function () {
@@ -150,8 +149,7 @@ Window_EveryoneStats.prototype.drawPlayerBlocks = function () {
             } else if (j < 9) {
                 text = actor.param(j);
             } else {
-                let id = j - 7;
-                text = actor.paramBasePermPlus(id);
+                text = actor.uparam(j);
             }
             this.drawText(text, x + 3, y, blockWidth, 'center');
         }

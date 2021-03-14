@@ -462,9 +462,8 @@ Window_Selectable.prototype.processHandler = function (handler, deactivate) {
 //-----------------------------------------------------------------------------
 
 Window_Command.prototype.updateWindowDisplay = function () {
-    this._height = this.windowHeight();
-    this._width = this.windowWidth();
-    this._refreshAllParts();
+    this.height = this.windowHeight();
+    this.width = this.windowWidth();
     this.refresh();
 };
 
