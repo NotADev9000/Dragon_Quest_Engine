@@ -108,7 +108,7 @@ Game_Action.prototype.needsSelection = function () {
     return this.checkItemScope([1, 7, 9, 12]);
 };
 
-Game_Action.prototype.statRelatedCodes = function () {
+Game_Action.prototype.buffGrowCodes = function () {
     return [Game_Action.EFFECT_ADD_BUFF, 
             Game_Action.EFFECT_ADD_DEBUFF,
             Game_Action.EFFECT_REMOVE_BUFF,
@@ -117,7 +117,16 @@ Game_Action.prototype.statRelatedCodes = function () {
 };
 
 Game_Action.prototype.isEffectBuffGrow = function (effect) {
-    return this.statRelatedCodes().contains(effect.code);
+    return this.buffGrowCodes().contains(effect.code);
+};
+
+Game_Action.prototype.stateCodes = function () {
+    return [Game_Action.EFFECT_ADD_STATE,
+            Game_Action.EFFECT_REMOVE_STATE];
+};
+
+Game_Action.prototype.isEffectStat = function (effect) {
+    return this.stateCodes().contains(effect.code);
 };
 
 Game_Action.prototype.isCertainHit = function () {
@@ -248,6 +257,13 @@ Game_Action.prototype.extraConfusionTarget = function () {
         case DQEng.Parameters.Game_Action.beguiledRestriction: // random ally
             return this.friendsUnit().randomTarget();
     }
+};
+
+Game_Action.prototype.hasItemAnyValidEffects = function (target) {
+    let effects = this.item().effects.concat(this.metaEffects(this.item().meta));
+    return effects.some(function (effect) {
+        return this.testItemEffect(target, effect);
+    }, this);
 };
 
 Game_Action.prototype.itemEva = function (target) {

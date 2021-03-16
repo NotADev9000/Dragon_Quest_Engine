@@ -32,6 +32,12 @@ Game_Battler.prototype.performRevival = function () {
     SoundManager.playRevival();
 };
 
+Game_Battler.prototype.addParam = function (paramId, value) {
+    this._result.grow[paramId] = value;
+    this._paramPlus[paramId] += value;
+    this.refresh();
+};
+
 Game_Battler.prototype.useItem = function (item, modifiedSkill, itemIndex = -1) {
     if (DataManager.isSkill(item)) {
         var skill = modifiedSkill ? modifiedSkill : item;

@@ -37,8 +37,9 @@ Game_ActionResult.prototype.clear = function () {
     this.stackedStates = [];
     this.recover = false;
     this.blocked = false;
+    this.grow = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // amount a stat grew by
     this.changedBuffs = [];
-    this.buffDifferences = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.buffDifferences = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 };
 
 Game_ActionResult.prototype.stackedStateObjects = function () {

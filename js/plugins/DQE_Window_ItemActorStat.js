@@ -111,7 +111,10 @@ Window_ItemActorStat.prototype.setStat = function (action) {
 
     // get types
     if (effect) {
-        if (action.isEffectBuffGrow(effect)) {
+        if (action.isEffectStat(effect)) {
+            this._stat[0] = Game_BattlerBase.TRAIT_STATE_RATE;
+            this._stat[1] = effect.dataId;
+        } else if (action.isEffectBuffGrow(effect)) {
             this._stat[0] = this._actor.buffIdToParamType(effect.dataId);
             this._stat[1] = this._actor.buffIdToParamId(effect.dataId);
         }
@@ -148,6 +151,14 @@ Window_ItemActorStat.prototype.prepDrawItems = function () {
             this._statName = TextManager.sparam(param);
             this._statValue = `${this._actor.displayEffects(2, param)}%`;
             break;
+        case Game_BattlerBase.TRAIT_STATE_RATE:
+            this._statName = $dataStates[param].name.toUpperCase();
+            this._statValue = this._actor.isStateAffected(param) ? `Yes` : `No`;
+            break;
+        default:
+            this._statName = '';
+            this._statValue = '';
+            break;
     }
 
     this.width = Math.max(this.windowWidth(), this.contents.measureTextWidth(this._statName) + ((this.standardPadding() + this.extraPadding()) * 2));
@@ -156,8 +167,9 @@ Window_ItemActorStat.prototype.prepDrawItems = function () {
 Window_ItemActorStat.prototype.drawStats = function () {
     const ep = this.extraPadding();
     const tw = this.textWidth();
-    this.changeTextColor(this.hpColor(this._actor));
+    if (this._stat[0] === Game_BattlerBase.TRAIT_STATE_RATE) this.changeTextColor(this.textColor($dataStates[this._stat[1]].meta.color));
     this.drawText(this._statName, ep, ep, tw, 'center');
+    this.resetTextColor();
     this.drawHorzLine(0, 51);
     this.drawText(this._statValue, ep, 69, tw, 'center');
 };

@@ -114,6 +114,7 @@ Scene_ItemBase.prototype.getResultTexts = function (target) {
     if (!this.getRevived(target)) {
         this.getDamage(target);
     }
+    this.getGrow(target);
 };
 
 Scene_ItemBase.prototype.getRevived = function (target) {
@@ -127,7 +128,7 @@ Scene_ItemBase.prototype.getRevived = function (target) {
     }, this);
     return revived;
 };
- 
+
 Scene_ItemBase.prototype.getDamage = function (target) {
     var result = target.result();
     if (result.missed) {
@@ -140,4 +141,14 @@ Scene_ItemBase.prototype.getDamage = function (target) {
 Scene_ItemBase.prototype.getHpRecover = function (target) {
     var damage = target.result().hpDamage;
     return '\\sysx[16]' + TextManager.actorRecovery.format(target.name(), TextManager.hp, -damage);
+};
+
+Scene_ItemBase.prototype.getGrow = function (target) {
+    target.result().grow.forEach((value, index) => {
+        if (value) {
+            const stat = index < 9 ? TextManager.param(index) : TextManager.baseparam(index - 7);
+            const dir = value > 0 ? `increases` : `decreases`;
+            this.addToMessage(`${target.name()}'s ${stat} ${dir} by ${value}!`);
+        }
+    });
 };
