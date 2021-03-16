@@ -10,9 +10,7 @@
 *
 *
 * @help
-* _stat:
-* 0 = hp
-* 1 = mp
+* N/A
 * 
 */
 
@@ -34,15 +32,12 @@ function Window_BattleActorStat() {
     this.initialize.apply(this, arguments);
 }
 
-Window_BattleActorStat.prototype = Object.create(Window_Base.prototype);
+Window_BattleActorStat.prototype = Object.create(Window_ItemActorStat.prototype);
 Window_BattleActorStat.prototype.constructor = Window_BattleActorStat;
 
-Window_BattleActorStat.prototype.initialize = function (x, y) {
-    var width = this.windowWidth();
-    var height = this.windowHeight();
-    Window_Base.prototype.initialize.call(this, x, y, width, height);
-    this._stat = -1;
-};
+//////////////////////////////
+// Functions - window sizing
+//////////////////////////////
 
 Window_BattleActorStat.prototype.windowWidth = function () {
     return 297;
@@ -56,8 +51,12 @@ Window_BattleActorStat.prototype.standardPadding = function () {
     return 24;
 };
 
-Window_BattleActorStat.prototype.lineGap = function () {
-    return 15;
+Window_BattleActorStat.prototype.extraPadding = function () {
+    return 0;
+};
+
+Window_BattleActorStat.prototype.itemHeight = function () {
+    return this.lineHeight() + this.lineGap();
 };
 
 Window_BattleActorStat.prototype.numVisibleRows = function () {
@@ -65,37 +64,90 @@ Window_BattleActorStat.prototype.numVisibleRows = function () {
 };
 
 Window_BattleActorStat.prototype.maxItems = function () {
-    return Math.min($gameParty.battleMembers().length, 4);
+    return $gameParty.battleMembers().length;
 };
 
-Window_BattleActorStat.prototype.setStat = function (stat) {
-    this._stat = stat;
-    this.refresh();
+//////////////////////////////
+// Functions - draw items
+//////////////////////////////
+
+Window_BattleActorStat.prototype.prepDrawItems = function () {
+    // set values
+    let param = this._stat[1];
+    switch (this._stat[0]) {
+        case Game_BattlerBase.TRAIT_PARAM:
+            this._statValue = '000/000';
+            if (param === 0) {
+                this._statName = TextManager.basic(2);
+            } else if (param === 1) {
+                this._statName = TextManager.basic(4);
+            } else {
+                this._statName = TextManager.param(param);
+                this._statValue = '000';
+            }
+            break;
+        case Game_BattlerBase.TRAIT_UPARAM:
+            this._statName = TextManager.baseparam(param - 7);
+            this._statValue = '000';
+            break;
+        case Game_BattlerBase.TRAIT_XPARAM:
+            this._statName = TextManager.xparam(param);
+            this._statValue = '000%';
+            break;
+        case Game_BattlerBase.TRAIT_SPARAM:
+            this._statName = TextManager.sparam(param);
+            this._statValue = '000%';
+            break;
+        case Game_BattlerBase.TRAIT_STATE_RATE:
+            this._statName = $dataStates[param].name.toUpperCase();
+            this._statValue = 'Yes';
+            break;
+        default:
+            this._statName = '';
+            this._statValue = '';
+            break;
+    }
+    this._statName += ': ';
+    this.width = Math.max(this.windowWidth(), this.contents.measureTextWidth(this._statName + this._statValue) + ((this.standardPadding() + this.extraPadding()) * 2));
 };
 
 Window_BattleActorStat.prototype.drawStats = function () {
-    for (let index = 0; index < this.maxItems(); index++) {
-        var actor = $gameParty.battleMembers()[index];
-        var text = '';
-        switch (this._stat) {
-            case 0:
-                padHp = actor.hp.toString().padStart(3, ' ');
-                text = `HP: ${padHp}/${actor.mhp}`;
+    const tw = this.textWidth();
+    let value = this._statValue;
+    let type = this._stat[0];
+    let param = this._stat[1];
+    let y;
+    $gameParty.battleMembers().forEach((actor, index) => {
+        switch (type) {
+            case Game_BattlerBase.TRAIT_PARAM:
+                if (param === 0) {
+                    value = `${actor.hp.toString().padStart(3, ' ')}/${actor.mhp}`;
+                } else if (param === 1) {
+                    value = `${actor.mp.toString().padStart(3, ' ')}/${actor.mmp}`;
+                } else {
+                    value = actor.param(param);
+                }
                 break;
-            case 1:
-                padMp = actor.mp.toString().padStart(3, ' ');
-                text = `MP: ${padMp}/${actor.mmp}`;
+            case Game_BattlerBase.TRAIT_UPARAM:
+                value = actor.uparam(param);
+                break;
+            case Game_BattlerBase.TRAIT_XPARAM:
+                value = `${actor.displayEffects(1, param)}%`;
+                break;
+            case Game_BattlerBase.TRAIT_SPARAM:
+                value = `${actor.displayEffects(2, param)}%`;
+                break;
+            case Game_BattlerBase.TRAIT_STATE_RATE:
+                value = actor.isStateAffected(param) ? `Yes` : `No`;
                 break;
             default:
+                value = ``;
                 break;
         }
-        var textWidth = this.windowWidth() - (this.standardPadding() * 2);
-        var y = index * (this.lineHeight() + this.lineGap());
-        this.drawText(text, 0, y, textWidth);
-    }
-};
-
-Window_BattleActorStat.prototype.refresh = function () {
-    this.contents.clear();
-    this.drawStats();
+        if (type === Game_BattlerBase.TRAIT_STATE_RATE) this.changeTextColor(this.textColor($dataStates[param].meta.color));
+        y = index * this.itemHeight();
+        this.drawText(this._statName, 0, y);
+        this.resetTextColor();
+        this.drawText(value, 0, y, tw, 'right');
+    });
 };

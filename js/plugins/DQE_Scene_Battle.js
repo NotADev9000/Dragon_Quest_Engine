@@ -874,9 +874,7 @@ Scene_Battle.prototype.selectActorSelection = function (pos = 0) {
 };
 
 Scene_Battle.prototype.selectActorStatWindow = function (action) {
-    if (action.isHpRecover()) {
-        this._actorStatWindow.setStat(0);
-    }
+    this._actorStatWindow.setAction(action);
     this._actorStatWindow.show();
 };
 
@@ -922,9 +920,7 @@ Scene_Battle.prototype.onSelectAction = function () {
                 this.selectActorSelection(1);
                 break;
         }
-        if (action.isRecover()) {
-            this.selectActorStatWindow(action);
-        }
+        this.selectActorStatWindow(action);
     }
 };
 

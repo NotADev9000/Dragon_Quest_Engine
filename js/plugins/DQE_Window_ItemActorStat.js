@@ -115,8 +115,8 @@ Window_ItemActorStat.prototype.setStat = function (action) {
             this._stat[0] = Game_BattlerBase.TRAIT_STATE_RATE;
             this._stat[1] = effect.dataId;
         } else if (action.isEffectBuffGrow(effect)) {
-            this._stat[0] = this._actor.buffIdToParamType(effect.dataId);
-            this._stat[1] = this._actor.buffIdToParamId(effect.dataId);
+            this._stat[0] = Game_BattlerBase.prototype.buffIdToParamType(effect.dataId);
+            this._stat[1] = Game_BattlerBase.prototype.buffIdToParamId(effect.dataId);
         }
     } else if (action.isHpEffect()) {
         this._stat[0] = Game_BattlerBase.TRAIT_PARAM;
