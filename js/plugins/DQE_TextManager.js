@@ -30,7 +30,8 @@ DQEng.TextManager = DQEng.TextManager || {};
 
 Object.defineProperties(TextManager, {
     medalUnit: { get: function () { return 'M'; }, configurable: true },
-    backup: { get: function () { return 'The frontline has fallen but backup has arrived!' }, configurable: true }
+    backup: { get: function () { return 'The frontline has fallen but backup has arrived!' }, configurable: true },
+    settings_cursorBeep: { get: function () { return `Cursor @Beep" Sound` }, configurable: true }
 });
 
 TextManager.terms = {};

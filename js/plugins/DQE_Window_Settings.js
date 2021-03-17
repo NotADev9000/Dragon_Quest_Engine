@@ -94,7 +94,7 @@ Window_Settings.prototype.statusText = function (index) {
             value = this.volumeText(value).padStart(4, ' ');
             break;
         case Window_Settings.COMMAND_TYPE_BOOL_ONOFF:
-            value = this.onOffText(value).padStart(3, ' ');
+            value = this.onOffText(value);
             break;
         case Window_Settings.COMMAND_TYPE_TEXT_SPEED:
             value = this.speedText(value).padStart(6, ' ');

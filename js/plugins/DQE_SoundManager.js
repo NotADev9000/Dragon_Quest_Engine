@@ -63,3 +63,7 @@ SoundManager.playRevival = function () {
         volume: 100
     });
 };
+
+SoundManager.playOk = function () {
+    if (ConfigManager.cursorBeep) this.playSystemSound(1);
+};

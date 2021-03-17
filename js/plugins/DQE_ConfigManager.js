@@ -29,6 +29,7 @@ DQEng.Config_Manager = DQEng.Config_Manager || {};
 
 ConfigManager.battleTextSpeed = 3; // 1 = very slow, 2 = slow, 3 = medium, 4 = fast, 5 = very fast
 ConfigManager.iconType = Input.ICON_GENERIC; // button icons displayed in-game
+ConfigManager.cursorBeep = 1; // should cursor beep sfx play in menus 1 = on, 0 = off
 
 // BGM Volume = ME Volume
 Object.defineProperty(ConfigManager, 'bgmVolume', {
@@ -82,6 +83,7 @@ ConfigManager.makeData = function () {
     config.windowScale = this.windowScale;
     config.fullscreen = this.fullscreen;
     config.iconType = this.iconType;
+    config.cursorBeep = this.cursorBeep;
     config.handlers = Input.handlers;
     config.keyMapper = Input.keyMapper;
     config.gamepadMapper = Input.gamepadMapper;
@@ -96,8 +98,9 @@ ConfigManager.applyData = function (config) {
     this.seVolume = this.readVolume(config, 'seVolume');
     this.battleTextSpeed = this.readSpeed(config, 'battleTextSpeed');
     this.windowScale = this.readScale(config, 'windowScale');
-    this.fullscreen = this.readFullscreen(config, 'fullscreen');
-    this.iconType = this.readFullscreen(config, 'iconType');
+    this.fullscreen = this.readBool(config, 'fullscreen');
+    this.iconType = this.readBool(config, 'iconType');
+    this.cursorBeep = this.readBool(config, 'cursorBeep')
     this.readInput(config); // controls
 };
 
@@ -106,9 +109,9 @@ ConfigManager.readSpeed = function (config, name) {
     return value !== undefined ? Number(value).clamp(1, 5) : 3;
 };
 
-ConfigManager.readFullscreen = function (config, name) {
+ConfigManager.readBool = function (config, name) {
     let value = config[name];
-    return value !== undefined ? value : 1; // fullscreen defaults to ON
+    return value !== undefined ? value : 1;
 };
 
 ConfigManager.readScale = function (config, name) {

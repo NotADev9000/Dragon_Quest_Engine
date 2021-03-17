@@ -43,5 +43,6 @@ Window_SettingsBattle.prototype.makeCommandList = function () {
     this.addCommand(TextManager.bgmVolume, 'bgmVolume', Window_Settings.COMMAND_TYPE_VOLUME);
     this.addCommand(TextManager.bgsVolume, 'bgsVolume', Window_Settings.COMMAND_TYPE_VOLUME);
     this.addCommand(TextManager.seVolume, 'seVolume', Window_Settings.COMMAND_TYPE_VOLUME);
+    this.addCommand(TextManager.settings_cursorBeep, 'cursorBeep', Window_Settings.COMMAND_TYPE_BOOL_ONOFF);
     this.addCommand('Battle Text Speed', 'battleTextSpeed', Window_Settings.COMMAND_TYPE_TEXT_SPEED);
 };
