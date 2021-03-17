@@ -66,6 +66,11 @@ Window_CustomCommand.prototype.makeCommandList = function () {
     this._commands.forEach(command => this.addCommand(command, command));
 };
 
+Window_CustomCommand.prototype.open = function () {
+    if (this._animateOpen) SoundManager.playChoice();
+    Window_Command.prototype.open.call(this);
+};
+
 Window_CustomCommand.prototype.updateOpen = function () {
     if (this._opening) {
         this._animateOpen ? this.openness += 32: this.openness = 255;

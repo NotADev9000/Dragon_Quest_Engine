@@ -513,6 +513,11 @@ Window_ChoiceList.prototype.contentsHeight = function () {
     return this.height - this.standardPadding() * 2;
 };
 
+Window_ChoiceList.prototype.open = function () {
+    SoundManager.playChoice();
+    Window_Base.prototype.open.call(this);
+};
+
 Window_ChoiceList.prototype.updateOpen = function () {
     if (this._opening) {
         this.openness += 32;

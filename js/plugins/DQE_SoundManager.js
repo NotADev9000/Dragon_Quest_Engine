@@ -46,24 +46,18 @@ SoundManager.playSoundByName = function (name, pan = 0, pitch = 100, volume = 10
     });
 };
 
+SoundManager.playOk = function () {
+    if (ConfigManager.cursorBeep) this.playSystemSound(1);
+};
+
 SoundManager.playPlayerAttack = function () {
-    AudioManager.playStaticSe({
-        name:   'Player Act',
-        pan:    0,
-        pitch:  100,
-        volume: 100
-    });
+    this.playSoundByName('Player Act');
 };
 
 SoundManager.playRevival = function () {
-    AudioManager.playStaticSe({
-        name: 'Revive',
-        pan: 0,
-        pitch: 100,
-        volume: 100
-    });
+    this.playSoundByName('Revive');
 };
 
-SoundManager.playOk = function () {
-    if (ConfigManager.cursorBeep) this.playSystemSound(1);
+SoundManager.playChoice = function () {
+    this.playSoundByName('Choice');
 };
