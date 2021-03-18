@@ -40,6 +40,7 @@ DQEng.Game_Party.initialize = Game_Party.prototype.initialize;
 Game_Party.prototype.initialize = function () {
     DQEng.Game_Party.initialize.call(this);
     this._restorePoint = new Game_RestorePoint();
+    this._zoomPoints = [];
     this._medalTotal = 0;       // total mini medals collected
     this._medalCurrent = 0;     // currently held mini medals
 };
@@ -201,4 +202,25 @@ Game_Party.prototype.setRestorePoint = function (mapId, x, y, dir) {
     restorePoint.x = x;
     restorePoint.y = y;
     restorePoint.direction = dir;
+};
+
+//////////////////////////////
+// Functions - zoom points
+//////////////////////////////
+
+Game_Party.prototype.zoomPoints = function () {
+    return this._zoomPoints;
+};
+
+// Zoom IDs start at 0
+Game_Party.prototype.addZoomPoint = function (id, name, mapId, x, y) {
+    const overwrite = this._zoomPoints.some(point => point.id === id) ? 1 : 0;
+    const point = {
+        id: id,
+        name: name,
+        mapId: mapId,
+        x: x,
+        y: y
+    }
+    this._zoomPoints.splice(id, overwrite, point);
 };

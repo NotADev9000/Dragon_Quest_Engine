@@ -43,6 +43,11 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
                 args = args.map(arg => Number(arg));
                 $gameParty.setRestorePoint(args[1], args[2], args[3], args[4]);
                 break;
+            case 'SetZoomPoint': // id, name, mapId, x, y
+                const name = args[2];
+                args = args.map(arg => Number(arg));
+                $gameParty.addZoomPoint(args[1], name, args[3], args[4], args[5]);
+                break;
             case 'GainMiniMedal': // amount
                 $gameParty.gainMedal(Number(args[1]));
                 break;

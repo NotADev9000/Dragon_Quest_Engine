@@ -593,6 +593,10 @@ Game_Actor.prototype.triedToMagicAllMessage = function (item) {
     return `${this._name} starts to cast ${item.name}...\\!\nBut it won't have any effect.`;
 };
 
+Game_Actor.prototype.triedToZoomMessage = function (item) {
+    return `${this._name} starts to cast ${item.name}...\\!\nBut something is stopping the spell's power.`;
+};
+
 Game_Actor.prototype.itemUsedMessage = function (item) {
     return `${this._name} uses the ${item.name}.`;
 };

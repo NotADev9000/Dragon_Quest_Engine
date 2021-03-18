@@ -21,10 +21,11 @@
 var DQEng = DQEng || {};
 DQEng.Game_System = DQEng.Game_System || {};
 
-var parameters = PluginManager.parameters('DQE_Scene_Gameover');
+var parameters = PluginManager.parameters('DQE_Game_System');
 DQEng.Parameters = DQEng.Parameters || {};
 DQEng.Parameters.Game_System = {};
 DQEng.Parameters.Game_System.OverrideBattleBgmSwitch = Number(parameters["Override Battle BGM Switch"]) || 2;
+DQEng.Parameters.Game_System.AllowZoomSwitch = Number(parameters["Allow Zoom Switch"]) || 3;
 
 //-----------------------------------------------------------------------------
 // Game_System

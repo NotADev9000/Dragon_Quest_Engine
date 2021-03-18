@@ -27,6 +27,8 @@ DQEng.Scene_Skill = DQEng.Scene_Skill || {};
 // Scene_Skill
 //-----------------------------------------------------------------------------
 
+Scene_Skill.Special_Zoom = 'zoom';
+
 Scene_Skill.prototype.create = function () {
     Scene_ItemBase.prototype.create.call(this);
     this.createHelpWindow();
@@ -113,7 +115,9 @@ Scene_Skill.prototype.onCommandOk = function () {
 };
 
 Scene_Skill.prototype.onSkillOk = function () {
-    if (!this.canUse()) {
+    if (this.isSpecialCase() && this.user().meetsUsableItemConditions(this.item())) {
+        this.startSpecialCase();
+    } else if (!this.canUse()) {
         this.displayMessage('This spell cannot currently be used.', Scene_Skill.prototype.triedToMagicMessage);
     } else if (this.action().isForOne()) {
         this._useOnWhoWindow.select(0);
@@ -141,23 +145,6 @@ Scene_Skill.prototype.onUseOnWhoOk = function () {
     this.startItemUse();
 };
 
-Scene_Skill.prototype.startItemUse = function (forAll = false) {
-    var item = this.item();
-    var user = this.user();
-
-    if (this.isItemEffectsValid()) {
-        user.useItem(item);
-        $gameMessage.add(user.magicUsedMessage(item));
-        this.applyItem();
-        this.displayItemResultMessages(Scene_Skill.prototype);
-    } else if (forAll) {
-        this.displayMessage(user.triedToMagicAllMessage(item), Scene_Skill.prototype.triedToUseAllMessage);
-    } else {
-        let useOnActor = $gameParty.members()[this._useOnWhoWindow.currentSymbol()];
-        this.displayMessage(user.triedToMagicMessage(item, useOnActor), Scene_Skill.prototype.triedToUseMessage);
-    }
-};
-
 Scene_Skill.prototype.onUseOnWhoCancel = function () {
     this._useOnWhoWindow.hide();
     this._itemStatusWindow.hide();
@@ -165,6 +152,19 @@ Scene_Skill.prototype.onUseOnWhoCancel = function () {
     this._skillWindow.hideBackgroundDimmer();
     this._skillWindow.hideAllHelpWindowBackgroundDimmers();
     this._skillWindow.activate();
+};
+
+Scene_Skill.prototype.onZoom = function () {
+    const item = this.item();
+    const user = this.user();
+
+    if ($gameSwitches.value(DQEng.Parameters.Game_System.AllowZoomSwitch)) {
+        // can zoom
+
+    } else {
+        // can't zoom
+        this.displayMessage(user.triedToZoomMessage(item), Scene_Skill.prototype.triedToMagicMessage);
+    }
 };
 
 //////////////////////////////
@@ -196,11 +196,40 @@ Scene_Skill.prototype.triedToUseAllMessage = function () {
 };
 
 //////////////////////////////
-// Functions - misc.
+// Functions - data
 //////////////////////////////
 
 Scene_Skill.prototype.user = function () {
     return $gameParty.members()[this._commandWindow.currentSymbol()];
+};
+
+Scene_Skill.prototype.startItemUse = function (forAll = false) {
+    const item = this.item();
+    const user = this.user();
+
+    if (this.isItemEffectsValid()) {
+        user.useItem(item);
+        $gameMessage.add(user.magicUsedMessage(item));
+        this.applyItem();
+        this.displayItemResultMessages(Scene_Skill.prototype);
+    } else if (forAll) {
+        this.displayMessage(user.triedToMagicAllMessage(item), Scene_Skill.prototype.triedToUseAllMessage);
+    } else {
+        const useOnActor = $gameParty.members()[this._useOnWhoWindow.currentSymbol()];
+        this.displayMessage(user.triedToMagicMessage(item, useOnActor), Scene_Skill.prototype.triedToUseMessage);
+    }
+};
+
+Scene_Skill.prototype.isSpecialCase = function () {
+    return this.item().meta.special;
+};
+
+Scene_Skill.prototype.startSpecialCase = function () {
+    switch (this.item().meta.special) {
+        case Scene_Skill.Special_Zoom:
+            this.onZoom();
+            break;
+    }
 };
 
 Scene_Skill.prototype.refreshItemStatWindows = function () {
