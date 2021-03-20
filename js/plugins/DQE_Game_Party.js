@@ -208,19 +208,26 @@ Game_Party.prototype.setRestorePoint = function (mapId, x, y, dir) {
 // Functions - zoom points
 //////////////////////////////
 
+/**
+ * returns the zoom point list without the empty items
+ */
 Game_Party.prototype.zoomPoints = function () {
-    return this._zoomPoints;
+    return this._zoomPoints.filter(point => point);
 };
 
 // Zoom IDs start at 0
 Game_Party.prototype.addZoomPoint = function (id, name, mapId, x, y) {
-    const overwrite = this._zoomPoints.some(point => point.id === id) ? 1 : 0;
     const point = {
         id: id,
-        name: name,
+        name: name.replaceAll('_', ' '),
         mapId: mapId,
         x: x,
         y: y
     }
-    this._zoomPoints.splice(id, overwrite, point);
+    this._zoomPoints[id] = point;
+};
+
+Game_Party.prototype.canZoom = function () {
+    return $gameSwitches.value(DQEng.Parameters.Game_System.AllowZoomSwitch)
+        && this.zoomPoints().length;
 };

@@ -125,6 +125,7 @@ var $plugins =
 {"name":"DQE_Window_ControlsPress","status":true,"description":"Displays information about changing buttons - V0.1","parameters":{}},
 {"name":"DQE_Window_Icon","status":true,"description":"Displays an icon in a window - V0.1","parameters":{}},
 {"name":"DQE_Window_SavefileList","status":true,"description":"The savefile list window - V0.1","parameters":{}},
+{"name":"DQE_Window_Zoom","status":true,"description":"A window showing Zoom locations - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}}
 ];

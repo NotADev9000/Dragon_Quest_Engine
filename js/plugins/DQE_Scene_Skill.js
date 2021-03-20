@@ -38,6 +38,7 @@ Scene_Skill.prototype.create = function () {
     this.createUseOnWhoWindow();
     this.createItemStatusWindow();
     this.createItemStatWindow();
+    this.createZoomWindow();
     this.createMessageWindow();
 };
 
@@ -95,6 +96,18 @@ Scene_Skill.prototype.createUseOnWhoWindow = function () {
     this.addWindow(this._useOnWhoWindow);
 };
 
+Scene_Skill.prototype.createZoomWindow = function () {
+    const x = this._helpWindow.x;
+    const y = this._helpWindow.y;
+    const width = this._helpWindow.width;
+    const height = Graphics.boxHeight - 96;
+    this._zoomWindow = new Window_Zoom(x, y, width, height, 'Zoom Where?');
+    this._zoomWindow.setHandler('ok', this.onZoomOk.bind(this));
+    this._zoomWindow.setHandler('cancel', this.onZoomCancel.bind(this));
+    this._zoomWindow.hide();
+    this.addWindow(this._zoomWindow);
+};
+
 /**
  * Always call this window last so it's at front
  */
@@ -118,7 +131,7 @@ Scene_Skill.prototype.onSkillOk = function () {
     if (this.isSpecialCase() && this.user().meetsUsableItemConditions(this.item())) {
         this.startSpecialCase();
     } else if (!this.canUse()) {
-        this.displayMessage('This spell cannot currently be used.', Scene_Skill.prototype.triedToMagicMessage);
+        this.displayMessage('This spell cannot currently be used.', Scene_Skill.prototype.triedToMagic_MessageCallback);
     } else if (this.action().isForOne()) {
         this._useOnWhoWindow.select(0);
         this._useOnWhoWindow.show();
@@ -154,24 +167,39 @@ Scene_Skill.prototype.onUseOnWhoCancel = function () {
     this._skillWindow.activate();
 };
 
-Scene_Skill.prototype.onZoom = function () {
+Scene_Skill.prototype.onSkillZoom = function () {
     const item = this.item();
     const user = this.user();
 
-    if ($gameSwitches.value(DQEng.Parameters.Game_System.AllowZoomSwitch)) {
+    if ($gameParty.canZoom()) {
         // can zoom
-
+        this._skillWindow.showBackgroundDimmer();
+        this._zoomWindow.select(0);
+        this._zoomWindow.show();
+        this._zoomWindow.activate();
     } else {
         // can't zoom
-        this.displayMessage(user.triedToZoomMessage(item), Scene_Skill.prototype.triedToMagicMessage);
+        this.displayMessage(user.triedToZoomMessage(item), Scene_Skill.prototype.triedToMagic_MessageCallback);
     }
+};
+
+Scene_Skill.prototype.onZoomOk = function () {
+    const item = this.item();
+    const user = this.user();
+    this.displayMessage(user.magicUsedMessage(item), Scene_Skill.prototype.zoom_MessageCallback);
+};
+
+Scene_Skill.prototype.onZoomCancel = function () {
+    this._zoomWindow.hide();
+    this._skillWindow.hideBackgroundDimmer();
+    this._skillWindow.activate();
 };
 
 //////////////////////////////
 // Functions - message callbacks
 //////////////////////////////
 
-Scene_Skill.prototype.actionResolvedMessage = function () {
+Scene_Skill.prototype.actionResolved_MessageCallback = function () {
     this.checkCommonEvent();
     this.checkGameover();
     this._useOnWhoWindow.hide();
@@ -183,16 +211,20 @@ Scene_Skill.prototype.actionResolvedMessage = function () {
     this._skillWindow.activate();
 };
 
-Scene_Skill.prototype.triedToMagicMessage = function () {
+Scene_Skill.prototype.triedToMagic_MessageCallback = function () {
     this._skillWindow.activate();
 };
 
-Scene_Skill.prototype.triedToUseMessage = function () {
+Scene_Skill.prototype.triedToUse_MessageCallback = function () {
     this._useOnWhoWindow.activate();
 };
 
-Scene_Skill.prototype.triedToUseAllMessage = function () {
+Scene_Skill.prototype.triedToUseAll_MessageCallback = function () {
     this._skillWindow.activate();
+};
+
+Scene_Skill.prototype.zoom_MessageCallback = function () {
+    SceneManager.goto(Scene_Map);
 };
 
 //////////////////////////////
@@ -213,10 +245,10 @@ Scene_Skill.prototype.startItemUse = function (forAll = false) {
         this.applyItem();
         this.displayItemResultMessages(Scene_Skill.prototype);
     } else if (forAll) {
-        this.displayMessage(user.triedToMagicAllMessage(item), Scene_Skill.prototype.triedToUseAllMessage);
+        this.displayMessage(user.triedToMagicAllMessage(item), Scene_Skill.prototype.triedToUseAll_MessageCallback);
     } else {
         const useOnActor = $gameParty.members()[this._useOnWhoWindow.currentSymbol()];
-        this.displayMessage(user.triedToMagicMessage(item, useOnActor), Scene_Skill.prototype.triedToUseMessage);
+        this.displayMessage(user.triedToMagicMessage(item, useOnActor), Scene_Skill.prototype.triedToUse_MessageCallback);
     }
 };
 
@@ -227,7 +259,7 @@ Scene_Skill.prototype.isSpecialCase = function () {
 Scene_Skill.prototype.startSpecialCase = function () {
     switch (this.item().meta.special) {
         case Scene_Skill.Special_Zoom:
-            this.onZoom();
+            this.onSkillZoom();
             break;
     }
 };

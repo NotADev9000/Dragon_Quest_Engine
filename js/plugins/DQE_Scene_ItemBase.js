@@ -107,7 +107,7 @@ Scene_ItemBase.prototype.displayItemResultMessages = function (scene) {
             this.getResultTexts(target);
         }
     });
-    this.displayMessage('', scene.actionResolvedMessage);
+    this.displayMessage('', scene.actionResolved_MessageCallback);
 };
 
 Scene_ItemBase.prototype.getResultTexts = function (target) {

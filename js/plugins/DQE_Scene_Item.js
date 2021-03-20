@@ -253,10 +253,10 @@ Scene_Item.prototype.startItemUse = function (forAll = false) {
         this.applyItem();
         this.displayItemResultMessages(Scene_Item.prototype);
     } else if (forAll) {
-        this.displayMessage(useByActor.triedToUseAllMessage(item), Scene_Item.prototype.triedToUseAllMessage);
+        this.displayMessage(useByActor.triedToUseAllMessage(item), Scene_Item.prototype.triedToUseAll_MessageCallback);
     } else {
         let useOnActor = $gameParty.members()[this._useOnWhoWindow.currentSymbol()];
-        this.displayMessage(useByActor.triedToUseMessage(item, useOnActor), Scene_Item.prototype.triedToUseMessage);
+        this.displayMessage(useByActor.triedToUseMessage(item, useOnActor), Scene_Item.prototype.triedToUse_MessageCallback);
     }
 };
 
@@ -401,7 +401,7 @@ Scene_Item.prototype.doWhatEquipMessage = function () {
     this._itemWindow.activate();
 };
 
-Scene_Item.prototype.actionResolvedMessage = function () {
+Scene_Item.prototype.actionResolved_MessageCallback = function () {
     this.checkCommonEvent();
     this.checkGameover();
     this._useOnWhoWindow.hide();
@@ -425,11 +425,11 @@ Scene_Item.prototype.actionResolvedMessage = function () {
 /**
  * Used an item which failed
  */
-Scene_Item.prototype.triedToUseMessage = function () {
+Scene_Item.prototype.triedToUse_MessageCallback = function () {
     this._useOnWhoWindow.activate();
 };
 
-Scene_Item.prototype.triedToUseAllMessage = function () {
+Scene_Item.prototype.triedToUseAll_MessageCallback = function () {
     this._doWhatWindow.activate();
 };
 
