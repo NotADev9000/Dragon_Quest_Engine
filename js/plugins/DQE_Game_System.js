@@ -8,6 +8,25 @@
 * @author NotADev
 * @plugindesc The game object class for the system data - V0.1
 *
+* @param Override Battle BGM Switch
+* @desc ID of switch that overrides player selected Battle BGM when ON
+* @default 2
+*
+* @param Allow Zoom Switch
+* @desc ID of switch that allows player to zoom
+* @default 3
+*
+* @param Start Zoom Switch
+* @desc ID of switch that starts the zoom common event
+* @default 4
+*
+* @param Lock Camera Switch
+* @desc ID of switch that locks camera in position (it won't follow player)
+* @default 5
+*
+* @param Seperate Followers Switch
+* @desc ID of switch that stops followers from following player
+* @default 6
 *
 * @help
 * N/A

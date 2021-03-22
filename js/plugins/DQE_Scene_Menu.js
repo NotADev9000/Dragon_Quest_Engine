@@ -87,6 +87,10 @@ Scene_Menu.prototype.createIconWindows = function () {
     this.addWindow(this._iconWindowR);
 };
 
+Scene_Menu.prototype.commandOptions = function () {
+    SceneManager.push(Scene_Church);
+};
+
 Scene_Menu.prototype.commandSkill = function () {
     SceneManager.push(Scene_Skill);
 };

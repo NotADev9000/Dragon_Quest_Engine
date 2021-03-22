@@ -43,9 +43,10 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
                 const follower = $gamePlayer.followers()?.follower(args[1]);
                 Game_Interpreter.FORCEDCHARACTER = follower;
                 break;
-            case 'SetRestorePoint': // mapId, x, y, direction (2=down, 4=left, 6=right, 8=up)
+            case 'SetRestorePoint': // mapId, x, y, direction (2=down, 4=left, 6=right, 8=up), map name (optional)
+                const mapName = args[5];
                 args = args.map(arg => Number(arg));
-                $gameParty.setRestorePoint(args[1], args[2], args[3], args[4]);
+                $gameParty.setRestorePoint(args[1], args[2], args[3], args[4], mapName);
                 break;
             case 'SetZoomPoint': // id, name, mapId, x, y
                 const name = args[2];

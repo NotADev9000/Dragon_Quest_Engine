@@ -51,6 +51,7 @@ Scene_Status.prototype.create = function () {
     this.createStatsOtherAbilitiesWindow();
     this.createStatsEffectsWindow();
     // everyone windows
+    this.createEveryoneInfoWindow();
     this.createEveryoneStatsWindow();
     // set windows created
     this._windowsCreated = true;
@@ -152,6 +153,14 @@ Scene_Status.prototype.createStatsEffectsWindow = function () {
 
 // everyone windows
 
+Scene_Status.prototype.createEveryoneInfoWindow = function () {
+    let x = this._statusWindow.x;
+    let y = this._statusWindow.y;
+    this._everyoneInfoWindow = new Window_EveryoneInfo(x, y, 1017);
+    this._everyoneInfoWindow.hide();
+    this.addWindow(this._everyoneInfoWindow);
+};
+
 Scene_Status.prototype.createEveryoneStatsWindow = function () {
     let x = this._commandWindow.x;
     let y = this._commandWindow.y;
@@ -174,6 +183,7 @@ Scene_Status.prototype.onCommandOk = function () {
         this._statsAttributesWindow.show();
         this.activateWindow(this._statsAttributesWindow);
     } else { // everyone selected
+        this._everyoneInfoWindow.hide();
         this._everyoneStatsWindow.select(0);
         this._everyoneStatsWindow.show();
         this.activateWindow(this._everyoneStatsWindow);
@@ -292,7 +302,9 @@ Scene_Status.prototype.setCategory = function (category) {
 Scene_Status.prototype.changeMode = function () {
     if (Number.isInteger(this._category)) { // player mode
         this.showCharacterWindows();
+        this._everyoneInfoWindow.hide();
     } else { // everyone mode
+        this._everyoneInfoWindow.show();
         this.hideCharacterWindows();
     }
 };

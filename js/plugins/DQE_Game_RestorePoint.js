@@ -12,6 +12,9 @@
 * @desc Map ID of default location where player should be brought to upon party wipe out
 * @default 1
 *
+* @param Default Restore Point - Map Name
+* @desc Map Name of default location where player should be brought to upon party wipe out
+*
 * @param Default Restore Point - X
 * @desc X position of default location where player should be brought to upon party wipe out
 * @default 0
@@ -43,6 +46,7 @@ var parameters = PluginManager.parameters('DQE_Game_RestorePoint');
 DQEng.Parameters = DQEng.Parameters || {};
 DQEng.Parameters.Game_RestorePoint = {};
 DQEng.Parameters.Game_RestorePoint.DefaultMapId = Number(parameters["Default Restore Point - Map ID"]);
+DQEng.Parameters.Game_RestorePoint.DefaultMapName = parameters["Default Restore Point - Map Name"];
 DQEng.Parameters.Game_RestorePoint.DefaultX = Number(parameters["Default Restore Point - X"]);
 DQEng.Parameters.Game_RestorePoint.DefaultY = Number(parameters["Default Restore Point - Y"]);
 DQEng.Parameters.Game_RestorePoint.DefaultDirection = Number(parameters["Default Restore Point - Direction"]);
@@ -57,15 +61,17 @@ function Game_RestorePoint() {
 }
 
 Object.defineProperties(Game_RestorePoint.prototype, {
-    mapId: { get: function () { return this._mapId; }, set: function(mapId) { this._mapId = mapId; }, configurable: true },
+    mapId: { get: function () { return this._mapId; }, set: function (mapId) { this._mapId = mapId; }, configurable: true },
+    mapName: { get: function () { return this._mapName; }, set: function (mapName) { this._mapName = mapName; }, configurable: true },
     x: { get: function () { return this._x; }, set: function (x) { this._x = x; }, configurable: true },
     y: { get: function () { return this._y; }, set: function (y) { this._y = y; }, configurable: true },
     direction: { get: function () { return this._direction; }, set: function (direction) { this._direction = direction; }, configurable: true }
 });
 
 Game_RestorePoint.prototype.initialize = function () {
-    let params = DQEng.Parameters.Game_RestorePoint;
+    const params = DQEng.Parameters.Game_RestorePoint;
     this.mapId = params.DefaultMapId;
+    this.mapName = params.DefaultMapName;
     this.x = params.DefaultX;
     this.y = params.DefaultY;
     this.direction = params.DefaultDirection;

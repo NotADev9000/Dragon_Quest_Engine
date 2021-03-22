@@ -197,9 +197,10 @@ Game_Party.prototype.restorePoint = function () {
     return this._restorePoint;
 };
 
-Game_Party.prototype.setRestorePoint = function (mapId, x, y, dir) {
+Game_Party.prototype.setRestorePoint = function (mapId, x, y, dir, mapName) {
     let restorePoint = this.restorePoint();
     restorePoint.mapId = mapId;
+    restorePoint.mapName = mapName || $gameMap.displayName();
     restorePoint.x = x;
     restorePoint.y = y;
     restorePoint.direction = dir;
