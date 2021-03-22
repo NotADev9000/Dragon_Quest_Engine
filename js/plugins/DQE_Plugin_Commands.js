@@ -39,6 +39,10 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
             case 'GiveActorsItemsSilent':
                 this.giveActorsItems(args[1], args[2], args[3], false);
                 break;
+            case 'ForceMoveRouteFollower': // follower position
+                const follower = $gamePlayer.followers()?.follower(args[1]);
+                Game_Interpreter.FORCEDCHARACTER = follower;
+                break;
             case 'SetRestorePoint': // mapId, x, y, direction (2=down, 4=left, 6=right, 8=up)
                 args = args.map(arg => Number(arg));
                 $gameParty.setRestorePoint(args[1], args[2], args[3], args[4]);

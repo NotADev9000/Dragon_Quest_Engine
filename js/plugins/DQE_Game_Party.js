@@ -41,6 +41,7 @@ Game_Party.prototype.initialize = function () {
     DQEng.Game_Party.initialize.call(this);
     this._restorePoint = new Game_RestorePoint();
     this._zoomPoints = [];
+    this._lastZoomPoint = {}; // last point zoomed to
     this._medalTotal = 0;       // total mini medals collected
     this._medalCurrent = 0;     // currently held mini medals
 };
@@ -230,4 +231,13 @@ Game_Party.prototype.addZoomPoint = function (id, name, mapId, x, y) {
 Game_Party.prototype.canZoom = function () {
     return $gameSwitches.value(DQEng.Parameters.Game_System.AllowZoomSwitch)
         && this.zoomPoints().length;
+};
+
+Game_Party.prototype.lastZoomPoint = function () {
+    return this._lastZoomPoint;
+};
+
+Game_Party.prototype.setLastZoomPoint = function (point) {
+    this._lastZoomPoint = point;
+    console.log(this.lastZoomPoint());
 };

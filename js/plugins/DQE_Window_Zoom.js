@@ -50,6 +50,10 @@ Window_Zoom.prototype.titleBlockHeight = function () {
 // Functions - data
 //////////////////////////////
 
+Window_Zoom.prototype.item = function () {
+    return $gameParty.zoomPoints()[this.index()];
+};
+
 Window_Zoom.prototype.maxItems = function () {
     return $gameParty.zoomPoints().length;
 };

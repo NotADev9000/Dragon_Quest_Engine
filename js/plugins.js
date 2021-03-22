@@ -27,6 +27,8 @@ var $plugins =
 {"name":"DQE_Game_Troop","status":true,"description":"The game object class for a troop and the battle-related data - V0.1","parameters":{}},
 {"name":"DQE_Game_Player","status":true,"description":"The The game object class for the Player - V0.1","parameters":{}},
 {"name":"DQE_Game_Follower","status":true,"description":"The The game object class for the Follower - V0.1","parameters":{}},
+{"name":"DQE_Game_Followers","status":true,"description":"The The game object class for the Followers - V0.1","parameters":{}},
+{"name":"DQE_Game_Interpreter","status":true,"description":"The game object class for the Interpreter - V0.1","parameters":{}},
 {"name":"DQE_SceneManager","status":true,"description":"Static class for managing scenes - V0.1","parameters":{}},
 {"name":"DQE_DataManager","status":true,"description":"Static class for managing the extra data - V0.1","parameters":{}},
 {"name":"DQE_SoundManager","status":true,"description":"The Sound Manager - V0.1","parameters":{}},

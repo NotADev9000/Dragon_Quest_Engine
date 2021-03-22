@@ -58,3 +58,24 @@ Game_Player.prototype.refresh = function () {
         });
     }
 };
+
+Game_Player.prototype.updateScroll = function (lastScrolledX, lastScrolledY) {
+    var x1 = lastScrolledX;
+    var y1 = lastScrolledY;
+    var x2 = this.scrolledX();
+    var y2 = this.scrolledY();
+    if (!$gameSwitches.value(DQEng.Parameters.Game_System.LockCameraSwitch)) {
+        if (y2 > y1 && y2 > this.centerY()) {
+            $gameMap.scrollDown(y2 - y1);
+        }
+        if (x2 < x1 && x2 < this.centerX()) {
+            $gameMap.scrollLeft(x1 - x2);
+        }
+        if (x2 > x1 && x2 > this.centerX()) {
+            $gameMap.scrollRight(x2 - x1);
+        }
+        if (y2 < y1 && y2 < this.centerY()) {
+            $gameMap.scrollUp(y1 - y2);
+        }
+    }
+};

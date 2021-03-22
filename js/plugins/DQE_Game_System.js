@@ -26,6 +26,9 @@ DQEng.Parameters = DQEng.Parameters || {};
 DQEng.Parameters.Game_System = {};
 DQEng.Parameters.Game_System.OverrideBattleBgmSwitch = Number(parameters["Override Battle BGM Switch"]) || 2;
 DQEng.Parameters.Game_System.AllowZoomSwitch = Number(parameters["Allow Zoom Switch"]) || 3;
+DQEng.Parameters.Game_System.StartZoomSwitch = Number(parameters["Start Zoom Switch"]) || 4;
+DQEng.Parameters.Game_System.LockCameraSwitch = Number(parameters["Lock Camera Switch"]) || 5;
+DQEng.Parameters.Game_System.SeperateFollowersSwitch = Number(parameters["Seperate Followers Switch"]) || 6;
 
 //-----------------------------------------------------------------------------
 // Game_System

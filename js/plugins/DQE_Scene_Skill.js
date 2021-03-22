@@ -186,6 +186,8 @@ Scene_Skill.prototype.onSkillZoom = function () {
 Scene_Skill.prototype.onZoomOk = function () {
     const item = this.item();
     const user = this.user();
+    $gameParty.setLastZoomPoint(this._zoomWindow.item());
+    $gameSwitches.setValue(DQEng.Parameters.Game_System.StartZoomSwitch, 1);
     this.displayMessage(user.magicUsedMessage(item), Scene_Skill.prototype.zoom_MessageCallback);
 };
 
