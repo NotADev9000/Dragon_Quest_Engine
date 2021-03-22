@@ -54,7 +54,7 @@ Object.defineProperty(ConfigManager, 'fullscreen', {
             Graphics._requestFullScreen();
         } else {
             this._fullscreen = 0;
-            Graphics._cancelFullScreen();
+            if (Graphics._isFullScreen()) Graphics._cancelFullScreen();
         }
     },
     configurable: true
