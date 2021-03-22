@@ -28,6 +28,10 @@ DQEng.Game_Follower = DQEng.Game_Follower || {};
 // Game_Follower
 //-----------------------------------------------------------------------------
 
+Game_Follower.prototype.memberIndex = function () {
+    return this._memberIndex;
+};
+
 Game_Follower.prototype.refresh = function () {
     var actor = this.actor();
     if (actor && actor.isDead()) {
@@ -52,13 +56,6 @@ Game_Follower.prototype.update = function () {
     }
 };
 
-Game_Follower.prototype.prepareZoom = function () {
-    this.setStepAnime(false);
-    this.setWalkAnime(false);
-    this.setDirectionFix(true);
-    this.setMoveSpeed(6);
-};
-
 Game_Follower.prototype.chaseCharacter = function (character) {
     var sx = this.deltaXFrom(character.x);
     var sy = this.deltaYFrom(character.y);
@@ -72,19 +69,7 @@ Game_Follower.prototype.chaseCharacter = function (character) {
     if (!$gameSwitches.value(DQEng.Parameters.Game_System.SeperateFollowersSwitch)) this.setMoveSpeed($gamePlayer.realMoveSpeed());
 };
 
-Game_Follower.prototype.chasePosition = function (x, y) {
-    const sx = this.deltaXFrom(x);
-    const sy = this.deltaYFrom(y);
-    if (sx !== 0 && sy !== 0) {
-        this.moveDiagonally(sx > 0 ? 4 : 6, sy > 0 ? 8 : 2);
-    } else if (sx !== 0) {
-        this.moveStraight(sx > 0 ? 4 : 6);
-    } else if (sy !== 0) {
-        this.moveStraight(sy > 0 ? 8 : 2);
-    }
-    this.setMoveSpeed($gamePlayer.realMoveSpeed());
-};
-
 Game_Follower.prototype.chasePrecedingCharacter = function () {
-    
+    const precedingChar = $gamePlayer.followers().follower(this.memberIndex() - 2);
+    this.chaseCharacter(precedingChar);
 };

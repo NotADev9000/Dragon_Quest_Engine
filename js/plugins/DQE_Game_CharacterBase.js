@@ -29,3 +29,14 @@ Game_CharacterBase.prototype.initMembers = function () {
     DQEng.Game_CharacterBase.call(this);
     this._moveSpeed = 5;
 };
+
+/**
+ * Sets the character up for Zoom movement
+ */
+Game_CharacterBase.prototype.prepareZoom = function () {
+    this.setThrough(true);
+    this.setStepAnime(false);
+    this.setWalkAnime(false);
+    this.setDirectionFix(true);
+    this.setMoveSpeed(7);
+};
