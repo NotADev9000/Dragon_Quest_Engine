@@ -71,7 +71,7 @@ Scene_ItemBase.prototype.canUse = function () {
 };
 
 Scene_ItemBase.prototype.item = function () {
-    return this._itemWindow ? this._itemWindow.item() : this._skillWindow.item();
+    return this._itemWindow.item();
 };
 
 Scene_ItemBase.prototype.action = function () {

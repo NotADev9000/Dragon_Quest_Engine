@@ -93,7 +93,7 @@ Scene_Battle.prototype.createStatusWindow = function () {
 
 Scene_Battle.prototype.createShowBuffsWindow = function () {
     let y = this._statusWindow[0].y + this._statusWindow[0].height;
-    this._showBuffsWindow = new Window_ShowBuffs(144, y, 343, 75);
+    this._showBuffsWindow = new Window_IconHelp(144, y, 343, 75, 'help', 'Show Buffs');
     this.addWindow(this._showBuffsWindow);
 };
 

@@ -31,8 +31,10 @@ Scene_Skill.Special_Zoom = 'zoom';
 
 Scene_Skill.prototype.create = function () {
     Scene_ItemBase.prototype.create.call(this);
+    this._hasZoom = $gameParty.hasZoom();
     this.createHelpWindow();
     this.createCommandWindow();
+    this.createQuickZoomWindow();
     this.createSkillWindow();
     this.createSkillStatWindow();
     this.createUseOnWhoWindow();
@@ -40,6 +42,7 @@ Scene_Skill.prototype.create = function () {
     this.createItemStatWindow();
     this.createZoomWindow();
     this.createMessageWindow();
+    this._quickZoomMode = false;
 };
 
 Scene_Skill.prototype.start = function () {
@@ -59,8 +62,18 @@ Scene_Skill.prototype.createHelpWindow = function () {
 Scene_Skill.prototype.createCommandWindow = function () {
     this._commandWindow = new Window_ItemCommand(48, 48, 354, 'Magic');
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
+    if (this._hasZoom) this._commandWindow.setHandler('help', this.onCommandZoom.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
+};
+
+Scene_Skill.prototype.createQuickZoomWindow = function () {
+    const x = this._commandWindow.x;
+    const y = this._commandWindow.y + this._commandWindow.height;
+    const width = this._commandWindow.width;
+    this._quickZoomWindow = new Window_IconHelp(x, y, width, 75, 'help', 'Quick Zoom');
+    if (!this._hasZoom) this._quickZoomWindow.hide();
+    this.addWindow(this._quickZoomWindow);
 };
 
 Scene_Skill.prototype.createSkillWindow = function () {
@@ -121,10 +134,23 @@ Scene_Skill.prototype.createMessageWindow = function () {
 //////////////////////////////
 
 Scene_Skill.prototype.onCommandOk = function () {
+    this._quickZoomWindow.hide();
     this._commandWindow.showBackgroundDimmer();
     this._skillWindow.activate();
     this._skillWindow.select(this._skillWindow._lastSelected);
     this._skillWindow.showAllHelpWindows();
+};
+
+Scene_Skill.prototype.onCommandZoom = function () {
+    this._commandWindow.showBackgroundDimmer();
+    this._quickZoomWindow.showBackgroundDimmer();
+    this._skillWindow.showBackgroundDimmer();
+    if ($gameParty.partyCanZoom()) {
+        this._quickZoomMode = true;
+        this.onSkillZoom();
+    } else {
+        this.displayMessage(this.nobodyToZoom_Message(), Scene_Skill.prototype.noZoomMembers_MessageCallback);
+    }
 };
 
 Scene_Skill.prototype.onSkillOk = function () {
@@ -147,6 +173,7 @@ Scene_Skill.prototype.onSkillOk = function () {
 };
 
 Scene_Skill.prototype.onSkillCancel = function () {
+    if (this._hasZoom) this._quickZoomWindow.show();
     this._commandWindow.hideBackgroundDimmer();
     this._skillWindow.hideAllHelpWindows();
     this._skillWindow.setLastSelected(this._skillWindow.index());
@@ -171,9 +198,10 @@ Scene_Skill.prototype.onSkillZoom = function () {
     const item = this.item();
     const user = this.user();
 
-    if ($gameParty.canZoom()) {
+    this._skillWindow.showBackgroundDimmer();
+    this._skillWindow.showAllHelpWindowBackgroundDimmers();
+    if ($gameParty.allowedZoom()) {
         // can zoom
-        this._skillWindow.showBackgroundDimmer();
         this._zoomWindow.select(0);
         this._zoomWindow.show();
         this._zoomWindow.activate();
@@ -194,7 +222,23 @@ Scene_Skill.prototype.onZoomOk = function () {
 Scene_Skill.prototype.onZoomCancel = function () {
     this._zoomWindow.hide();
     this._skillWindow.hideBackgroundDimmer();
-    this._skillWindow.activate();
+    this._skillWindow.hideAllHelpWindowBackgroundDimmers();
+    if (this._quickZoomMode) {
+        this._commandWindow.hideBackgroundDimmer();
+        this._quickZoomWindow.hideBackgroundDimmer();
+        this._commandWindow.activate();
+        this._quickZoomMode = false;
+    } else {
+        this._skillWindow.activate();
+    }
+};
+
+//////////////////////////////
+// Functions - messages
+//////////////////////////////
+
+Scene_Skill.prototype.nobodyToZoom_Message = function () {
+    return `There's nobody in the party available!`;
 };
 
 //////////////////////////////
@@ -214,7 +258,17 @@ Scene_Skill.prototype.actionResolved_MessageCallback = function () {
 };
 
 Scene_Skill.prototype.triedToMagic_MessageCallback = function () {
-    this._skillWindow.activate();
+    if (this._quickZoomMode) {
+        this._quickZoomWindow.hideBackgroundDimmer();
+        this._skillWindow.hideBackgroundDimmer();
+        this._commandWindow.hideBackgroundDimmer();
+        this._commandWindow.activate();
+        this._quickZoomMode = false;
+    } else {
+        this._skillWindow.hideBackgroundDimmer();
+        this._skillWindow.hideAllHelpWindowBackgroundDimmers();
+        this._skillWindow.activate();
+    }
 };
 
 Scene_Skill.prototype.triedToUse_MessageCallback = function () {
@@ -229,12 +283,23 @@ Scene_Skill.prototype.zoom_MessageCallback = function () {
     SceneManager.goto(Scene_Map);
 };
 
+Scene_Skill.prototype.noZoomMembers_MessageCallback = function () {
+    this._quickZoomWindow.hideBackgroundDimmer();
+    this._skillWindow.hideBackgroundDimmer();
+    this._commandWindow.hideBackgroundDimmer();
+    this._commandWindow.activate();
+};
+
 //////////////////////////////
 // Functions - data
 //////////////////////////////
 
 Scene_Skill.prototype.user = function () {
-    return $gameParty.members()[this._commandWindow.currentSymbol()];
+    return this._quickZoomMode ? $gameParty.zoomMember() : $gameParty.members()[this._commandWindow.currentSymbol()];
+};
+
+Scene_Skill.prototype.item = function () {
+    return this._quickZoomMode ? $dataSkills[DQEng.Parameters.Game_BattlerBase.zoomSkillId] : this._skillWindow.item();
 };
 
 Scene_Skill.prototype.startItemUse = function (forAll = false) {

@@ -9,6 +9,9 @@
 * @plugindesc The superclass of Game_Battler. It mainly contains parameters calculation. - V0.1
 *
 *
+* @param Zoom Skill ID
+* @desc the skill ID for the zoom skill.
+*
 * @param Self Stun Skill ID
 * @desc the skill ID for the self stun skill (for confusion). Default: 18.
 * @default 18
@@ -63,6 +66,7 @@ DQEng.Game_BattlerBase = DQEng.Game_BattlerBase || {};
 var parameters = PluginManager.parameters('DQE_Game_BattlerBase');
 DQEng.Parameters = DQEng.Parameters || {};
 DQEng.Parameters.Game_BattlerBase = {};
+DQEng.Parameters.Game_BattlerBase.zoomSkillId = Number(parameters["Zoom Skill ID"]) || 16;
 DQEng.Parameters.Game_BattlerBase.selfStunSkillId = Number(parameters["Self Stun Skill ID"]) || 18;
 DQEng.Parameters.Game_BattlerBase.stareSkillId = Number(parameters["Stare Skill ID"]) || 19;
 DQEng.Parameters.Game_BattlerBase.whistleSkillId = Number(parameters["Whistle Skill ID"]) || 20;

@@ -41,7 +41,7 @@ Game_Party.prototype.initialize = function () {
     DQEng.Game_Party.initialize.call(this);
     this._restorePoint = new Game_RestorePoint();
     this._zoomPoints = [];
-    this._lastZoomPoint = {}; // last point zoomed to
+    this._lastZoomPoint = {};   // last point zoomed to
     this._medalTotal = 0;       // total mini medals collected
     this._medalCurrent = 0;     // currently held mini medals
 };
@@ -229,9 +229,39 @@ Game_Party.prototype.addZoomPoint = function (id, name, mapId, x, y) {
     this._zoomPoints[id] = point;
 };
 
-Game_Party.prototype.canZoom = function () {
+/**
+ * Does game allow player to zoom & does player have zoom points
+ */
+Game_Party.prototype.allowedZoom = function () {
     return $gameSwitches.value(DQEng.Parameters.Game_System.AllowZoomSwitch)
         && this.zoomPoints().length;
+};
+
+/**
+ * Does party have zoom spell
+ */
+Game_Party.prototype.hasZoom = function () {
+    return this.members().some(actor => {
+        return actor.hasSkill(DQEng.Parameters.Game_BattlerBase.zoomSkillId);
+    });
+};
+
+/**
+ * Is there a party member who has and is able to use zoom spell
+ */
+Game_Party.prototype.partyCanZoom = function () {
+    return this.movableMembers().some(actor => {
+        return actor.hasSkill(DQEng.Parameters.Game_BattlerBase.zoomSkillId);
+    });
+};
+
+/**
+ * Return front party member who can zoom
+ */
+Game_Party.prototype.zoomMember = function () {
+    return this.movableMembers().find(actor => {
+        return actor.hasSkill(DQEng.Parameters.Game_BattlerBase.zoomSkillId);
+    });
 };
 
 Game_Party.prototype.lastZoomPoint = function () {
