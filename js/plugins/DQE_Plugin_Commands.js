@@ -62,6 +62,9 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
             case 'SetChurchStyle': // style
                 Scene_Church.TEXTSTYLE = args[1].toLowerCase();
                 break;
+            case 'SetBankStyle': // style
+                Scene_Bank.TEXTSTYLE = args[1].toLowerCase();
+                break;
             default:
                 console.error('INVALID Dragon Quest Engine Command');
         }

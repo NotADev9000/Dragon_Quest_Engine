@@ -89,9 +89,9 @@ Window_EveryoneInfo.prototype.drawAll = function () {
     this.drawText('Gold Coins Carried:', ep, y);
     this.drawText(value, 0, y, iw, 'right');
     y += ih;
-    // value = $gameParty.goldInBank();
+    value = $gameParty.bankGold();
     this.drawText('Gold Coins in Bank:', ep, y);
-    this.drawText(0, 0, y, iw, 'right');
+    this.drawText(value, 0, y, iw, 'right');
     y += ih;
     // horizontal rule
     this.drawHorzLine(0, y);

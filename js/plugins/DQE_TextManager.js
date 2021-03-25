@@ -62,6 +62,21 @@ TextManager.terms.churchText.generic = [
     `*: Is there any other way we can be of assistance?`
 ];
 
+// Bank
+
+TextManager.terms.bankText = {};
+
+TextManager.terms.bankText.generic = [
+    `*: Welcome to the Bank of Snowmourne.`,
+    `*: Your current bank balance is %1.\nHow can we be helpin' you today?`,
+    `*: You currently have %1 safely tucked away in our vault. Thank you for using our services.`,
+    `*: We are carrying the maximum amount of gold possible for you. You'll have to make a withdrawal first.`,
+    `*: We'd be happy to accept your gold, how much will you be leaving with us today?`,
+    `*: We aren't currently carrying any gold for you. You'll have to make a deposit first.`,
+    `*: And how much gold would you like to withdraw?`,
+    `*: Your current bank balance is %1.\nHow else can we be of assistance?`
+];
+
 // Parameters
 
 TextManager.terms.baseparam = [

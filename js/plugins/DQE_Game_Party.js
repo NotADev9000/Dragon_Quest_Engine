@@ -42,6 +42,7 @@ Game_Party.prototype.initialize = function () {
     this._restorePoint = new Game_RestorePoint();
     this._zoomPoints = [];
     this._lastZoomPoint = {};   // last point zoomed to
+    this._bankGold = 0;         // gold in the bank
     this._medalTotal = 0;       // total mini medals collected
     this._medalCurrent = 0;     // currently held mini medals
 };
@@ -65,6 +66,58 @@ Game_Party.prototype.giveItemToActorAndEquipMessage = function (item, actor) {
 
 Game_Party.prototype.giveMultipleItemsToActorMessage = function (item, actor, amount) {
     return `${actor._name} takes ${amount} ${item.name}s from the bag.`;
+};
+
+//////////////////////////////
+// Functions - gold
+//////////////////////////////
+
+/**
+ * 10 million max gold
+ */
+Game_Party.prototype.maxGold = function () {
+    return 10000000;
+};
+
+//////////////////////////////
+// Functions - bank gold
+//////////////////////////////
+
+Game_Party.prototype.bankGold = function () {
+    return this._bankGold;
+};
+
+/**
+ * 10 million max bank gold
+ */
+Game_Party.prototype.maxBankGold = function () {
+    return 10000000;
+};
+
+Game_Party.prototype.hasMaxBankGold = function () {
+    return this.bankGold() >= this.maxBankGold();
+};
+
+Game_Party.prototype.hasNoBankGold = function () {
+    return this.bankGold() <= 0;
+};
+
+Game_Party.prototype.gainBankGold = function (amount) {
+    this._bankGold = (this._bankGold + amount).clamp(0, this.maxBankGold());
+};
+
+Game_Party.prototype.loseBankGold = function (amount) {
+    this.gainBankGold(-amount);
+};
+
+Game_Party.prototype.depositGold = function (amount) {
+    this.loseGold(amount);
+    this.gainBankGold(amount);
+};
+
+Game_Party.prototype.withdrawGold = function (amount) {
+    this.gainGold(amount);
+    this.loseBankGold(amount);
 };
 
 //////////////////////////////

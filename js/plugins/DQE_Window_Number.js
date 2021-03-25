@@ -140,7 +140,7 @@ Window_Number.prototype.processNumberChange = function () {
 };
 
 //////////////////////////////
-// Functions - updates
+// Functions - refresh
 //////////////////////////////
 
 Window_Number.prototype.refresh = function () {

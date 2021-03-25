@@ -195,7 +195,6 @@ Scene_Church.prototype.onSaveOk = function () {
 
 Scene_Church.prototype.onSaveCancel = function () {
     this._saveWindow.hide();
-    this._commandWindow.hideBackgroundDimmer();
     this.displayMessage(this.restartSceneMessage(), Scene_Church.prototype.backToMainMessageCallback);
 };
 
@@ -491,6 +490,7 @@ Scene_Church.prototype.doTaskMessageCallback = function () {
 };
 
 Scene_Church.prototype.backToMainMessageCallback = function () {
+    this._commandWindow.hideBackgroundDimmer();
     this._commandWindow.show();
     this._helpWindow.show();
     this._goldWindow.show();
