@@ -67,14 +67,20 @@ TextManager.terms.churchText.generic = [
 TextManager.terms.bankText = {};
 
 TextManager.terms.bankText.generic = [
-    `*: Welcome to the Bank of Snowmourne.`,
-    `*: Your current bank balance is %1.\nHow can we be helpin' you today?`,
-    `*: You currently have %1 safely tucked away in our vault. Thank you for using our services.`,
-    `*: We are carrying the maximum amount of gold possible for you. You'll have to make a withdrawal first.`,
-    `*: We'd be happy to accept your gold, how much will you be leaving with us today?`,
-    `*: We aren't currently carrying any gold for you. You'll have to make a deposit first.`,
-    `*: And how much gold would you like to withdraw?`,
-    `*: Your current bank balance is %1.\nHow else can we be of assistance?`
+    `*: Welcome to the Bank of Snowmourne.`,                                                                    // welcomeMessage //
+    `*: Your current bank balance is %1.\nHow can we be helpin' you today?`,                                    // introMessage
+    `*: You currently have %1 safely tucked away in our vault. Thank you for using our services.`,              // leaveMessage
+    `*: We are carryin' the maximum amount of gold possible for you. You'll have to make a withdrawal first.`,  // maxGoldInBankMessage
+    `*: We'd be happy to accept your gold, how much will you be leavin' with us today?`,                        // depositMessage //
+    `*: You don't have that much gold on you!`,                                                                 // notEnoughGoldMessage
+    `*: You'd like to leave %1 with us?`,                                                                       // depositChoiceMessage
+    `*: Right, we'll lock it up in the vault straight away. You've no need to worry.`,                          // depositStartMessage
+    `*: We aren't currently carryin' any gold for you. You'll have to make a deposit first.`,                   // noGoldInBankMessage
+    `*: We're holdin' %1 for you, how much gold would you like to withdraw?`,                                   // withdrawMessage //
+    `*: That's more gold than we are carryin' for you!`,                                                        // notEnoughGoldInBankMessage
+    `*: You'd like to withdraw %1 from the vault?`,                                                             // withdrawChoiceMessage
+    `*: Right, here you go!`,                                                                                   // withdrawStartMessage
+    `*: Your current bank balance is %1.\nHow else can we be of assistance?`                                    // restartSceneMessage //
 ];
 
 // Parameters

@@ -38,6 +38,7 @@ Scene_Bank.prototype.constructor = Scene_Bank;
 Scene_Bank.prototype.initialize = function () {
     Scene_MenuBase.prototype.initialize.call(this);
     this._chosenCommand = Scene_Bank.DEPOSIT;
+    this._goldTransfer = 0; // how much gold to be deposited/withdrawed
 };
 
 Scene_Bank.prototype.create = function () {
@@ -79,6 +80,7 @@ Scene_Bank.prototype.createInputWindow = function () {
     const x = this._commandWindow.x + this._commandWindow.width;
     const y = this._commandWindow.y;
     this._inputWindow = new Window_NumberInput(x, y, 8);
+    this._inputWindow.setHandler('ok', this.onInputOk.bind(this));
     this._inputWindow.setHandler('cancel', this.onInputCancel.bind(this));
     this._inputWindow.openness = 0;
     this.addWindow(this._inputWindow);
@@ -86,9 +88,9 @@ Scene_Bank.prototype.createInputWindow = function () {
 
 Scene_Bank.prototype.createChoiceWindow = function () {
     this._choiceWindow = new Window_CustomCommand(0, 0, 156, ['Yes', 'No'], true);
-    // this._choiceWindow.setHandler('Yes', this.onChoiceYes.bind(this));
-    // this._choiceWindow.setHandler('No', this.onChoiceCancel.bind(this));
-    // this._choiceWindow.setHandler('cancel', this.onChoiceCancel.bind(this));
+    this._choiceWindow.setHandler('Yes', this.onChoiceYes.bind(this));
+    this._choiceWindow.setHandler('No', this.onChoiceCancel.bind(this));
+    this._choiceWindow.setHandler('cancel', this.onChoiceCancel.bind(this));
     this._choiceWindow.openness = 0;
     this._choiceWindow.deactivate();
     this.addWindow(this._choiceWindow);
@@ -131,7 +133,57 @@ Scene_Bank.prototype.commandCancel = function () {
     this.displayMessage(this.leaveMessage(), Scene_Bank.prototype.popScene);
 };
 
+Scene_Bank.prototype.onInputOk = function () {
+    this._goldTransfer = this._inputWindow.number();
+    if (this._goldTransfer <= 0) {
+        this.onInputCancel();
+        return;
+    }
+    switch (this._chosenCommand) {
+        case Scene_Bank.DEPOSIT:
+            if (this._goldTransfer > $gameParty.gold()) {
+                this._messageWindow.setInput(true);
+                this.displayMessage(this.notEnoughGoldMessage(), Scene_Bank.prototype.notEnoughGold_MessageCallback);
+            } else {
+                this.displayMessage(this.depositChoiceMessage(), Scene_Bank.prototype.confirmChoice_MessageCallback);
+            }
+            break;
+        case Scene_Bank.WITHDRAW:
+            if (this._goldTransfer > $gameParty.bankGold()) {
+                this._messageWindow.setInput(true);
+                this.displayMessage(this.notEnoughGoldInBankMessage(), Scene_Bank.prototype.notEnoughGoldInBank_MessageCallback);
+            } else {
+                this.displayMessage(this.withdrawChoiceMessage(), Scene_Bank.prototype.confirmChoice_MessageCallback);
+            }
+            break;
+    }
+};
+
 Scene_Bank.prototype.onInputCancel = function () {
+    this._inputWindow.close();
+    this.displayMessage(this.restartSceneMessage(), Scene_Bank.prototype.backToMain_MessageCallback);
+};
+
+Scene_Bank.prototype.onChoiceYes = function () {
+    this._choiceWindow.close();
+    this._inputWindow.close();
+    this._messageWindow.setInput(true);
+    switch (this._chosenCommand) {
+        case Scene_Bank.DEPOSIT:
+            $gameParty.depositGold(this._goldTransfer);
+            this._goldWindow.refresh();
+            this.displayMessage(this.depositStartMessage(), Scene_Bank.prototype.depositedOrWithdrawed_MessageCallback);
+            break;
+        case Scene_Bank.WITHDRAW:
+            $gameParty.withdrawGold(this._goldTransfer);
+            this._goldWindow.refresh();
+            this.displayMessage(this.withdrawStartMessage(), Scene_Bank.prototype.depositedOrWithdrawed_MessageCallback);
+            break;
+    }
+};
+
+Scene_Bank.prototype.onChoiceCancel = function () {
+    this._choiceWindow.close();
     this._inputWindow.close();
     this.displayMessage(this.restartSceneMessage(), Scene_Bank.prototype.backToMain_MessageCallback);
 };
@@ -140,8 +192,9 @@ Scene_Bank.prototype.onInputCancel = function () {
 // Functions - data
 //////////////////////////////
 
-Scene_Bank.prototype.goldDisplay = function () {
-    return `${$gameParty.bankGold()}\\c[7]${TextManager.currencyUnit}\\c[1]`;
+Scene_Bank.prototype.goldDisplay = function (transfer = false) {
+    const gold = transfer ? this._goldTransfer : $gameParty.bankGold();
+    return `${gold}\\c[7]${TextManager.currencyUnit}\\c[1]`;
 };
 
 Scene_Bank.prototype.activateInputWindow = function () {
@@ -155,6 +208,8 @@ Scene_Bank.prototype.activateInputWindow = function () {
 // Functions - messages
 //////////////////////////////
 
+// flavour
+
 Scene_Bank.prototype.welcomeMessage = function () {
     return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][0];
 };
@@ -167,6 +222,8 @@ Scene_Bank.prototype.leaveMessage = function () {
     return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][2].format(this.goldDisplay());
 };
 
+// deposit
+
 Scene_Bank.prototype.maxGoldInBankMessage = function () {
     return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][3];
 };
@@ -175,16 +232,44 @@ Scene_Bank.prototype.depositMessage = function () {
     return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][4];
 };
 
-Scene_Bank.prototype.noGoldInBankMessage = function () {
+Scene_Bank.prototype.notEnoughGoldMessage = function () {
     return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][5];
 };
 
-Scene_Bank.prototype.withdrawMessage = function () {
-    return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][6];
+Scene_Bank.prototype.depositChoiceMessage = function () {
+    return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][6].format(this.goldDisplay(true));
 };
 
+Scene_Bank.prototype.depositStartMessage = function () {
+    return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][7];
+};
+
+// withdraw
+
+Scene_Bank.prototype.noGoldInBankMessage = function () {
+    return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][8];
+};
+
+Scene_Bank.prototype.withdrawMessage = function () {
+    return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][9].format(this.goldDisplay());
+};
+
+Scene_Bank.prototype.notEnoughGoldInBankMessage = function () {
+    return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][10];
+};
+
+Scene_Bank.prototype.withdrawChoiceMessage = function () {
+    return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][11].format(this.goldDisplay(true));
+};
+
+Scene_Bank.prototype.withdrawStartMessage = function () {
+    return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][12];
+};
+
+// flavour 2
+
 Scene_Bank.prototype.restartSceneMessage = function () {
-    return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][7].format(this.goldDisplay());
+    return TextManager.terms.bankText[Scene_Bank.TEXTSTYLE][13].format(this.goldDisplay());
 };
 
 //////////////////////////////
@@ -211,9 +296,29 @@ Scene_Bank.prototype.deposit_MessageCallback = function () {
     this.activateInputWindow();
 };
 
+Scene_Bank.prototype.notEnoughGold_MessageCallback = function () {
+    this._messageWindow.setInput(false);
+    this.displayMessage(this.depositMessage(), Scene_Bank.prototype.deposit_MessageCallback);
+};
+
 Scene_Bank.prototype.withdraw_MessageCallback = function () {
     this._chosenCommand = Scene_Bank.WITHDRAW;
     this.activateInputWindow();
+};
+
+Scene_Bank.prototype.notEnoughGoldInBank_MessageCallback = function () {
+    this._messageWindow.setInput(false);
+    this.displayMessage(this.withdrawMessage(), Scene_Bank.prototype.withdraw_MessageCallback);
+};
+
+Scene_Bank.prototype.confirmChoice_MessageCallback = function () {
+    this._choiceWindow.open();
+    this._choiceWindow.select(0);
+    this._choiceWindow.activate();
+};
+
+Scene_Bank.prototype.depositedOrWithdrawed_MessageCallback = function () {
+    this.displayMessage(this.leaveMessage(), Scene_Bank.prototype.popScene);
 };
 
 Scene_Bank.prototype.backToMain_MessageCallback = function () {

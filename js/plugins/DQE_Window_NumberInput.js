@@ -26,9 +26,20 @@ DQEng.Window_NumberInput = DQEng.Window_NumberInput || {};
 //-----------------------------------------------------------------------------
 
 Window_NumberInput.prototype.initialize = function (x, y, digits) {
+    this._windowCursor2Sprite = null;
     this._digits = digits;
     Window_Selectable.prototype.initialize.call(this, x, y, this.windowWidth(), this.windowHeight());
     this.initNumber();
+};
+
+/**
+ * @method _createAllParts
+ * @private
+ */
+Window_NumberInput.prototype._createAllParts = function () {
+    Window.prototype._createAllParts.call(this);
+    this._windowCursor2Sprite = new Sprite();
+    this.addChild(this._windowCursor2Sprite);
 };
 
 //////////////////////////////
@@ -95,6 +106,10 @@ Window_NumberInput.prototype.changeDigit = function (up) {
 // Functions - controls
 //////////////////////////////
 
+Window_NumberInput.prototype.processOk = function () {
+    Window_Selectable.prototype.processOk.call(this);
+};
+
 Window_NumberInput.prototype.processNumberChange = function () {
     if (this.isOpenAndActive()) {
         if (Input.isRepeated('up')) {
@@ -142,4 +157,45 @@ Window_NumberInput.prototype.updateOpen = function () {
             this._opening = false;
         }
     }
+};
+
+//////////////////////////////
+// Functions - cursor
+//////////////////////////////
+
+/**
+ * Cursor is now up/down arrow frame selected from windowskin
+ * 
+ * @method _refreshCursor
+ * @private
+ */
+Window_NumberInput.prototype._refreshCursor = function () {
+    const pad = this._padding;
+    // up arrow
+    this._windowCursorSprite.bitmap = this._windowskin;
+    this._windowCursorSprite.setFrame(132, 15, this._cursorRect.width, this._cursorRect.height);
+    this._windowCursorSprite.move(this._cursorRect.x + pad, this._cursorRect.y + pad);
+    // down arrow
+    this._windowCursor2Sprite.bitmap = this._windowskin;
+    this._windowCursor2Sprite.setFrame(132, 60, this._cursorRect.width, this._cursorRect.height);
+    let downArrowY = this._cursorRect.y + (this.lineHeight() * 2) + (this.lineGap() * 2);
+    this._windowCursor2Sprite.move(this._cursorRect.x + pad, downArrowY + pad);
+};
+
+/**
+ * cursor width/height is changed to match up/down arrow
+ */
+Window_NumberInput.prototype.updateCursor = function () {
+    if (this.isCursorVisible()) {
+        const rect = this.itemRect(this.index());
+        this.setCursorRect(rect.x, rect.y, 21, 21);
+    } else {
+        this.setCursorRect(0, 0, 0, 0);
+    }
+};
+
+Window_NumberInput.prototype._updateCursor = function () {
+    const open = this.isOpen();
+    this._windowCursorSprite.visible = open;
+    this._windowCursor2Sprite.visible = open;
 };
