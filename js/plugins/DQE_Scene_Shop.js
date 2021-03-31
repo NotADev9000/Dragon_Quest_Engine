@@ -29,11 +29,12 @@ Scene_Shop.TEXTSTYLE = 'generic';      // the messages to display when in the sc
 Scene_Shop.prototype.create = function () {
     Scene_MenuBase.prototype.create.call(this);
     this.createCommandWindow();
+    // gold
+    this.createGoldWindow();
     // item lists
     this.createBuyWindow();
     this.createMiscWindow();
-    // misc
-    this.createGoldWindow();
+    this.createItemStatsWindow();
     // messages
     this.createChoiceWindow();
     this.createMessageWindow();
@@ -57,6 +58,14 @@ Scene_Shop.prototype.createCommandWindow = function () {
     this.addWindow(this._commandWindow);
 };
 
+// gold
+
+Scene_Shop.prototype.createGoldWindow = function () {
+    this._goldWindow = new Window_Gold(0, 48);
+    this._goldWindow.x = (Graphics.boxWidth - this._goldWindow.width) - 48;
+    this.addWindow(this._goldWindow);
+};
+
 // item lists
 
 Scene_Shop.prototype.createBuyWindow = function () {
@@ -71,19 +80,21 @@ Scene_Shop.prototype.createBuyWindow = function () {
 
 Scene_Shop.prototype.createMiscWindow = function () {
     const x = this._buyWindow.x + this._buyWindow.width;
-    const y = this._buyWindow.y;
-    this._miscWindow = new Window_ShopMisc(x, y, 324, 177);
+    const y = this._goldWindow.y + this._goldWindow.height;
+    this._miscWindow = new Window_ShopMisc(x, y, 630, 108);
     this._miscWindow.hide();
     this._buyWindow.setHelpWindow(this._miscWindow);
     this.addWindow(this._miscWindow);
 };
 
-// misc
-
-Scene_Shop.prototype.createGoldWindow = function () {
-    this._goldWindow = new Window_Gold(0, 48);
-    this._goldWindow.x = (Graphics.boxWidth - this._goldWindow.width) - 48;
-    this.addWindow(this._goldWindow);
+Scene_Shop.prototype.createItemStatsWindow = function () {
+    const x = this._buyWindow.x;
+    const y = this._buyWindow.y + this._buyWindow.height;
+    const width = this._buyWindow.width;
+    this._itemStatsWindow = new Window_ShopItemStats(x, y, width, 318);
+    this._itemStatsWindow.hide();
+    this._buyWindow.setHelpWindow(this._itemStatsWindow);
+    this.addWindow(this._itemStatsWindow);
 };
 
 // messages
@@ -126,6 +137,7 @@ Scene_Shop.prototype.commandCancel = function () {
 };
 
 Scene_Shop.prototype.onBuyCancel = function () {
+    this._buyWindow.hideAllHelpWindows();
     this._buyWindow.hide();
     this.displayMessage(this.restartSceneMessage(), Scene_Shop.prototype.backToMain_MessageCallback);
 };

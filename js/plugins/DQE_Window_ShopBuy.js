@@ -77,6 +77,13 @@ Window_ShopBuy.prototype.updateHelp = function () {
 Window_ShopBuy.prototype.setHelpWindowItem = function (item) {
     // misc window
     this._helpWindow[0].setItem(item);
+    if (DataManager.isWeapon(item) || DataManager.isArmor(item)) {
+        // item stats window
+        this._helpWindow[1].show();
+        this._helpWindow[1].setItem(item);
+    } else {
+        this._helpWindow[1].hide();
+    }
 };
 
 //////////////////////////////

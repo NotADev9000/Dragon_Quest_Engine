@@ -32,9 +32,9 @@ Window_ShopMisc.prototype = Object.create(Window_Base.prototype);
 Window_ShopMisc.prototype.constructor = Window_ShopMisc;
 
 Window_ShopMisc.prototype.initialize = function (x, y, width, height) {
-    this._type = null;
-    this._carried = 0;
     Window_Base.prototype.initialize.call(this, x, y, width, height);
+    this._type = '';
+    this._carried = 0;
 };
 
 //////////////////////////////
@@ -87,12 +87,10 @@ Window_ShopMisc.prototype.drawAll = function () {
     let y = 0;
     // type
     this.drawText('Type:', 0, y);
-    y += ih;
     this.drawText(this._type, 0, y, cw, 'right');
     y += ih;
     // carried
     this.drawText('No. Carried:', 0, y);
-    y += ih;
     this.drawText(this._carried, 0, y, cw, 'right');
 };
 

@@ -104,6 +104,7 @@ var $plugins =
 {"name":"DQE_Window_SkillCost","status":true,"description":"The window for displaying a skills MP cost in the magic menu - V0.1","parameters":{}},
 {"name":"DQE_Window_ShopBuy","status":true,"description":"The window for the buy list - V0.1","parameters":{}},
 {"name":"DQE_Window_ShopMisc","status":true,"description":"The window for the shop's misc list - V0.1","parameters":{}},
+{"name":"DQE_Window_ShopItemStats","status":true,"description":"The window for the shop's item stat list - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemLocation","status":true,"description":"The window for displaying an item and its location - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemActorStat","status":true,"description":"The window for displaying party members stats in the item menu - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleActorStat","status":true,"description":"The window for displaying party members stats in battle - V0.1","parameters":{}},

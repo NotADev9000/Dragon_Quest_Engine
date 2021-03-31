@@ -106,7 +106,8 @@ Window_EquipmentStats.prototype.setEquippedPlusSlot = function (equipped, slot) 
     this.refresh();
 };
 
-Window_EquipmentStats.prototype.makeItemStats = function (item, equipped = false) {
+// window base so can be used in other windows (specifically shopItemStats etc.)
+Window_Base.prototype.makeItemStats = function (item, equipped = false) {
     stats = [];
     if (item) {
         // default params
