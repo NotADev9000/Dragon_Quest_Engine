@@ -83,6 +83,16 @@ TextManager.terms.bankText.generic = [
     `*: Your current bank balance is %1.\nHow else can we be of assistance?`                                    // restartSceneMessage //
 ];
 
+// Shop
+
+TextManager.terms.shopText = {};
+
+TextManager.terms.shopText.generic = [
+    `*: Welcome to our Item Shop. How can I serve you?`,                                                        // welcomeMessage //
+    `*: Come again any time!`,                                                                                  // leaveMessage
+    `*: Is there anything else I can help you with?`                                                            // restartSceneMessage
+];
+
 // Parameters
 
 TextManager.terms.baseparam = [

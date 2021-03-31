@@ -279,6 +279,28 @@ Game_Actor.prototype.hasItem = function (item) {
     return this.items().contains(item);
 };
 
+Game_Actor.prototype.amountOfItem = function (item, type) {
+    const items = this.items();
+    const id = item.id;
+    let count = 0;
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].id === id) {
+            switch (type) {
+                case 0:
+                    if (items[i].itypeId === item.itypeId) count++;
+                    break;
+                case 1:
+                    if (items[i].wtypeId === item.wtypeId) count++;
+                    break;
+                case 2:
+                    if (items[i].atypeId === item.atypeId) count++;
+                    break;
+            }
+        }
+    }
+    return count;
+};
+
 /**
  * How many items can actor fit in inventory
  */

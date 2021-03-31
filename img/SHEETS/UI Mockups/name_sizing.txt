@@ -1,3 +1,4 @@
 DQE: max name sizing in characters
 
 Skills: 20
+Items: 20
