@@ -53,7 +53,6 @@ Window_ShopItemStats.prototype.numberOfItems = function () {
 //////////////////////////////
 
 Window_ShopItemStats.prototype.setItem = function (item) {
-    // this._item = JsonEx.makeDeepCopy(item);
     this._stats = this.makeItemStats(item);
     this.refresh();
 };
@@ -90,7 +89,7 @@ Window_ShopItemStats.prototype.drawStats = function () {
         }
         sign = value < 0 ? '' : '+';
         // stat name
-        this.changeTextColor(this.itemColor());
+        this.changeTextColor(this.statColor());
         this.drawText(name, 0, y);
         this.resetTextColor();
         // stat value

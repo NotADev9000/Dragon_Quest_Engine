@@ -434,6 +434,11 @@ Game_BattlerBase.prototype.isAllWield = function () {
     return this.slotType() === 2;
 };
 
+Game_BattlerBase.prototype.canEquip = function (item) {
+    if (item?.etypeId >= 0) return item.wtypeId >= 0 ? this.canEquipWeapon(item) : this.canEquipArmor(item);
+    return false;
+};
+
 //////////////////////////////
 // Functions - items
 //////////////////////////////

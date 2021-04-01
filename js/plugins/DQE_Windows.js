@@ -114,8 +114,12 @@ Window_Base.prototype.disabledColor = function () {
     return this.textColor(16);
 };
 
-Window_Base.prototype.itemColor = function () {
+Window_Base.prototype.statColor = function () {
     return this.textColor(10);
+};
+
+Window_Base.prototype.statEquipColor = function () {
+    return this.textColor(2);
 };
 
 Window_Base.prototype.powerUpColor = function () {

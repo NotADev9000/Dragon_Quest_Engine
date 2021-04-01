@@ -329,6 +329,11 @@ Game_Actor.prototype.hasTwoHandedEquipped = function () {
     return e[0]?.meta.twoHand || e[1]?.meta.twoHand;
 };
 
+Game_Actor.prototype.hasHandsFree = function () {
+    let e = this.equips();
+    return !(e[0]?.id || e[1]?.id);
+};
+
 Game_Actor.prototype.getSlotData = function () {
     var slotData = [];
     this._equips.forEach((item, index) => {

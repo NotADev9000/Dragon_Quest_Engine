@@ -627,7 +627,7 @@ Scene_Battle.prototype.onEquipmentDoWhatEquip = function () {
 
     if (actor.canEquip(item)) {
         if (DataManager.isWeapon(item) &&
-            !(item.meta.twoHand || actor.hasTwoHandedEquipped()) &&
+            !(item.meta.twoHand || actor.hasTwoHandedEquipped() || actor.hasHandsFree()) &&
             (actor.isDualWield() || actor.isAllWield())) { // player needs to select slot to equip item into
             this._equipmentSlotWindow.select(0);
             this._equipmentSlotWindow.show();
@@ -664,7 +664,8 @@ Scene_Battle.prototype.onEquipmentDoWhatCancel = function () {
 Scene_Battle.prototype.onEquipmentSlotOk = function () {
     let actor = BattleManager.actor();
     let index = this._equipmentWindow._trueIndexes[this._equipmentWindow.index()];
-    let slot = this._equipmentSlotWindow.index();
+    const item = this._equipmentWindow.item();
+    let slot = actor.whichEquipSlot(item, this._equipmentSlotWindow.index());
 
     this.displayMessage(actor.equipItemMessage(index), Scene_Battle.prototype.doWhatEquipMessage);
     actor.equipItemFromInv(index, slot);
