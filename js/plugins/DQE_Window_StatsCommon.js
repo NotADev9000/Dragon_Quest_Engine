@@ -52,7 +52,7 @@ Window_StatsCommon.prototype.drawNameTitle = function (title) {
     icon = this.getHandlerIcon('previous');
     this.drawTextEx(` \\i[${icon}]`, 0, y);
     icon = this.getHandlerIcon('next');
-    this.drawTextEx(`\\i[${icon}] `, rightIconX, y, this.contentsWidth(), 'right');
+    this.drawTextEx(`\\i[${icon}] `, rightIconX, y);
     // actor name & level
     this.drawText(text, 0, y, this.contentsWidth(), 'center');
     y += itemHeight;

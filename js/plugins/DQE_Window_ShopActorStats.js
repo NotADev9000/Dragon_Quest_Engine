@@ -76,6 +76,26 @@ Window_ShopActorStats.prototype.setValues = function (stats, item) {
     this.refresh();
 };
 
+Window_ShopActorStats.prototype.forwardIndex = function () {
+    const numStats = this.numStats();
+    if (numStats > 1) {
+        this._index = this._index >= numStats - 1 ? 0 : this._index + 1;
+    }
+    this.refresh();
+};
+
+Window_ShopActorStats.prototype.backwardIndex = function () {
+    const numStats = this.numStats();
+    if (numStats > 1) {
+        this._index = this._index <= 0 ? numStats - 1 : this._index - 1;
+    }
+    this.refresh();
+};
+
+Window_ShopActorStats.prototype.numStats = function () {
+    return this._stats.length;
+};
+
 Window_ShopActorStats.prototype.makeStatDiffs = function (stat, replaceStats) {
     const isSparamType = stat.code === Game_BattlerBase.TRAIT_SPARAM || stat.code === Game_BattlerBase.TRAIT_STATE_RATE; // sparam types display value differently
     let diff = isSparamType ? 1 - stat.value : stat.value; // diff is initially the new equipments value
@@ -123,6 +143,8 @@ Window_ShopActorStats.prototype.makeActorValues = function (actor, stat) {
 //////////////////////////////
 
 Window_ShopActorStats.prototype.drawTitle = function () {
+    const ep = this.extraPadding();
+    const cw = this.contentsWidth();
     const stat = this._stats[this._index];
     // get stat name
     let name = '';
@@ -141,8 +163,16 @@ Window_ShopActorStats.prototype.drawTitle = function () {
             break;
     }
     // draw stat name
-    this.drawText(name, 0, this.extraPadding(), this.contentsWidth(), 'center');
+    this.drawText(name, 0, ep, cw, 'center');
     this.drawHorzLine(0, this.titleBlockHeight() - 3);
+    // draw icons
+    if (this.numStats() > 1) {
+        let icon = this.getHandlerIcon('previous');
+        this.drawTextEx(` \\i[${icon}]`, 0, ep);
+        icon = this.getHandlerIcon('next');
+        let x = cw - Window_Base._iconWidth - this.textWidth(' ');
+        this.drawTextEx(`\\i[${icon}] `, x, ep);
+    }
 };
 
 Window_ShopActorStats.prototype.drawStats = function () {

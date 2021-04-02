@@ -76,6 +76,8 @@ Scene_Shop.prototype.createBuyWindow = function () {
     this._buyWindow.hide();
     // this._buyWindow.setHandler('ok', this.onBuyOk.bind(this));
     this._buyWindow.setHandler('cancel', this.onBuyCancel.bind(this));
+    this._buyWindow.setHandler('next', this.onBuyNextStat.bind(this));
+    this._buyWindow.setHandler('previous', this.onBuyNextStat.bind(this, true));
     this.addWindow(this._buyWindow);
 };
 
@@ -144,6 +146,10 @@ Scene_Shop.prototype.commandCancel = function () {
     this._commandWindow.hide();
     this._messageWindow.setInput(true);
     this.displayMessage(this.leaveMessage(), Scene_Shop.prototype.popScene);
+};
+
+Scene_Shop.prototype.onBuyNextStat = function (backwards = false) {
+    backwards ? this._actorStatsWindow.backwardIndex() : this._actorStatsWindow.forwardIndex();
 };
 
 Scene_Shop.prototype.onBuyCancel = function () {
