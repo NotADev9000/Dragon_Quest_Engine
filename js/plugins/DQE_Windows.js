@@ -303,6 +303,56 @@ Window_Base.prototype.dimColor1 = function () {
     return 'rgba(0, 0, 0, 0.5)';
 };
 
+/**
+ * returns an array of parameters that the passed in item changes when equipped
+ * 
+ * @param {$dataWeapons | $dataArmors} item check the stats that this item changes
+ * @param {Boolean} equipped is this item equipped by actor
+ */
+Window_Base.prototype.makeItemStats = function (item, equipped = false) {
+    stats = [];
+    if (item) {
+        // default params
+        item.params.forEach((param, index) => {
+            if (param !== 0) stats.push({
+                code: Game_BattlerBase.TRAIT_PARAM,
+                dataId: index,
+                value: param
+            });
+        });
+        // meta params
+        if (item.meta.charm) stats.push({
+            code: Game_BattlerBase.TRAIT_PARAM,
+            dataId: Game_BattlerBase.POS_PARAM_CHARM,
+            value: Number(item.meta.charm)
+        });
+        // xparams/sparams/states
+        stats = stats.concat(item.traits.filter(trait => {
+            return trait.code === Game_BattlerBase.TRAIT_STATE_RATE ||
+                trait.code === Game_BattlerBase.TRAIT_PARAM ||
+                trait.code === Game_BattlerBase.TRAIT_XPARAM ||
+                trait.code === Game_BattlerBase.TRAIT_SPARAM
+        })).concat(Game_Actor.prototype.metaTraits.call(this, item.meta));
+    }
+    // equipped check
+    stats.forEach(stat => stat.equipped = equipped);
+    return stats;
+};
+
+/**
+ * returns an array of copies of the equipment that would be replaced when giving an actor new equipment
+ */
+Window_Base.prototype.getReplaceEquipment = function (twoHand, actor, slot) {
+    let replaceEquipment = []; // holds the equipment that would be swapped out
+    if (twoHand) { // if new item is two-handed then get items in both slots it occupies
+        replaceEquipment.push(JsonEx.makeDeepCopy(actor.equips()[0]));
+        replaceEquipment.push(JsonEx.makeDeepCopy(actor.equips()[1]));
+    } else { // if new item isn't two-handed then just get the item that would be replaced
+        replaceEquipment.push(JsonEx.makeDeepCopy(actor.getItemInSlot(slot)));
+    }
+    return replaceEquipment;
+};
+
 Window_Base.prototype.obtainEscapeParamString = function (textState) {
     var arr = /^\[\w+\]/.exec(textState.text.slice(textState.index));
     if (arr) {

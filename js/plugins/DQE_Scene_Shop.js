@@ -35,6 +35,7 @@ Scene_Shop.prototype.create = function () {
     this.createBuyWindow();
     this.createMiscWindow();
     this.createItemStatsWindow();
+    this.createActorStatsWindow();
     // messages
     this.createChoiceWindow();
     this.createMessageWindow();
@@ -95,6 +96,15 @@ Scene_Shop.prototype.createItemStatsWindow = function () {
     this._itemStatsWindow.hide();
     this._buyWindow.setHelpWindow(this._itemStatsWindow);
     this.addWindow(this._itemStatsWindow);
+};
+
+Scene_Shop.prototype.createActorStatsWindow = function () {
+    const x = this._itemStatsWindow.x + this._itemStatsWindow.width;
+    this._actorStatsWindow = new Window_ShopActorStats(x, 0, 630, 372);
+    this._actorStatsWindow.y = this._itemStatsWindow.y - this._actorStatsWindow.titleBlockHeight();
+    this._actorStatsWindow.hide();
+    this._buyWindow.setHelpWindow(this._actorStatsWindow);
+    this.addWindow(this._actorStatsWindow);
 };
 
 // messages

@@ -78,11 +78,15 @@ Window_ShopBuy.prototype.setHelpWindowItem = function (item) {
     // misc window
     this._helpWindow[0].setItem(item);
     if (DataManager.isWeapon(item) || DataManager.isArmor(item)) {
-        // item stats window
+        // item stats (1) & actor stats (2) window
+        const stats = this.makeItemStats(item);
+        this._helpWindow[1].setStats(stats);
+        this._helpWindow[2].setValues(stats, item);
         this._helpWindow[1].show();
-        this._helpWindow[1].setItem(item);
+        this._helpWindow[2].show();
     } else {
         this._helpWindow[1].hide();
+        this._helpWindow[2].hide();
     }
 };
 

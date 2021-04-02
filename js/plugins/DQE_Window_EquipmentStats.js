@@ -106,37 +106,6 @@ Window_EquipmentStats.prototype.setEquippedPlusSlot = function (equipped, slot) 
     this.refresh();
 };
 
-// window base so can be used in other windows (specifically shopItemStats etc.)
-Window_Base.prototype.makeItemStats = function (item, equipped = false) {
-    stats = [];
-    if (item) {
-        // default params
-        item.params.forEach((param, index) => {
-            if (param !== 0) stats.push({
-                code: Game_BattlerBase.TRAIT_PARAM,
-                dataId: index,
-                value: param
-            });
-        });
-        // meta params
-        if (item.meta.charm) stats.push({
-            code: Game_BattlerBase.TRAIT_PARAM,
-            dataId: Game_BattlerBase.POS_PARAM_CHARM,
-            value: Number(item.meta.charm)
-        });
-        // xparams/sparams/states
-        stats = stats.concat(item.traits.filter(trait => {
-            return trait.code === Game_BattlerBase.TRAIT_STATE_RATE ||
-                trait.code === Game_BattlerBase.TRAIT_PARAM ||
-                trait.code === Game_BattlerBase.TRAIT_XPARAM ||
-                trait.code === Game_BattlerBase.TRAIT_SPARAM
-        })).concat(Game_Actor.prototype.metaTraits.call(this, item.meta));
-    }
-    // equipped check
-    stats.forEach(stat => stat.equipped = equipped);
-    return stats;
-};
-
 Window_EquipmentStats.prototype.combineItemStats = function (stats, equippedStats) {
     let result = {};
     let unequipped = [], equipped = [];
@@ -179,14 +148,7 @@ Window_EquipmentStats.prototype.drawTitle = function () {
 Window_EquipmentStats.prototype.drawStats = function () {
     let stats = this.makeItemStats(this._item); // stats for the hovered over item (in slot and list windows)
     if (!this._equipped && this._actor) {
-        let replaceEquipment = []; // holds the equipment that would be swapped out
-        if (this._item.meta.twoHand) { // if new item is two-handed then get items in both slots it occupies
-            replaceEquipment.push(JsonEx.makeDeepCopy(this._actor.equips()[0]));
-            replaceEquipment.push(JsonEx.makeDeepCopy(this._actor.equips()[1]));
-        } else { // if new item isn't two-handed then just get the item that would be replaced
-            replaceEquipment.push(JsonEx.makeDeepCopy(this._actor.getItemInSlot(this._slot)));
-        }
-
+        let replaceEquipment = this.getReplaceEquipment(this._item.meta.twoHand, this._actor, this._slot);
         let otherStats = [];
         replaceEquipment.forEach(equipment => {
             otherStats = otherStats.concat(this.makeItemStats(equipment, true)); // the stats for the current equipped items

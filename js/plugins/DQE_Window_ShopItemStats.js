@@ -52,8 +52,8 @@ Window_ShopItemStats.prototype.numberOfItems = function () {
 // Functions - data
 //////////////////////////////
 
-Window_ShopItemStats.prototype.setItem = function (item) {
-    this._stats = this.makeItemStats(item);
+Window_ShopItemStats.prototype.setStats = function (stats) {
+    this._stats = stats;
     this.refresh();
 };
 
