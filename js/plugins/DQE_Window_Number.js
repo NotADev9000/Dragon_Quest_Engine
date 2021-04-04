@@ -69,6 +69,10 @@ Window_Number.prototype.extraPadding = function () {
 // Functions - numbers
 //////////////////////////////
 
+Window_Number.prototype.number = function () {
+    return this._number;
+}
+
 Window_Number.prototype.setup = function (min, max) {
     this.setMin(min);
     this.setMax(max);

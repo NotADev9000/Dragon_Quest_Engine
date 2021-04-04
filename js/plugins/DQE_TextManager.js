@@ -90,7 +90,62 @@ TextManager.terms.shopText = {};
 TextManager.terms.shopText.generic = [
     `*: Welcome to our Item Shop. How can I serve you?`,                                                        // welcomeMessage //
     `*: Come again any time!`,                                                                                  // leaveMessage
-    `*: Is there anything else I can help you with?`                                                            // restartSceneMessage
+    `*: Is there anything else I can help you with?`,                                                           // restartSceneMessage
+    `*: Sorry, you don't seem to have enough gold for that.`,                                                   // notEnoughGoldMessage //
+    `*: A %1? That'll be %2 gold coins, please.`,                                                               // singleBuyItemMessage
+    `*: %1 %2s? That'll be %3 gold coins, please.`,                                                             // multipleBuyItemMessage
+    `*: And who's going to carry your purchase?`,                                                               // carryPurchaseMessage
+    `*: Changed your mind have you?\nNo worries, is there anything else I can help you with?`,                  // cancelBuyMessage
+    `*: Thank you!\nIs there anything else I can help you with?`,                                                // postPurchaseMessage
+];
+
+// Obtaining Items
+// %X is ordered as so: 1 - itemName, 2 - actorName, 3 - amount
+
+TextManager.terms.obtainItemText = {};
+
+// bag
+
+TextManager.terms.obtainItemText.bag = [
+    `%2 places the %1 in the bag.`,                                                                             // single item into bag
+    `%2 places the %3 %1s in the bag.`,                                                                         // multiple items into bag
+];
+
+TextManager.terms.obtainItemText.bag_Anonymous = [
+    `The %1 is placed in the bag.`,                                                                             // single item into bag
+    `The %3 %1s are placed in the bag.`,                                                                        // multiple items into bag
+];
+
+TextManager.terms.obtainItemText.bag_NoItemName = [
+    `%2 places it in the bag.`,                                                                                 // single item into bag
+    `%2 places them in the bag.`,                                                                               // multiple items into bag
+];
+
+TextManager.terms.obtainItemText.bag_Remaining = [
+    `%2 places the remaining %1 in the bag.`,                                                                   // single item into bag
+    `%2 places the remaining %3 %1s in the bag.`,                                                               // multiple items into bag
+];
+
+TextManager.terms.obtainItemText.bag_Anonymous_NoItemName = [
+    `It is placed in the bag.`,                                                                                 // single item into bag
+    `They are placed in the bag.`,                                                                              // multiple items into bag
+];
+
+TextManager.terms.obtainItemText.bag_NoItemName_Remaining = [
+    `%2 places the remaining 1 in the bag.`,                                                                    // single item into bag
+    `%2 places the remaining %3 in the bag.`,                                                                   // multiple items into bag
+];
+
+// actor
+
+TextManager.terms.obtainItemText.actor = [
+    `%2 receives a %1.`,                                                                                        // single item into bag
+    `%2 receives %3 %1s.`,                                                                                      // multiple items into bag
+];
+
+TextManager.terms.obtainItemText.actor_NoItemName = [
+    `%2 receives 1.`,                                                                                           // single item into bag
+    `%2 receives %3.`,                                                                                          // multiple items into bag
 ];
 
 // Parameters

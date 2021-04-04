@@ -35,6 +35,10 @@ Window_ShopBuy.prototype.initialize = function (x, y, width, height, shopGoods) 
 // Functions - data
 //////////////////////////////
 
+Window_ShopBuy.prototype.item = function () {
+    return this._data[this.index()];
+};
+
 Window_ShopBuy.prototype.makeItemList = function () {
     this._data = [];
     this._price = [];
@@ -66,6 +70,24 @@ Window_ShopBuy.prototype.isEnabled = function () {
     return true;
 };
 
+Window_ShopBuy.prototype.priceAtIndex = function (index) {
+    return this._price[index] || 0;
+};
+
+Window_ShopBuy.prototype.priceAtCurrentIndex = function () {
+    return this._price[this.index()] || 0;
+};
+
+/**
+ * the maximum amount of the selected item player can afford
+ */
+Window_ShopBuy.prototype.maxAfford = function () {
+    const price = this.priceAtCurrentIndex();
+    const gold = $gameParty.gold();
+    if (price <= 0 || gold <= 0) return 99;
+    return Math.min(99, Math.floor(gold / price));
+};
+
 //////////////////////////////
 // Functions - help windows
 //////////////////////////////
@@ -82,12 +104,17 @@ Window_ShopBuy.prototype.setHelpWindowItem = function (item) {
         const stats = this.makeItemStats(item);
         this._helpWindow[1].setStats(stats);
         this._helpWindow[2].setValues(stats, item);
+        this._helpWindow[3].hide();
         this._helpWindow[1].show();
         this._helpWindow[2].show();
     } else {
+        // carrying (3) window
+        this._helpWindow[3].setItem(item);
         this._helpWindow[1].hide();
         this._helpWindow[2].hide();
+        this._helpWindow[3].show();
     }
+    this._helpWindow[4].setItem(item);
 };
 
 //////////////////////////////
@@ -100,7 +127,7 @@ Window_ShopBuy.prototype.drawItem = function (index) {
     // item name
     this.drawText(item.name, rect.x, rect.y);
     // item price
-    const price = this._price[index];
+    const price = this.priceAtIndex(index);
     this.drawText(price, rect.x - 24, rect.y, rect.width, 'right');
     // currency unit
     this.changeTextColor(this.goldColor());

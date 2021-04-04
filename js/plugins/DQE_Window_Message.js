@@ -111,14 +111,14 @@ Window_Message.prototype.lineHeight = function () {
 
 /**
  * Calculates and returns the height of the message window
- * 20 pixels were added to fit the cursor at the bottom of window
+ * 19 pixels were added to fit the cursor at the bottom of window
  * this somewhat matches DQ1+2 SNES
  *
  * @gameMatch DQ1+2 SNES
  * @return {Number} height of message window
  */
 Window_Message.prototype.fittingHeight = function (numLines) {
-    return (numLines * this.lineHeight() + this.standardPadding() * 2) + 20;
+    return (numLines * this.lineHeight() + this.standardPadding() * 2) + 19;
 };
 
 /**

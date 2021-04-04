@@ -681,6 +681,10 @@ Game_Actor.prototype.inventoryFullMessage = function () {
     return `${this._name} has a full inventory.\nSelect an item to swap.`;
 };
 
+Game_Actor.prototype.inventoryFullCarryMessage = function () {
+    return `${this._name} can't carry any more items!`;
+};
+
 //////////////////////////////
 // Functions - actions
 //////////////////////////////
