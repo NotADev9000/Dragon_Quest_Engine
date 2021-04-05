@@ -298,7 +298,7 @@ Scene_Shop.prototype.onPartyOk = function () {
         this._partyWindow.hide();
         this._inventoryWindow.hide();
         this.takeGold();
-        const message = Game_Interpreter.prototype.giveItems_Bag(this._item, this._amount); // this function gives player the items and returns the message(s) to display
+        const message = Game_Interpreter.prototype.giveItems_Bag(this._item, this._amount);
         this._messageWindow.setInput(true);
         this.displayMessage(message, Scene_Shop.prototype.postPurchase_MessageCallback);
     } else {
@@ -311,6 +311,13 @@ Scene_Shop.prototype.onPartyOk = function () {
             this.displayMessage(this._actor.inventoryFullCarryMessage(), Scene_Shop.prototype.fullInventory_MessageCallback);
         } else {
             // PLACE PURCHASE IN ACTOR INVENTORY
+            this._partyWindow.hide();
+            this._inventoryWindow.hide();
+            this.takeGold();
+            let message = Game_Interpreter.prototype.giveItems_Actor(this._item, this._amount, this._actor);
+            message = Game_Interpreter.prototype.concat_Messages(message);
+            this._messageWindow.setInput(true);
+            this.displayMessage(message, Scene_Shop.prototype.postPurchase_MessageCallback);
         }
     }
 };

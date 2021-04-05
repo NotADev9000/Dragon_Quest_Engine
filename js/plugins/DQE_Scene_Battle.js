@@ -642,6 +642,7 @@ Scene_Battle.prototype.onEquipmentDoWhatEquip = function () {
 };
 
 Scene_Battle.prototype.equipItem = function (actor, index) {
+    SoundManager.playEquip();
     this.displayMessage(actor.equipItemMessage(index), Scene_Battle.prototype.doWhatEquipMessage);
     actor.equipItemFromInv(index);
 };
@@ -651,6 +652,7 @@ Scene_Battle.prototype.onEquipmentDoWhatUnequip = function () {
     let index = this._equipmentWindow._trueIndexes[this._equipmentWindow.index()];
     var slotIndex = this._equipmentWindow.slotIndex();
 
+    SoundManager.playEquip();
     this.displayMessage(actor.unequipItemMessage(index), Scene_Battle.prototype.doWhatEquipMessage);
     actor.unequipItem(index, true, slotIndex);
 };
@@ -667,6 +669,7 @@ Scene_Battle.prototype.onEquipmentSlotOk = function () {
     const item = this._equipmentWindow.item();
     let slot = actor.whichEquipSlot(item, this._equipmentSlotWindow.index());
 
+    SoundManager.playEquip();
     this.displayMessage(actor.equipItemMessage(index), Scene_Battle.prototype.doWhatEquipMessage);
     actor.equipItemFromInv(index, slot);
 };

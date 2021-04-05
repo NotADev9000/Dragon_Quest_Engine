@@ -173,6 +173,7 @@ Scene_Equip.prototype.onEquipSlotDoWhatUnequip = function () {
     let index = this._equipSlotWindow.orderInInventory()[slotIndex];
 
     this._equipSlotDoWhatWindow.hide();
+    SoundManager.playEquip();
     this.displayMessage(actor.unequipItemMessage(index), Scene_Equip.prototype.doWhatUnequipMessageCallback);
     actor.unequipItem(index, true, slotIndex);
 };
@@ -270,6 +271,7 @@ Scene_Equip.prototype.equipItemOkMessages = function (actor, swapOut, slotIndex,
             message = actor.getItemFromActorAndEquipMessage(data.index, otherActor);
         } 
     }
+    SoundManager.playEquip();
     this.displayMessage(message, Scene_Equip.prototype.onEquipItemMessageCallback);
 };
 

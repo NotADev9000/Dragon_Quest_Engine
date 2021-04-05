@@ -96,11 +96,11 @@ TextManager.terms.shopText.generic = [
     `*: %1 %2s? That'll be %3 gold coins, please.`,                                                             // multipleBuyItemMessage
     `*: And who's going to carry your purchase?`,                                                               // carryPurchaseMessage
     `*: Changed your mind have you?\nNo worries, is there anything else I can help you with?`,                  // cancelBuyMessage
-    `*: Thank you!\nIs there anything else I can help you with?`,                                                // postPurchaseMessage
+    `*: Thank you for your purchase!\nIs there anything else I can help you with?`,                             // postPurchaseMessage
 ];
 
 // Obtaining Items
-// %X is ordered as so: 1 - itemName, 2 - actorName, 3 - amount
+// %X is ordered as so: 1 - item name, 2 - actor name, 3 - amount
 
 TextManager.terms.obtainItemText = {};
 
@@ -139,7 +139,7 @@ TextManager.terms.obtainItemText.bag_NoItemName_Remaining = [
 // actor
 
 TextManager.terms.obtainItemText.actor = [
-    `%2 receives a %1.`,                                                                                        // single item into bag
+    `%2 receives the %1.`,                                                                                        // single item into bag
     `%2 receives %3 %1s.`,                                                                                      // multiple items into bag
 ];
 

@@ -206,6 +206,7 @@ Scene_Item.prototype.onDoWhatEquip = function () {
     var item = this._itemWindow.item();
 
     if (actor.canEquip(item)) {
+        SoundManager.playEquip();
         this.displayMessage(actor.equipItemMessage(index), Scene_Item.prototype.doWhatEquipMessage);
         actor.equipItemFromInv(index);
     } else {
@@ -218,6 +219,7 @@ Scene_Item.prototype.onDoWhatUnequip = function () {
     var index = this._itemWindow.index();
     var slotIndex = this._itemWindow.slotIndex();
 
+    SoundManager.playEquip();
     this.displayMessage(actor.unequipItemMessage(index), Scene_Item.prototype.doWhatEquipMessage);
     actor.unequipItem(index, true, slotIndex);
 };

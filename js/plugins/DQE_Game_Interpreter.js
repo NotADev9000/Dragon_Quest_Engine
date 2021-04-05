@@ -51,11 +51,11 @@ Game_Interpreter.prototype.command205 = function () {
 
 Game_Interpreter.prototype.giveItems_Bag = function (item, amount, actor, showItemName = true, showActorName = true, remaining = false) {
     const itemName = showItemName ? item.name : undefined;
-    const actorName = showActorName ? actor.name() : undefined;
+    let actorName = showActorName ? actor?.name() : undefined;
 
     $gameParty.gainItem(item, amount);
     // messages
-    if (!actor || actor.isDead()) actor = $gameParty.movableMembers()[0];
+    if (!actor || actor.isDead()) actorName = $gameParty.movableMembers()[0].name();
     return this.itemsGiven_Messages_Bag(itemName, amount, actorName, remaining);
 };
 
@@ -67,7 +67,7 @@ Game_Interpreter.prototype.giveItems_Actor = function (item, amount, actor) {
     if (given) messages.push(this.itemsGiven_Messages_Actor(item.name, given, actor.name()));
     // give remaining items to bag
     amount -= given;
-    if (amount >= 0) messages.push(this.giveItems_Bag(item, amount, actor, false, true, true));
+    if (amount > 0) messages.push(this.giveItems_Bag(item, amount, actor, false, true, true));
 
     return messages;
 };
@@ -90,4 +90,10 @@ Game_Interpreter.prototype.itemsGiven_Messages_Actor = function (itemName, amoun
 
     const message = TextManager.terms.obtainItemText[`${arr_type}${arr_itemName}`][arr_amount];
     return message.format(itemName, actorName, amount);
+};
+
+// messages
+
+Game_Interpreter.prototype.concat_Messages = function (messages) {
+    return messages.join('\n');
 };
