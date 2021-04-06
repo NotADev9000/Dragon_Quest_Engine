@@ -54,7 +54,7 @@ Scene_Item.prototype.createHelpWindow = function () {
 };
 
 Scene_Item.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_ItemCommand(48, 48, 354, 'Items', ['Items', 'Equipment', 'Important']);
+    this._commandWindow = new Window_TitledPartyCommand_ItemList(48, 48, 354, 'Items', ['Items', 'Equipment', 'Important']);
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);

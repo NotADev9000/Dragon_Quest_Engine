@@ -489,7 +489,9 @@ Window_Selectable.prototype.processHandling = function () {
                 ['previous', false], 
                 ['next', false], 
                 ['pagedown', true], 
-                ['pageup', true]
+                ['pageup', true],
+                ['right', false],
+                ['left', false]
             ];
             handles.some(handle => {
                 let type = handle[0];

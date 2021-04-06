@@ -77,9 +77,9 @@ Window_ItemListBase.prototype.updateHelp = function () {
     this.setHelpWindowItem(this.item());
 };
 
-Window_ItemListBase.prototype.refresh = function () {
+Window_ItemListBase.prototype.refresh = function (resetLastSelected = true) {
     this.makeItemList();
     this.createContents();
-    Window_Pagination.prototype.refresh.call(this);
+    Window_Pagination.prototype.refresh.call(this, resetLastSelected);
     this.drawAllItems();
 };

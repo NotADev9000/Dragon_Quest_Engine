@@ -264,7 +264,7 @@ Window_Pagination.prototype.cursorUp = function () {
 };
 
 Window_Pagination.prototype.cursorRight = function () {
-    let maxCols = this.maxCols();
+    const maxCols = this.maxCols();
     if (this._numPages > 1 || maxCols > 1) {
         let nextCol = this.column() + 1;
         let nextIndex = this.index() + 1;
@@ -293,6 +293,17 @@ Window_Pagination.prototype.cursorLeft = function () {
     }
 };
 
+/**
+ * Moves to next/previous page, cursor is placed at top of page
+ * 
+ * @param {Number} next +1 if next page, -1 if previous
+ */
+Window_Pagination.prototype.gotoNextPage = function (next = 1) {
+    if (this._numPages <= 1) return;
+    const nextIndex = (this.getNextPage(next) - 1) * this.maxItemsOnPage();
+    this.select(nextIndex);
+};
+
 //////////////////////////////
 // Functions - refresh
 //////////////////////////////
@@ -303,7 +314,10 @@ Window_Pagination.prototype.cursorLeft = function () {
 Window_Pagination.prototype.select = function (index) {
     this._index = Math.min(this.maxItems()-1, index);
     this._stayCount = 0;
-    if (this._page != this.page() && this._index > -1) { this.refresh() };
+    if (this._index > -1) {
+        this.setLastSelected(this._index);
+        if (this._page != this.page()) this.refresh(false);
+    }
     this.updateCursor();
     this.callUpdateHelp();
 };
@@ -312,8 +326,8 @@ Window_Pagination.prototype.select = function (index) {
  * List of items should be made before this method is called
  * Draw all should be called after this method is called
  */
-Window_Pagination.prototype.refresh = function () {
-    this.setLastSelected(0);
+Window_Pagination.prototype.refresh = function (resetLastSelected = true) {
+    if (resetLastSelected) this.setLastSelected(0);
     this._numPages = this.numPages();
     this._page = this.page();
     this._topIndex = this.topIndex();

@@ -60,7 +60,7 @@ Scene_Skill.prototype.createHelpWindow = function () {
 };
 
 Scene_Skill.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_ItemCommand(48, 48, 354, 'Magic');
+    this._commandWindow = new Window_TitledPartyCommand_ItemList(48, 48, 354, 'Magic');
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     if (this._hasZoom) this._commandWindow.setHandler('help', this.onCommandZoom.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
