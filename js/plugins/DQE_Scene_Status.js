@@ -80,7 +80,7 @@ Scene_Status.prototype.createStatusWindow = function () {
     let y = this._commandWindow.y;
     this._statusWindow = new Window_Status(x, y, 504);
     this.addWindow(this._statusWindow);
-    this._commandWindow.setAssociatedWindow(this._statusWindow);
+    this._commandWindow.setHelpWindow(this._statusWindow);
 };
 
 Scene_Status.prototype.createEquipmentWindow = function () {
@@ -88,7 +88,7 @@ Scene_Status.prototype.createEquipmentWindow = function () {
     let y = this._statusWindow.y + this._statusWindow.height;
     this._equipmentWindow = new Window_SimpleEquipmentList(x, y, 504);
     this.addWindow(this._equipmentWindow);
-    this._commandWindow.setAssociatedWindow(this._equipmentWindow);
+    this._commandWindow.setHelpWindow(this._equipmentWindow);
 };
 
 Scene_Status.prototype.createStatsWindow = function () {
@@ -96,7 +96,7 @@ Scene_Status.prototype.createStatsWindow = function () {
     let y = this._statusWindow.y;
     this._statsWindow = new Window_Stats(x, y, 513);
     this.addWindow(this._statsWindow);
-    this._commandWindow.setAssociatedWindow(this._statsWindow);
+    this._commandWindow.setHelpWindow(this._statsWindow);
 };
 
 Scene_Status.prototype.createStatsAttributesWindow = function () {

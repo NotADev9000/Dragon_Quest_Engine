@@ -85,7 +85,7 @@ Scene_Skill.prototype.createSkillWindow = function () {
     this._skillWindow.setHandler('ok', this.onSkillOk.bind(this));
     this._skillWindow.setHandler('cancel', this.onSkillCancel.bind(this));
     this.addWindow(this._skillWindow);
-    this._commandWindow.setAssociatedWindow(this._skillWindow);
+    this._commandWindow.setHelpWindow(this._skillWindow);
 };
 
 Scene_Skill.prototype.createSkillStatWindow = function () {

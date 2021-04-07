@@ -163,7 +163,7 @@ Scene_Shop.prototype.createHowManyWindow = function () {
 // party windows
 
 Scene_Shop.prototype.createPartyWindow = function () {
-    this._partyWindow = new Window_TitledPartyCommand(48, 48, 354, 'Who?', ['Bag']);
+    this._partyWindow = new Window_TitledPartyCommand_ItemList(48, 48, 354, 'Who?', ['Bag']);
     this._partyWindow.setHandler('ok', this.onPartyOk.bind(this));
     this._partyWindow.setHandler('cancel', this.onPartyCancel.bind(this));
     this._partyWindow.hide();
@@ -177,7 +177,7 @@ Scene_Shop.prototype.createInventoryWindow = function () {
     this._inventoryWindow = new Window_ItemList(x, y, 594, 483);
     this._inventoryWindow.hide();
     this.addWindow(this._inventoryWindow);
-    this._partyWindow.setAssociatedWindow(this._inventoryWindow);
+    this._partyWindow.setHelpWindow(this._inventoryWindow);
 };
 
 // messages

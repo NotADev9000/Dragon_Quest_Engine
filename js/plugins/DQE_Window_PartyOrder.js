@@ -39,41 +39,37 @@ Window_PartyOrder.prototype.initialize = function (x, y, windowWidth, commandTyp
     Window_PartySelection.prototype.initialize.call(this, x, y, windowWidth, commandType, excludeActors);
 };
 
-Window_PartyOrder.prototype.setAssociatedWindow = function (window) {
-    this._associatedWindow = window;
+Window_PartyOrder.prototype.setListWindow = function (window) {
+    this._listWindow = window;
 };
 
-Window_PartyOrder.prototype.updateAssociatedWindow = function (index, addData = true) {
+Window_PartyOrder.prototype.updateListWindow = function (index, addData = true) {
     if (addData) {
         this._excludeActors.push(index);
-        this._associatedWindow.addData(index);
+        this._listWindow.addData(index);
     } else {
         this._excludeActors.splice(this._excludeActors.indexOf(index), 1);
-        this._associatedWindow.removeData();
+        this._listWindow.removeData();
     }
     this.refresh(true);
 };
 
-Window_PartyOrder.prototype.clearAssociatedWindow = function () {
+Window_PartyOrder.prototype.clearListWindow = function () {
     this._excludeActors = [];
-    this._associatedWindow.clearData();
+    this._listWindow.clearData();
     this.refresh();
-};
-
-Window_PartyOrder.prototype.setStatusWindow = function (window) {
-    this._statusWindow = window;
 };
 
 Window_PartyOrder.prototype.show = function () {
     Window_PartySelection.prototype.show.call(this);
-    if (this._associatedWindow) this._associatedWindow.show();
-    if (this._statusWindow) this._statusWindow.show();
+    this._listWindow?.show();
+    this._helpWindow[0]?.show();
 };
 
 Window_PartyOrder.prototype.hide = function () {
     Window_PartySelection.prototype.hide.call(this);
-    if (this._associatedWindow) this._associatedWindow.hide();
-    if (this._statusWindow) this._statusWindow.hide();
+    this._listWindow?.hide();
+    this._helpWindow[0]?.hide();
 };
 
 Window_PartyOrder.prototype.refresh = function (checkSelect = false) {
@@ -83,9 +79,9 @@ Window_PartyOrder.prototype.refresh = function (checkSelect = false) {
     }
 };
 
-Window_PartyOrder.prototype.update = function () {
-    Window_PartySelection.prototype.update.call(this);
-    if (this._statusWindow) {
-        this._statusWindow.setCategory(this.currentSymbol());
-    }
+Window_PartyOrder.prototype.updateHelp = function () {
+    const symbol = this.currentSymbol();
+    this._helpWindow.forEach(helpWindow => {
+        helpWindow.setCategory(symbol);
+    });
 };

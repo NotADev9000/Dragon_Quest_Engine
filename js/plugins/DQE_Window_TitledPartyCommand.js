@@ -92,15 +92,9 @@ Window_TitledPartyCommand.prototype.addPartyCommands = function () {
 // Functions - updates
 //////////////////////////////
 
-Window_TitledPartyCommand.prototype.setAssociatedWindow = function (window) {
-    this._associatedWindow.push(window);
-};
-
-Window_TitledPartyCommand.prototype.update = function () {
-    Window_TitledCommand.prototype.update.call(this);
-    if (this._associatedWindow.length) {
-        this._associatedWindow.forEach(window => {
-            window.setCategory(this.currentSymbol());
-        });
-    }
+Window_TitledPartyCommand.prototype.updateHelp = function () {
+    const symbol = this.currentSymbol();
+    this._helpWindow.forEach(helpWindow => {
+        helpWindow.setCategory(symbol);
+    });
 };

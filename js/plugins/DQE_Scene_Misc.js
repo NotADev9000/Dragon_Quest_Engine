@@ -92,7 +92,7 @@ Scene_Misc.prototype.createLineUpListWindow = function () {
     this._lineUpListWindow = new Window_TitledList(x, 48, 354, 'Order', $gameParty.allMembers().length);
     this._lineUpListWindow.deactivate();
     this._lineUpListWindow.hide();
-    this._lineUpPartyWindow.setAssociatedWindow(this._lineUpListWindow);
+    this._lineUpPartyWindow.setListWindow(this._lineUpListWindow);
     this.addWindow(this._lineUpListWindow);
 };
 
@@ -100,7 +100,7 @@ Scene_Misc.prototype.createLineUpStatusWindow = function () {
     let x = this._lineUpListWindow.x + this._lineUpListWindow.width;
     this._lineUpStatusWindow = new Window_MenuStatus(x, 48, undefined);
     this._lineUpStatusWindow.hide();
-    this._lineUpPartyWindow.setStatusWindow(this._lineUpStatusWindow);
+    this._lineUpPartyWindow.setHelpWindow(this._lineUpStatusWindow);
     this.addWindow(this._lineUpStatusWindow);
 };
 
@@ -159,7 +159,7 @@ Scene_Misc.prototype.commandSettings = function () {
 
 Scene_Misc.prototype.onLineUpPartyOk = function () {
     if (this._lineUpListWindow._list.length < this._lineUpListWindow._rows) { // if there's room in the list window
-        this._lineUpPartyWindow.updateAssociatedWindow(this._lineUpPartyWindow.currentSymbol());
+        this._lineUpPartyWindow.updateListWindow(this._lineUpPartyWindow.currentSymbol());
         this._lineUpPartyWindow.activate();
     }
     if (this._lineUpListWindow._list.length >= this._lineUpListWindow._rows) {
@@ -174,7 +174,7 @@ Scene_Misc.prototype.onLineUpPartyOk = function () {
 
 Scene_Misc.prototype.onLineUpPartyCancel = function () {
     if (this._lineUpListWindow._list.length) { // if there's items to remove from the list window
-        this._lineUpPartyWindow.updateAssociatedWindow(this._lineUpPartyWindow.currentSymbol(), false);
+        this._lineUpPartyWindow.updateListWindow(this._lineUpPartyWindow.currentSymbol(), false);
         this._lineUpPartyWindow.activate();
     } else {
         this._commandWindow.hideBackgroundDimmer();
@@ -192,7 +192,7 @@ Scene_Misc.prototype.onLineUpConfirmOk = function () {
         this._lineUpListWindow.hideBackgroundDimmer();
         this._lineUpPartyWindow.hideBackgroundDimmer();
         this._commandWindow.hideBackgroundDimmer();
-        this._lineUpPartyWindow.clearAssociatedWindow();
+        this._lineUpPartyWindow.clearListWindow();
         this._lineUpPartyWindow.deselect();
         this._commandWindow.activate();
     } else {

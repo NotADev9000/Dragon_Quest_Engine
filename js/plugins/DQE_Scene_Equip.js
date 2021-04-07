@@ -63,7 +63,7 @@ Scene_Equip.prototype.createEquipSlotWindow = function () {
     this._equipSlotWindow.setHandler('cancel', this.onEquipSlotCancel.bind(this));
     this.addWindow(this._equipSlotWindow);
     this._equipSlotWindow.setHelpWindow(this._helpWindow);
-    this._commandWindow.setAssociatedWindow(this._equipSlotWindow);
+    this._commandWindow.setHelpWindow(this._equipSlotWindow);
 };
 
 Scene_Equip.prototype.createEquipSlotDoWhatWindow = function () {
@@ -88,7 +88,7 @@ Scene_Equip.prototype.createEquipItemWindow = function () {
     this._equipItemWindow.setHandler('cancel', this.onEquipItemCancel.bind(this));
     this._equipItemWindow.hide();
     this.addWindow(this._equipItemWindow);
-    this._commandWindow.setAssociatedWindow(this._equipItemWindow);
+    this._commandWindow.setHelpWindow(this._equipItemWindow);
 };
 
 Scene_Equip.prototype.createEquipLocationWindow = function () {
@@ -106,7 +106,7 @@ Scene_Equip.prototype.createEquipStatsWindow = function () {
     this._equipStatsWindow = new Window_EquipmentStats(x, y, 420, 450);
     this._equipStatsWindow.hide();
     this.addWindow(this._equipStatsWindow);
-    this._commandWindow.setAssociatedWindow(this._equipStatsWindow);
+    this._commandWindow.setHelpWindow(this._equipStatsWindow);
     this._equipSlotWindow.setHelpWindow(this._equipStatsWindow);
     this._equipItemWindow.setHelpWindow(this._equipStatsWindow);
 };

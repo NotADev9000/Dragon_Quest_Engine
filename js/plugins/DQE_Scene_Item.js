@@ -67,7 +67,7 @@ Scene_Item.prototype.createItemWindow = function () {
     this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
     this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
     this.addWindow(this._itemWindow);
-    this._commandWindow.setAssociatedWindow(this._itemWindow);
+    this._commandWindow.setHelpWindow(this._itemWindow);
 };
 
 Scene_Item.prototype.createEquipStatsWindow = function () {
@@ -76,7 +76,7 @@ Scene_Item.prototype.createEquipStatsWindow = function () {
     this._equipStatsWindow = new Window_EquipmentStats(x, y, 420, 450);
     this._equipStatsWindow.hide();
     this.addWindow(this._equipStatsWindow);
-    this._commandWindow.setAssociatedWindow(this._equipStatsWindow);
+    this._commandWindow.setHelpWindow(this._equipStatsWindow);
     this._itemWindow.setHelpWindow(this._equipStatsWindow);
 };
 
@@ -118,7 +118,7 @@ Scene_Item.prototype.createTransferItemWindow = function () {
     this._transferItemWindow.setHandler('cancel', this.onTransferItemCancel.bind(this));
     this._transferItemWindow.hide();
     this.addWindow(this._transferItemWindow);
-    this._transferToWhoWindow.setAssociatedWindow(this._transferItemWindow);
+    this._transferToWhoWindow.setHelpWindow(this._transferItemWindow);
 };
 
 Scene_Item.prototype.createHowManyWindow = function () {

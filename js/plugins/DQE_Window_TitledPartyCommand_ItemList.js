@@ -40,7 +40,7 @@ Window_TitledPartyCommand_ItemList.prototype.constructor = Window_TitledPartyCom
 //////////////////////////////
 
 Window_TitledPartyCommand_ItemList.prototype.isCurrentItemEnabled = function () {
-    return this._associatedWindow[0]._data.length;
+    return this._helpWindow[0]?._data.length;
 };
 
 //////////////////////////////
@@ -56,7 +56,7 @@ Window_TitledPartyCommand_ItemList.prototype.cursorLeft = function () {
 };
 
 Window_TitledPartyCommand_ItemList.prototype.changeItemListPage = function (next = 1) {
-    const itemListWindow = this._associatedWindow[0];
+    const itemListWindow = this._helpWindow[0];
     if (itemListWindow) {
         itemListWindow.gotoNextPage(next);
         itemListWindow.deselect();

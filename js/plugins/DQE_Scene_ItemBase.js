@@ -43,7 +43,7 @@ Scene_ItemBase.prototype.createItemStatusWindow = function () {
     this._itemStatusWindow = new Window_MenuStatus(x, y, undefined, undefined, true);
     this._itemStatusWindow.hide();
     this.addWindow(this._itemStatusWindow);
-    this._useOnWhoWindow.setAssociatedWindow(this._itemStatusWindow);
+    this._useOnWhoWindow.setHelpWindow(this._itemStatusWindow);
 };
 
 Scene_ItemBase.prototype.createItemStatWindow = function () {
@@ -52,7 +52,7 @@ Scene_ItemBase.prototype.createItemStatWindow = function () {
     this._itemStatWindow = new Window_ItemActorStat(x, y);
     this._itemStatWindow.hide();
     this.addWindow(this._itemStatWindow);
-    this._useOnWhoWindow.setAssociatedWindow(this._itemStatWindow);
+    this._useOnWhoWindow.setHelpWindow(this._itemStatWindow);
 };
 
 //////////////////////////////
