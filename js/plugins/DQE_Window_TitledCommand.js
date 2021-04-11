@@ -103,6 +103,13 @@ Window_TitledCommand.prototype.makeCommandList = function () {
     if (this._commands != undefined) { this.addCommands(); }
 };
 
+Window_TitledCommand.prototype.updateCommands = function (commands) {
+    this.clearCommandList();
+    this._commands = commands;
+    this.makeCommandList();
+    this.updateWindowDisplay();
+};
+
 Window_TitledCommand.prototype.addCommands = function () {
     this._commands.forEach(command => {
         this.addCommand(command, command, true);

@@ -179,7 +179,7 @@ Window_ItemActorStat.prototype.drawStats = function () {
 //////////////////////////////
 
 Window_ItemActorStat.prototype.refresh = function () {
-    if (this._stat.length) {
+    if (this._stat.length && this._actor) {
         this.prepDrawItems();
         this.createContents();
         this.drawStats();

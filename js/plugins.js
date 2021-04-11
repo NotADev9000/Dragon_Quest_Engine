@@ -109,6 +109,7 @@ var $plugins =
 {"name":"DQE_Window_ShopCarry","status":true,"description":"The window for the shop's Carry list - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemLocation","status":true,"description":"The window for displaying an item and its location - V0.1","parameters":{}},
 {"name":"DQE_Window_ItemActorStat","status":true,"description":"The window for displaying party members stats in the item menu - V0.1","parameters":{}},
+{"name":"DQE_Window_ItemCarry","status":true,"description":"The window for displaying amount of a singular item held - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleActorStat","status":true,"description":"The window for displaying party members stats in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_EquipSlot","status":true,"description":"The window for selecting actor's equipment - V0.1","parameters":{}},
 {"name":"DQE_Window_EquipSlot_Weapons","status":true,"description":"The window for selecting actor's equipment (displays weapons only) - V0.1","parameters":{}},

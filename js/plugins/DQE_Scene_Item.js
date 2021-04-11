@@ -57,6 +57,7 @@ Scene_Item.prototype.createCommandWindow = function () {
     this._commandWindow = new Window_TitledPartyCommand_ItemList(48, 48, 354, 'Items', ['Items', 'Equipment', 'Important']);
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
+    this._commandWindow.setCheckListIsEmpty(true);
     this.addWindow(this._commandWindow);
 };
 
@@ -103,7 +104,7 @@ Scene_Item.prototype.createUseOnWhoWindow = function () {
 };
 
 Scene_Item.prototype.createTransferToWhoWindow = function () {
-    this._transferToWhoWindow = new Window_TitledPartyCommand(48, 48, 354, 'To Who?');
+    this._transferToWhoWindow = new Window_TitledPartyCommand_ItemList(48, 48, 354, 'To Who?');
     this._transferToWhoWindow.deactivate();
     this._transferToWhoWindow.setHandler('ok', this.onTransferToWhoOk.bind(this));
     this._transferToWhoWindow.setHandler('cancel', this.onTransferToWhoCancel.bind(this));
@@ -165,7 +166,6 @@ Scene_Item.prototype.onItemOk = function () {
 Scene_Item.prototype.onItemCancel = function () {
     this._commandWindow.hideBackgroundDimmer();
     this._itemWindow.hideAllHelpWindows();
-    this._itemWindow.setLastSelected(this._itemWindow.index());
     this._itemWindow.deselect();
     this._commandWindow.activate();
 };
@@ -333,7 +333,6 @@ Scene_Item.prototype.onTransferItemOk = function () {
 
 Scene_Item.prototype.onTransferItemCancel = function () {
     this._transferToWhoWindow.hideBackgroundDimmer();
-    this._transferItemWindow.setLastSelected(this._transferItemWindow.index());
     this._transferItemWindow.deselect();
     this._transferToWhoWindow.activate();
 };

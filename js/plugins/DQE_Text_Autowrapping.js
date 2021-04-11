@@ -10,7 +10,7 @@
 *
 *
 * @help
-* TODO: Look into why textWidthExCheck prevents sfonts from coloring correctly
+* N/A
 * 
 */
 

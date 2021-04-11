@@ -72,6 +72,14 @@ Game_Interpreter.prototype.giveItems_Actor = function (item, amount, actor) {
     return messages;
 };
 
+Game_Interpreter.prototype.giveGold = function (amount, receive) {
+    $gameParty.gainGold(amount);
+    // messages
+    return this.goldGiven_Messages(amount, receive);
+};
+
+// messages
+
 Game_Interpreter.prototype.itemsGiven_Messages_Bag = function (itemName, amount, actorName, remaining = false) {
     const arr_type = 'bag';
     const arr_amount = amount <= 1 ? 0 : 1;
@@ -92,7 +100,18 @@ Game_Interpreter.prototype.itemsGiven_Messages_Actor = function (itemName, amoun
     return message.format(itemName, actorName, amount);
 };
 
-// messages
+Game_Interpreter.prototype.goldGiven_Messages = function (amount, receive = true) {
+    let actorName;
+    let arr_partyAmount = 1;
+    if ($gameParty.members().length <= 1) {
+        actorName = $gameParty.movableMembers()[0].name();
+        arr_partyAmount = 0;
+    }
+    const arr_receive = receive ? 'receive' : 'acquire';
+
+    const message = TextManager.terms.obtainGold[`${arr_receive}`][arr_partyAmount];
+    return message.format(actorName, amount);
+};
 
 Game_Interpreter.prototype.concat_Messages = function (messages) {
     return messages.join('\n');

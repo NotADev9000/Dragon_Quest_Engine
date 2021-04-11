@@ -43,6 +43,10 @@ Window_SkillCost.prototype.initialize = function (x, y) {
     this._mpTotal = '';
 };
 
+//////////////////////////////
+// Functions - window sizing
+//////////////////////////////
+
 Window_SkillCost.prototype.windowWidth = function () {
     return 444;
 };
@@ -63,6 +67,10 @@ Window_SkillCost.prototype.textWidth = function () {
     return this.windowWidth() - (this.standardPadding() + this.extraPadding()) * 2;
 };
 
+//////////////////////////////
+// Functions - data
+//////////////////////////////
+
 Window_SkillCost.prototype.setText = function (cost, total) {
     if (this._mpCost !== cost || this._mpTotal != total) {
         this._mpCost = cost;
@@ -78,6 +86,10 @@ Window_SkillCost.prototype.setItem = function (skill, actorMP) {
     this.setText(cost, total);
 };
 
+//////////////////////////////
+// Functions - draw items
+//////////////////////////////
+
 Window_SkillCost.prototype.drawTitle = function () {
     var pos = this.extraPadding();
     this.drawText('MP Cost', pos, pos, this.textWidth(), 'center');
@@ -88,6 +100,10 @@ Window_SkillCost.prototype.drawCost = function () {
     let y = 69;
     this.drawText(text, this.extraPadding(), y, this.textWidth(), 'center');
 };
+
+//////////////////////////////
+// Functions - refresh
+//////////////////////////////
 
 Window_SkillCost.prototype.refresh = function () {
     this.contents.clear();

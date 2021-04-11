@@ -24,7 +24,14 @@ DQEng.Scene_Shop = DQEng.Scene_Shop || {};
 // Scene_Shop
 //-----------------------------------------------------------------------------
 
+Scene_Shop.BUY = 'Buy';
+Scene_Shop.SELL = 'Sell';
 Scene_Shop.TEXTSTYLE = 'generic';      // the messages to display when in the scene (check DQE_TextManager for more, check DQE_Plugin_Commands for changing style)
+
+Scene_Shop.prototype.initialize = function () {
+    Scene_MenuBase.prototype.initialize.call(this);
+    this._chosenCommand = Scene_Shop.BUY;
+};
 
 DQEng.Scene_Shop.prepare = Scene_Shop.prototype.prepare;
 Scene_Shop.prototype.prepare = function (goods, purchaseOnly) {
@@ -53,12 +60,14 @@ Scene_Shop.prototype.create = function () {
     this.createItemStatsWindow();
     this.createActorStatsWindow();
     this.createCarryWindow();
-    // misc windows
-    this.createHelpWindow();
-    this.createHowManyWindow();
     // party windows
     this.createPartyWindow();
     this.createInventoryWindow();
+    this.createInventoryDescriptionWindow();
+    this.createInventoryCarryWindow();
+    // misc windows
+    this.createHelpWindow();
+    this.createHowManyWindow();
     // messages
     this.createChoiceWindow();
     this.createMessageWindow();
@@ -73,8 +82,9 @@ Scene_Shop.prototype.start = function () {
 //////////////////////////////
 
 Scene_Shop.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_TitledCommand(48, 48, 354, 'Do What?', ['Buy', 'Sell', 'Cancel']);
-    this._commandWindow.setHandler('Buy', this.commandBuy.bind(this));
+    this._commandWindow = new Window_TitledCommand(48, 48, 354, 'Do What?', [Scene_Shop.BUY, Scene_Shop.SELL, 'Cancel']);
+    this._commandWindow.setHandler(Scene_Shop.BUY, this.commandBuy.bind(this));
+    this._commandWindow.setHandler(Scene_Shop.SELL, this.commandSell.bind(this));
     this._commandWindow.setHandler('Cancel', this.commandCancel.bind(this));
     this._commandWindow.setHandler('cancel', this.commandCancel.bind(this));
     this._commandWindow.hide();
@@ -175,9 +185,30 @@ Scene_Shop.prototype.createInventoryWindow = function () {
     const x = this._partyWindow.x + this._partyWindow.width;
     const y = this._partyWindow.y;
     this._inventoryWindow = new Window_ItemList(x, y, 594, 483);
+    this._inventoryWindow.setHandler('ok', this.onInventoryOk.bind(this));
+    this._inventoryWindow.setHandler('cancel', this.onInventoryCancel.bind(this));
     this._inventoryWindow.hide();
     this.addWindow(this._inventoryWindow);
     this._partyWindow.setHelpWindow(this._inventoryWindow);
+};
+
+Scene_Shop.prototype.createInventoryDescriptionWindow = function () {
+    const x = this._partyWindow.x;
+    const y = this._inventoryWindow.y + 591;
+    this._inventoryDescriptionWindow = new Window_Help(x, y, 1344, 3);
+    this._inventoryDescriptionWindow.hide();
+    this._inventoryWindow.setHelpWindow(this._inventoryDescriptionWindow);
+    this.addWindow(this._inventoryDescriptionWindow);
+};
+
+Scene_Shop.prototype.createInventoryCarryWindow = function () {
+    const x = this._partyWindow.x;
+    const width = this._partyWindow.width;
+    this._inventoryCarryWindow = new Window_ItemCarry(x, 0, width);
+    this._inventoryCarryWindow.y = this._inventoryDescriptionWindow.y - this._inventoryCarryWindow.height;
+    this._inventoryCarryWindow.hide();
+    this._inventoryWindow.setHelpWindow(this._inventoryCarryWindow);
+    this.addWindow(this._inventoryCarryWindow);
 };
 
 // messages
@@ -203,7 +234,11 @@ Scene_Shop.prototype.createMessageWindow = function () {
 // Functions - on handlers
 //////////////////////////////
 
+// command window
+
 Scene_Shop.prototype.commandBuy = function () {
+    this._chosenCommand = Scene_Shop.BUY;
+    this.preparePartyWindows_Buy();
     this._buyWindow.refresh();
     this._buyWindow.select(0);
     this._messageWindow.close();
@@ -214,11 +249,26 @@ Scene_Shop.prototype.commandBuy = function () {
     this._buyWindow.activate();
 };
 
+Scene_Shop.prototype.commandSell = function () {
+    this._chosenCommand = Scene_Shop.SELL;
+    this.preparePartyWindows_Sell();
+    this._goldWindow.hide();
+    this._partyWindow.select(0);
+    this._inventoryWindow.refresh();
+    this._messageWindow.close();
+    this._commandWindow.hide();
+    this._partyWindow.show();
+    this._inventoryWindow.show();
+    this._partyWindow.activate();
+};
+
 Scene_Shop.prototype.commandCancel = function () {
     this._commandWindow.hide();
     this._messageWindow.setInput(true);
     this.displayMessage(this.leaveMessage(), Scene_Shop.prototype.popScene);
 };
+
+// buy window
 
 Scene_Shop.prototype.onBuyOk = function () {
     this._price = this._buyWindow.priceAtCurrentIndex();
@@ -256,43 +306,13 @@ Scene_Shop.prototype.onBuyCancel = function () {
     this.displayMessage(this.restartSceneMessage(), Scene_Shop.prototype.backToMain_MessageCallback);
 };
 
-Scene_Shop.prototype.onHowManyOk = function () {
-    this._amount = this._howManyWindow.number();
-    this._price *= this._amount;
-    this.dimBuyWindows();
-    this.displayMessage(this.buyItemMessage(), Scene_Shop.prototype.confirmChoice_MessageCallback);
-};
+// party window
 
-Scene_Shop.prototype.onHowManyCancel = function () {
-    this._howManyWindow.hide();
-    this._buyWindow.hideBackgroundDimmer();
-    this._buyWindow.activate();
-};
-
-Scene_Shop.prototype.onChoiceYes = function () {
-    // hide buy windows
-    this._choiceWindow.close();
-    this._messageWindow.close();
-    this._howManyWindow.hide();
-    this._buyWindow.hideAllHelpWindows();
-    this._buyWindow.hide();
-    this.unDimBuyWindows();
-    // display message
-    this.displayMessage(this.carryPurchaseMessage(), Scene_Shop.prototype.carryPurchase_MessageCallback);
-};
-
-Scene_Shop.prototype.onChoiceCancel = function () {
-    this._messageWindow.close();
-    this._choiceWindow.close();
-    this._howManyWindow.hide();
-    this.unDimBuyWindows();
-    this._buyWindow.activate();
-};
-
-/**
- * Confirmation of BUYING items
- */
 Scene_Shop.prototype.onPartyOk = function () {
+    this._chosenCommand === Scene_Shop.BUY ? this.onPartyBuy() : this.onPartySell();
+};
+
+Scene_Shop.prototype.onPartyBuy = function () {
     if (this.inBag()) {
         // PLACE PURCHASE IN BAG
         this._partyWindow.hide();
@@ -322,10 +342,124 @@ Scene_Shop.prototype.onPartyOk = function () {
     }
 };
 
+Scene_Shop.prototype.onPartySell = function () {
+    this._partyWindow.showBackgroundDimmer();
+    this._inventoryWindow.activate();
+    this._inventoryWindow.select(this._inventoryWindow._lastSelected);
+    this._inventoryDescriptionWindow.show();
+    if (this.inBag()) this._inventoryCarryWindow.show();
+};
+
 Scene_Shop.prototype.onPartyCancel = function () {
     this._partyWindow.hide();
     this._inventoryWindow.hide();
-    this.displayMessage(this.cancelBuyMessage(), Scene_Shop.prototype.backToMain_MessageCallback);
+    this.displayMessage(this.cancelPartyMessage(), Scene_Shop.prototype.backToMain_MessageCallback);
+};
+
+// inventory window
+
+Scene_Shop.prototype.onInventoryOk = function () {
+    this._item = this.item();
+    this._price = this._inventoryWindow.sellCost(this._item);
+    this.dimInventoryWindows();
+    if (this._price <= 0 ) {
+        // UNSELLABLE
+        this._messageWindow.setInput(true);
+        this.displayMessage(this.cantSellMessage(), Scene_Shop.prototype.cantSell_MessageCallback);
+    } else {
+        const carrying = this._inventoryCarryWindow.getCarry();
+        if (this.inBag() && carrying > 1) {
+            this._howManyWindow.setup(1, carrying);
+            this._howManyWindow.show();
+            this._howManyWindow.activate();
+        } else {
+            this._amount = 1;
+            this._index = this._inventoryWindow.index();
+            this.updateActor();
+            this._goldWindow.show();
+            this.displayMessage(this.sellItemMessage(), Scene_Shop.prototype.confirmChoice_MessageCallback);
+        }
+    }
+};
+
+Scene_Shop.prototype.onInventoryCancel = function () {
+    this._partyWindow.hideBackgroundDimmer();
+    this._inventoryWindow.deselect();
+    this._inventoryWindow.hideAllHelpWindows();
+    this._partyWindow.activate();
+};
+
+// how many window
+
+Scene_Shop.prototype.onHowManyOk = function () {
+    this._amount = this._howManyWindow.number();
+    this._price *= this._amount;
+    switch (this._chosenCommand) {
+        case Scene_Shop.BUY:
+            this.dimBuyWindows();
+            this.displayMessage(this.buyItemMessage(), Scene_Shop.prototype.confirmChoice_MessageCallback);
+            break;
+        case Scene_Shop.SELL:
+            this._goldWindow.show();
+            this.displayMessage(this.sellItemMessage(), Scene_Shop.prototype.confirmChoice_MessageCallback);
+            break;
+    }
+};
+
+Scene_Shop.prototype.onHowManyCancel = function () {
+    this._howManyWindow.hide();
+    switch (this._chosenCommand) {
+        case Scene_Shop.BUY:
+            this._buyWindow.hideBackgroundDimmer();
+            this._buyWindow.activate();
+            break;
+        case Scene_Shop.SELL:
+            this.unDimInventoryWindows();
+            this._inventoryWindow.activate();
+            break;
+    }
+};
+
+// choice window
+
+Scene_Shop.prototype.onChoiceYes = function () {
+    this._choiceWindow.close();
+    this._messageWindow.close();
+    this._howManyWindow.hide();
+    switch (this._chosenCommand) {
+        case Scene_Shop.BUY:
+            this._buyWindow.hideAllHelpWindows();
+            this._buyWindow.hide();
+            this.unDimBuyWindows();
+            this.displayMessage(this.carryPurchaseMessage(), Scene_Shop.prototype.carryPurchase_MessageCallback);
+            break;
+        case Scene_Shop.SELL:
+            this._inventoryWindow.hideAllHelpWindows();
+            this._inventoryWindow.hide();
+            this._inventoryWindow.deselect();
+            this._partyWindow.hide();
+            this.unDimInventoryWindows();
+            this._partyWindow.hideBackgroundDimmer();
+            this.doSell();
+            break;
+    }
+};
+
+Scene_Shop.prototype.onChoiceCancel = function () {
+    this._messageWindow.close();
+    this._choiceWindow.close();
+    this._howManyWindow.hide();
+    switch (this._chosenCommand) {
+        case Scene_Shop.BUY:
+            this.unDimBuyWindows();
+            this._buyWindow.activate();
+            break;
+        case Scene_Shop.SELL:
+            this._goldWindow.hide();
+            this.unDimInventoryWindows();
+            this._inventoryWindow.activate();
+            break;
+    }
 };
 
 //////////////////////////////
@@ -364,12 +498,28 @@ Scene_Shop.prototype.carryPurchaseMessage = function () {
     return TextManager.terms.shopText[Scene_Shop.TEXTSTYLE][6];
 };
 
-Scene_Shop.prototype.cancelBuyMessage = function () {
+Scene_Shop.prototype.postPurchaseMessage = function () {
     return TextManager.terms.shopText[Scene_Shop.TEXTSTYLE][7];
 };
 
-Scene_Shop.prototype.postPurchaseMessage = function () {
+// party
+
+Scene_Shop.prototype.cancelPartyMessage = function () {
     return TextManager.terms.shopText[Scene_Shop.TEXTSTYLE][8];
+};
+
+// sell
+
+Scene_Shop.prototype.cantSellMessage = function () {
+    return TextManager.terms.shopText[Scene_Shop.TEXTSTYLE][9];
+};
+
+Scene_Shop.prototype.sellItemMessage = function () {
+    if (this._amount < 2) {
+        return TextManager.terms.shopText[Scene_Shop.TEXTSTYLE][10].format(this._item.name, this._price);
+    } else {
+        return TextManager.terms.shopText[Scene_Shop.TEXTSTYLE][11].format(this._amount, this._item.name, this._price);
+    }
 };
 
 //////////////////////////////
@@ -384,6 +534,7 @@ Scene_Shop.prototype.welcome_MessageCallback = function () {
 
 Scene_Shop.prototype.backToMain_MessageCallback = function () {
     this._commandWindow.show();
+    this._goldWindow.show();
     this._commandWindow.activate();
 };
 
@@ -419,17 +570,36 @@ Scene_Shop.prototype.postPurchase_MessageCallback = function () {
     this.displayMessage(this.postPurchaseMessage(), Scene_Shop.prototype.backToMain_MessageCallback);
 };
 
+Scene_Shop.prototype.cantSell_MessageCallback = function () {
+    this._messageWindow.close();
+    this._messageWindow.setInput(false);
+    this.unDimInventoryWindows();
+    this._inventoryWindow.activate();
+};
+
 //////////////////////////////
 // Functions - misc
 //////////////////////////////
 
 Scene_Shop.prototype.item = function () {
-    return this._buyWindow.item();
+    return this._chosenCommand === Scene_Shop.BUY ? this._buyWindow.item() : this._inventoryWindow.item();
 };
 
 Scene_Shop.prototype.takeGold = function () {
     $gameParty.loseGold(this._price);
     this._goldWindow.refresh();
+};
+
+Scene_Shop.prototype.doSell = function () {
+    if (this.inBag()) {
+        $gameParty.loseItem(this._item, this._amount);
+    } else {
+        this._actor.removeItemAtIndex(this._index);
+    }
+    const message = Game_Interpreter.prototype.giveGold(this._price);
+    this._goldWindow.refresh();
+    this._messageWindow.setInput(true);
+    this.displayMessage(message, Scene_Shop.prototype.postPurchase_MessageCallback);
 };
 
 // party options
@@ -442,6 +612,26 @@ Scene_Shop.prototype.updateActor = function () {
     this._actor = $gameParty.members()[this._partyWindow.currentSymbol()];
 };
 
+Scene_Shop.prototype.preparePartyWindows_Buy = function () {
+    if (this._partyWindow.checkListIsEmpty()) {
+        this._partyWindow.setCheckListIsEmpty(false);
+        this._partyWindow.updateCommands(['Bag']);
+        this._inventoryWindow.setDisplaySellCost(false);
+        this._inventoryWindow.width = 594;
+        this._inventoryWindow.height = 483;
+    }
+};
+
+Scene_Shop.prototype.preparePartyWindows_Sell = function () {
+    if (!this._partyWindow.checkListIsEmpty()) {
+        this._partyWindow.setCheckListIsEmpty(true);
+        this._partyWindow.updateCommands(['Items', 'Equipment']);
+        this._inventoryWindow.setDisplaySellCost(true);
+        this._inventoryWindow.width = 714;
+        this._inventoryWindow.height = 591;
+    }
+};
+
 // window dimmers
 
 Scene_Shop.prototype.dimBuyWindows = function () {
@@ -452,4 +642,14 @@ Scene_Shop.prototype.dimBuyWindows = function () {
 Scene_Shop.prototype.unDimBuyWindows = function () {
     this._buyWindow.hideBackgroundDimmer();
     this._buyWindow.hideAllHelpWindowBackgroundDimmers();
+};
+
+Scene_Shop.prototype.dimInventoryWindows = function () {
+    this._inventoryWindow.showBackgroundDimmer();
+    this._inventoryWindow.showAllHelpWindowBackgroundDimmers();
+};
+
+Scene_Shop.prototype.unDimInventoryWindows = function () {
+    this._inventoryWindow.hideBackgroundDimmer();
+    this._inventoryWindow.hideAllHelpWindowBackgroundDimmers();
 };

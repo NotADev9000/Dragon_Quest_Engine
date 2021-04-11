@@ -64,6 +64,7 @@ Scene_Skill.prototype.createCommandWindow = function () {
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     if (this._hasZoom) this._commandWindow.setHandler('help', this.onCommandZoom.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
+    this._commandWindow.setCheckListIsEmpty(true);
     this.addWindow(this._commandWindow);
 };
 

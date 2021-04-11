@@ -95,8 +95,11 @@ TextManager.terms.shopText.generic = [
     `*: A %1? That'll be %2 gold coins, please.`,                                                               // singleBuyItemMessage
     `*: %1 %2s? That'll be %3 gold coins, please.`,                                                             // multipleBuyItemMessage
     `*: And who's going to carry your purchase?`,                                                               // carryPurchaseMessage
-    `*: Changed your mind have you?\nNo worries, is there anything else I can help you with?`,                  // cancelBuyMessage
     `*: Thank you for your purchase!\nIs there anything else I can help you with?`,                             // postPurchaseMessage
+    `*: Changed your mind have you? No worries, is there anything else I can help you with?`,                  // cancelPartyMessage //
+    `*: I'm afraid I can't buy that from you!`,                                                                 // cantSellMessage //
+    `*: A %1? I can give you %2 gold coins for that.`,                                                          // singleSellItemMessage
+    `*: %1 %2s? I can give you %3 gold coins for those.`,                                                       // multipleSellItemMessage
 ];
 
 // Obtaining Items
@@ -139,13 +142,30 @@ TextManager.terms.obtainItemText.bag_NoItemName_Remaining = [
 // actor
 
 TextManager.terms.obtainItemText.actor = [
-    `%2 receives the %1.`,                                                                                        // single item into bag
+    `%2 receives the %1.`,                                                                                      // single item into bag
     `%2 receives %3 %1s.`,                                                                                      // multiple items into bag
 ];
 
 TextManager.terms.obtainItemText.actor_NoItemName = [
     `%2 receives 1.`,                                                                                           // single item into bag
     `%2 receives %3.`,                                                                                          // multiple items into bag
+];
+
+// Obtaining Gold
+// %X is ordered as so: 1 - actor name, 2 - amount
+
+TextManager.terms.obtainGold = {};
+
+// bag
+
+TextManager.terms.obtainGold.receive = [
+    `%1 receives %2\\c[7]G\\c[1].`,                                                                               // single member receives gold
+    `The party receives %2\\c[7]G\\c[1].`,                                                                        // party receives gold
+];
+
+TextManager.terms.obtainGold.acquire = [
+    `%1 acquires %2\\c[7]G\\c[1].`,                                                                               // single member acquires gold
+    `The party acquires %2\\c[7]G\\c[1].`,                                                                        // party acquires gold
 ];
 
 // Parameters
