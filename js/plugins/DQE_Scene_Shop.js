@@ -353,7 +353,8 @@ Scene_Shop.prototype.onPartySell = function () {
 Scene_Shop.prototype.onPartyCancel = function () {
     this._partyWindow.hide();
     this._inventoryWindow.hide();
-    this.displayMessage(this.cancelPartyMessage(), Scene_Shop.prototype.backToMain_MessageCallback);
+    const message = this._chosenCommand === Scene_Shop.BUY ? this.cancelPartyMessage() : this.restartSceneMessage();
+    this.displayMessage(message, Scene_Shop.prototype.backToMain_MessageCallback);
 };
 
 // inventory window
@@ -522,6 +523,10 @@ Scene_Shop.prototype.sellItemMessage = function () {
     }
 };
 
+Scene_Shop.prototype.postSellMessage = function () {
+    return TextManager.terms.shopText[Scene_Shop.TEXTSTYLE][12];
+};
+
 //////////////////////////////
 // Functions - message callbacks
 //////////////////////////////
@@ -575,6 +580,11 @@ Scene_Shop.prototype.cantSell_MessageCallback = function () {
     this._messageWindow.setInput(false);
     this.unDimInventoryWindows();
     this._inventoryWindow.activate();
+};
+
+Scene_Shop.prototype.postSell_MessageCallback = function () {
+    this._messageWindow.setInput(false);
+    this.displayMessage(this.postSellMessage(), Scene_Shop.prototype.backToMain_MessageCallback);
 };
 
 //////////////////////////////

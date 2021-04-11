@@ -96,10 +96,11 @@ TextManager.terms.shopText.generic = [
     `*: %1 %2s? That'll be %3 gold coins, please.`,                                                             // multipleBuyItemMessage
     `*: And who's going to carry your purchase?`,                                                               // carryPurchaseMessage
     `*: Thank you for your purchase!\nIs there anything else I can help you with?`,                             // postPurchaseMessage
-    `*: Changed your mind have you? No worries, is there anything else I can help you with?`,                  // cancelPartyMessage //
+    `*: Changed your mind have you? No worries, is there anything else I can help you with?`,                   // cancelPartyMessage //
     `*: I'm afraid I can't buy that from you!`,                                                                 // cantSellMessage //
     `*: A %1? I can give you %2 gold coins for that.`,                                                          // singleSellItemMessage
     `*: %1 %2s? I can give you %3 gold coins for those.`,                                                       // multipleSellItemMessage
+    `*: Thank you for the items!\n Is there anything else I can help you with?`,                                // postSellMessage
 ];
 
 // Obtaining Items
