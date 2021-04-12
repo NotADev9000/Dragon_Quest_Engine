@@ -33,11 +33,14 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
     DQEng.Plugin_Commands.pluginCommand.call(this, command, args);
     if (command.toLowerCase() === 'dqe') {
         switch (args[0]) {
-            case 'GiveActorsItems':// itemType, itemId, amount
-                this.giveActorsItems(args[1], args[2], args[3]);
+            case 'GiveActorItems':// itemType, itemId, amount, memberId
+                this.plugin_GiveActorItems(args[1], args[2], args[3], args[4]);
                 break;
-            case 'GiveActorsItemsSilent':
-                this.giveActorsItems(args[1], args[2], args[3], false);
+            case 'GiveActorItemsSilent':
+                this.plugin_GiveActorItems(args[1], args[2], args[3], args[4], false);
+                break;
+            case 'GiveActorItemsExtra':
+                this.plugin_GiveActorItems(args[1], args[2], args[3], args[4], true, true);
                 break;
             case 'ForceMoveRouteFollower': // follower position
                 const follower = $gamePlayer.followers()?.follower(args[1]);
@@ -74,59 +77,25 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
     }
 };
 
-Game_Interpreter.prototype.giveActorsItems = function (itemType, itemId, amount, messages = true) {
+Game_Interpreter.prototype.plugin_GiveActorItems = function (itemType, itemId, amount, memberId, showMessages = true, showExtra = false) {
+    let item;
+    const messages = [];
     switch (itemType.toLowerCase()) {
         case 'item':
-            var item = $dataItems[itemId];
+            item = $dataItems[itemId];
             break;
         case 'weapon':
-            var item = $dataWeapons[itemId];
+            item = $dataWeapons[itemId];
             break;
         case 'armor':
-            var item = $dataArmors[itemId];
+            item = $dataArmors[itemId];
             break;
         default:
-            console.error('INVALID itemType: the first argument after the command must be 0, 1 or 2');
+            console.error('INVALID itemType: the first argument after the command must be item, weapon or armor');
     }
-    var actors = $gameParty.members();
-    var leftover = amount;
-    var amountGiven = 0;
+    const actor = $gameParty.members()[memberId];
 
-    // place items into actor inventory starting with front actor
-    for (const actor of actors) {
-        amountGiven = actor.giveItems(item, leftover);
-        leftover = leftover - amountGiven;
-        if (messages && amountGiven) {
-            this.giveActorsItemsMessage(amount, amountGiven, actor);
-        }
-        if (!leftover) {break;}
-    };
-    // if actors can't carry it all place the remaining items in bag
-    if (leftover) {
-        $gameParty.gainItem(item, leftover);
-        if (messages) {
-            this.giveActorsItemsMessage(amount, leftover, null, true);
-        }
-    }
-};
-
-Game_Interpreter.prototype.giveActorsItemsMessage = function (amount, amountGiven, actor = null, bag = false) {
-    var message = '';
-    var gaveAllAtOnce = amount == amountGiven; // did the items all get given to one actor/the bag
-
-    if (gaveAllAtOnce) {
-        if (amount == 1) {
-            message += bag ? 'It was placed in the bag.' : `${actor.name()} held onto it.`;
-        } else if (bag) {
-            message += 'They were all placed in the bag.';
-        } else {
-            message += `${actor.name()} held onto them.`;
-        }
-    } else if (bag) {
-        message += 'The rest were placed in the bag.';
-    } else {
-        message += `${actor.name()} held onto ${amountGiven}.`;
-    }
-
-    $gameMessage.add(message);
+    if (showMessages) $gameMessage.add(this.itemsGiven_Messages_Obtain(item, amount)); // "obtained" messages
+    messages.push(this.giveItems_Actor(item, amount, actor));                          // give actor items & return "actor received" messages
+    if (showExtra) $gameMessage.add(this.concat_Messages(messages));                   // display "actor received" messages
 };

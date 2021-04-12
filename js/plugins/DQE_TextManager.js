@@ -103,10 +103,18 @@ TextManager.terms.shopText.generic = [
     `*: Thank you for the items!\n Is there anything else I can help you with?`,                                // postSellMessage
 ];
 
-// Obtaining Items
-// %X is ordered as so: 1 - item name, 2 - actor name, 3 - amount
+// Obtained Items
+// %X is ordered as so: 1 - connector, 2 - item name, 3 - amount
 
 TextManager.terms.obtainItemText = {};
+
+TextManager.terms.obtainItemText.obtained = [
+    `Obtained %1%2.`,
+    `Obtained %3 %1%2.`
+];
+
+// Obtaining Items
+// %X is ordered as so: 1 - item name, 2 - actor name, 3 - amount
 
 // bag
 
@@ -143,13 +151,13 @@ TextManager.terms.obtainItemText.bag_NoItemName_Remaining = [
 // actor
 
 TextManager.terms.obtainItemText.actor = [
-    `%2 receives the %1.`,                                                                                      // single item into bag
-    `%2 receives %3 %1s.`,                                                                                      // multiple items into bag
+    `%2 receives the %1.`,                                                                                      // single item
+    `%2 receives %3 %1s.`,                                                                                      // multiple items
 ];
 
 TextManager.terms.obtainItemText.actor_NoItemName = [
-    `%2 receives 1.`,                                                                                           // single item into bag
-    `%2 receives %3.`,                                                                                          // multiple items into bag
+    `%2 receives 1.`,                                                                                           // single item
+    `%2 receives %3.`,                                                                                          // multiple items
 ];
 
 // Obtaining Gold

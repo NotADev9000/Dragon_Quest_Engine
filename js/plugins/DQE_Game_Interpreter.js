@@ -100,6 +100,22 @@ Game_Interpreter.prototype.itemsGiven_Messages_Actor = function (itemName, amoun
     return message.format(itemName, actorName, amount);
 };
 
+Game_Interpreter.prototype.itemsGiven_Messages_Obtain = function (item, amount) {
+    const meta = item.meta;
+    let itemName = item.name;
+    let connector, message;
+
+    if (amount > 1) {
+        if (!meta.text_obtain_noSPlural) itemName += 's';
+        connector = meta.text_obtain_multiple || '';
+        message = TextManager.terms.obtainItemText.obtained[1];
+    } else {
+        connector = meta.text_obtain_single || itemName.aOrAn() + ' ';
+        message = TextManager.terms.obtainItemText.obtained[0];
+    }
+    return message.format(connector, itemName, amount);
+};
+
 Game_Interpreter.prototype.goldGiven_Messages = function (amount, receive = true) {
     let actorName;
     let arr_partyAmount = 1;
