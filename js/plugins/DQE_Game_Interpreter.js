@@ -49,6 +49,19 @@ Game_Interpreter.prototype.command205 = function () {
 
 // items
 
+Game_Interpreter.prototype.getItem = function (type, Id) {
+    switch (type.toLowerCase()) {
+        case 'item':
+            return $dataItems[Id];
+        case 'weapon':
+            return $dataWeapons[Id];
+        case 'armor':
+            return $dataArmors[Id];
+        default:
+            console.error('INVALID itemType: the first argument after the command must be item, weapon or armor');
+    }
+};
+
 Game_Interpreter.prototype.giveItems_Bag = function (item, amount, actor, showItemName = true, showActorName = true, remaining = false) {
     const itemName = showItemName ? item.name : undefined;
     let actorName = showActorName ? actor?.name() : undefined;

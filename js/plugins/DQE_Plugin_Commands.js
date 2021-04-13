@@ -42,6 +42,9 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
             case 'GiveActorItemsExtra':
                 this.plugin_GiveActorItems(args[1], args[2], args[3], args[4], true, true);
                 break;
+            case 'GiveBagItems':// itemType, itemId, amount
+                this.plugin_GiveBagItems(args[1], args[2], args[3]);
+                break;
             case 'ForceMoveRouteFollower': // follower position
                 const follower = $gamePlayer.followers()?.follower(args[1]);
                 Game_Interpreter.FORCEDCHARACTER = follower;
@@ -78,24 +81,18 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
 };
 
 Game_Interpreter.prototype.plugin_GiveActorItems = function (itemType, itemId, amount, memberId, showMessages = true, showExtra = false) {
-    let item;
+    const item = this.getItem(itemType, itemId);
     const messages = [];
-    switch (itemType.toLowerCase()) {
-        case 'item':
-            item = $dataItems[itemId];
-            break;
-        case 'weapon':
-            item = $dataWeapons[itemId];
-            break;
-        case 'armor':
-            item = $dataArmors[itemId];
-            break;
-        default:
-            console.error('INVALID itemType: the first argument after the command must be item, weapon or armor');
-    }
     const actor = $gameParty.members()[memberId];
 
     if (showMessages) $gameMessage.add(this.itemsGiven_Messages_Obtain(item, amount)); // "obtained" messages
     messages.push(this.giveItems_Actor(item, amount, actor));                          // give actor items & return "actor received" messages
     if (showExtra) $gameMessage.add(this.concat_Messages(messages));                   // display "actor received" messages
+};
+
+Game_Interpreter.prototype.plugin_GiveBagItems = function (itemType, itemId, amount, showMessages = true) {
+    const item = this.getItem(itemType, itemId);
+
+    $gameParty.gainItem(item, Number(amount));
+    if (showMessages) $gameMessage.add(this.itemsGiven_Messages_Obtain(item, amount)); // "obtained" messages
 };
