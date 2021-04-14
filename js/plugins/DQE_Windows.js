@@ -582,3 +582,8 @@ Window_ChoiceList.prototype.updateOpen = function () {
         }
     }
 };
+
+DQEng.Windows.drawTextEx = Window_ChoiceList.prototype.drawTextEx;
+Window_ChoiceList.prototype.drawTextEx = function (text, x, y) {
+    return DQEng.Windows.drawTextEx.call(this, text, x, y, false, false);
+};
