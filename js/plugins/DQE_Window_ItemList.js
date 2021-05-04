@@ -42,24 +42,6 @@ Window_ItemList.prototype.initialize = function (x, y, width, height) {
 //////////////////////////////
 
 /**
- * checks if an item is in the selected category
- */
-Window_ItemList.prototype.includes = function (item) {
-    switch (this._category) {
-        case 'Items':
-            return DataManager.isItem(item) && item.itypeId === 1;
-        case 'Equipment':
-            return DataManager.isWeapon(item) || DataManager.isArmor(item);
-        case 'Important':
-            return DataManager.isItem(item) && item.itypeId === 2;
-        case 'Bag':
-            return true;
-        default:
-            return false;
-    }
-};
-
-/**
  * Creates the item list to be displayed in the window
  * Retrieves items from party or actor inventory
  * Retrieves equipment from actor equips
@@ -71,10 +53,29 @@ Window_ItemList.prototype.makeItemList = function () {
         this._data = actor.items();
         this._slotData = actor.getSlotData();
     } else {
-        this._data = $gameParty.allItems().filter(function (item) {
-            return this.includes(item);
-        }, this);
+        switch (this._category) {
+            case 'Items':
+                this._data = this.getItems(1);
+                break;
+            case 'Equipment':
+                this._data = $gameParty.equipItems();
+                break;
+            case 'Important':
+                this._data = this.getItems(2);
+                break;
+            case 'Bag':
+                $gameParty.allItems();
+        }
     }
+};
+
+/**
+ * returns items (no equipment) that match the passed itypeId
+ */
+Window_ItemList.prototype.getItems = function (itypeId) {
+    return $gameParty.items().filter(item => {
+        return item.itypeId === itypeId;
+    }, this);
 };
 
 Window_ItemList.prototype.slotIndex = function () {
