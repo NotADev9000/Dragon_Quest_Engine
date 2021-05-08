@@ -64,7 +64,7 @@ Window_ItemList.prototype.makeItemList = function () {
                 this._data = this.getItems(2);
                 break;
             case 'Bag':
-                $gameParty.allItems();
+                this._data = $gameParty.allItems();
         }
     }
 };

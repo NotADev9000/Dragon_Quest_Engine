@@ -323,5 +323,4 @@ Game_Party.prototype.lastZoomPoint = function () {
 
 Game_Party.prototype.setLastZoomPoint = function (point) {
     this._lastZoomPoint = point;
-    console.log(this.lastZoomPoint());
 };
