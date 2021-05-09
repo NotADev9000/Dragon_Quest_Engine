@@ -51,6 +51,136 @@ Game_Party.prototype.initialize = function () {
 // Functions - items
 //////////////////////////////
 
+// ITEM INFO
+
+/**
+ * containers are an array of arrays
+ * this allows an order of when items were obtained instead of by database ID
+ * 
+ * second array contains ***item info***
+ * element[0] = item ID
+ * element[1] = amount of item
+ * 
+ * second array contains ***equipment info***
+ * element[0] = item ID
+ * element[1] = amount of item
+ * element[2] = is weapon or armor? 0 = weapons, 1 = armor
+ */
+Game_Party.prototype.initAllItems = function () {
+    this._items = [];
+    this._equipment = [];
+};
+
+/**
+ * filters _equipment into weapons
+ * THIS FUNCTION DOES NOT GET THE DATA ITEMS - USE weapons()
+ */
+Game_Party.prototype.equipmentWeapons = function () {
+    return this._equipment.filter(equipment => equipment[2] === 0);
+};
+
+/**
+ * filters _equipment into armor
+ * THIS FUNCTION DOES NOT GET THE DATA ITEMS - USE armors()
+ */
+Game_Party.prototype.equipmentArmors = function () {
+    return this._equipment.filter(equipment => equipment[2] === 1);
+};
+
+/**
+ * returns all equipment if seperateEquipment is false
+ * returns just the weapons or armor if seperateEquipment is true
+ */
+Game_Party.prototype.itemContainer = function (item, seperateEquipment = false) {
+    if (!item) {
+        return null;
+    } else if (DataManager.isItem(item)) {
+        return this._items;
+    } else if (DataManager.isWeapon(item)) {
+        return seperateEquipment ? this.equipmentWeapons() : this._equipment;
+    } else if (DataManager.isArmor(item)) {
+        return seperateEquipment ? this.equipmentArmors() : this._equipment;
+    } else {
+        return null;
+    }
+};
+
+/**
+ * returns the array of item info for passed item
+ * returns undefined if not holding that item
+ */
+Game_Party.prototype.itemInfo = function (item) {
+    return this.itemContainer(item, true).
+        find(containerItem => containerItem[0] === item.id);
+};
+
+// DATA ITEMS
+
+Game_Party.prototype.items = function () {
+    return this.dataItems(this._items, $dataItems);
+};
+
+Game_Party.prototype.equipItems = function () {
+    return this.dataItems(this._equipment);
+};
+
+Game_Party.prototype.weapons = function () {
+    const weapons = this.equipmentWeapons();
+    return this.dataItems(weapons, $dataWeapons);
+};
+
+Game_Party.prototype.armors = function () {
+    const armors = this.equipmentArmors();
+    return this.dataItems(armors, $dataArmors);
+};
+
+Game_Party.prototype.dataItems = function (items, data) {
+    const list = [];
+    const hasData = data ? true : false; // has a data object been passed as argument? (it won't be when getting weapons & armors)
+
+    items.forEach(item => {
+        if (!hasData) data = item[2] === 0 ? $dataWeapons : $dataArmors; // getting all equipment data so item needs to be checked if it's a weapon or armor piece
+        list.push(data[item[0]]);
+    });
+    return list;
+};
+
+// ITEM QUERIES
+
+Game_Party.prototype.numItems = function (item) {
+    const itemInfo = this.itemInfo(item);
+    return itemInfo ? itemInfo[1] : 0;
+};
+
+Game_Party.prototype.gainItem = function (item, amount) {
+    const container = this.itemContainer(item);
+    if (container) {
+        const itemInfo = this.itemInfo(item);
+        if (itemInfo) {
+            // already holding this item
+            itemInfo[1] = (itemInfo[1] + amount).clamp(0, this.maxItems()); // update amount of that item
+            // if carrying 0, delete item from array
+            if (itemInfo[1] === 0) {
+                const removeAt = container.indexOf(itemInfo);
+                container.splice(removeAt, 1);
+            }
+        } else if (amount > 0) {
+            // not holding this item & not trying to remove it
+            let newItem = [item.id, amount];
+            // if item is weapon or armor add indicator to item array (0 = weapon, 1 = armor)
+            if ("wtypeId" in item) newItem.push(0)
+            else if ("atypeId" in item) newItem.push(1);
+            // add new weapon to container
+            container.push(newItem);
+        }
+        $gameMap.requestRefresh();
+    }
+};
+
+//////////////////////////////
+// Functions - moving items
+//////////////////////////////
+
 Game_Party.prototype.giveItemToActor = function (item, actor, index, amount = 1) {
     actor.giveItems(item, amount, index);
     this.loseItem(item, amount, false);
