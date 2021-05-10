@@ -63,7 +63,7 @@ Scene_Item.prototype.createCommandWindow = function () {
 
 Scene_Item.prototype.createItemWindow = function () {
     var wx = this._commandWindow.x + this._commandWindow.windowWidth();
-    this._itemWindow = new Window_ItemList_EquipStat(wx, 48, 594, 591);
+    this._itemWindow = new Window_ItemList_EquipStat(wx, 48, 594, 591, true);
     this._itemWindow.setHelpWindow(this._helpWindow);
     this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
     this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
@@ -114,7 +114,7 @@ Scene_Item.prototype.createTransferToWhoWindow = function () {
 
 Scene_Item.prototype.createTransferItemWindow = function () {
     mainItemWin = this._itemWindow;
-    this._transferItemWindow = new Window_ItemList(mainItemWin.x, mainItemWin.y, mainItemWin._width, mainItemWin._height);
+    this._transferItemWindow = new Window_ItemList(mainItemWin.x, mainItemWin.y, mainItemWin._width, mainItemWin._height, true);
     this._transferItemWindow.setHandler('ok', this.onTransferItemOk.bind(this));
     this._transferItemWindow.setHandler('cancel', this.onTransferItemCancel.bind(this));
     this._transferItemWindow.hide();

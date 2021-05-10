@@ -35,8 +35,9 @@ function Window_ItemListBase() {
 Window_ItemListBase.prototype = Object.create(Window_Pagination.prototype);
 Window_ItemListBase.prototype.constructor = Window_ItemListBase;
 
-Window_ItemListBase.prototype.initialize = function (x, y, width, height) {
+Window_ItemListBase.prototype.initialize = function (x, y, width, height, sortItems = false) {
     Window_Pagination.prototype.initialize.call(this, x, y, width, height);
+    this._sortItems = sortItems;
     this._category = null;
     this._data = [];
 };

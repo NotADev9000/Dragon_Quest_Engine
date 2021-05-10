@@ -30,8 +30,8 @@ DQEng.Window_ItemList = DQEng.Window_ItemList || {};
 
 Window_ItemList.prototype = Object.create(Window_ItemListBase.prototype);
 
-Window_ItemList.prototype.initialize = function (x, y, width, height) {
-    Window_ItemListBase.prototype.initialize.call(this, x, y, width, height);
+Window_ItemList.prototype.initialize = function (x, y, width, height, sortItems = false) {
+    Window_ItemListBase.prototype.initialize.call(this, x, y, width, height, sortItems);
     this._numActorEquips = 0; // How many items actor has equipped
     this._slotData = []; // a list of which equipped piece is in which slot
     this._displaySellCost = false; // shows the cost of selling the item instead of amount carried
@@ -66,6 +66,8 @@ Window_ItemList.prototype.makeItemList = function () {
             case 'Bag':
                 this._data = $gameParty.allItems();
         }
+        // sort items
+        if (this._sortItems) Data_Items.sortBagItems(this._data);
     }
 };
 

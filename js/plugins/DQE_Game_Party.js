@@ -36,15 +36,27 @@ DQEng.Parameters.Game_Party.PreferredMember = Number(parameters["Preferred Membe
 // Game_Party
 //-----------------------------------------------------------------------------
 
+// Amount of sorting types
+Game_Party.SORT_LENGTH = 2;
+// Constants to identify sorting style
+Game_Party.SORT_BY_OBTAINED = 0;
+Game_Party.SORT_BY_ALPHABETICAL = 1;
+
 DQEng.Game_Party.initialize = Game_Party.prototype.initialize;
 Game_Party.prototype.initialize = function () {
     DQEng.Game_Party.initialize.call(this);
-    this._restorePoint = new Game_RestorePoint();
-    this._zoomPoints = [];
-    this._lastZoomPoint = {};   // last point zoomed to
+    // bank
     this._bankGold = 0;         // gold in the bank
+    // mini medals
     this._medalTotal = 0;       // total mini medals collected
     this._medalCurrent = 0;     // currently held mini medals
+    // restore points
+    this._restorePoint = new Game_RestorePoint();
+    // zoom points
+    this._zoomPoints = [];
+    this._lastZoomPoint = {};   // last point zoomed to
+    // item sorting
+    this._sortMethod = Game_Party.SORT_BY_OBTAINED; // sort type defaults to order obtained
 };
 
 //////////////////////////////
@@ -57,11 +69,11 @@ Game_Party.prototype.initialize = function () {
  * containers are an array of arrays
  * this allows an order of when items were obtained instead of by database ID
  * 
- * second array contains ***item info***
+ * second array contains ***_item info***
  * element[0] = item ID
  * element[1] = amount of item
  * 
- * second array contains ***equipment info***
+ * second array contains ***_equipment info***
  * element[0] = item ID
  * element[1] = amount of item
  * element[2] = is weapon or armor? 0 = weapons, 1 = armor
@@ -183,7 +195,7 @@ Game_Party.prototype.gainItem = function (item, amount) {
 
 Game_Party.prototype.giveItemToActor = function (item, actor, index, amount = 1) {
     actor.giveItems(item, amount, index);
-    this.loseItem(item, amount, false);
+    this.loseItem(item, amount);
 };
 
 Game_Party.prototype.giveItemToActorMessage = function (item, actor) {
@@ -453,4 +465,27 @@ Game_Party.prototype.lastZoomPoint = function () {
 
 Game_Party.prototype.setLastZoomPoint = function (point) {
     this._lastZoomPoint = point;
+};
+
+//////////////////////////////
+// Functions - sort items style
+//////////////////////////////
+
+Game_Party.prototype.sortMethod = function () {
+    return this._sortMethod;
+};
+
+/**
+ * Pass in a constant (number) to set sort method
+ */
+Game_Party.prototype.setSortMethod = function (sortMethod) {
+    this._sortMethod = sortMethod;
+};
+
+Game_Party.prototype.nextSortMethod = function () {
+    this._sortMethod = this._sortMethod >= Game_Party.SORT_LENGTH - 1 ? 0 : this._sortMethod + 1;
+};
+
+Game_Party.prototype.prevSortMethod = function () {
+    this._sortMethod = this._sortMethod <= 0 ? Game_Party.SORT_LENGTH - 1 : this._sortMethod - 1;
 };
