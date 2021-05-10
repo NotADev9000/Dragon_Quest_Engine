@@ -90,7 +90,7 @@ Window_ShopMisc.prototype.drawAll = function () {
     this.drawText(this._type, 0, y, cw, 'right');
     y += ih;
     // carried
-    this.drawText('No. Carried:', 0, y);
+    this.drawText('You carry:', 0, y);
     this.drawText(this._carried, 0, y, cw, 'right');
 };
 
