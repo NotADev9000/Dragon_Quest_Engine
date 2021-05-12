@@ -37,10 +37,11 @@ DQEng.Parameters.Game_Party.PreferredMember = Number(parameters["Preferred Membe
 //-----------------------------------------------------------------------------
 
 // Amount of sorting types
-Game_Party.SORT_LENGTH = 2;
+Game_Party.SORT_LENGTH = 3;
 // Constants to identify sorting style
 Game_Party.SORT_BY_OBTAINED = 0;
 Game_Party.SORT_BY_ALPHABETICAL = 1;
+Game_Party.SORT_BY_TYPE = 2;
 
 DQEng.Game_Party.initialize = Game_Party.prototype.initialize;
 Game_Party.prototype.initialize = function () {
@@ -488,4 +489,11 @@ Game_Party.prototype.nextSortMethod = function () {
 
 Game_Party.prototype.prevSortMethod = function () {
     this._sortMethod = this._sortMethod <= 0 ? Game_Party.SORT_LENGTH - 1 : this._sortMethod - 1;
+};
+
+/**
+ * This function should be called whenever the sort method is changed
+ */
+Game_Party.prototype.sortActorsItems = function () {
+
 };

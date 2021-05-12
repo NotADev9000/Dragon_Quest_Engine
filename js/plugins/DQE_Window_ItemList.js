@@ -48,7 +48,8 @@ Window_ItemList.prototype.initialize = function (x, y, width, height, sortItems 
  */
 Window_ItemList.prototype.makeItemList = function () {
     if (this.isCategoryActor()) {
-        var actor = $gameParty.members()[this._category];
+        // actor items are sorted when sort method is changed not when item list is made
+        const actor = $gameParty.members()[this._category];
         this._numActorEquips = actor.numEquips();
         this._data = actor.items();
         this._slotData = actor.getSlotData();
