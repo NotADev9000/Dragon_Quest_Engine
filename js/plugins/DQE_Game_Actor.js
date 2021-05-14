@@ -111,7 +111,7 @@ Game_Actor.prototype.equipSlots = function () {
  * removes equipped items from item list but NOT
  * from the equips list
  */
-Game_Actor.prototype.resetCarriedEquips = function () {
+Game_Actor.prototype.removeEquipsFromItemList = function () {
     this._items.splice(0, this.numEquips());
 };
 
@@ -186,12 +186,23 @@ Game_Actor.prototype.getItemInSlot = function (slotId) {
 //////////////////////////////
 
 /**
- * Returns held items as an array of data items
+ * Returns held items as an array of Game_Item
+ */
+Game_Actor.prototype.gameItems = function () {
+    return this._items;
+};
+
+/**
+ * Returns held items as an array of $dataItems
  */
 Game_Actor.prototype.items = function () {
     return this._items.map(function (item) {
         return item.object();
     });
+};
+
+Game_Actor.prototype.setItems = function (items) {
+    this._items = items;
 };
 
 /**
@@ -372,7 +383,7 @@ Game_Actor.prototype.equipItemFromInv = function (index, slot = undefined) {
         // remove item that has just been equipped
         this.removeItemAtIndex(index);
     }
-    this.resetCarriedEquips();
+    this.removeEquipsFromItemList();
     this._equips[slotId].setObject(item);
     this._items = this.initCarriedEquips().concat(this._items);
     this.updateTwoHand(slotId, item);

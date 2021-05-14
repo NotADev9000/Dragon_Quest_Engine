@@ -32,14 +32,33 @@ function Data_Items() {
     throw new Error('Data_Items is a static class');
 }
 
-/**
- * 
- * 
- * @param {array} items array of Game_Items
- */
-Data_Items.sortActorItems = (items) => {
+//////////////////////////////
+// Functions - actor inventory
+//////////////////////////////
 
+/**
+ * sorts an actor's held items by type.
+ * DOES NOT change equipped items
+ * 
+ * @param {Game_Actor} actor to have held items sorted
+ */
+Data_Items.sortActorItems = (actor) => {
+    // remove equipped items from list as they should not be sorted
+    actor.removeEquipsFromItemList();
+    // sort remaining
+    let items = actor.gameItems();
+    items.sort(Data_Items.sortByType_Actor);
+    // add back the equipped items
+    actor.setItems(actor.initCarriedEquips().concat(items));
 };
+
+Data_Items.sortByType_Actor = (item1, item2) => {
+    return Data_Items.sortComparison(item1.order(), item2.order());
+};
+
+//////////////////////////////
+// Functions - bag inventory
+//////////////////////////////
 
 /**
  * Sorts an array of data items by current sorting method.
@@ -56,7 +75,7 @@ Data_Items.sortBagItems = (data) => {
             data.sort((a, b) => a.name.localeCompare(b.name))
             break;
         case Game_Party.SORT_BY_TYPE:
-            data.sort(Data_Items.sortBagByType);
+            data.sort(Data_Items.sortByType_Bag);
             break;
     }
 };
@@ -68,7 +87,7 @@ Data_Items.sortBagItems = (data) => {
  * @param {$dataItem} item2 
  * @returns an integer representing how the two items should be ordered (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#description)
  */
-Data_Items.sortBagByType = (item1, item2) => {
+Data_Items.sortByType_Bag = (item1, item2) => {
     // get item type
     let type1 = Data_Items.itemTypeToNumOrder(item1);
     let type2 = Data_Items.itemTypeToNumOrder(item2);
