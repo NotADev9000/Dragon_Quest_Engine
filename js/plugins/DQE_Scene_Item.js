@@ -33,6 +33,8 @@ Scene_Item.prototype.create = function () {
     this.createCommandWindow();
     this.createItemWindow();
     this.createEquipStatsWindow();
+    this.createItemSortWindow();
+    this.createItemOrganiseWindow();
     this.createDoWhatWindow();
     this.createUseOnWhoWindow();
     this.createItemStatusWindow();
@@ -67,6 +69,8 @@ Scene_Item.prototype.createItemWindow = function () {
     this._itemWindow.setHelpWindow(this._helpWindow);
     this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
     this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
+    this._itemWindow.setHandler('sort', this.onSort.bind(this));
+    this._itemWindow.setHandler('filter', this.onFilter.bind(this));
     this.addWindow(this._itemWindow);
     this._commandWindow.setHelpWindow(this._itemWindow);
 };
@@ -74,11 +78,27 @@ Scene_Item.prototype.createItemWindow = function () {
 Scene_Item.prototype.createEquipStatsWindow = function () {
     let x = this._itemWindow.x + this._itemWindow.width;
     let y = this._itemWindow.y;
-    this._equipStatsWindow = new Window_EquipmentStats(x, y, 420, 450);
+    this._equipStatsWindow = new Window_EquipmentStats(x, y, 396, 468);
     this._equipStatsWindow.hide();
     this.addWindow(this._equipStatsWindow);
     this._commandWindow.setHelpWindow(this._equipStatsWindow);
     this._itemWindow.setHelpWindow(this._equipStatsWindow);
+};
+
+Scene_Item.prototype.createItemSortWindow = function () {
+    const x = this._equipStatsWindow.x;
+    const y = this._equipStatsWindow.y + this._equipStatsWindow.height;
+    this._itemSortWindow = new Window_Sort(x, y, 396);
+    this._itemSortWindow.hide();
+    this.addWindow(this._itemSortWindow);
+};
+
+Scene_Item.prototype.createItemOrganiseWindow = function () {
+    const x = this._equipStatsWindow.x;
+    const y = this._equipStatsWindow.y + this._equipStatsWindow.height;
+    this._itemOrganiseWindow = new Window_IconHelp(x, y, 396, 123, ['sort', 'filter'], ['Organise', 'Filter'], 9, 15);
+    this._itemOrganiseWindow.hide();
+    this.addWindow(this._itemOrganiseWindow);
 };
 
 Scene_Item.prototype.createDoWhatWindow = function () {
@@ -148,6 +168,7 @@ Scene_Item.prototype.onCommandOk = function () {
     this._itemWindow.activate();
     this._itemWindow.select(this._itemWindow._lastSelected);
     this._itemWindow.showHelpWindow();
+    this.showSortWindows();
 };
 
 Scene_Item.prototype.onItemOk = function () {
@@ -158,6 +179,7 @@ Scene_Item.prototype.onItemOk = function () {
     this.manageDoWhatPosition();
     this._itemWindow.showBackgroundDimmer();
     this._itemWindow.showAllHelpWindowBackgroundDimmers();
+    this.showSortWindowBackgroundDimmers();
     this._doWhatWindow.select(0);
     this._doWhatWindow.show();
     this._doWhatWindow.activate();
@@ -166,8 +188,28 @@ Scene_Item.prototype.onItemOk = function () {
 Scene_Item.prototype.onItemCancel = function () {
     this._commandWindow.hideBackgroundDimmer();
     this._itemWindow.hideAllHelpWindows();
+    this.hideSortWindows();
     this._itemWindow.deselect();
     this._commandWindow.activate();
+};
+
+Scene_Item.prototype.onSort = function () {
+    if (this.inBag(this._commandWindow)) {
+        // sort bag items
+        $gameParty.nextSortMethod();
+        this._itemSortWindow.refresh();
+        this._itemWindow.refresh();
+        this._itemWindow.callUpdateHelp();
+    } else {
+        // organise actor items
+    }
+};
+
+Scene_Item.prototype.onFilter = function () {
+    if (!this.inBag(this._commandWindow)) {
+        // filter actor items
+
+    }
 };
 
 Scene_Item.prototype.onDoWhatUse = function () {
@@ -227,6 +269,7 @@ Scene_Item.prototype.onDoWhatUnequip = function () {
 Scene_Item.prototype.onDoWhatCancel = function () {
     this._itemWindow.hideBackgroundDimmer();
     this._itemWindow.hideAllHelpWindowBackgroundDimmers();
+    this.hideSortWindowBackgroundDimmers();
     this._doWhatWindow.hide();
     this._itemWindow.activate();
 };
@@ -398,6 +441,7 @@ Scene_Item.prototype.doWhatEquipMessage = function () {
     this._doWhatWindow.hide();
     this._itemWindow.hideBackgroundDimmer();
     this._itemWindow.hideAllHelpWindowBackgroundDimmers();
+    this.hideSortWindowBackgroundDimmers();
     this._itemWindow.refresh();
     this._itemWindow.activate();
 };
@@ -410,6 +454,7 @@ Scene_Item.prototype.actionResolved_MessageCallback = function () {
     this._itemStatWindow.hide();
     this._itemWindow.hideBackgroundDimmer();
     this._itemWindow.hideAllHelpWindowBackgroundDimmers();
+    this.hideSortWindowBackgroundDimmers();
     this._doWhatWindow.hideBackgroundDimmer();
     this._doWhatWindow.hide();
     this._itemWindow.refresh();
@@ -418,6 +463,7 @@ Scene_Item.prototype.actionResolved_MessageCallback = function () {
     } else {
         this._commandWindow.hideBackgroundDimmer();
         this._itemWindow.hideAllHelpWindows();
+        this.hideSortWindows();
         this._itemWindow.deselect();
         this._commandWindow.activate();
     }
@@ -445,12 +491,14 @@ Scene_Item.prototype.transferredMessage = function () {
     this._doWhatWindow.hideBackgroundDimmer();
     this._itemWindow.hideBackgroundDimmer();
     this._itemWindow.hideAllHelpWindowBackgroundDimmers();
+    this.hideSortWindowBackgroundDimmers();
     this._itemWindow.refresh();
     if (this._commandWindow.isCurrentItemEnabled()) {
         this._itemWindow.activate();
     } else {
         this._commandWindow.hideBackgroundDimmer();
         this._itemWindow.hideAllHelpWindows();
+        this.hideSortWindows();
         this._itemWindow.deselect();
         this._commandWindow.activate();
     }
@@ -488,4 +536,20 @@ Scene_Item.prototype.inBag = function (selectionWindow) {
 Scene_Item.prototype.refreshItemStatWindows = function () {
     this._itemStatusWindow.refresh();
     this._itemStatWindow.refresh();
+};
+
+Scene_Item.prototype.showSortWindows = function () {
+    this.inBag(this._commandWindow) ? this._itemSortWindow.show() : this._itemOrganiseWindow.show();
+};
+
+Scene_Item.prototype.hideSortWindows = function () {
+    this.inBag(this._commandWindow) ? this._itemSortWindow.hide() : this._itemOrganiseWindow.hide();
+};
+
+Scene_Item.prototype.showSortWindowBackgroundDimmers = function () {
+    this.inBag(this._commandWindow) ? this._itemSortWindow.showBackgroundDimmer() : this._itemOrganiseWindow.showBackgroundDimmer();
+};
+
+Scene_Item.prototype.hideSortWindowBackgroundDimmers = function () {
+    this.inBag(this._commandWindow) ? this._itemSortWindow.hideBackgroundDimmer() : this._itemOrganiseWindow.hideBackgroundDimmer();
 };

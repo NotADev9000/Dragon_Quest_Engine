@@ -490,10 +490,3 @@ Game_Party.prototype.nextSortMethod = function () {
 Game_Party.prototype.prevSortMethod = function () {
     this._sortMethod = this._sortMethod <= 0 ? Game_Party.SORT_LENGTH - 1 : this._sortMethod - 1;
 };
-
-/**
- * This function should be called whenever the sort method is changed
- */
-Game_Party.prototype.sortActorsItems = function () {
-
-};

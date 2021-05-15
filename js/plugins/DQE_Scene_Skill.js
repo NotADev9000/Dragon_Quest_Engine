@@ -72,7 +72,7 @@ Scene_Skill.prototype.createQuickZoomWindow = function () {
     const x = this._commandWindow.x;
     const y = this._commandWindow.y + this._commandWindow.height;
     const width = this._commandWindow.width;
-    this._quickZoomWindow = new Window_IconHelp(x, y, width, 75, 'help', 'Quick Zoom');
+    this._quickZoomWindow = new Window_IconHelp(x, y, width, 75, ['help'], ['Quick Zoom']);
     if (!this._hasZoom) this._quickZoomWindow.hide();
     this.addWindow(this._quickZoomWindow);
 };
