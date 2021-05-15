@@ -129,13 +129,15 @@ Window_SettingsControls.prototype.updateHelp = function () {
     let text = '';
     switch (index) {
         case 1:
-            text = 'Change the icons displayed in menus.<BR>This choice does not affect the actual controls.';
+            text = this._mode === 0 ? 'Reset the controls back to the default settings.' : 
+                                      'Change the icons displayed in menus.<BR>This choice does not affect the actual controls.';
             break;
         case 2:
             text = 'Reset the controls back to a default setting.<BR>You can choose from various gamepad styles.';
             break;
         default:
-            text = 'Change the controls for the connected gamepad.<BR>Use the mouse buttons if you get stuck.'
+            text = this._mode === 0 ? 'Change the controls for the keyboard.<BR>Use the mouse buttons if you get stuck.' : 
+                                      'Change the controls for the connected gamepad.<BR>Use the mouse buttons if you get stuck.';
             break;
     }
     this.setHelpWindowItem(text);
