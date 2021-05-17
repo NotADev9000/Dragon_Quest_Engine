@@ -97,21 +97,10 @@ Data_Items.sortByType_Bag = (item1, item2) => {
     // return comparison if items are not the same item type
     if (returnValue !== 0) return returnValue;
 
-    // get detailed item type
-    switch (type1) {
-        case 0: // item
-            type1 = item1.meta.itype;
-            type2 = item2.meta.itype;
-            break;
-        case 1: // weapon
-            type1 = item1.wtypeId;
-            type2 = item2.wtypeId;
-            break;
-        case 2: // armor
-            type1 = item1.atypeId;
-            type2 = item2.atypeId;
-            break;
-    }
+    // get item order
+    const makeOrder = Game_Item.prototype.makeOrder;
+    type1 = makeOrder(type1, item1);
+    type2 = makeOrder(type2, item2);
 
     // compare detailed item type
     returnValue = Data_Items.sortComparison(type1, type2);

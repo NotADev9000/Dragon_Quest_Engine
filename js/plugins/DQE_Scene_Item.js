@@ -96,7 +96,7 @@ Scene_Item.prototype.createItemSortWindow = function () {
 Scene_Item.prototype.createItemOrganiseWindow = function () {
     const x = this._equipStatsWindow.x;
     const y = this._equipStatsWindow.y + this._equipStatsWindow.height;
-    this._itemOrganiseWindow = new Window_IconHelp(x, y, 396, 123, ['sort', 'filter'], ['Organise', 'Filter'], 9, 15);
+    this._itemOrganiseWindow = new Window_IconHelp(x, y, 396, 123, ['sort', 'filter'], ['Organise', 'Send to Bag'], 9, 15);
     this._itemOrganiseWindow.hide();
     this.addWindow(this._itemOrganiseWindow);
 };
@@ -198,11 +198,13 @@ Scene_Item.prototype.onSort = function () {
         // sort bag items
         $gameParty.nextSortMethod();
         this._itemSortWindow.refresh();
-        this._itemWindow.refresh();
-        this._itemWindow.callUpdateHelp();
     } else {
         // organise actor items
+        const actor = $gameParty.members()[this._commandWindow.currentSymbol()];
+        Data_Items.sortActorItems(actor);
     }
+    this._itemWindow.refresh();
+    this._itemWindow.callUpdateHelp();
 };
 
 Scene_Item.prototype.onFilter = function () {

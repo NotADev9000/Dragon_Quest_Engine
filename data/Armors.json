@@ -1,7 +1,7 @@
 [
 null,
-{"id":1,"atypeId":1,"description":"A large suit of armour once worn by a warrior\nking.","etypeId":4,"traits":[],"iconIndex":0,"name":"Big Armour","note":"","params":[0,0,0,14,0,0,0,0],"price":0},
-{"id":2,"atypeId":5,"description":"A large shield, big enough to protect the entire\nbody of a warrior.","etypeId":2,"traits":[],"iconIndex":0,"name":"Leather Shield","note":"","params":[0,0,0,12,0,0,0,0],"price":0},
-{"id":3,"atypeId":1,"description":"A large helmet that protects the face from all\nangles.","etypeId":3,"traits":[],"iconIndex":0,"name":"Big Helmet","note":"","params":[0,0,0,8,0,0,0,0],"price":0},
-{"id":4,"atypeId":1,"description":"A heavy, rusty, dirty ball and chain.","etypeId":5,"traits":[{"code":22,"dataId":1,"value":-0.01}],"iconIndex":0,"name":"Ball'n'Chain","note":"","params":[0,0,0,0,0,0,-10,0],"price":0}
+{"id":1,"atypeId":1,"description":"A large suit of armour once worn by a warrior\nking.","etypeId":4,"traits":[],"iconIndex":0,"name":"Big Armour","note":"<order:001>","params":[0,0,0,14,0,0,0,0],"price":0},
+{"id":2,"atypeId":5,"description":"A large shield, big enough to protect the entire\nbody of a warrior.","etypeId":2,"traits":[],"iconIndex":0,"name":"Leather Shield","note":"<order:001>","params":[0,0,0,12,0,0,0,0],"price":0},
+{"id":3,"atypeId":1,"description":"A large helmet that protects the face from all\nangles.","etypeId":3,"traits":[],"iconIndex":0,"name":"Big Helmet","note":"<order:001>","params":[0,0,0,8,0,0,0,0],"price":0},
+{"id":4,"atypeId":1,"description":"A heavy, rusty, dirty ball and chain.","etypeId":5,"traits":[{"code":22,"dataId":1,"value":-0.01}],"iconIndex":0,"name":"Ball'n'Chain","note":"<order:001>","params":[0,0,0,0,0,0,-10,0],"price":0}
 ]
