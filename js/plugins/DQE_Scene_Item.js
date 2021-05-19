@@ -209,7 +209,7 @@ Scene_Item.prototype.onSort = function () {
 
 Scene_Item.prototype.onFilter = function () {
     if (!this.inBag(this._commandWindow)) {
-        // filter actor items
+        // filter actor items to bag
 
     }
 };

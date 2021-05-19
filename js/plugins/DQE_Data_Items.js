@@ -108,6 +108,39 @@ Data_Items.sortByType_Bag = (item1, item2) => {
     return returnValue;
 };
 
+//////////////////////////////
+// Functions - equipment inventory
+//////////////////////////////
+
+/**
+ * Sorts an array of equipmentList items by current sorting method.
+ * This function should be used for sorting items in a Window_EquipmentList
+ * 
+ * @param {array} data 
+ * @returns array of sorted data items
+ */
+Data_Items.sortEquipmentListItems = (data) => {
+    switch ($gameParty.sortMethod()) {
+        case Game_Party.SORT_BY_OBTAINED:
+            return;
+        case Game_Party.SORT_BY_ALPHABETICAL:
+            data.sort((a, b) => a.item.name.localeCompare(b.item.name))
+            break;
+        case Game_Party.SORT_BY_TYPE:
+            data.sort(Data_Items.sortByType_Equipment);
+            break;
+    }
+};
+
+Data_Items.sortByType_Equipment = (equipListData1, equipListData2) => {
+    return Data_Items.sortByType_Bag(equipListData1.item, equipListData2.item);
+};
+
+//////////////////////////////
+// Functions - general sorting functions
+//////////////////////////////
+
+
 /**
  * checks item type and returns a value representing its position
  * lower value = first in list

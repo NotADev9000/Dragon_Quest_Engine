@@ -35,8 +35,8 @@ function Window_EquipmentList() {
 Window_EquipmentList.prototype = Object.create(Window_ItemListBase.prototype);
 Window_EquipmentList.prototype.constructor = Window_EquipmentList;
 
-Window_EquipmentList.prototype.initialize = function (x, y, width, height) {
-    Window_ItemListBase.prototype.initialize.call(this, x, y, width, height);
+Window_EquipmentList.prototype.initialize = function (x, y, width, height, sortItems = false) {
+    Window_ItemListBase.prototype.initialize.call(this, x, y, width, height, sortItems);
     this._slot = null;
 };
 
@@ -116,6 +116,8 @@ Window_EquipmentList.prototype.makeItemList = function () {
             break;
     }
     if (etype) this.getData(etype);
+    // sort items
+    if (this._data.length > 0 && this._sortItems) Data_Items.sortEquipmentListItems(this._data);
 };
 
 Window_EquipmentList.prototype.getData = function (etype) {
@@ -217,11 +219,11 @@ Window_EquipmentList.prototype.itemRect = function (index) {
 };
 
 Window_EquipmentList.prototype.refresh = function () {
-    this.makeItemList();
-    this.createContents();
-    Window_Pagination.prototype.refresh.call(this);
-    this.drawTitle();
-    if (this._slot !== null) {
+    if (this._slot >= 0) {
+        this.makeItemList();
+        this.createContents();
+        Window_Pagination.prototype.refresh.call(this);
+        this.drawTitle();
         this.drawSlot();
         this.drawAllItems();
     }

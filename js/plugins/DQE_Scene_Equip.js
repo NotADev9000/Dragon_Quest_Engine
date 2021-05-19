@@ -36,6 +36,7 @@ Scene_Equip.prototype.create = function () {
     this.createEquipItemWindow();
     this.createEquipLocationWindow();
     this.createEquipStatsWindow();
+    this.createItemSortWindow();
     this.createMessageWindow();
 };
 
@@ -82,10 +83,11 @@ Scene_Equip.prototype.createEquipSlotDoWhatWindow = function () {
 
 Scene_Equip.prototype.createEquipItemWindow = function () {
     let x = this._commandWindow.x + this._commandWindow.windowWidth();
-    this._equipItemWindow = new Window_EquipmentList(x, 48, 571, 573);
+    this._equipItemWindow = new Window_EquipmentList(x, 48, 571, 573, true);
     this._equipItemWindow.setHelpWindow(this._helpWindow);
     this._equipItemWindow.setHandler('ok', this.onEquipItemOk.bind(this));
     this._equipItemWindow.setHandler('cancel', this.onEquipItemCancel.bind(this));
+    this._equipItemWindow.setHandler('sort', this.onSort.bind(this));
     this._equipItemWindow.hide();
     this.addWindow(this._equipItemWindow);
     this._commandWindow.setHelpWindow(this._equipItemWindow);
@@ -109,6 +111,14 @@ Scene_Equip.prototype.createEquipStatsWindow = function () {
     this._commandWindow.setHelpWindow(this._equipStatsWindow);
     this._equipSlotWindow.setHelpWindow(this._equipStatsWindow);
     this._equipItemWindow.setHelpWindow(this._equipStatsWindow);
+};
+
+Scene_Equip.prototype.createItemSortWindow = function () {
+    const x = this._equipStatsWindow.x;
+    const y = this._equipStatsWindow.y + this._equipStatsWindow.height;
+    this._equipSortWindow = new Window_Sort(x, y, 420);
+    this._equipSortWindow.hide();
+    this.addWindow(this._equipSortWindow);
 };
 
 /**
@@ -158,6 +168,7 @@ Scene_Equip.prototype.onChangeEquip = function () {
         this._equipItemWindow.select(this._equipItemWindow._lastSelected);
         this._equipItemWindow.show();
         this._equipItemWindow.showHelpWindow(1);
+        this._equipSortWindow.show();
         this._equipItemWindow.activate();
     } else {
         this._equipSlotDoWhatWindow.showBackgroundDimmer();
@@ -239,9 +250,17 @@ Scene_Equip.prototype.onEquipItemOk = function () {
 Scene_Equip.prototype.onEquipItemCancel = function () {
     this._equipItemWindow.setLastSelected(this._equipItemWindow.index());
     this._equipItemWindow.hideHelpWindow(1);
+    this._equipSortWindow.hide();
     this._equipSlotWindow.show();
     this._equipItemWindow.hide();
     this._equipSlotWindow.activate();
+};
+
+Scene_Equip.prototype.onSort = function () {
+    $gameParty.nextSortMethod();
+    this._equipSortWindow.refresh();
+    this._equipItemWindow.refresh();
+    this._equipItemWindow.callUpdateHelp();
 };
 
 //////////////////////////////
@@ -297,6 +316,7 @@ Scene_Equip.prototype.doWhatUnequipMessageCallback = function () {
 Scene_Equip.prototype.onEquipItemMessageCallback = function () {
     this._equipSlotWindow.refresh();
     this._equipItemWindow.hideHelpWindow(1);
+    this._equipSortWindow.show();
     this._equipSlotWindow.show();
     this._equipItemWindow.hide();
     this._equipItemWindow.hideBackgroundDimmer();
