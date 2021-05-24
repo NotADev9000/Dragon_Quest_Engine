@@ -35,6 +35,7 @@ Scene_Item.prototype.create = function () {
     this.createEquipStatsWindow();
     this.createItemSortWindow();
     this.createItemOrganiseWindow();
+    this.createSendToBagWindow();
     this.createDoWhatWindow();
     this.createUseOnWhoWindow();
     this.createItemStatusWindow();
@@ -99,6 +100,16 @@ Scene_Item.prototype.createItemOrganiseWindow = function () {
     this._itemOrganiseWindow = new Window_IconHelp(x, y, 396, 123, ['sort', 'filter'], ['Organise', 'Send to Bag'], 9, 15);
     this._itemOrganiseWindow.hide();
     this.addWindow(this._itemOrganiseWindow);
+};
+
+Scene_Item.prototype.createSendToBagWindow = function () {
+    this._sendToBagWindow = new Window_TitledCommand(48, 48, 354, 'Send to Bag', ['Items', 'Equipment', 'Everything', 'Cancel']);
+    this._sendToBagWindow.deactivate();
+    this._sendToBagWindow.setHandler('ok', this.onSendToBagOk.bind(this));
+    this._sendToBagWindow.setHandler('cancel', this.onSendToBagCancel.bind(this));
+    this._sendToBagWindow.setHandler('Cancel', this.onSendToBagCancel.bind(this));
+    this._sendToBagWindow.hide();
+    this.addWindow(this._sendToBagWindow);
 };
 
 Scene_Item.prototype.createDoWhatWindow = function () {
@@ -209,9 +220,45 @@ Scene_Item.prototype.onSort = function () {
 
 Scene_Item.prototype.onFilter = function () {
     if (!this.inBag(this._commandWindow)) {
-        // filter actor items to bag
-
+        this._itemWindow.deactivate();
+        this._itemWindow.showBackgroundDimmer();
+        this._itemWindow.showAllHelpWindowBackgroundDimmers();
+        this.showSortWindowBackgroundDimmers();
+        // open filter choice window
+        this._sendToBagWindow.select(0);
+        this._sendToBagWindow.show();
+        this._sendToBagWindow.activate();
     }
+};
+
+Scene_Item.prototype.onSendToBagOk = function () {
+    const actor = $gameParty.members()[this._commandWindow.currentSymbol()];
+    const choice = this._sendToBagWindow.currentSymbol();
+    let message;
+    switch (choice) {
+        case 'Items':
+            actor.sendItemsOrEquipmentToBag();
+            message = actor.sendItemsToBagMessage();
+            break;
+        case 'Equipment':
+            actor.sendItemsOrEquipmentToBag(false);
+            message = actor.sendEquipmentToBagMessage();
+            break;
+        default: // Everything
+            actor.sendEverythingToBag();
+            message = actor.sendEverythingToBagMessage();
+            break;
+    }
+    this._itemWindow.refresh();
+    this.displayMessage(message, Scene_Item.prototype.sentToBagMessage);
+};
+
+Scene_Item.prototype.onSendToBagCancel = function () {
+    this._itemWindow.hideBackgroundDimmer();
+    this._itemWindow.hideAllHelpWindowBackgroundDimmers();
+    this.hideSortWindowBackgroundDimmers();
+    this._sendToBagWindow.hide();
+    this._itemWindow.activate();
 };
 
 Scene_Item.prototype.onDoWhatUse = function () {
@@ -510,6 +557,10 @@ Scene_Item.prototype.transferFullMessage = function () {
     this._transferToWhoWindow.showBackgroundDimmer();
     this._transferItemWindow.activate();
     this._transferItemWindow.select(this._transferItemWindow._lastSelected);
+};
+
+Scene_Item.prototype.sentToBagMessage = function () {
+    this.onSendToBagCancel();
 };
 
 //////////////////////////////

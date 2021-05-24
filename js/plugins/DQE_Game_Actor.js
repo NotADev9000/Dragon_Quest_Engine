@@ -539,6 +539,33 @@ Game_Actor.prototype.tradeItemWithActor = function (index, actorIndex, actor, th
     actor.giveItems(item, 1, actorNewPos);
 };
 
+/**
+ * Sends all non-equipment items OR all unequipped equipment to bag
+ */
+Game_Actor.prototype.sendItemsOrEquipmentToBag = function (sendItems = true) {
+    const itemCheckFunc = sendItems ? Game_Item.prototype.isItem : Game_Item.prototype.isEquipItem;
+    this.removeEquipsFromItemList(); // so no equips are sent to bag
+
+    // keeps the items of the type not being checked (these items are not added to bag as the OR check has been passed)
+    // items of the type being checked are then added to bag
+    // (these items are added to bag as OR check has failed, $gameParty.gainItem always returns undefined)
+    const filtered = this._items.filter((item, i) =>
+        !itemCheckFunc.call(item) || $gameParty.gainItem(this.item(i), 1)
+    );
+
+    // place equips back
+    this._items = this.initCarriedEquips().concat(filtered);
+};
+
+/**
+ * Sends all unequipped items & equipment to bag
+ */
+Game_Actor.prototype.sendEverythingToBag = function () {
+    this.removeEquipsFromItemList();
+    this._items.forEach((item, i) => $gameParty.gainItem(this.item(i), 1));
+    this._items = this.initCarriedEquips();
+};
+
 //////////////////////////////
 // Functions - parameters
 //////////////////////////////
@@ -694,6 +721,20 @@ Game_Actor.prototype.inventoryFullMessage = function () {
 
 Game_Actor.prototype.inventoryFullCarryMessage = function () {
     return `${this._name} can't carry any more items!`;
+};
+
+// Sending to bag
+
+Game_Actor.prototype.sendItemsToBagMessage = function () {
+    return `${this._name} places all non-equipment items in the bag.`;
+};
+
+Game_Actor.prototype.sendEquipmentToBagMessage = function () {
+    return `${this._name} places all unequipped gear in the bag.`;
+};
+
+Game_Actor.prototype.sendEverythingToBagMessage = function () {
+    return `${this._name} places all unequipped items and gear in the bag.`;
 };
 
 //////////////////////////////
