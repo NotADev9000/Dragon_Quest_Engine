@@ -151,3 +151,15 @@ Window_BattleActorStat.prototype.drawStats = function () {
         this.drawText(value, 0, y, tw, 'right');
     });
 };
+
+//////////////////////////////
+// Functions - refresh
+//////////////////////////////
+
+Window_ItemActorStat.prototype.refresh = function () {
+    if (this._stat.length) {
+        this.prepDrawItems();
+        this.createContents();
+        this.drawStats();
+    }
+};
