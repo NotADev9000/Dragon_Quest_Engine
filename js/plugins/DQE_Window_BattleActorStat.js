@@ -156,7 +156,7 @@ Window_BattleActorStat.prototype.drawStats = function () {
 // Functions - refresh
 //////////////////////////////
 
-Window_ItemActorStat.prototype.refresh = function () {
+Window_BattleActorStat.prototype.refresh = function () {
     if (this._stat.length) {
         this.prepDrawItems();
         this.createContents();
