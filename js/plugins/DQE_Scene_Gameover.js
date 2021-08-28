@@ -6,7 +6,7 @@
 /*:
 *
 * @author NotADev
-* @plugindesc The scene for gameover; sends player to restore point and takes half off gold - V0.1
+* @plugindesc The scene for gameover; sends player to restore point and takes half of gold - V0.1
 *
 * @param Wipe Out Switch
 * @desc ID of switch to turn on when party is wiped out

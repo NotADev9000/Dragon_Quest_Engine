@@ -56,13 +56,23 @@ Scene_Misc.prototype.create = function () {
     this.selectLastCommand();
 };
 
+Scene_Misc.prototype.needsFadeOut = function () {
+    return SceneManager.isNextScene(Scene_SkillSystem);
+};
+
+Scene_Misc.prototype.stop = function () {
+    Scene_Base.prototype.stop.call(this);
+    if (this.needsFadeOut()) this.startFadeOut(this.fadeSpeed(), false);
+};
+
 //////////////////////////////
 // Functions - create windows
 //////////////////////////////
 
 Scene_Misc.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_TitledCommand(48, 48, 354, 'Misc.', ['Heal All', 'Line-up', 'Battle Music', 'Settings'], Scene_Misc.prototype.changeWindows);
+    this._commandWindow = new Window_TitledCommand(48, 48, 354, 'Misc.', ['Heal All', 'Skill Sets', 'Line-up', 'Battle Music', 'Settings'], Scene_Misc.prototype.changeWindows);
     this._commandWindow.setHandler('Heal All', this.commandHealAll.bind(this));
+    this._commandWindow.setHandler('Skill Sets', this.commandSkillSets.bind(this));
     this._commandWindow.setHandler('Line-up', this.commandLineUp.bind(this));
     this._commandWindow.setHandler('Battle Music', this.commandBattleMusic.bind(this));
     this._commandWindow.setHandler('Settings', this.commandSettings.bind(this));
@@ -137,6 +147,11 @@ Scene_Misc.prototype.createMessageWindow = function () {
 
 Scene_Misc.prototype.commandHealAll = function () {
     this._commandWindow.activate();
+};
+
+Scene_Misc.prototype.commandSkillSets = function () {
+    this.setLastCommand(this._commandWindow.currentSymbol());
+    SceneManager.push(Scene_SkillSystem);
 };
 
 Scene_Misc.prototype.commandLineUp = function () {
@@ -265,6 +280,12 @@ Scene_Misc.prototype.changeWindows = function (symbol) {
         switch (symbol) {
             case 'Heal All':
                 this._helpWindow.setItem('Quickly and easily restore all your party members to full health.');
+                this._helpWindow.show();
+                this._lineUpPartyWindow.hide();
+                this._battleMusicWindow.hide();
+                break;
+            case 'Skill Sets':
+                this._helpWindow.setItem('Spend skill points to unlock abilities for your party members.');
                 this._helpWindow.show();
                 this._lineUpPartyWindow.hide();
                 this._battleMusicWindow.hide();

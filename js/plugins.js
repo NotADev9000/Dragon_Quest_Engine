@@ -48,6 +48,7 @@ var $plugins =
 {"name":"DQE_Scene_ItemBase","status":true,"description":"The superclass of Scene_Item and Scene_Skill - V0.1","parameters":{}},
 {"name":"DQE_Scene_Item","status":true,"description":"The scene for the item menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_Skill","status":true,"description":"The scene for the skill (aka magic) menu - V0.1","parameters":{}},
+{"name":"DQE_Scene_SkillSystem","status":true,"description":"The scene for the skill system - V0.1","parameters":{}},
 {"name":"DQE_Scene_Equip","status":true,"description":"The scene for the equip menu - V0.1","parameters":{}},
 {"name":"DQE_Scene_Battle","status":true,"description":"The scene for the battle - V0.1","parameters":{}},
 {"name":"DQE_Scene_Status","status":true,"description":"The scene for the status menu - V0.1","parameters":{}},

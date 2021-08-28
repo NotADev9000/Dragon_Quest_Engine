@@ -24,6 +24,16 @@ DQEng.Scene_Boot = DQEng.Scene_Boot || {};
 // Scene_Boot
 //-----------------------------------------------------------------------------
 
+DQEng.Scene_Boot.loadSystemImages = Scene_Boot.loadSystemImages;
+Scene_Boot.loadSystemImages = function () {
+    DQEng.Scene_Boot.loadSystemImages.call(this);
+    ImageManager.reserveSystem('SkillSystem_BG');
+};
+
+/**
+ * Only change in this function is going to Scene_File instead of Scene_Title
+ * Note: Will be changed when the title is implemented
+ */
 Scene_Boot.prototype.start = function () {
     Scene_Base.prototype.start.call(this);
     SoundManager.preloadImportantSounds();
