@@ -1,0 +1,22 @@
+Skill Sets in JS:
+- game_actor:
+	+ skill points
+	+ skill sets
+
+$dataSkillSets
++ skill set:
+	- name
+	- description
+	- layers:[
+		+ layer X:
+			+ layer unlock cost
+				- certain amount of skills from previous layer
+				  must be bought to unlock this layer
+			+ nodes:[
+				- node:
+					+ unlocks:
+						- skills, stats, weapon use
+					+ cost
+						- sp, gold?, m-medals?
+			]
+	]
