@@ -5,8 +5,8 @@ Skill Sets in JS:
 
 $dataSkillSets
 + skill set:
+	- ID (generally same as name)
 	- name
-	- description
 	- layers:[
 		+ layer X:
 			+ layer unlock cost
@@ -14,9 +14,17 @@ $dataSkillSets
 				  must be bought to unlock this layer
 			+ nodes:[
 				- node:
+					+ name: (leave blank for skill name)
 					+ unlocks:
 						- skills, stats, weapon use
 					+ cost
 						- sp, gold?, m-medals?
 			]
 	]
+	
+
+- dataManager makes $dataSkillSets from json (contains all skill sets)
+- (^ set the nodes & layers to locked)
+- (^ set the layers & sets to incomplete)
+- dataManager adds skillsets ID to $dataActors object
+- game_actor setup initiates actors' skillsets

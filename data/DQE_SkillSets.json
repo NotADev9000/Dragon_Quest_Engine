@@ -1,0 +1,74 @@
+[
+    {
+        "id": "SWORDS",
+        "name": "Swords",
+        "layers": [
+            {
+                "unlockCost": 0,
+                "nodes": [
+                    {
+                        "name": "Flame Slash",
+                        "onUnlock": {
+                            "skills": [
+                                4
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 9
+                        },
+                        "unlocked": false
+                    },
+                    {
+                        "name": "Gust Slash",
+                        "onUnlock": {
+                            "skills": [
+                                5
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 10
+                        },
+                        "unlocked": false
+                    }
+                ],
+                "unlocked": true,
+                "complete": false
+            }
+        ],
+        "complete": false
+    }
+]

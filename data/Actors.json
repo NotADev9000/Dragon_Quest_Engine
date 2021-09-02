@@ -1,6 +1,6 @@
 [
 null,
-{"id":1,"battlerName":"","characterIndex":0,"characterName":"Protags1_DQ3","classId":1,"equips":[1,0,3,1,0],"faceIndex":0,"faceName":"","traits":[{"code":51,"dataId":10,"value":1}],"initialLevel":1,"maxLevel":99,"name":"Hero","nickname":"The Frizziest","note":"<slotType:2> # all wield","profile":""},
+{"id":1,"battlerName":"","characterIndex":0,"characterName":"Protags1_DQ3","classId":1,"equips":[1,0,3,1,0],"faceIndex":0,"faceName":"","traits":[{"code":51,"dataId":10,"value":1},{"code":11,"dataId":1,"value":1}],"initialLevel":1,"maxLevel":99,"name":"Hero","nickname":"The Frizziest","note":"<slotType:2> # all wield\n<skillsets>\nSWORDS\n</skillsets>","profile":""},
 {"id":2,"battlerName":"","characterIndex":1,"characterName":"Protags1_DQ3","classId":3,"equips":[0,0,0,0,0],"faceIndex":7,"faceName":"","traits":[],"initialLevel":1,"maxLevel":99,"name":"Cannock","nickname":"The Prince","note":"","profile":""},
 {"id":3,"battlerName":"","characterIndex":2,"characterName":"Protags1_DQ3","classId":4,"equips":[0,0,0,0,0],"faceIndex":7,"faceName":"","traits":[],"initialLevel":1,"maxLevel":99,"name":"Moonbrook","nickname":"The Princess","note":"","profile":""},
 {"id":4,"battlerName":"","characterIndex":3,"characterName":"Protags1_DQ3","classId":2,"equips":[0,0,0,0,0],"faceIndex":0,"faceName":"","traits":[],"initialLevel":1,"maxLevel":99,"name":"Erdrick","nickname":"Legendary Hero","note":"","profile":""},

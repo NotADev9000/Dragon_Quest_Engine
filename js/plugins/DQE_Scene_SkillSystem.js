@@ -38,6 +38,8 @@ Scene_SkillSystem.prototype.initialize = function () {
 Scene_SkillSystem.prototype.create = function () {
     Scene_MenuBase.prototype.create.call(this);
     this.createCommandWindow();
+    this.createSkillPointsWindow();
+    this.createSkillSetsListWindow();
 };
 
 Scene_SkillSystem.prototype.start = function () {
@@ -54,6 +56,13 @@ Scene_SkillSystem.prototype.update = function () {
 // Functions - visuals
 //////////////////////////////
 
+Scene_SkillSystem.prototype.createBackground = function () {
+    this._backgroundSprite = new TilingSprite();
+    this._backgroundSprite.move(0, 0, Graphics.width, Graphics.height);
+    this._backgroundSprite.bitmap = ImageManager.loadSystem('SkillSystem_BG');
+    this.addChild(this._backgroundSprite);
+};
+
 Scene_SkillSystem.prototype.updateBackgroundScroll = function () {
     // moving the origin x/y allows the tiling sprite to tile the image properly
     this._backgroundSprite.origin.x -= 2;
@@ -64,16 +73,54 @@ Scene_SkillSystem.prototype.updateBackgroundScroll = function () {
 // Functions - create windows
 //////////////////////////////
 
-Scene_SkillSystem.prototype.createBackground = function() {
-    this._backgroundSprite = new TilingSprite();
-    this._backgroundSprite.move(0, 0, Graphics.width, Graphics.height);
-    this._backgroundSprite.bitmap = ImageManager.loadSystem('SkillSystem_BG');
-    this.addChild(this._backgroundSprite);
-};
-
 Scene_SkillSystem.prototype.createCommandWindow = function () {
     this._commandWindow = new Window_TitledPartyCommand(0, 0, 354, 'Party');
-    // this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
+    this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
+    this._commandWindow.setHandler('pageup', this.onCommandNextSkillSet.bind(this));
+    this._commandWindow.setHandler('pagedown', this.onCommandPreviousSkillSet.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._commandWindow);
+};
+
+Scene_SkillSystem.prototype.createSkillPointsWindow = function () {
+    const y = this._commandWindow.y + this._commandWindow.height;
+    this._skillPointsWindow = new Window_SkillPoints(0, y, 354);
+    this.addWindow(this._skillPointsWindow);
+    this._commandWindow.setHelpWindow(this._skillPointsWindow);
+};
+
+Scene_SkillSystem.prototype.createSkillSetsListWindow = function () {
+    const x = this._commandWindow.x + this._commandWindow.width;
+    this._skillSetsListWindow = new Window_SkillSetsList(x, 0, 1086, 375);
+    this._skillSetsListWindow.setHandler('cancel', this.onSkillSetListCancel.bind(this));
+    this.addWindow(this._skillSetsListWindow);
+    this._commandWindow.setHelpWindow(this._skillSetsListWindow);
+};
+
+//////////////////////////////
+// Functions - on handlers
+//////////////////////////////
+
+Scene_SkillSystem.prototype.onCommandOk = function () {
+    this._commandWindow.showBackgroundDimmer();
+    this._skillSetsListWindow.select(this._skillSetsListWindow._lastSelected);
+    this._skillSetsListWindow.activate();
+};
+
+Scene_SkillSystem.prototype.onCommandNextSkillSet = function () {
+    this._skillSetsListWindow.gotoNextPage();
+    this._skillSetsListWindow.deselect();
+    this._commandWindow.activate();
+};
+
+Scene_SkillSystem.prototype.onCommandPreviousSkillSet = function () {
+    this._skillSetsListWindow.gotoNextPage(-1);
+    this._skillSetsListWindow.deselect();
+    this._commandWindow.activate();
+};
+
+Scene_SkillSystem.prototype.onSkillSetListCancel = function () {
+    this._commandWindow.hideBackgroundDimmer();
+    this._skillSetsListWindow.deselect();
+    this._commandWindow.activate();
 };

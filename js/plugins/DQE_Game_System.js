@@ -59,6 +59,10 @@ Game_System.prototype.initialize = function() {
     this._battleBgmId = 6; // ID of DQ battle music e.g. 1 = DQ1, 2 = DQ2 etc.
 };
 
+//////////////////////////////
+// Functions - music
+//////////////////////////////
+
 Game_System.prototype.battleBgmId = function () {
     return this._battleBgmId;
 };
@@ -118,4 +122,12 @@ Game_System.prototype.changeBattleBgmFromId = function () {
 Game_System.prototype.changeDefaultBattleBgm = function (value) {
     this.setBattleBgmId(value);
     if (!$gameSwitches.value(DQEng.Parameters.Game_System.OverrideBattleBgmSwitch)) this.changeBattleBgmFromId();
+};
+
+//////////////////////////////
+// Functions - skill sets
+//////////////////////////////
+
+Game_System.prototype.findSkillSet = function (skillSetId) {
+    return $DQE_dataSkillSets.find(skillSetData => skillSetData.id === skillSetId);
 };

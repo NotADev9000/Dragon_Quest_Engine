@@ -106,6 +106,8 @@ var $plugins =
 {"name":"DQE_Window_SimpleEquipmentList","status":true,"description":"The window for displaying equipments but without selection - V0.1","parameters":{}},
 {"name":"DQE_Window_SkillList","status":true,"description":"The window for displaying skills - V0.1","parameters":{}},
 {"name":"DQE_Window_SkillCost","status":true,"description":"The window for displaying a skills MP cost in the magic menu - V0.1","parameters":{}},
+{"name":"DQE_Window_SkillPoints","status":true,"description":"The window for displaying how many skill points an actor has - V0.1","parameters":{}},
+{"name":"DQE_Window_SkillSetsList","status":true,"description":"The window for displaying an actors' skill sets - V0.1","parameters":{}},
 {"name":"DQE_Window_ShopBuy","status":true,"description":"The window for the buy list - V0.1","parameters":{}},
 {"name":"DQE_Window_ShopMisc","status":true,"description":"The window for the shop's misc list - V0.1","parameters":{}},
 {"name":"DQE_Window_ShopItemStats","status":true,"description":"The window for the shop's item stat list - V0.1","parameters":{}},

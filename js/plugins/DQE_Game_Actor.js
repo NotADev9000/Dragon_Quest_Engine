@@ -45,6 +45,8 @@ Game_Actor.prototype.initMembers = function () {
     DQEng.Game_Actor.initMembers.call(this);
     this._items = [];
     this._checkSecondHand = true;
+    this._skillSets = [];
+    this._skillPoints = 0;
 };
 
 /**
@@ -53,9 +55,12 @@ Game_Actor.prototype.initMembers = function () {
 DQEng.Game_Actor.setup = Game_Actor.prototype.setup;
 Game_Actor.prototype.setup = function (actorId) {
     DQEng.Game_Actor.setup.call(this, actorId);
-    this._items = this.initItems();
+    // items
+    this.initItems();
     this.releaseUnequippableItems(true);
     this.refresh();
+    // skillsets
+    this.initSkillSets();
 };
 
 //////////////////////////////
@@ -68,7 +73,7 @@ Game_Actor.prototype.setup = function (actorId) {
  * TODO: Read from Actor notetags to retrieve default items
  */
 Game_Actor.prototype.initItems = function () {
-    return this.initCarriedEquips();
+    this._items = this.initCarriedEquips();
 };
 
 Game_Actor.prototype.initCarriedEquips = function () {
@@ -603,7 +608,7 @@ Game_Actor.prototype.paramEquips = function (paramId) {
 //////////////////////////////
 
 Game_Actor.prototype.currentClass = function (extra = false) {
-    return extra ? $DQEdataClasses[this._classId] : $dataClasses[this._classId];
+    return extra ? $DQE_dataClasses[this._classId] : $dataClasses[this._classId];
 };
 
 //////////////////////////////
@@ -641,6 +646,57 @@ Game_Actor.prototype.displayLevelUp = function (newSkills, playSound) {
         $gameMessage.add(TextManager.obtainSkill.format(skill.name));
     });
 };
+
+//////////////////////////////
+// Functions - skill sets
+//////////////////////////////
+
+Game_Actor.prototype.skillSets = function () {
+    return this._skillSets;
+};
+
+Game_Actor.prototype.initSkillSets = function () {
+    this._skillSets = [];
+    // looping through the data actors' skill sets
+    this.actor().skillSets.forEach(skillSetId => {
+        this.addSkillSet(skillSetId);
+
+        this.addSkillSet(skillSetId);
+        this.addSkillSet(skillSetId);
+        this.addSkillSet(skillSetId);
+        this.addSkillSet(skillSetId);
+        this.addSkillSet(skillSetId);
+        this.addSkillSet(skillSetId);
+        this.addSkillSet(skillSetId);
+        this.addSkillSet(skillSetId);
+        this.addSkillSet(skillSetId);
+    });
+};
+
+Game_Actor.prototype.addSkillSet = function (skillSetId) {
+    const skillSet = $gameSystem.findSkillSet(skillSetId);
+    if (skillSet) {
+        this._skillSets.push(JsonEx.makeDeepCopy(skillSet));
+    } else {
+        console.warn(`skill set with ID: ${skillSetId} does not exist.`);
+    }
+};
+
+//////////////////////////////
+// Functions - skill points
+//////////////////////////////
+
+Game_Actor.prototype.skillPoints = function () {
+    return this._skillPoints;
+};
+
+Game_Actor.prototype.addSkillPoints = function (amount) {
+    if (this._skillPoints < 9999) this._skillPoints += amount;
+}
+
+Game_Actor.prototype.loseSkillPoints = function (amount) {
+    if (this._skillPoints > 0) this._skillPoints -= amount;
+}
 
 //////////////////////////////
 // Functions - messages
