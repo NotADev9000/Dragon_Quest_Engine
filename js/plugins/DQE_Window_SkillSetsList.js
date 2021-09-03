@@ -128,7 +128,15 @@ Window_SkillSetsList.prototype.drawItem = function (index) {
     const item = this._data[index];
     if (item) {
         const rect = this.itemRectForText(index);
+        // skill set complete color change
+        if (item.complete) this.changeTextColor(this.completeSkillSetColor());
+        // skill set name
         this.drawText(item.name, rect.x, rect.y, rect.width);
+        // nodes unlocked / total nodes
+        const nodesUnlocked = item.nodesUnlocked;
+        const nodesTotal = $gameSystem.getSkillSetNodeAmount(item);
+        this.drawText(`${nodesUnlocked}/${nodesTotal}`, rect.x, rect.y, rect.width, 'right');
+        this.resetTextColor();
     }
 };
 

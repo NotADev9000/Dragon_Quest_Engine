@@ -92,15 +92,19 @@ Window_Base.prototype.currencyColor = function (unit) {
         default:
             return this.goldColor();
     }
-}
+};
+
+Window_Base.prototype.completeSkillSetColor = function () {
+    return this.goldColor();
+};
 
 Window_Base.prototype.medalColor = function () {
     return this.textColor(4);
-}
+};
 
 Window_Base.prototype.goldColor = function () {
     return this.textColor(6);
-}
+};
 
 Window_Base.prototype.crisisColor = function () {
     return this.textColor(6);

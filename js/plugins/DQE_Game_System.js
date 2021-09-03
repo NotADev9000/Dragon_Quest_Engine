@@ -131,3 +131,16 @@ Game_System.prototype.changeDefaultBattleBgm = function (value) {
 Game_System.prototype.findSkillSet = function (skillSetId) {
     return $DQE_dataSkillSets.find(skillSetData => skillSetData.id === skillSetId);
 };
+
+/**
+ * Returns the total amount of nodes in a skill set
+ * 
+ * @param {Object} skillSet the skillSet data object
+ */
+Game_System.prototype.getSkillSetNodeAmount = function (skillSet) {
+    let nodeCount = 0;
+    skillSet.layers.forEach(layer => {
+        nodeCount += layer.nodes.length;
+    });
+    return nodeCount;
+};
