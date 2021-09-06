@@ -666,10 +666,6 @@ Game_Actor.prototype.initSkillSets = function () {
         this.addSkillSet(skillSetId);
         this.addSkillSet(skillSetId);
         this.addSkillSet(skillSetId);
-        this.addSkillSet(skillSetId);
-        this.addSkillSet(skillSetId);
-        this.addSkillSet(skillSetId);
-        this.addSkillSet(skillSetId);
     });
 };
 
@@ -680,6 +676,10 @@ Game_Actor.prototype.addSkillSet = function (skillSetId) {
     } else {
         console.warn(`skill set with ID: ${skillSetId} does not exist.`);
     }
+};
+
+Game_Actor.prototype.numSkillSets = function () {
+    return this._skillSets.length;
 };
 
 //////////////////////////////

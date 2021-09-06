@@ -38,8 +38,9 @@ Scene_SkillSystem.prototype.initialize = function () {
 Scene_SkillSystem.prototype.create = function () {
     Scene_MenuBase.prototype.create.call(this);
     this.createCommandWindow();
-    this.createSkillPointsWindow();
     this.createSkillSetsListWindow();
+    this.createSkillSetsWindow();
+    this.createSkillPointsWindow();
 };
 
 Scene_SkillSystem.prototype.start = function () {
@@ -74,12 +75,30 @@ Scene_SkillSystem.prototype.updateBackgroundScroll = function () {
 //////////////////////////////
 
 Scene_SkillSystem.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_TitledPartyCommand(0, 0, 354, 'Party');
+    this._commandWindow = new Window_TitledPartyCommand_ItemList(0, 0, 354, 'Party');
     this._commandWindow.setHandler('ok', this.onCommandOk.bind(this));
     this._commandWindow.setHandler('pageup', this.onCommandNextSkillSet.bind(this));
     this._commandWindow.setHandler('pagedown', this.onCommandPreviousSkillSet.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
+    this._commandWindow.setCheckListIsEmpty(true);
     this.addWindow(this._commandWindow);
+};
+
+Scene_SkillSystem.prototype.createSkillSetsListWindow = function () {
+    const x = this._commandWindow.x + this._commandWindow.width;
+    this._skillSetsListWindow = new Window_SkillSetsList(x, 0, 1086, 231);
+    this._skillSetsListWindow.setHandler('cancel', this.onSkillSetListCancel.bind(this));
+    this.addWindow(this._skillSetsListWindow);
+    this._commandWindow.setHelpWindow(this._skillSetsListWindow);
+};
+
+Scene_SkillSystem.prototype.createSkillSetsWindow = function () {
+    const x = this._skillSetsListWindow.x;
+    const y = this._skillSetsListWindow.y + this._skillSetsListWindow.height;
+    this._skillSetsWindow = new Window_SkillSets(x, y, 1086, 555, false);
+    this.addWindow(this._skillSetsWindow);
+    this._commandWindow.setHelpWindow(this._skillSetsWindow);
+    this._skillSetsListWindow.setHelpWindow(this._skillSetsWindow);
 };
 
 Scene_SkillSystem.prototype.createSkillPointsWindow = function () {
@@ -87,14 +106,6 @@ Scene_SkillSystem.prototype.createSkillPointsWindow = function () {
     this._skillPointsWindow = new Window_SkillPoints(0, y, 354);
     this.addWindow(this._skillPointsWindow);
     this._commandWindow.setHelpWindow(this._skillPointsWindow);
-};
-
-Scene_SkillSystem.prototype.createSkillSetsListWindow = function () {
-    const x = this._commandWindow.x + this._commandWindow.width;
-    this._skillSetsListWindow = new Window_SkillSetsList(x, 0, 1086, 375);
-    this._skillSetsListWindow.setHandler('cancel', this.onSkillSetListCancel.bind(this));
-    this.addWindow(this._skillSetsListWindow);
-    this._commandWindow.setHelpWindow(this._skillSetsListWindow);
 };
 
 //////////////////////////////

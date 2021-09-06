@@ -86,6 +86,10 @@ Window_SkillSetsList.prototype.maxItems = function () {
     return this._data ? this._data.length : 1;
 };
 
+Window_SkillSetsList.prototype.updateHelp = function () {
+    this.setHelpWindowItem(this.index());
+};
+
 //////////////////////////////
 // Functions - draw items
 //////////////////////////////
