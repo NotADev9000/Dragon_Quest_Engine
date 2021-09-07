@@ -86,8 +86,27 @@ Window_SkillSetsList.prototype.maxItems = function () {
     return this._data ? this._data.length : 1;
 };
 
+//////////////////////////////
+// Functions - help windows
+//////////////////////////////
+
+/**
+ * window does not have to be active to call update help
+ */
+Window_SkillSetsList.prototype.callUpdateHelp = function () {
+    if (this._helpWindow?.length) this.updateHelp();
+};
+
 Window_SkillSetsList.prototype.updateHelp = function () {
     this.setHelpWindowItem(this.index());
+};
+
+Window_SkillSetsList.prototype.callUpdateSingleHelp = function (helpWindow) {
+    this.updateSingleHelp(helpWindow);
+};
+
+Window_SkillSetsList.prototype.updateSingleHelp = function (helpWindow) {
+    this.setSingleHelpWindowItem(this.index(), helpWindow);
 };
 
 //////////////////////////////

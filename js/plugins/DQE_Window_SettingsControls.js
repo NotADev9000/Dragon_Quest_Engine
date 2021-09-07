@@ -142,3 +142,7 @@ Window_SettingsControls.prototype.updateHelp = function () {
     }
     this.setHelpWindowItem(text);
 };
+
+Window_SettingsControls.prototype.updateSingleHelp = function () {
+    this.updateHelp();
+};

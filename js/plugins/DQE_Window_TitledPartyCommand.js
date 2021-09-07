@@ -89,7 +89,7 @@ Window_TitledPartyCommand.prototype.addPartyCommands = function () {
 };
 
 //////////////////////////////
-// Functions - updates
+// Functions - help windows
 //////////////////////////////
 
 Window_TitledPartyCommand.prototype.updateHelp = function () {
@@ -97,4 +97,8 @@ Window_TitledPartyCommand.prototype.updateHelp = function () {
     this._helpWindow.forEach(helpWindow => {
         helpWindow.setCategory(symbol);
     });
+};
+
+Window_TitledPartyCommand.prototype.updateSingleHelp = function (helpWindow) {
+    helpWindow.setCategory(this.currentSymbol());
 };

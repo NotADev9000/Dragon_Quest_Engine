@@ -81,6 +81,9 @@ Scene_SkillSystem.prototype.createCommandWindow = function () {
     this._commandWindow.setHandler('pagedown', this.onCommandPreviousSkillSet.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this._commandWindow.setCheckListIsEmpty(true);
+    // cursor right and left should change skillSets window
+    this._commandWindow.cursorLeft = () => {};
+    this._commandWindow.cursorRight = () => {};
     this.addWindow(this._commandWindow);
 };
 

@@ -33,10 +33,64 @@ Window_Selectable.prototype.initialize = function (x, y, width, height) {
     this._helpWindow = [];
 }
 
+//////////////////////////////
+// Functions - data
+//////////////////////////////
+
 Window_Selectable.prototype.setHelpWindow = function (helpWindow) {
     this._helpWindow.push(helpWindow);
-    this.callUpdateHelp();
+    this.callUpdateSingleHelp(helpWindow);
 };
+
+// all help windows
+
+Window_Selectable.prototype.callUpdateHelp = function () {
+    if (this.active && this._helpWindow && this._helpWindow.length) {
+        this.updateHelp();
+    }
+};
+
+/**
+ * updates all help windows' contents
+ * this function should be overridden
+ *
+ * @param {Window_Base} helpWindow
+ */
+Window_Selectable.prototype.updateHelp = function () {
+    this._helpWindow.forEach(helpWindow => {
+        helpWindow.clear();
+    });
+};
+
+Window_Selectable.prototype.setHelpWindowItem = function (item) {
+    this._helpWindow.forEach(helpWindow => {
+        helpWindow.setItem(item);
+    });
+};
+
+// single help windows
+
+Window_Selectable.prototype.callUpdateSingleHelp = function (helpWindow) {
+    if (this.active) this.updateSingleHelp(helpWindow);
+};
+
+/**
+ * updates a single help windows' contents
+ * this function should be overridden
+ * 
+ * @param {Window_Base} helpWindow 
+ */
+Window_Selectable.prototype.updateSingleHelp = function (helpWindow) {
+    helpWindow.clear();
+};
+
+Window_Selectable.prototype.setSingleHelpWindowItem = function (item, helpWindow) {
+    helpWindow.setItem(item);
+};
+
+//////////////////////////////
+// Functions - displaying
+//////////////////////////////
 
 Window_Selectable.prototype.showHelpWindow = function (index = 0) {
     if (this._helpWindow && this._helpWindow.length) {
@@ -66,6 +120,10 @@ Window_Selectable.prototype.hideAllHelpWindows = function () {
     }
 };
 
+//////////////////////////////
+// Functions - dimmers
+//////////////////////////////
+
 Window_Selectable.prototype.showHelpWindowBackgroundDimmer = function (index = 0) {
     if (this._helpWindow && this._helpWindow.length) {
         this._helpWindow[index].showBackgroundDimmer();
@@ -92,22 +150,4 @@ Window_Selectable.prototype.hideAllHelpWindowBackgroundDimmers = function () {
             helpWindow.hideBackgroundDimmer();
         });
     }
-};
-
-Window_Selectable.prototype.callUpdateHelp = function () {
-    if (this.active && this._helpWindow && this._helpWindow.length) {
-        this.updateHelp();
-    }
-};
-
-Window_Selectable.prototype.updateHelp = function () {
-    this._helpWindow.forEach(helpWindow => {
-        helpWindow.clear();
-    });
-};
-
-Window_Selectable.prototype.setHelpWindowItem = function (item) {
-    this._helpWindow.forEach(helpWindow => {
-        helpWindow.setItem(item);
-    });
 };
