@@ -67,7 +67,27 @@ Window_SkillSetsList.prototype.setCategory = function (category) {
         this._category = category;
         this._actor = $gameParty.members()[this._category];
         this.refresh();
+        this.setSkillSetWindowActor();
     }
+};
+
+Window_SkillSetsList.prototype.setSkillSetWindowActor = function () {
+    // sets the skill set windows' actor
+    this._helpWindow[0]?.setCategory(this._category);
+    // update the skill set for skill set window
+    this.quickSelect();
+};
+
+/**
+ * select to populate help windows & immediately deselect
+ * to make sure cursor isn't showing
+ * 
+ * called whenever the actor is changed so that help windows
+ * can be updated
+ */
+Window_SkillSetsList.prototype.quickSelect = function () {
+    this.select(0);
+    this.deselect();
 };
 
 Window_SkillSetsList.prototype.item = function () {
@@ -107,6 +127,18 @@ Window_SkillSetsList.prototype.callUpdateSingleHelp = function (helpWindow) {
 
 Window_SkillSetsList.prototype.updateSingleHelp = function (helpWindow) {
     this.setSingleHelpWindowItem(this.index(), helpWindow);
+};
+
+Window_SkillSetsList.prototype.setHelpWindowItem = function (item) {
+    this._helpWindow.forEach(helpWindow => {
+        this.setSingleHelpWindowItem(item, helpWindow);
+    }, this);
+};
+
+Window_SkillSetsList.prototype.setSingleHelpWindowItem = function (item, helpWindow) {
+    // if actor has no skill sets
+    if (!this._data.length) item = -2;
+    helpWindow.setItem(item);
 };
 
 //////////////////////////////

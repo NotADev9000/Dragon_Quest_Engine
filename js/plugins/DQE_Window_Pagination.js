@@ -157,7 +157,7 @@ Window_Pagination.prototype.maxItemsOnPage = function () {
  * @param {number} next gets the next page if 1, previous if -1
  */
 Window_Pagination.prototype.getNextPage = function (next = 1) {
-    let nextPage = this._page + next;
+    const nextPage = this._page + next;
     return nextPage <= 0 ? this._numPages : nextPage > this._numPages ? 1 : nextPage;
 };
 

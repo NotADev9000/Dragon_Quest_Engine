@@ -82,8 +82,8 @@ Scene_SkillSystem.prototype.createCommandWindow = function () {
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this._commandWindow.setCheckListIsEmpty(true);
     // cursor right and left should change skillSets window
-    this._commandWindow.cursorLeft = () => {};
-    this._commandWindow.cursorRight = () => {};
+    this._commandWindow.cursorLeft = () => { this._skillSetsWindow.cursorLeft.call(this._skillSetsWindow); };
+    this._commandWindow.cursorRight = () => { this._skillSetsWindow.cursorRight.call(this._skillSetsWindow); };
     this.addWindow(this._commandWindow);
 };
 
@@ -100,8 +100,8 @@ Scene_SkillSystem.prototype.createSkillSetsWindow = function () {
     const y = this._skillSetsListWindow.y + this._skillSetsListWindow.height;
     this._skillSetsWindow = new Window_SkillSets(x, y, 1086, 555, false);
     this.addWindow(this._skillSetsWindow);
-    this._commandWindow.setHelpWindow(this._skillSetsWindow);
     this._skillSetsListWindow.setHelpWindow(this._skillSetsWindow);
+    this._skillSetsListWindow.setSkillSetWindowActor();
 };
 
 Scene_SkillSystem.prototype.createSkillPointsWindow = function () {
