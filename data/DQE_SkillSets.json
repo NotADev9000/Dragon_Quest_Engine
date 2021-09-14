@@ -4,7 +4,6 @@
         "name": "Swords",
         "layers": [
             {
-                "unlockCost": 0,
                 "nodes": [
                     {
                         "name": "Flame Slash",
@@ -65,7 +64,75 @@
                         "unlocked": false
                     }
                 ],
+                "unlockCost": 0,
                 "unlocked": true,
+                "nodesUnlocked": 0,
+                "complete": false
+            },
+            {
+                "nodes": [
+                    {
+                        "name": "Dragon Slash",
+                        "onUnlock": {
+                            "skills": [
+                                6
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 12
+                        },
+                        "unlocked": false
+                    },
+                    {
+                        "name": "Metal Slash",
+                        "onUnlock": {
+                            "skills": [
+                                7
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 7
+                        },
+                        "unlocked": false
+                    }
+                ],
+                "unlockCost": 2,
+                "unlocked": false,
+                "nodesUnlocked": 0,
                 "complete": false
             }
         ],

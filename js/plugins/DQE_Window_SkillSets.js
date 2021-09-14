@@ -82,12 +82,32 @@ Window_SkillSets.prototype.setCategory = function (category) {
 Window_SkillSets.prototype.setItem = function (index) {
     if (this._skillSetIndex !== index) {
         this._skillSetIndex = index;
+        this._page = 1;
+        this.makeItemList();
+        this._itemsOnPage = this.itemsOnPage();
         this.refresh();
     }
 };
 
 Window_SkillSets.prototype.item = function () {
-    return this._data && this.index() >= 0 ? this._data[this.index()] : null;
+    const index = this.index();
+    if (this._data && index >= 0) {
+        return this.node(index);
+    }
+    
+    return null;
+};
+
+Window_SkillSets.prototype.node = function (index) {
+    return this._data.layers[this.getLayerIndex()].nodes[index];
+};
+
+Window_SkillSets.prototype.layer = function () {
+    return this._data.layers[this.getLayerIndex()];
+};
+
+Window_SkillSets.prototype.previouslayersNodesUnlocked = function () {
+    return this._data.layers[this.getLayerIndex()-1].nodesUnlocked;
 };
 
 /**
@@ -104,7 +124,7 @@ Window_SkillSets.prototype.makeItemList = function () {
 };
 
 Window_SkillSets.prototype.maxItems = function () {
-    return this._data ? this._data.length : 1;
+    return this._itemsOnPage;
 };
 
 //////////////////////////////
@@ -133,21 +153,12 @@ Window_SkillSets.prototype.trueIndex = function (index) {
 // Functions - page
 //////////////////////////////
 
-/**
- * Returns the current page being displayed
- */
-Window_SkillSets.prototype.page = function () {
-    const index = this.index();
-    if (index < 0) return 1;
-    return Math.floor((index / this.maxItemsOnPage()) + 1);
-};
-
 Window_SkillSets.prototype.numPages = function () {
-    return this._data.length ? this._data.layers.length : 1;
+    return this._data.layers?.length ? this._data.layers.length : 1;
 };
 
 Window_SkillSets.prototype.itemsOnPage = function () {
-    return this._data.layers?.[this.getLayerIndex()].nodes.length ?? 0;
+    return this._data?.layers?.[this.getLayerIndex()].nodes.length ?? 0;
 };
 
 //////////////////////////////
@@ -190,6 +201,7 @@ Window_SkillSets.prototype.cursorLeft = function () {
 Window_SkillSets.prototype.gotoNextPage = function (next = 1) {
     if (this._numPages <= 1) return;
     this._page = this.getNextPage(next);
+    this._itemsOnPage = this.itemsOnPage();
     // force refresh
     this.select(this.index(), true);
 };
@@ -202,13 +214,14 @@ Window_SkillSets.prototype.drawTitleBlock = function () {
     const title = this._data.name || 'No Skill Set';
     const lineGap = this.lineGap();
     const itemHeight = this.itemHeight() + lineGap;
+    const hasSkills = this._actor.numSkillSets() > 1;
     let y = this.extraPadding();
 
     // window title
     this.drawText(title, 0, y, this.contentsWidth(), 'center');
 
     // icons (switching pages)
-    if (this._actor.numSkillSets() > 1) {
+    if (hasSkills) {
         // left icon
         let icon = this.getHandlerIcon('previous');
         this.drawTextEx(` \\i[${icon}]`, 0, y);
@@ -223,15 +236,67 @@ Window_SkillSets.prototype.drawTitleBlock = function () {
     this.drawHorzLine(0, y);
     y += 3 + lineGap;
 
-    // layer number
-    this.drawText(`Layer ${this._page}`, this.extraPadding(), y);
+    if (hasSkills) {
+        const ep = this.extraPadding();
+        const layer = this.layer();
+        let layerText = `Layer ${this._page}`;
 
-    // layer status
-    // layer unlocked info here
+        // complete layer - color change & tick
+        if (layer.complete) {
+            layerText += ' ^';
+            this.changeTextColor(this.completeSkillSetColor());
+        }
 
-    y += itemHeight;
-    // horizontal rule
-    this.drawHorzLine(0, y);
+        // layer number
+        this.drawText(layerText, ep, y);
+    
+        // layer status (only shows on layers > 1)
+        if (this._page !== 1) {
+            if (layer.unlocked) {
+                layerText = 'UNLOCKED';
+                this.changeTextColor(this.unlockedSkillLayerColor());
+            } else {
+                layerText = 'LOCKED';
+                this.changeTextColor(this.lockedSkillLayerColor());
+            }
+            layerText += ` ${this.previouslayersNodesUnlocked()}/${layer.unlockCost}`;
+            this.drawText(layerText, 0, y, this.contentsWidth() - ep, 'right');
+        }
+        this.resetTextColor();
+
+        y += itemHeight;
+        // horizontal rule
+        this.drawHorzLine(0, y);
+    }
+};
+
+Window_SkillSets.prototype.drawItem = function (index) {
+    const node = this.node(index);
+    if (node) {
+        // position items for cursor if selectable
+        const rect = this._selectable ? this.itemRectForText(index) : this.itemRect(index);
+        // unlocked nodes - color change & tick
+        let name = node.name;
+        if (node.unlocked) {
+            name += ' ^';
+            this.changeTextColor(this.completeSkillSetColor());
+        }
+        // node name
+        this.drawText(name, rect.x, rect.y, rect.width);
+        // node cost
+        const cost = node.cost;
+        let costText = '???';
+        if (cost.miniMedals) {
+            costText = `${cost.miniMedals} ${TextManager.medalUnit}`;
+        } else if (cost.gold) {
+            costText = `${cost.gold} ${TextManager.currencyUnit}`;
+        } else if (cost.skillPoints) {
+            costText = `${cost.skillPoints} ${TextManager.skillPointUnit}`;
+        }
+        this.drawText(costText, rect.x, rect.y, rect.width, 'right');
+        // reset node color
+        this.resetTextColor();
+    }
 };
 
 Window_SkillSets.prototype.itemRect = function (index) {
@@ -245,22 +310,22 @@ Window_SkillSets.prototype.itemRect = function (index) {
 //////////////////////////////
 
 Window_SkillSets.prototype.select = function (index, refresh = false) {
-    this._index = Math.min(this.maxItems() - 1, index);
+    this._index = Math.min(this._itemsOnPage - 1, index);
     this._stayCount = 0;
-    if (this._index > -1) {
-        this.setLastSelected(this._index);
-        if (refresh) this.refresh(false);
-    }
+    this.setLastSelected(this._index);
+    if (refresh) this.refresh();
     this.updateCursor();
     this.callUpdateHelp();
 };
 
 Window_SkillSets.prototype.refresh = function () {
     if (this._actor) {
-        this.makeItemList();
         this.createContents();
         this.drawTitleBlock();
-        Window_Pagination.prototype.refresh.call(this);
+        this._numPages = this.numPages();
+        this._topIndex = this.topIndex();
+        this._numRows = this.numRows();
+        this.drawPageBlock();
         this.drawAllItems();
     }
 };

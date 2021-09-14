@@ -98,6 +98,14 @@ Window_Base.prototype.completeSkillSetColor = function () {
     return this.goldColor();
 };
 
+Window_Base.prototype.unlockedSkillLayerColor = function () {
+    return this.textColor(8);
+};
+
+Window_Base.prototype.lockedSkillLayerColor = function () {
+    return this.textColor(2);
+};
+
 Window_Base.prototype.medalColor = function () {
     return this.textColor(4);
 };

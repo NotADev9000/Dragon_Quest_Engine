@@ -82,8 +82,8 @@ Scene_SkillSystem.prototype.createCommandWindow = function () {
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     this._commandWindow.setCheckListIsEmpty(true);
     // cursor right and left should change skillSets window
-    this._commandWindow.cursorLeft = () => { this._skillSetsWindow.cursorLeft.call(this._skillSetsWindow); };
-    this._commandWindow.cursorRight = () => { this._skillSetsWindow.cursorRight.call(this._skillSetsWindow); };
+    this._commandWindow.cursorLeft = this.onCursorLeft.bind(this);
+    this._commandWindow.cursorRight = this.onCursorRight.bind(this);
     this.addWindow(this._commandWindow);
 };
 
@@ -91,6 +91,9 @@ Scene_SkillSystem.prototype.createSkillSetsListWindow = function () {
     const x = this._commandWindow.x + this._commandWindow.width;
     this._skillSetsListWindow = new Window_SkillSetsList(x, 0, 1086, 231);
     this._skillSetsListWindow.setHandler('cancel', this.onSkillSetListCancel.bind(this));
+    // cursor right and left should change skillSets window
+    this._skillSetsListWindow.cursorLeft = this.onCursorLeft.bind(this);
+    this._skillSetsListWindow.cursorRight = this.onCursorRight.bind(this);
     this.addWindow(this._skillSetsListWindow);
     this._commandWindow.setHelpWindow(this._skillSetsListWindow);
 };
@@ -101,7 +104,6 @@ Scene_SkillSystem.prototype.createSkillSetsWindow = function () {
     this._skillSetsWindow = new Window_SkillSets(x, y, 1086, 555, false);
     this.addWindow(this._skillSetsWindow);
     this._skillSetsListWindow.setHelpWindow(this._skillSetsWindow);
-    this._skillSetsListWindow.setSkillSetWindowActor();
 };
 
 Scene_SkillSystem.prototype.createSkillPointsWindow = function () {
@@ -111,30 +113,46 @@ Scene_SkillSystem.prototype.createSkillPointsWindow = function () {
     this._commandWindow.setHelpWindow(this._skillPointsWindow);
 };
 
+Scene_SkillSystem.prototype.createStatsWindow = function () {
+    this._statsWindow = new Window_Stats(0, 0, 513);
+    this.addWindow(this._statsWindow);
+    this._commandWindow.setHelpWindow(this._statsWindow);
+};
+
 //////////////////////////////
 // Functions - on handlers
 //////////////////////////////
 
 Scene_SkillSystem.prototype.onCommandOk = function () {
     this._commandWindow.showBackgroundDimmer();
+    this._skillSetsListWindow.setHideCursor(false);
     this._skillSetsListWindow.select(this._skillSetsListWindow._lastSelected);
     this._skillSetsListWindow.activate();
 };
 
 Scene_SkillSystem.prototype.onCommandNextSkillSet = function () {
+    this._skillSetsListWindow.setHideCursor(true);
     this._skillSetsListWindow.gotoNextPage();
-    this._skillSetsListWindow.deselect();
     this._commandWindow.activate();
 };
 
 Scene_SkillSystem.prototype.onCommandPreviousSkillSet = function () {
+    this._skillSetsListWindow.setHideCursor(true);
     this._skillSetsListWindow.gotoNextPage(-1);
-    this._skillSetsListWindow.deselect();
     this._commandWindow.activate();
 };
 
+Scene_SkillSystem.prototype.onCursorLeft = function () { 
+    this._skillSetsWindow.cursorLeft.call(this._skillSetsWindow);
+};
+
+Scene_SkillSystem.prototype.onCursorRight = function () {
+    this._skillSetsWindow.cursorRight.call(this._skillSetsWindow);
+};
+
 Scene_SkillSystem.prototype.onSkillSetListCancel = function () {
+    this._skillSetsListWindow.setHideCursor(true);
+    this._skillSetsListWindow.updateCursor();
     this._commandWindow.hideBackgroundDimmer();
-    this._skillSetsListWindow.deselect();
     this._commandWindow.activate();
 };

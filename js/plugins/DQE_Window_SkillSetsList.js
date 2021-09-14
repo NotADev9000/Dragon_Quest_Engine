@@ -40,6 +40,7 @@ Window_SkillSetsList.prototype.initialize = function (x, y, width, height) {
     this._actor = null;
     this._data = [];
     this._noData = 'No Skill Sets!';
+    this._hideCursor = false;
 };
 
 //////////////////////////////
@@ -66,28 +67,11 @@ Window_SkillSetsList.prototype.setCategory = function (category) {
     if (this._category !== category) {
         this._category = category;
         this._actor = $gameParty.members()[this._category];
-        this.refresh();
-        this.setSkillSetWindowActor();
+        this.setSkillSetWindowActor(); // assign the skill set window the same actor
+        this._index = 0; // selection must be reset on actor change
+        this.refresh(); // update data & display
+        this.callUpdateHelp(); // update the data in skill window
     }
-};
-
-Window_SkillSetsList.prototype.setSkillSetWindowActor = function () {
-    // sets the skill set windows' actor
-    this._helpWindow[0]?.setCategory(this._category);
-    // update the skill set for skill set window
-    this.quickSelect();
-};
-
-/**
- * select to populate help windows & immediately deselect
- * to make sure cursor isn't showing
- * 
- * called whenever the actor is changed so that help windows
- * can be updated
- */
-Window_SkillSetsList.prototype.quickSelect = function () {
-    this.select(0);
-    this.deselect();
 };
 
 Window_SkillSetsList.prototype.item = function () {
@@ -111,6 +95,22 @@ Window_SkillSetsList.prototype.maxItems = function () {
 //////////////////////////////
 
 /**
+ * help window should be a skill set window
+ * before updating the help window the actor must be set
+ * 
+ * @param {Window_SkillSets} helpWindow 
+ */
+Window_SkillSetsList.prototype.setHelpWindow = function (helpWindow) {
+    this._helpWindow.push(helpWindow);
+    this.setSkillSetWindowActor();
+    this.callUpdateSingleHelp(helpWindow);
+};
+
+Window_SkillSetsList.prototype.setSkillSetWindowActor = function () {
+    this._helpWindow[0]?.setCategory(this._category);
+};
+
+/**
  * window does not have to be active to call update help
  */
 Window_SkillSetsList.prototype.callUpdateHelp = function () {
@@ -129,16 +129,16 @@ Window_SkillSetsList.prototype.updateSingleHelp = function (helpWindow) {
     this.setSingleHelpWindowItem(this.index(), helpWindow);
 };
 
-Window_SkillSetsList.prototype.setHelpWindowItem = function (item) {
+Window_SkillSetsList.prototype.setHelpWindowItem = function (index) {
     this._helpWindow.forEach(helpWindow => {
-        this.setSingleHelpWindowItem(item, helpWindow);
+        this.setSingleHelpWindowItem(index, helpWindow);
     }, this);
 };
 
-Window_SkillSetsList.prototype.setSingleHelpWindowItem = function (item, helpWindow) {
+Window_SkillSetsList.prototype.setSingleHelpWindowItem = function (index, helpWindow) {
     // if actor has no skill sets
-    if (!this._data.length) item = -2;
-    helpWindow.setItem(item);
+    if (!this._data.length) index = -2;
+    helpWindow.setItem(index);
 };
 
 //////////////////////////////
@@ -202,7 +202,7 @@ Window_SkillSetsList.prototype.itemRect = function (index) {
 };
 
 //////////////////////////////
-// Functions - cursor movement
+// Functions - cursor
 //////////////////////////////
 
 Window_SkillSetsList.prototype.cursorRight = function () {
@@ -217,6 +217,15 @@ Window_SkillSetsList.prototype.cursorPagedown = function () {
 
 Window_SkillSetsList.prototype.cursorPageup = function () {
     Window_Pagination.prototype.cursorRight.call(this);
+};
+
+Window_SkillSetsList.prototype.isCursorVisible = function () {
+    if (this._hideCursor) return false;
+    return Window_Pagination.prototype.isCursorVisible.call(this);
+};
+
+Window_SkillSetsList.prototype.setHideCursor = function (hideCursor) {
+    this._hideCursor = hideCursor;
 };
 
 //////////////////////////////
