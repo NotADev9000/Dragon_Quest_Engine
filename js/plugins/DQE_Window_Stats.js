@@ -35,7 +35,8 @@ function Window_Stats() {
 Window_Stats.prototype = Object.create(Window_Status.prototype);
 Window_Stats.prototype.constructor = Window_Stats;
 
-Window_Stats.prototype.initialize = function (x, y, width) {
+Window_Stats.prototype.initialize = function (x, y, width, drawName = false) {
+    this._drawName = drawName;
     Window_Status.prototype.initialize.call(this, x, y, width);
 };
 
@@ -43,12 +44,8 @@ Window_Stats.prototype.initialize = function (x, y, width) {
 // Functions - window sizing
 //////////////////////////////
 
-Window_Stats.prototype.standardPadding = function () {
-    return 24;
-};
-
 Window_Stats.prototype.windowHeight = function () {
-    return 429;
+    return this._drawName ? 483 : 429;
 };
 
 //////////////////////////////
@@ -56,20 +53,33 @@ Window_Stats.prototype.windowHeight = function () {
 //////////////////////////////
 
 Window_Stats.prototype.drawStats = function () {
-    let height = this.lineHeight() + 15;
+    const ep = this.extraPadding();
+    const cw = this.contentsWidth() - (ep * 2);
+    const lineGap = this.lineGap();
+    const itemHeight = this.lineHeight() + lineGap;
+    let y = ep;
     let text, value;
-    for (var i = 0; i < 11; i++) {
-        let y = i * height;
+
+    // actor name
+    if (this._drawName) {
+        this.drawText(this._actor.name(), ep, y, cw, 'center');
+        y += itemHeight;
+        this.drawHorzLine(0, y);
+        y += 3 + lineGap;
+    }
+
+    // stats
+    for (let i = 0; i < 11; i++) {
         if (i < 9) {
             text = `${TextManager.param(i)}:`;
             value = this._actor.param(i);
         } else {
-            let id = i - 7;
-            text = `${TextManager.baseparam(id)}:`;
+            text = `${TextManager.baseparam(i - 7)}:`;
             value = this._actor.uparam(i);
         }
-        this.drawText(text, 0, y);
-        this.drawText(value, 0, y, this.contentsWidth(), 'right');
+        this.drawText(text, ep, y);
+        this.drawText(value, ep, y, cw, 'right');
+        y += itemHeight;
     }
 };
 

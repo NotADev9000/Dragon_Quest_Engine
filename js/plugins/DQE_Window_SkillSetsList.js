@@ -219,6 +219,20 @@ Window_SkillSetsList.prototype.cursorPageup = function () {
     Window_Pagination.prototype.cursorRight.call(this);
 };
 
+Window_SkillSetsList.prototype.moveToNextSkillSet = function () {
+    let next = this.index() + 1;
+    // loop to start of skill sets
+    if (next >= this._data.length) next = 0;  
+    this.select(next);
+};
+
+Window_SkillSetsList.prototype.moveToPreviousSkillSet = function () {
+    let prev = this.index() - 1;
+    // loop to end of skill sets
+    if (prev < 0) prev = this._data.length - 1;
+    this.select(prev);
+};
+
 Window_SkillSetsList.prototype.isCursorVisible = function () {
     if (this._hideCursor) return false;
     return Window_Pagination.prototype.isCursorVisible.call(this);

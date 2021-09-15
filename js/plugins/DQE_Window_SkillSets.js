@@ -128,6 +128,14 @@ Window_SkillSets.prototype.maxItems = function () {
 };
 
 //////////////////////////////
+// Functions - display
+//////////////////////////////
+
+Window_SkillSets.prototype.setSelectable = function (selectable) {
+    this._selectable = selectable;
+};
+
+//////////////////////////////
 // Functions - index
 //////////////////////////////
 
@@ -313,15 +321,16 @@ Window_SkillSets.prototype.select = function (index, refresh = false) {
     this._index = Math.min(this._itemsOnPage - 1, index);
     this._stayCount = 0;
     this.setLastSelected(this._index);
-    if (refresh) this.refresh();
+    if (refresh) this.refresh(false);
     this.updateCursor();
     this.callUpdateHelp();
 };
 
-Window_SkillSets.prototype.refresh = function () {
+Window_SkillSets.prototype.refresh = function (resetLastSelected = true) {
     if (this._actor) {
         this.createContents();
         this.drawTitleBlock();
+        if (resetLastSelected) this.setLastSelected(0);
         this._numPages = this.numPages();
         this._topIndex = this.topIndex();
         this._numRows = this.numRows();

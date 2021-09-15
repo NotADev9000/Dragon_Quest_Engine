@@ -92,7 +92,7 @@ Window_SkillPoints.prototype.drawPoints = function () {
 //////////////////////////////
 
 Window_SkillPoints.prototype.refresh = function () {
-    this.contents.clear();
+    this.createContents();
     this.drawTitle();
     this.drawHorzLine(0, 51);
     if (this._actor) this.drawPoints();
