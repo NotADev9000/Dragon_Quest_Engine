@@ -90,6 +90,10 @@ Window_SkillSetsList.prototype.maxItems = function () {
     return this._data ? this._data.length : 1;
 };
 
+Window_SkillSetsList.prototype.hasSkillSets = function () {
+    return this._data.length > 0;
+};
+
 //////////////////////////////
 // Functions - help windows
 //////////////////////////////
@@ -137,7 +141,7 @@ Window_SkillSetsList.prototype.setHelpWindowItem = function (index) {
 
 Window_SkillSetsList.prototype.setSingleHelpWindowItem = function (index, helpWindow) {
     // if actor has no skill sets
-    if (!this._data.length) index = -2;
+    if (!this.hasSkillSets()) index = -2;
     helpWindow.setItem(index);
 };
 
@@ -172,7 +176,7 @@ Window_SkillSetsList.prototype.drawTitleBlock = function () {
 };
 
 Window_SkillSetsList.prototype.drawAllItems = function () {
-    if (!this._data.length) { // if actor has no skill sets
+    if (!this.hasSkillSets()) { // if actor has no skill sets
         this.drawText(this._noData, 0, this.extraPadding() + this.titleBlockHeight(), this.contentsWidth(), 'center');
     } else {
         Window_Pagination.prototype.drawAllItems.call(this);

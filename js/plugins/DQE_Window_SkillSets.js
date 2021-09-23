@@ -85,7 +85,7 @@ Window_SkillSets.prototype.setItem = function (index) {
         this._page = 1;
         this.makeItemList();
         this._itemsOnPage = this.itemsOnPage();
-        this.refresh();
+        this.select(this.index(), true); // refresh in here
     }
 };
 
