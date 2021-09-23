@@ -660,12 +660,6 @@ Game_Actor.prototype.initSkillSets = function () {
     // looping through the data actors' skill sets
     this.actor().skillSets.forEach(skillSetId => {
         this.addSkillSet(skillSetId);
-
-        this.addSkillSet(skillSetId);
-        this.addSkillSet(skillSetId);
-        this.addSkillSet(skillSetId);
-        this.addSkillSet(skillSetId);
-        this.addSkillSet(skillSetId);
     });
 };
 
@@ -691,11 +685,11 @@ Game_Actor.prototype.skillPoints = function () {
 };
 
 Game_Actor.prototype.addSkillPoints = function (amount) {
-    if (this._skillPoints < 9999) this._skillPoints += amount;
+    this._skillPoints = Math.min(this._skillPoints + amount, 9999);
 }
 
 Game_Actor.prototype.loseSkillPoints = function (amount) {
-    if (this._skillPoints > 0) this._skillPoints -= amount;
+    this._skillPoints = Math.max(this._skillPoints - amount, 0);
 }
 
 //////////////////////////////
