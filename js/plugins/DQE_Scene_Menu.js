@@ -68,7 +68,7 @@ Scene_Menu.prototype.createGoldWindow = function () {
 
 Scene_Menu.prototype.createStatusWindow = function () {
     this._statusWindow = [];
-    var partyMembers = $gameParty.members();
+    const partyMembers = $gameParty.members();
 
     for (let i = 0; i < Math.min(partyMembers.length, 4); i++) {
         this._statusWindow[i] = new Window_MenuStatus(144 + (Window_MenuStatus.prototype.windowWidth() * i), 570, partyMembers[i]);
