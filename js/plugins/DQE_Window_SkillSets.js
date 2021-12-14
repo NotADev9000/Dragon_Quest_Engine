@@ -222,14 +222,15 @@ Window_SkillSets.prototype.drawTitleBlock = function () {
     const title = this._data.name || 'No Skill Set';
     const lineGap = this.lineGap();
     const itemHeight = this.itemHeight() + lineGap;
-    const hasSkills = this._actor.numSkillSets() > 1;
+    const hasSkills = this._actor.numSkillSets() >= 1;
+    const hasMultipleSkills = hasSkills >= 2;
     let y = this.extraPadding();
 
     // window title
     this.drawText(title, 0, y, this.contentsWidth(), 'center');
 
     // icons (switching pages)
-    if (hasSkills) {
+    if (hasMultipleSkills) {
         // left icon
         let icon = this.getHandlerIcon('previous');
         this.drawTextEx(` \\i[${icon}]`, 0, y);
