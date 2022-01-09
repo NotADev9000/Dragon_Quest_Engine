@@ -34,6 +34,10 @@ Window_Help.prototype.initialize = function (x, y, width, numLines = 2, height =
     this._text = '';
 };
 
+//////////////////////////////
+// Functions - window sizing
+//////////////////////////////
+
 Window_Help.prototype.lineGap = function () {
     return 9;
 };
@@ -42,9 +46,17 @@ Window_Help.prototype.standardPadding = function () {
     return 24;
 };
 
+//////////////////////////////
+// Functions - data
+//////////////////////////////
+
 Window_Help.prototype.setItem = function (item) {
     this.setText(item ? item.description || item : '');
 };
+
+//////////////////////////////
+// Functions - refresh
+//////////////////////////////
 
 Window_Help.prototype.refresh = function () {
     this.contents.clear();

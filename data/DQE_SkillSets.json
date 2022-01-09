@@ -7,9 +7,10 @@
                 "nodes": [
                     {
                         "name": "Flame Slash",
+                        "description": "",
                         "onUnlock": {
                             "skills": [
-                                4
+                                14
                             ],
                             "parameters": [
                                 0,
@@ -36,9 +37,10 @@
                     },
                     {
                         "name": "Gust Slash",
+                        "description": "",
                         "onUnlock": {
                             "skills": [
-                                5
+                                10
                             ],
                             "parameters": [
                                 0,
@@ -73,9 +75,10 @@
                 "nodes": [
                     {
                         "name": "Dragon Slash",
+                        "description": "",
                         "onUnlock": {
                             "skills": [
-                                6
+                                27
                             ],
                             "parameters": [
                                 0,
@@ -102,9 +105,10 @@
                     },
                     {
                         "name": "Metal Slash",
+                        "description": "",
                         "onUnlock": {
                             "skills": [
-                                7
+                                28
                             ],
                             "parameters": [
                                 0,

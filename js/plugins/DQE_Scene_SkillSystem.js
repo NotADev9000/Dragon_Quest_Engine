@@ -42,6 +42,7 @@ Scene_SkillSystem.prototype.create = function () {
     this.createSkillSetsWindow();
     this.createSkillPointsWindow();
     this.createStatsWindow();
+    this.createSkillDescriptionWindow();
 };
 
 Scene_SkillSystem.prototype.start = function () {
@@ -153,6 +154,16 @@ Scene_SkillSystem.prototype.createStatsWindow = function () {
     this._commandWindow.setHelpWindow(this._statsWindow);
 };
 
+Scene_SkillSystem.prototype.createSkillDescriptionWindow = function () {
+    const x = this._statsWindow.x + this._statsWindow.width;
+    const y = 0 + this._skillSetsWindow.height;
+    this._skillDescriptionWindow = new Window_SkillSetDescription(x, y, 927);
+    this._skillDescriptionWindow.hide();
+
+    this.addWindow(this._skillDescriptionWindow);
+    this._skillSetsWindow.setHelpWindow(this._skillDescriptionWindow);
+};
+
 //////////////////////////////
 // Functions - on handlers
 //////////////////////////////
@@ -234,6 +245,8 @@ Scene_SkillSystem.prototype.onSkillSetListOk = function () {
     this._skillSetsWindow.refresh();
     this._skillSetsWindow.select(this._skillSetsWindow._lastSelected);
     this._skillSetsWindow.activate();
+    // show skill description window
+    this._skillDescriptionWindow.show();
 };
 
 Scene_SkillSystem.prototype.onSkillSetListCancel = function () {
@@ -258,6 +271,8 @@ Scene_SkillSystem.prototype.onSkillSetCancel = function () {
     this._skillSetsWindow.setSelectable(false);
     this._skillSetsWindow.deselect();
     this._skillSetsWindow.refresh();
+    // hide skill description window
+    this._skillDescriptionWindow.hide();
 
     if (this._skillSetsListWindow.hasSkillSets()) {
         // activate skill sets list

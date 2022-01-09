@@ -144,3 +144,30 @@ Game_System.prototype.getSkillSetNodeAmount = function (skillSet) {
     });
     return nodeCount;
 };
+
+/**
+ * Returns the nodes unlock description. Checks if a skill is unlocked and
+ * gets said skills description, mpCost & requirements. Gets the nodes description
+ * field if the unlockable isn't a skill.
+ * 
+ * The array is returned in that order as it matches the parameters for the
+ * Window_SkillSetDescription draw function.
+ * 
+ * @param {Object} node object from the skillSet data object 
+ * @returns array of unlock details retrieved from the node
+ */
+Game_System.prototype.getNodeUnlockDescription = function (node) {
+    let mpCost = '';
+    let description = node.description;
+    let requirement = 'No requirements';
+    const isSkill = node.onUnlock.skills.length;
+
+    if (isSkill) {
+        const skill = $dataSkills[node.onUnlock.skills[0]]; // description always shows first skill details
+        description = skill.description;
+        mpCost = skill.mpCost.toString();
+        if (skill.requiredWtypeId1) requirement = $dataSystem.weaponTypes[skill.requiredWtypeId1] + ' required';
+    }
+
+    return [isSkill, mpCost, description, requirement];
+};

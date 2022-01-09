@@ -99,7 +99,7 @@ Window_SkillSets.prototype.item = function () {
 };
 
 Window_SkillSets.prototype.node = function (index) {
-    return this._data.layers[this.getLayerIndex()].nodes[index];
+    return this.layer().nodes[index];
 };
 
 Window_SkillSets.prototype.layer = function () {
@@ -125,6 +125,19 @@ Window_SkillSets.prototype.makeItemList = function () {
 
 Window_SkillSets.prototype.maxItems = function () {
     return this._itemsOnPage;
+};
+
+//////////////////////////////
+// Functions - help windows
+//////////////////////////////
+
+Window_SkillSets.prototype.updateHelp = function () {
+    this.setHelpWindowItem($gameSystem.getNodeUnlockDescription(this.item()));
+};
+
+Window_SkillSets.prototype.setHelpWindowItem = function (unlockDetails) {
+    // Window_SkillSetDescription
+    this._helpWindow[0].setItem(...unlockDetails);
 };
 
 //////////////////////////////

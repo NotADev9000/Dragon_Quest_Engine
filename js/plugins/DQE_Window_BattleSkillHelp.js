@@ -41,6 +41,10 @@ Window_BattleSkillHelp.prototype.initialize = function (x, y, width, numLines = 
     this._mpTotal = '';
 };
 
+//////////////////////////////
+// Functions - data
+//////////////////////////////
+
 Window_BattleSkillHelp.prototype.setText = function (desc, cost, total) {
     if (this._text !== desc || this._mpCost !== cost || this._mpTotal != total) {
         this._text = desc;
@@ -57,6 +61,10 @@ Window_BattleSkillHelp.prototype.setItem = function (skill, actor) {
 
     this.setText(desc, cost, total);
 };
+
+//////////////////////////////
+// Functions - draw items
+//////////////////////////////
 
 /**
  * Draws the bottom section of the window to display MP cost

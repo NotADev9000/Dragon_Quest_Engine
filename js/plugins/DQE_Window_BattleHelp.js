@@ -40,6 +40,10 @@ Window_BattleHelp.prototype.initialize = function (x, y, width, numLines, titleB
     Window_Help.prototype.initialize.call(this, x, y, width, numLines);
 };
 
+//////////////////////////////
+// Functions - window sizing
+//////////////////////////////
+
 Window_BattleHelp.prototype.fittingHeight = function (numLines) {
     return Window_Base.prototype.fittingHeightTitleBlock.call(this, numLines);
 };
@@ -56,12 +60,20 @@ Window_BattleHelp.prototype.extraPadding = function () {
     return 15;
 };
 
+//////////////////////////////
+// Functions - draw items
+//////////////////////////////
+
 Window_BattleHelp.prototype.drawTitleBlock = function () {
 };
 
+//////////////////////////////
+// Functions - refresh
+//////////////////////////////
+
 Window_BattleHelp.prototype.refresh = function () {
     this.contents.clear();
-    var pos = this.extraPadding();
+    const pos = this.extraPadding();
     this.drawTextEx(this._text, pos, pos);
     this.drawTitleBlock();
 };
