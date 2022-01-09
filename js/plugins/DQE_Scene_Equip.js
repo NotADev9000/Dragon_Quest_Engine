@@ -275,6 +275,7 @@ Scene_Equip.prototype.equipItemOkMessages = function (actor, swapOut, slotIndex,
     let message = '';
     this._equipItemWindow.showBackgroundDimmer();
     this._equipItemWindow.showAllHelpWindowBackgroundDimmers();
+    this._equipSortWindow.showBackgroundDimmer();
     if (inBag) {
         if (swapOut) {
             message = actor.tradeItemWithBagAndEquipMessage(itemIndex, data.item);
@@ -316,7 +317,8 @@ Scene_Equip.prototype.doWhatUnequipMessageCallback = function () {
 Scene_Equip.prototype.onEquipItemMessageCallback = function () {
     this._equipSlotWindow.refresh();
     this._equipItemWindow.hideHelpWindow(1);
-    this._equipSortWindow.show();
+    this._equipSortWindow.hide();
+    this._equipSortWindow.hideBackgroundDimmer();
     this._equipSlotWindow.show();
     this._equipItemWindow.hide();
     this._equipItemWindow.hideBackgroundDimmer();
