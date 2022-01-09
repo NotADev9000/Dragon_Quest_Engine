@@ -245,8 +245,6 @@ Scene_SkillSystem.prototype.onSkillSetListOk = function () {
     this._skillSetsWindow.refresh();
     this._skillSetsWindow.select(this._skillSetsWindow._lastSelected);
     this._skillSetsWindow.activate();
-    // show skill description window
-    this._skillDescriptionWindow.show();
 };
 
 Scene_SkillSystem.prototype.onSkillSetListCancel = function () {

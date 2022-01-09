@@ -132,7 +132,14 @@ Window_SkillSets.prototype.maxItems = function () {
 //////////////////////////////
 
 Window_SkillSets.prototype.updateHelp = function () {
-    this.setHelpWindowItem($gameSystem.getNodeUnlockDescription(this.item()));
+    const node = this.item();
+    if (node) {
+        this.setHelpWindowItem($gameSystem.getNodeUnlockDescription(node));
+        this._helpWindow[0].show();
+    } else {
+        // if actor has no skillsets then hide description window
+        this._helpWindow[0].hide();
+    }
 };
 
 Window_SkillSets.prototype.setHelpWindowItem = function (unlockDetails) {
