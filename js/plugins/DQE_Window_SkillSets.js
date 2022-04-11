@@ -6,7 +6,7 @@
 /*:
 *
 * @author NotADev
-* @plugindesc The window for unlocking nodes in skill set - V0.1
+* @plugindesc The window for unlocking nodes in a skill set - V0.1
 *
 *
 * @help
@@ -89,6 +89,9 @@ Window_SkillSets.prototype.setItem = function (index) {
     }
 };
 
+/**
+ * Returns the currently selected node if the window has data
+ */
 Window_SkillSets.prototype.item = function () {
     const index = this.index();
     if (this._data && index >= 0) {
@@ -205,6 +208,24 @@ Window_SkillSets.prototype.column = function () {
 // Functions - cursor movement
 //////////////////////////////
 
+Window_SkillSets.prototype.processOk = function () {
+    if (this.layer().unlocked) {
+        if (!this.item().unlocked) {
+            // this node hasn't been bought yet
+            this.playOkSound();
+            this.updateInputData();
+            this.deactivate();
+            this.callOkHandler();
+        }
+    } else {
+        // layer is locked
+        this.playOkSound();
+        this.updateInputData();
+        this.deactivate();
+        this.callHandler('disabled');
+    }
+};
+
 Window_SkillSets.prototype.cursorDown = function () {
     Window_Selectable.prototype.cursorDown.call(this);
 };
@@ -313,16 +334,8 @@ Window_SkillSets.prototype.drawItem = function (index) {
         // node name
         this.drawText(name, rect.x, rect.y, rect.width);
         // node cost
-        const cost = node.cost;
-        let costText = '???';
-        if (cost.miniMedals) {
-            costText = `${cost.miniMedals} ${TextManager.medalUnit}`;
-        } else if (cost.gold) {
-            costText = `${cost.gold} ${TextManager.currencyUnit}`;
-        } else if (cost.skillPoints) {
-            costText = `${cost.skillPoints} ${TextManager.skillPointUnit}`;
-        }
-        this.drawText(costText, rect.x, rect.y, rect.width, 'right');
+        const cost = $gameSystem.getNodeCostAmountAndType(node);
+        this.drawText(cost, rect.x, rect.y, rect.width, 'right');
         // reset node color
         this.resetTextColor();
     }

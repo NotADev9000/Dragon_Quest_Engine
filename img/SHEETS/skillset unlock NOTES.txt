@@ -1,0 +1,21 @@
+skillset on unlock:
+
+in this order:
+
+increase:
+- skillset.nodesUnlocked
+
+set to true:
+- skillset.layer.node.unlocked
+
+increase:
+- skillset.layer.nodesUnlocked
+
+if complete set to true:
+- skillset.layer.complete
+
+if unlockCost is met set to true:
+- skillset.layer[+1].unlocked
+
+if complete set to true:
+- skillset.complete

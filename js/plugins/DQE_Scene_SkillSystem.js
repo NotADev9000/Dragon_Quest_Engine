@@ -6,7 +6,7 @@
 /*:
 *
 * @author NotADev
-* @plugindesc The scene for the skill system - V0.1
+* @plugindesc The scene for the skill system where skills are unlocked - V0.1
 *
 * @help
 * N/A
@@ -43,6 +43,8 @@ Scene_SkillSystem.prototype.create = function () {
     this.createSkillPointsWindow();
     this.createStatsWindow();
     this.createSkillDescriptionWindow();
+    // messages
+    this.createMessageWindow();
 };
 
 Scene_SkillSystem.prototype.start = function () {
@@ -98,6 +100,9 @@ Scene_SkillSystem.prototype.createCommandWindow = function () {
     this.addWindow(this._commandWindow);
 };
 
+/**
+ * Holds the actors' list of skill sets
+ */
 Scene_SkillSystem.prototype.createSkillSetsListWindow = function () {
     const x = this._commandWindow.x + this._commandWindow.width;
     this._skillSetsListWindow = new Window_SkillSetsList(x, 0, 1086, 231);
@@ -119,10 +124,15 @@ Scene_SkillSystem.prototype.createSkillSetsListWindow = function () {
     this._commandWindow.setHelpWindow(this._skillSetsListWindow);
 };
 
+/**
+ * Displays a skill sets' layers and nodes
+ * Used by player to select and unlock nodes
+ */
 Scene_SkillSystem.prototype.createSkillSetsWindow = function () {
     const x = this._skillSetsListWindow.x;
     const y = this._skillSetsListWindow.y + this._skillSetsListWindow.height;
     this._skillSetsWindow = new Window_SkillSets(x, y, 1086, 555, false);
+    this._skillSetsWindow.setHandler('ok', this.onSkillSetOk.bind(this));
 
     // next actor
     this._skillSetsWindow.setHandler('pageup', this.onNextActor.bind(this));
@@ -132,6 +142,7 @@ Scene_SkillSystem.prototype.createSkillSetsWindow = function () {
     this._skillSetsWindow.setHandler('next', this.onNextSkillSet.bind(this));
     this._skillSetsWindow.setHandler('previous', this.onPreviousSkillSet.bind(this));
 
+    this._skillSetsWindow.setHandler('disabled', this.onSkillSetLayerLocked.bind(this));
     this._skillSetsWindow.setHandler('cancel', this.onSkillSetCancel.bind(this));
 
     this.addWindow(this._skillSetsWindow);
@@ -162,6 +173,13 @@ Scene_SkillSystem.prototype.createSkillDescriptionWindow = function () {
 
     this.addWindow(this._skillDescriptionWindow);
     this._skillSetsWindow.setHelpWindow(this._skillDescriptionWindow);
+};
+
+// messages
+
+Scene_SkillSystem.prototype.createMessageWindow = function () {
+    this._messageWindow = new Window_Message();
+    this.addWindow(this._messageWindow);
 };
 
 //////////////////////////////
@@ -227,7 +245,7 @@ Scene_SkillSystem.prototype.onCursorRight = function () {
     this._skillSetsWindow.cursorRight.call(this._skillSetsWindow);
 };
 
-// skill set window
+// skill set list window
 
 Scene_SkillSystem.prototype.onSkillSetListOk = function () {
     this._commandWindow.hide();
@@ -252,6 +270,39 @@ Scene_SkillSystem.prototype.onSkillSetListCancel = function () {
     this._skillSetsListWindow.updateCursor();
     this._commandWindow.hideBackgroundDimmer();
     this._commandWindow.activate();
+};
+
+// skill set window
+
+Scene_SkillSystem.prototype.onSkillSetOk = function () {
+    const actor = this.actor();
+    const cost = this.node().cost;
+    let affordMessage = '';
+    let canAfford = true;
+
+    if (cost.miniMedals) {
+        if ($gameParty.medalCurrent() < cost.miniMedals) {
+            canAfford = false;
+            affordMessage = this.notEnoughMedalsMessage();
+        }
+    } else if (cost.gold) {
+        if ($gameParty.gold() < cost.gold) {
+            canAfford = false;
+            affordMessage = this.notEnoughGoldMessage();
+        }
+    } else if (cost.skillPoints) {
+        if (actor.skillPoints() < cost.skillPoints) {
+            canAfford = false;
+            affordMessage = this.notEnoughSkillPointsMessage(actor);
+        }
+    }
+
+    if (canAfford) {
+        this._skillSetsWindow.activate();
+    } else {
+        this.dimSkillWindows();
+        this.displayMessage(affordMessage, Scene_SkillSystem.prototype.nodeDisabled_MessageCallback);
+    }
 };
 
 Scene_SkillSystem.prototype.onSkillSetCancel = function () {
@@ -279,4 +330,66 @@ Scene_SkillSystem.prototype.onSkillSetCancel = function () {
         // back to command window
         this.onSkillSetListCancel();
     }
+};
+
+Scene_SkillSystem.prototype.onSkillSetLayerLocked = function () {
+    this.dimSkillWindows();
+    this.displayMessage(this.layerLockedMessage(), Scene_SkillSystem.prototype.nodeDisabled_MessageCallback);
+};
+
+//////////////////////////////
+// Functions - messages
+//////////////////////////////
+
+Scene_SkillSystem.prototype.layerLockedMessage = function () {
+    return 'This layer is locked!';
+};
+
+Scene_SkillSystem.prototype.notEnoughMedalsMessage = function () {
+    return `You don't have enough Mini Medals!`;
+};
+
+Scene_SkillSystem.prototype.notEnoughGoldMessage = function () {
+    return `You don't have enough gold!`;
+};
+
+Scene_SkillSystem.prototype.notEnoughSkillPointsMessage = function (actor) {
+    return `${actor.name()} doesn't have enough Skill Points!`;
+};
+
+//////////////////////////////
+// Functions - message callbacks
+//////////////////////////////
+
+Scene_SkillSystem.prototype.nodeDisabled_MessageCallback = function () {
+    this._statsWindow.hideBackgroundDimmer();
+    this._skillPointsWindow.hideBackgroundDimmer();
+    this._skillSetsWindow.hideBackgroundDimmer();
+    this._skillDescriptionWindow.hideBackgroundDimmer();
+    this._skillSetsWindow.activate();
+};
+
+//////////////////////////////
+// Functions - data
+//////////////////////////////
+
+Scene_SkillSystem.prototype.actor = function () {
+    return $gameParty.members()[this._commandWindow.currentSymbol()];
+};
+
+Scene_SkillSystem.prototype.node = function () {
+    return this._skillSetsWindow.item();
+};
+
+//////////////////////////////
+// Functions - misc
+//////////////////////////////
+
+// window dimmers
+
+Scene_SkillSystem.prototype.dimSkillWindows = function () {
+    this._statsWindow.showBackgroundDimmer();
+    this._skillPointsWindow.showBackgroundDimmer();
+    this._skillSetsWindow.showBackgroundDimmer();
+    this._skillDescriptionWindow.showBackgroundDimmer();
 };

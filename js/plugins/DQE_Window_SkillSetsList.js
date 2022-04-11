@@ -6,7 +6,7 @@
 /*:
 *
 * @author NotADev
-* @plugindesc The window for displaying an actors' skill sets - V0.1
+* @plugindesc The window for displaying an actors' list of skill sets - V0.1
 *
 *
 * @help

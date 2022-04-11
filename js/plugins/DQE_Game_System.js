@@ -146,14 +146,14 @@ Game_System.prototype.getSkillSetNodeAmount = function (skillSet) {
 };
 
 /**
- * Returns the nodes unlock description. Checks if a skill is unlocked and
+ * Returns the nodes' unlock description. Checks if a skill is unlocked and
  * gets said skills description, mpCost & requirements. Gets the nodes description
  * field if the unlockable isn't a skill.
  * 
  * The array is returned in that order as it matches the parameters for the
  * Window_SkillSetDescription draw function.
  * 
- * @param {Object} node object from the skillSet data object 
+ * @param {Object} node object from the skillSet data object
  * @returns array of unlock details retrieved from the node
  */
 Game_System.prototype.getNodeUnlockDescription = function (node) {
@@ -170,4 +170,64 @@ Game_System.prototype.getNodeUnlockDescription = function (node) {
     }
 
     return [isSkill, mpCost, description, requirement];
+};
+
+/**
+ * Returns the nodes' unlock amount
+ * 
+ * @param {Object} node object from the skillSet data object
+ * @returns amount the node costs to unlock
+ */
+Game_System.prototype.getNodeCostAmount = function (node) {
+    const cost = node.cost;
+
+    if (cost.miniMedals) {
+        return cost.miniMedals;
+    } else if (cost.gold) {
+        return cost.gold;
+    } else if (cost.skillPoints) {
+        return cost.skillPoints;
+    }
+
+    return 0;
+};
+
+/**
+ * Returns the nodes' unlock currency as a string
+ * 
+ * @param {Object} node object from the skillSet data object
+ * @returns string of cost type
+ */
+Game_System.prototype.getNodeCostType = function (node) {
+    const cost = node.cost;
+
+    if (cost.miniMedals) {
+        return TextManager.medalUnit;
+    } else if (cost.gold) {
+        return TextManager.currencyUnit;
+    } else if (cost.skillPoints) {
+        return TextManager.skillPointUnit;
+    }
+
+    return '';
+};
+
+/**
+ * Returns the nodes' unlock amount and currency as a string
+ * 
+ * @param {Object} node object from the skillSet data object
+ * @returns amount the node costs to unlock + currency
+ */
+Game_System.prototype.getNodeCostAmountAndType = function (node) {
+    const cost = node.cost;
+
+    if (cost.miniMedals) {
+        return `${cost.miniMedals} ${TextManager.medalUnit}`;
+    } else if (cost.gold) {
+        return `${cost.gold} ${TextManager.currencyUnit}`;
+    } else if (cost.skillPoints) {
+        return `${cost.skillPoints} ${TextManager.skillPointUnit}`;
+    }
+
+    return '0';
 };
