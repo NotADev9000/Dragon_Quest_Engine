@@ -70,3 +70,11 @@ Scene_Base.prototype.update = function () {
     }
     DQEng.Scene_Base.update.call(this);
 };
+
+/**
+ * Changed so windows are no longer added to windowlayer()
+ * as per: https://forums.rpgmakerweb.com/index.php?threads/debugging-graphics-and-why-you-should-stop-using-windowlayer.132126/
+ */
+Scene_Base.prototype.addWindow = function (window) {
+    this.addChild(window);
+};
