@@ -43,7 +43,7 @@ Window_SkillSets.prototype.initialize = function (x, y, width, height, selectabl
     // skillset
     this._skillSetIndex = -1;
     // display data
-    this._data = [];
+    this._data = {};
     this._page = 1;
     // determines whether the items are drawn with cursor space
     this._selectable = selectable;
@@ -122,7 +122,7 @@ Window_SkillSets.prototype.makeItemList = function () {
     if (this._skillSetIndex >= 0)  {
         this._data = this._actor.skillSets()[this._skillSetIndex];
     } else if (this._skillSetIndex < -1) {
-        this._data = [];
+        this._data = {};
     }
 };
 
@@ -209,20 +209,22 @@ Window_SkillSets.prototype.column = function () {
 //////////////////////////////
 
 Window_SkillSets.prototype.processOk = function () {
-    if (this.layer().unlocked) {
-        if (!this.item().unlocked) {
-            // this node hasn't been bought yet
+    if (this.index() >= 0) { // check this actor has skillsets before processing anything
+        if (this.layer().unlocked) {
+            if (!this.item().unlocked) {
+                // this node hasn't been bought yet
+                this.playOkSound();
+                this.updateInputData();
+                this.deactivate();
+                this.callOkHandler();
+            }
+        } else {
+            // layer is locked
             this.playOkSound();
             this.updateInputData();
             this.deactivate();
-            this.callOkHandler();
+            this.callHandler('disabled');
         }
-    } else {
-        // layer is locked
-        this.playOkSound();
-        this.updateInputData();
-        this.deactivate();
-        this.callHandler('disabled');
     }
 };
 
@@ -334,7 +336,7 @@ Window_SkillSets.prototype.drawItem = function (index) {
         // node name
         this.drawText(name, rect.x, rect.y, rect.width);
         // node cost
-        const cost = $gameSystem.getNodeCostAmountAndType(node);
+        const cost = $gameSystem.getNodeCostDetails(node, true, true);
         this.drawText(cost, rect.x, rect.y, rect.width, 'right');
         // reset node color
         this.resetTextColor();

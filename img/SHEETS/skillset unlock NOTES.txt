@@ -1,6 +1,15 @@
 skillset on unlock:
 
-in this order:
+in game:
+
+- Spend X skill points/gold/mini medals to learn 'XXX'?
+- Trigger the unlocks on Actor
+- Update skillset object (JSON v)
+- Reduce Actor's spendings
+- Small animation?
+- Refresh window
+
+for JSON in this order:
 
 increase:
 - skillset.nodesUnlocked

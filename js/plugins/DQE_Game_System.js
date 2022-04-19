@@ -173,61 +173,29 @@ Game_System.prototype.getNodeUnlockDescription = function (node) {
 };
 
 /**
- * Returns the nodes' unlock amount
+ * Returns details about a nodes' cost
+ * Can return the amount, type of currency as a string or both as a string
  * 
  * @param {Object} node object from the skillSet data object
- * @returns amount the node costs to unlock
+ * @param {Boolean} getAmount should the amount be returned
+ * @param {Boolean} getType should the currency type be returned
+ * @param {Boolean} getShorthand should the type return the abbreviated version
+ * @returns 
  */
-Game_System.prototype.getNodeCostAmount = function (node) {
+Game_System.prototype.getNodeCostDetails = function (node, getAmount, getType, getShorthand = true) {
     const cost = node.cost;
+    let details = '';
 
     if (cost.miniMedals) {
-        return cost.miniMedals;
+        if (getAmount) details = cost.miniMedals;
+        if (getType) details += getShorthand ? ' ' + TextManager.medalUnit : ' ' + TextManager.medalText(cost.miniMedals);
     } else if (cost.gold) {
-        return cost.gold;
+        if (getAmount) details = cost.gold;
+        if (getType) details += ' ' + TextManager.currencyUnit;
     } else if (cost.skillPoints) {
-        return cost.skillPoints;
+        if (getAmount) details = cost.skillPoints;
+        if (getType) details += getShorthand ? ' ' + TextManager.skillPointUnit : ' ' + TextManager.skillPointText(cost.skillPoints);
     }
 
-    return 0;
-};
-
-/**
- * Returns the nodes' unlock currency as a string
- * 
- * @param {Object} node object from the skillSet data object
- * @returns string of cost type
- */
-Game_System.prototype.getNodeCostType = function (node) {
-    const cost = node.cost;
-
-    if (cost.miniMedals) {
-        return TextManager.medalUnit;
-    } else if (cost.gold) {
-        return TextManager.currencyUnit;
-    } else if (cost.skillPoints) {
-        return TextManager.skillPointUnit;
-    }
-
-    return '';
-};
-
-/**
- * Returns the nodes' unlock amount and currency as a string
- * 
- * @param {Object} node object from the skillSet data object
- * @returns amount the node costs to unlock + currency
- */
-Game_System.prototype.getNodeCostAmountAndType = function (node) {
-    const cost = node.cost;
-
-    if (cost.miniMedals) {
-        return `${cost.miniMedals} ${TextManager.medalUnit}`;
-    } else if (cost.gold) {
-        return `${cost.gold} ${TextManager.currencyUnit}`;
-    } else if (cost.skillPoints) {
-        return `${cost.skillPoints} ${TextManager.skillPointUnit}`;
-    }
-
-    return '0';
+    return details;
 };

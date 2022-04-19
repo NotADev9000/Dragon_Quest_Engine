@@ -35,6 +35,14 @@ Object.defineProperties(TextManager, {
     settings_cursorBeep: { get: function () { return `Cursor @Beep" Sound` }, configurable: true }
 });
 
+TextManager.medalText = function (pluralAmount = 0) {
+    return pluralAmount === 1 ? 'Mini Medal' : 'Mini Medals';
+}
+
+TextManager.skillPointText = function (pluralAmount = 0) {
+    return pluralAmount === 1 ? 'Skill Point' : 'Skill Points';
+}
+
 TextManager.terms = {};
 
 // Church

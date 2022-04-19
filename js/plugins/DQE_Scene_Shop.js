@@ -40,12 +40,6 @@ Scene_Shop.prototype.prepare = function (goods, purchaseOnly) {
     this._price = 0; // cost of transaction
 };
 
-Scene_MenuBase.prototype.create = function () {
-    Scene_Base.prototype.create.call(this);
-    this.createBackground();
-    this.createWindowLayer();
-};
-
 Scene_Shop.prototype.create = function () {
     Scene_Base.prototype.create.call(this);
     this.createBackground();

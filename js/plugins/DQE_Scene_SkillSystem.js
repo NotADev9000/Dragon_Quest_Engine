@@ -44,6 +44,7 @@ Scene_SkillSystem.prototype.create = function () {
     this.createStatsWindow();
     this.createSkillDescriptionWindow();
     // messages
+    this.createChoiceWindow();
     this.createMessageWindow();
 };
 
@@ -177,8 +178,21 @@ Scene_SkillSystem.prototype.createSkillDescriptionWindow = function () {
 
 // messages
 
+Scene_SkillSystem.prototype.createChoiceWindow = function () {
+    this._choiceWindow = new Window_CustomCommand(0, 0, 156, ['Yes', 'No'], true);
+    // this._choiceWindow.setHandler('Yes', this.onChoiceYes.bind(this));
+    this._choiceWindow.setHandler('No', this.onChoiceCancel.bind(this));
+    this._choiceWindow.setHandler('cancel', this.onChoiceCancel.bind(this));
+    this._choiceWindow.openness = 0;
+    this._choiceWindow.deactivate();
+    this.addWindow(this._choiceWindow);
+};
+
 Scene_SkillSystem.prototype.createMessageWindow = function () {
-    this._messageWindow = new Window_Message();
+    this._messageWindow = new Window_MessageInputToggle();
+    this._messageWindow.setInput(true);
+    this._choiceWindow.x = (this._messageWindow.x + this._messageWindow.width) - this._choiceWindow.width;
+    this._choiceWindow.y = this._messageWindow.y - this._choiceWindow.height - DQEng.Parameters.Windows.ChoiceList_ChoiceYOffset;
     this.addWindow(this._messageWindow);
 };
 
@@ -276,33 +290,39 @@ Scene_SkillSystem.prototype.onSkillSetListCancel = function () {
 
 Scene_SkillSystem.prototype.onSkillSetOk = function () {
     const actor = this.actor();
-    const cost = this.node().cost;
-    let affordMessage = '';
+    const node = this.node()
+    const cost = node.cost;
+    let message = '';
+    let callback = Scene_SkillSystem.prototype.nodeDisabled_MessageCallback;
     let canAfford = true;
 
+    // check currency and if player can afford
     if (cost.miniMedals) {
         if ($gameParty.medalCurrent() < cost.miniMedals) {
             canAfford = false;
-            affordMessage = this.notEnoughMedalsMessage();
+            message = this.notEnoughMedalsMessage();
         }
     } else if (cost.gold) {
         if ($gameParty.gold() < cost.gold) {
             canAfford = false;
-            affordMessage = this.notEnoughGoldMessage();
+            message = this.notEnoughGoldMessage();
         }
     } else if (cost.skillPoints) {
         if (actor.skillPoints() < cost.skillPoints) {
             canAfford = false;
-            affordMessage = this.notEnoughSkillPointsMessage(actor);
+            message = this.notEnoughSkillPointsMessage(actor);
         }
     }
 
+    // change message and callback if can afford
     if (canAfford) {
-        this._skillSetsWindow.activate();
-    } else {
-        this.dimSkillWindows();
-        this.displayMessage(affordMessage, Scene_SkillSystem.prototype.nodeDisabled_MessageCallback);
+        message = this.SpendMessage(node);
+        this._messageWindow.setInput(false);
+        callback = Scene_SkillSystem.prototype.confirmChoice_MessageCallback;
     }
+    
+    this.dimSkillWindows();
+    this.displayMessage(message, callback);
 };
 
 Scene_SkillSystem.prototype.onSkillSetCancel = function () {
@@ -337,6 +357,16 @@ Scene_SkillSystem.prototype.onSkillSetLayerLocked = function () {
     this.displayMessage(this.layerLockedMessage(), Scene_SkillSystem.prototype.nodeDisabled_MessageCallback);
 };
 
+// choice window
+
+Scene_SkillSystem.prototype.onChoiceCancel = function () {
+    this._messageWindow.setInput(true);
+    this._messageWindow.close();
+    this._choiceWindow.close();
+    this.undimSkillWindows();
+    this._skillSetsWindow.activate();
+};
+
 //////////////////////////////
 // Functions - messages
 //////////////////////////////
@@ -357,16 +387,24 @@ Scene_SkillSystem.prototype.notEnoughSkillPointsMessage = function (actor) {
     return `${actor.name()} doesn't have enough Skill Points!`;
 };
 
+Scene_SkillSystem.prototype.SpendMessage = function (node) {
+    return `Spend ${$gameSystem.getNodeCostDetails(node, true, true, false)} to unlock?`;
+};
+
 //////////////////////////////
 // Functions - message callbacks
 //////////////////////////////
 
 Scene_SkillSystem.prototype.nodeDisabled_MessageCallback = function () {
-    this._statsWindow.hideBackgroundDimmer();
-    this._skillPointsWindow.hideBackgroundDimmer();
-    this._skillSetsWindow.hideBackgroundDimmer();
-    this._skillDescriptionWindow.hideBackgroundDimmer();
+    this._messageWindow.close();
+    this.undimSkillWindows();
     this._skillSetsWindow.activate();
+};
+
+Scene_SkillSystem.prototype.confirmChoice_MessageCallback = function () {
+    this._choiceWindow.select(0);
+    this._choiceWindow.open();
+    this._choiceWindow.activate();
 };
 
 //////////////////////////////
@@ -392,4 +430,11 @@ Scene_SkillSystem.prototype.dimSkillWindows = function () {
     this._skillPointsWindow.showBackgroundDimmer();
     this._skillSetsWindow.showBackgroundDimmer();
     this._skillDescriptionWindow.showBackgroundDimmer();
+};
+
+Scene_SkillSystem.prototype.undimSkillWindows = function () {
+    this._statsWindow.hideBackgroundDimmer();
+    this._skillPointsWindow.hideBackgroundDimmer();
+    this._skillSetsWindow.hideBackgroundDimmer();
+    this._skillDescriptionWindow.hideBackgroundDimmer();
 };
