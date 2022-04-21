@@ -47,6 +47,7 @@ Game_Actor.prototype.initMembers = function () {
     this._checkSecondHand = true;
     this._skillSets = [];
     this._skillPoints = 0;
+    this._addedTraits = []; // traits that are unlocked throughout the game
 };
 
 /**
@@ -601,6 +602,25 @@ Game_Actor.prototype.paramEquips = function (paramId) {
         }
     }
     return value;
+};
+
+//////////////////////////////
+// Functions - traits
+//////////////////////////////
+
+Game_Actor.prototype.allTraits = function () {
+    let traits = Game_Battler.prototype.allTraits.call(this);
+    return traits.concat(this._addedTraits);
+};
+
+/**
+ * adds a new trait to the actor
+ * trait param should follow trait objects: {code: trait type ID, dataId: trait data ID, value: trait data value}
+ * 
+ * @param {Object} trait the trait to add
+ */
+Game_Actor.prototype.addTrait = function (trait) {
+    this._addedTraits.push(trait);
 };
 
 //////////////////////////////
