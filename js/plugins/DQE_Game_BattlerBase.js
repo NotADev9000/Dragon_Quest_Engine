@@ -309,6 +309,9 @@ Game_BattlerBase.prototype.metaTraits = function (meta) {
             let dataId; // position in sp/ex-parameter list
 
             switch (properties[0]) {
+                case 'slotType': // Slot Type
+                    code = Game_BattlerBase.TRAIT_SLOT_TYPE;
+                    break;
                 case 'xparam': // Ex-Parameter
                     code = Game_BattlerBase.TRAIT_XPARAM;
                     break;
@@ -317,6 +320,15 @@ Game_BattlerBase.prototype.metaTraits = function (meta) {
                     break;
             }
             switch (properties[1]) {
+                case '1Wield': // Single Wield
+                    dataId = 0;
+                    break;
+                case '2Wield': // Dual Wield
+                    dataId = 1;
+                    break;
+                case 'allWield': // All Wield
+                    dataId = 2;
+                    break;
                 case 'blr': // BLock Rate
                     dataId = Game_BattlerBase.POS_XPARAM_BLOCKRATE;
                     break;
@@ -419,13 +431,6 @@ Game_BattlerBase.prototype.mostImportantStateDisplay = function () {
 //////////////////////////////
 // Functions - equipment
 //////////////////////////////
-
-DQEng.Game_BattlerBase.slotType = Game_BattlerBase.prototype.slotType;
-Game_BattlerBase.prototype.slotType = function () {
-    let actor = this.actor();
-    if (actor.meta.slotType) return Number(actor.meta.slotType);
-    return DQEng.Game_BattlerBase.slotType.call(this);
-};
 
 /**
  * Can the battler single & dual wield?
