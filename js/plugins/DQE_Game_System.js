@@ -118,6 +118,7 @@ Game_System.prototype.changeBattleBgmFromId = function () {
  * Changes the default battle music
  * Only the ID is changed if Switch X is ON
  * This prevents players from changing the battle bgm during certain events
+ * NOTE: After event that forces a BGM has expired "$gameSystem.changeBattleBgmFromId()" must be called!
  */
 Game_System.prototype.changeDefaultBattleBgm = function (value) {
     this.setBattleBgmId(value);
@@ -131,6 +132,102 @@ Game_System.prototype.changeDefaultBattleBgm = function (value) {
 Game_System.prototype.findSkillSet = function (skillSetId) {
     return $DQE_dataSkillSets.find(skillSetData => skillSetData.id === skillSetId);
 };
+
+// unlocking skills
+
+Game_System.prototype.triggerNodeUnlocks = function (node, actor) {
+    this.triggerSkillUnlocks(node, actor);
+    this.triggerParameterUnlocks(node, actor);
+    this.triggerTraitUnlocks(node, actor);
+    this.triggerSwitchUnlocks(node);
+};
+
+Game_System.prototype.triggerSkillUnlocks = function (node, actor) {
+    const skills = node.onUnlock.skills;
+
+    if (skills.length) {
+        skills.forEach(skillId => {
+            actor.learnSkill(skillId);
+        });
+    }
+};
+
+Game_System.prototype.triggerParameterUnlocks = function (node, actor) {
+    const params = node.onUnlock.parameters;
+
+    params.forEach((change, index) => {
+        if (change !== 0) actor.addParam(index, change);
+    });
+};
+
+Game_System.prototype.triggerTraitUnlocks = function (node, actor) {
+    const traits = node.onUnlock.traits;
+
+    traits.forEach(trait => {
+        actor.addTrait(trait);
+    });
+};
+
+Game_System.prototype.triggerSwitchUnlocks = function (node) {
+    const switches = node.onUnlock.switches;
+
+    switches.forEach(switchId => {
+        $gameSwitches.setValue(switchId, true);
+    });
+};
+
+Game_System.prototype.chargeActor = function (node, actor) {
+    const cost = node.cost;
+
+    if (cost.miniMedals) {
+        $gameParty.loseMedal(cost.miniMedals);
+    } else if (cost.gold) {
+        $gameParty.loseGold(cost.gold);
+    } else if (cost.skillPoints) {
+        actor.loseSkillPoints(cost.skillPoints);
+    }
+};
+
+/**
+ * values should be passed by reference so the unlock changes the actors' skillset
+ * 
+ * @param {dataSkillSet} skillset 
+ * @param {number} layerIndex 
+ * @param {dataSkillSet.layers[x].nodes[x]} node 
+ */
+Game_System.prototype.updateSkillSetUnlocks = function (skillset, layerIndex, node) {
+    const layer = skillset.layers[layerIndex];
+
+    // increase total unlocked nodes
+    skillset.nodesUnlocked++;
+    // unlock node
+    node.unlocked = true;
+    // increase layer counter
+    layer.nodesUnlocked++;
+    // complete layer
+    if (this.canCompleteLayer(layer)) layer.complete = true;
+    // unlock next layer
+    if (this.canUnlockNextLayer(layerIndex, skillset.layers)) skillset.layers[layerIndex+1].unlocked = true;
+    // complete skillset
+    if (this.canCompleteSkillSet(skillset)) skillset.complete = true;
+};
+
+Game_System.prototype.canCompleteLayer = function (layer) {
+    return layer.nodesUnlocked >= layer.nodes.length;
+};
+
+Game_System.prototype.canUnlockNextLayer = function (layerIndex, layers) {
+    if (layerIndex + 1 >= layers.length) return false;
+    const currentLayerUnlocked = layers[layerIndex].nodesUnlocked;
+    const nextLayerCost = layers[layerIndex+1].unlockCost;
+    return currentLayerUnlocked >= nextLayerCost;
+};
+
+Game_System.prototype.canCompleteSkillSet = function (skillset) {
+    return skillset.nodesUnlocked >= this.getSkillSetNodeAmount(skillset);
+};
+
+// node details
 
 /**
  * Returns the total amount of nodes in a skill set

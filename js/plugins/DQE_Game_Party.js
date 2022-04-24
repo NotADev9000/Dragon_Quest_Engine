@@ -281,7 +281,7 @@ Game_Party.prototype.gainMedal = function (amount) {
 };
 
 Game_Party.prototype.loseMedal = function (amount) {
-    if (this._medalCurrent > 0) this._medalCurrent -= amount;
+    this._medalCurrent = Math.max(this._medalCurrent - amount, 0);
 };
 
 //////////////////////////////

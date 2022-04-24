@@ -89,6 +89,10 @@ Window_SkillSets.prototype.setItem = function (index) {
     }
 };
 
+Window_SkillSets.prototype.data = function () {
+    return this._data;
+};
+
 /**
  * Returns the currently selected node if the window has data
  */

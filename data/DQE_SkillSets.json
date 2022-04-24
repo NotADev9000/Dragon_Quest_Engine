@@ -6,7 +6,7 @@
             {
                 "nodes": [
                     {
-                        "name": "Flame Slash",
+                        "name": "Falcon Slash",
                         "description": "",
                         "onUnlock": {
                             "skills": [

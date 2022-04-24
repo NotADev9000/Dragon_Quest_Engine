@@ -706,11 +706,11 @@ Game_Actor.prototype.skillPoints = function () {
 
 Game_Actor.prototype.addSkillPoints = function (amount) {
     this._skillPoints = Math.min(this._skillPoints + amount, 9999);
-}
+};
 
 Game_Actor.prototype.loseSkillPoints = function (amount) {
     this._skillPoints = Math.max(this._skillPoints - amount, 0);
-}
+};
 
 //////////////////////////////
 // Functions - messages
