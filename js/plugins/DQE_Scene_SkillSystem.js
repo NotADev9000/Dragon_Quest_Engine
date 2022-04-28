@@ -360,27 +360,17 @@ Scene_SkillSystem.prototype.onSkillSetLayerLocked = function () {
 // choice window
 
 Scene_SkillSystem.prototype.onChoiceYes = function () {
-    const actor = this.actor();
-    const node = this.node();
-
-    this._messageWindow.setInput(true);
-    this._messageWindow.close();
-    this._choiceWindow.close();
-
-    $gameSystem.chargeActor(node, actor);
-    $gameSystem.triggerNodeUnlocks(node, actor);
-    $gameSystem.updateSkillSetUnlocks(this.skillSet(), this.layerIndex(), node);
-    // Small animation?
-    this.refreshWindows();
-
+    this.closeTextWindows();
+    this.unlockNode();
     this.undimSkillWindows();
-    this._skillSetsWindow.activate();
+    this.refreshWindows(false);
+    // play unlock animation on window THEN run passed in callback function
+    SoundManager.playNodeUnlock();
+    this._skillSetsWindow.showUnlockHighlight(this.choiceYes_HighlightCallback, 8);
 };
 
 Scene_SkillSystem.prototype.onChoiceCancel = function () {
-    this._messageWindow.setInput(true);
-    this._messageWindow.close();
-    this._choiceWindow.close();
+    this.closeTextWindows();
     this.undimSkillWindows();
     this._skillSetsWindow.activate();
 };
@@ -426,8 +416,26 @@ Scene_SkillSystem.prototype.confirmChoice_MessageCallback = function () {
 };
 
 //////////////////////////////
+// Functions - highlight callbacks
+//////////////////////////////
+
+Scene_SkillSystem.prototype.choiceYes_HighlightCallback = function () {
+    this.refreshWindows();
+    this._skillSetsWindow.activate();
+};
+
+//////////////////////////////
 // Functions - data
 //////////////////////////////
+
+Scene_SkillSystem.prototype.unlockNode = function () {
+    const actor = this.actor();
+    const node = this.node();
+    
+    $gameSystem.chargeActor(node, actor);
+    $gameSystem.triggerNodeUnlocks(node, actor);
+    $gameSystem.updateSkillSetUnlocks(this.skillSet(), this.layerIndex(), node);
+};
 
 Scene_SkillSystem.prototype.actor = function () {
     return $gameParty.members()[this._commandWindow.currentSymbol()];
@@ -456,6 +464,12 @@ Scene_SkillSystem.prototype.node = function () {
 
 // windows
 
+Scene_SkillSystem.prototype.closeTextWindows = function () {
+    this._messageWindow.setInput(true);
+    this._messageWindow.close();
+    this._choiceWindow.close();
+};
+
 Scene_SkillSystem.prototype.dimSkillWindows = function () {
     this._statsWindow.showBackgroundDimmer();
     this._skillPointsWindow.showBackgroundDimmer();
@@ -470,9 +484,9 @@ Scene_SkillSystem.prototype.undimSkillWindows = function () {
     this._skillDescriptionWindow.hideBackgroundDimmer();
 };
 
-Scene_SkillSystem.prototype.refreshWindows = function () {
+Scene_SkillSystem.prototype.refreshWindows = function (refreshSkillSet = true) {
     this._statsWindow.refresh();
     this._skillPointsWindow.refresh();
-    this._skillSetsWindow.refresh();
+    if (refreshSkillSet) this._skillSetsWindow.refresh();
     this._skillSetsListWindow.refresh();
 };

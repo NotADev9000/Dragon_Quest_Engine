@@ -47,6 +47,10 @@ Window_SkillSets.prototype.initialize = function (x, y, width, height, selectabl
     this._page = 1;
     // determines whether the items are drawn with cursor space
     this._selectable = selectable;
+    // the callback function to run after the highlighter has completed
+    this._highlightCallback = null;
+    this._isHighlightGrowing = true; // is the highlighter increasing in opacity?
+    this._highlightDelay = 0;
 };
 
 //////////////////////////////
@@ -59,6 +63,61 @@ Window_SkillSets.prototype.lineGap = function () {
 
 Window_SkillSets.prototype.titleBlockHeight = function () {
     return 108;
+};
+
+//////////////////////////////
+// Functions - visuals
+//////////////////////////////
+
+Window_SkillSets.prototype.showUnlockHighlight = function (callback, delay) {
+    if (!this._highlightSprite) {
+        this._highlightSprite = new Sprite();
+        this._highlightSprite.bitmap = new Bitmap(0, 0);
+        this.addChild(this._highlightSprite);
+    }
+
+    const bitmap = this._highlightSprite.bitmap;
+    if (bitmap.width !== this.width || bitmap.height !== this.height) {
+        this.refreshUnlockHighlightBitmap();
+    }
+
+    this._highlightDelay = delay;
+    this._highlightSprite.opacity = 0;
+    this._highlightSprite.visible = true;
+    this._highlightCallback = callback;
+};
+
+Window_SkillSets.prototype.refreshUnlockHighlightBitmap = function () {
+    if (this._highlightSprite) {
+        const bitmap = this._highlightSprite.bitmap;
+        const w = this.width;
+        const h = this.height;
+        const c1 = this.highlightColor();
+        bitmap.resize(w, h);
+        bitmap.fillRect(0, 0, w, h, c1);
+        this._highlightSprite.setFrame(0, 0, w, h);
+    }
+};
+
+Window_SkillSets.prototype.updateUnlockHighlight = function () {
+    if (this._isHighlightGrowing) { // highlight opacity should increase
+        this._highlightSprite.opacity += 25;
+        if (this._highlightSprite.opacity >= 225) {
+            this._isHighlightGrowing = false
+            this.refresh(); // window refreshed when highlight is full opacity
+        };
+    } else { // highlight opacity should decrease
+        this._highlightSprite.opacity -= 25;
+        if (this._highlightSprite.opacity <= 0) {
+            this._highlightCallback.call(SceneManager._scene);
+            this._highlightCallback = null;
+            this._isHighlightGrowing = true;
+        }
+    }
+};
+
+Window_SkillSets.prototype.highlightColor = function () {
+    return 'rgba(255, 255, 255, 1)';
 };
 
 //////////////////////////////
@@ -336,6 +395,8 @@ Window_SkillSets.prototype.drawItem = function (index) {
         if (node.unlocked) {
             name += ' ^';
             this.changeTextColor(this.completeSkillSetColor());
+        } else if (!this.layer().unlocked) {
+            this.changeTextColor(this.disabledColor());
         }
         // node name
         this.drawText(name, rect.x, rect.y, rect.width);
@@ -376,5 +437,14 @@ Window_SkillSets.prototype.refresh = function (resetLastSelected = true) {
         this._numRows = this.numRows();
         this.drawPageBlock();
         this.drawAllItems();
+    }
+};
+
+Window_SkillSets.prototype.update = function () {
+    Window_Pagination.prototype.update.call(this);
+    if (this._highlightCallback && this._highlightDelay <= 0) {
+        this.updateUnlockHighlight();
+    } else {
+        this._highlightDelay--;
     }
 };

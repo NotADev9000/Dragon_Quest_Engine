@@ -61,3 +61,7 @@ SoundManager.playRevival = function () {
 SoundManager.playChoice = function () {
     this.playSoundByName('Choice');
 };
+
+SoundManager.playNodeUnlock = function () {
+    this.playSoundByName('Node Unlock');
+};
