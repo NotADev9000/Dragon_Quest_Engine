@@ -114,9 +114,17 @@ BattleManager.displayDefeatMessage = function () {
     $gameMessage.add(text);
 };
 
+BattleManager.displayExp = function () {
+    const exp = this._rewards.exp;
+    if (exp > 0) {
+        const text = TextManager.obtainExp.format(exp, TextManager.exp);
+        $gameMessage.add(text);
+    }
+};
+
 BattleManager.gainExp = function () {
-    var exp = this._rewards.exp;
-    var playSound = true; // play lv up sound
+    const exp = this._rewards.exp;
+    let playSound = true; // play lv up sound
     $gameParty.allMembers().forEach(function (actor) {
         let lastLevel = actor._level;
         actor.gainExp(exp, playSound);
@@ -174,6 +182,24 @@ BattleManager.endTurn = function () {
 };
 
 /**
+ * added new message page after victory message
+ * added AudioManager.stopBgm
+ * removed replayBgmAndBgs (now in updateBattleEnd)
+ */
+BattleManager.processVictory = function () {
+    $gameParty.removeBattleStates();
+    $gameParty.performVictory();
+    this.playVictoryMe();
+    AudioManager.stopBgm();
+    this.makeRewards();
+    this.displayVictoryMessage();
+    $gameMessage.newPage();
+    this.displayRewards();
+    this.gainRewards();
+    this.endBattle(0);
+};
+
+/**
  * formula: escape chance + (deftness/2000)
  * 
  * escape chance = 25% * (1 + times player has tried to escape)
@@ -199,11 +225,24 @@ BattleManager.processEscape = function () {
     return success;
 };
 
-DQEng.Battle_Manager.updateBattleEnd = BattleManager.updateBattleEnd;
 BattleManager.updateBattleEnd = function () {
     this._logWindow.opacity = 0;
     this._logWindow.clear(true);
-    DQEng.Battle_Manager.updateBattleEnd.call(this);
+    if (this.isBattleTest()) {
+        AudioManager.stopBgm();
+        SceneManager.exit();
+    } else if (!this._escaped && $gameParty.isAllDead()) {
+        if (this._canLose) {
+            $gameParty.reviveBattleMembers();
+            SceneManager.pop();
+        } else {
+            SceneManager.goto(Scene_Gameover);
+        }
+    } else {
+        this.replayBgmAndBgs();
+        SceneManager.pop();
+    }
+    this._phase = null;
 };
 
 BattleManager.update = function () {
