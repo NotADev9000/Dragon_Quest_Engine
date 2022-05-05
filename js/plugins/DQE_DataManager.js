@@ -28,9 +28,22 @@ DQEng.Data_Manager = DQEng.Data_Manager || {};
 //-----------------------------------------------------------------------------
 
 DataManager._databaseFiles = DataManager._databaseFiles.concat([
+    { name: '$DQE_dataActors', src: 'DQE_Actors.json' },
     { name: '$DQE_dataClasses', src: 'DQE_Classes.json' },
     { name: '$DQE_dataSkillSets', src: 'DQE_SkillSets.json' }
 ]);
+
+/**
+ * Adds extra actor data (skillPoints etc.) from $DQE_dataActors to $dataActors
+ */
+DataManager.combineDataActors = function () {
+    for (let i = 1; i < $dataActors.length; i++) {
+        $dataActors[i].skillPoints = [];
+        $dataActors[i] = { ...$dataActors[i], ...$DQE_dataActors[i]};
+    }
+
+    delete $DQE_dataActors;
+};
 
 //////////////////////////////
 // Functions - skill sets

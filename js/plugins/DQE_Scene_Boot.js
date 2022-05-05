@@ -31,11 +31,14 @@ Scene_Boot.loadSystemImages = function () {
 };
 
 /**
- * Only change in this function is going to Scene_File instead of Scene_Title
+ * Calls dataManager combine data function
+ * 
+ * Goes to Scene_File instead of Scene_Title
  * Note: Will be changed when the title is implemented
  */
 Scene_Boot.prototype.start = function () {
     Scene_Base.prototype.start.call(this);
+    DataManager.combineDataActors();
     SoundManager.preloadImportantSounds();
     if (DataManager.isBattleTest()) {
         DataManager.setupBattleTest();

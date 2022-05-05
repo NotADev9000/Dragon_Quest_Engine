@@ -45,6 +45,10 @@ TextManager.skillPointText = function (pluralAmount = 0) {
 
 TextManager.terms = {};
 
+// Skill Points
+
+TextManager.terms.obtainSkillPoint = `%1 receives %2!`;
+
 // Church
 
 TextManager.terms.churchText = {};

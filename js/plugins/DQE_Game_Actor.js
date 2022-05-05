@@ -652,8 +652,15 @@ Game_Actor.prototype.changeExp = function (exp, show, playSound = false) {
     }
     if (show && this._level > lastLevel) {
         this.displayLevelUp(this.findNewSkills(lastSkills), playSound);
+        this.displayEarnedSkillPoints();
     }
     this.refresh();
+};
+
+DQEng.Game_Actor.levelUp = Game_Actor.prototype.levelUp;
+Game_Actor.prototype.levelUp = function () {
+    DQEng.Game_Actor.levelUp.call(this);
+    this.addSkillPoints(this.skillPointsThisLevel());
 };
 
 Game_Actor.prototype.displayLevelUp = function (newSkills, playSound) {
@@ -662,9 +669,20 @@ Game_Actor.prototype.displayLevelUp = function (newSkills, playSound) {
     var breaker = playSound ? ' \\|' : '';
     $gameMessage.newPage();
     $gameMessage.add(me + text + breaker);
-    newSkills.forEach(function (skill) {
-        $gameMessage.add(TextManager.obtainSkill.format(skill.name));
-    });
+    if (newSkills.length) {
+        $gameMessage.newPage();
+        newSkills.forEach(function (skill) {
+            $gameMessage.add(TextManager.obtainSkill.format(this._name, skill.name));
+        }, this);
+    }
+};
+
+Game_Actor.prototype.displayEarnedSkillPoints = function () {
+    const skillPointsLevel = this.skillPointsThisLevel();
+    if (skillPointsLevel > 0) {
+        $gameMessage.newPage();
+        $gameMessage.add(TextManager.terms.obtainSkillPoint.format(this._name, `${skillPointsLevel} ${TextManager.skillPointText(skillPointsLevel)}`));
+    }
 };
 
 //////////////////////////////
@@ -702,6 +720,13 @@ Game_Actor.prototype.numSkillSets = function () {
 
 Game_Actor.prototype.skillPoints = function () {
     return this._skillPoints;
+};
+
+/**
+ * @returns how many skill points actor earns at their current level
+ */
+Game_Actor.prototype.skillPointsThisLevel = function () {
+    return this.actor().skillPoints[this._level] || 0;
 };
 
 Game_Actor.prototype.addSkillPoints = function (amount) {
