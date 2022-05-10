@@ -376,16 +376,16 @@ Window_Base.prototype.obtainEscapeParamString = function (textState) {
 };
 
 Window_Base.prototype.obtainEscapeParamFunc = function (textState) {
-    var arr = /\[(.*?)\]/.exec(textState.text.slice(textState.index));
+    let arr = /\[(.*?)\]/.exec(textState.text.slice(textState.index));
     if (arr) {
         textState.index += arr[0].length;
-        var context = window;
-        var namespaces = arr[1].split(".");
-        // var func = namespaces.pop();
+        let context = window;
+        const namespaces = arr[1].split(",");
+        const params = namespaces.pop();
         for (var i = 0; i < namespaces.length; i++) {
             context = context[namespaces[i]];
         }
-        return context.apply(SceneManager._scene);
+        return context.apply(SceneManager._scene, [params]);
     } else {
         return '';
     }

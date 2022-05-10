@@ -580,12 +580,16 @@ Game_Actor.prototype.paramMax = function (paramId) {
     return Game_Battler.prototype.paramMax.call(this, paramId);
 };
 
-Game_Actor.prototype.paramDefault = function (paramId) {
-    return this.currentClass(paramId > 7).params[paramId][this._level];
+/**
+ * @param {*} paramId ID of the parameter to retrieve
+ * @param {*} levelChange How much to change the current level by 
+ */
+Game_Actor.prototype.paramDefault = function (paramId, levelChange = 0) {
+    return this.currentClass(paramId > 7).params[paramId][this._level + levelChange];
 };
 
-Game_Actor.prototype.paramBase = function (paramId) {
-    return Game_Battler.prototype.paramBase.call(this, paramId);
+Game_Actor.prototype.paramBase = function (paramId, levelChange = 0) {
+    return Game_Battler.prototype.paramBase.call(this, paramId, levelChange);
 };
 
 Game_Actor.prototype.paramPlus = function (paramId) {
@@ -635,12 +639,12 @@ Game_Actor.prototype.currentClass = function (extra = false) {
 // Functions - levels
 //////////////////////////////
 
-Game_Actor.prototype.gainExp = function (exp, playSound) {
+Game_Actor.prototype.gainExp = function (exp, playSound, inBattle) {
     var newExp = this.currentExp() + Math.round(exp * this.finalExpRate());
-    this.changeExp(newExp, this.shouldDisplayLevelUp(), playSound);
+    this.changeExp(newExp, this.shouldDisplayLevelUp(), playSound, inBattle);
 };
 
-Game_Actor.prototype.changeExp = function (exp, show, playSound = false) {
+Game_Actor.prototype.changeExp = function (exp, show, playSound = false, inBattle = false) {
     this._exp[this._classId] = Math.max(exp, 0);
     var lastLevel = this._level;
     var lastSkills = this.skills();
@@ -651,7 +655,7 @@ Game_Actor.prototype.changeExp = function (exp, show, playSound = false) {
         this.levelDown();
     }
     if (show && this._level > lastLevel) {
-        this.displayLevelUp(this.findNewSkills(lastSkills), playSound);
+        this.displayLevelUp(this.findNewSkills(lastSkills), playSound, inBattle);
         this.displayEarnedSkillPoints();
     }
     this.refresh();
@@ -663,12 +667,17 @@ Game_Actor.prototype.levelUp = function () {
     this.addSkillPoints(this.skillPointsThisLevel());
 };
 
-Game_Actor.prototype.displayLevelUp = function (newSkills, playSound) {
-    var text = TextManager.levelUp.format(this._name, TextManager.level, this._level);
-    var me = playSound ? '\\ME[Level_Up]' : '';
-    var breaker = playSound ? ' \\|' : '';
+Game_Actor.prototype.displayLevelUp = function (newSkills, playSound, inBattle) {
+    const text = TextManager.levelUp.format(this._name, TextManager.level, this._level);
+    let statWindowCallback = '';
+    if (inBattle) {
+        const actorIndex = $gameParty.members().indexOf(this);
+        statWindowCallback = `\\FUNC[SceneManager,_scene,refreshAndShowStatsWindow,${actorIndex}]`;
+    }
+    const me = playSound ? '\\ME[Level_Up]' : '';
+    const breaker = playSound ? ' \\|' : '';
     $gameMessage.newPage();
-    $gameMessage.add(me + text + breaker);
+    $gameMessage.add(statWindowCallback + me + text + breaker);
     if (newSkills.length) {
         $gameMessage.newPage();
         newSkills.forEach(function (skill) {

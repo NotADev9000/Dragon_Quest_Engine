@@ -83,6 +83,7 @@ var $plugins =
 {"name":"DQE_Window_BattleEnemy","status":true,"description":"The window that displays party member status in battle - V0.1","parameters":{}},
 {"name":"DQE_Window_Status","status":true,"description":"The simple status window - V0.1","parameters":{}},
 {"name":"DQE_Window_Stats","status":true,"description":"A window displaying actor stats - V0.1","parameters":{}},
+{"name":"DQE_Window_Stats_LevelUp","status":true,"description":"A window displaying change in actors stats on level up - V0.1","parameters":{}},
 {"name":"DQE_Window_StatsCommon","status":true,"description":"NOT A USEABLE WINDOW; holds common functions between the \"window_stats\" windows - V0.1","parameters":{}},
 {"name":"DQE_Window_StatsAttributes","status":true,"description":"A window breaking down an actors' attributes - V0.1","parameters":{}},
 {"name":"DQE_Window_StatsMagic","status":true,"description":"A window breaking down an actors' magic - V0.1","parameters":{}},

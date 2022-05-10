@@ -96,7 +96,7 @@ Scene_ItemBase.prototype.itemTargetActors = function () {
 //////////////////////////////
 
 Scene_ItemBase.prototype.addToMessage = function (text) {
-    let refresh = '\\func[SceneManager._scene.refreshItemStatWindows]';
+    let refresh = '\\FUNC[SceneManager,_scene,refreshItemStatWindows,]';
     $gameMessage.add(refresh + text);
 };
 

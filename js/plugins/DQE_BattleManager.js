@@ -127,7 +127,7 @@ BattleManager.gainExp = function () {
     let playSound = true; // play lv up sound
     $gameParty.allMembers().forEach(function (actor) {
         let lastLevel = actor._level;
-        actor.gainExp(exp, playSound);
+        actor.gainExp(exp, playSound, true);
         if (actor._level > lastLevel) playSound = false;
     });
 };
@@ -228,6 +228,7 @@ BattleManager.processEscape = function () {
 BattleManager.updateBattleEnd = function () {
     this._logWindow.opacity = 0;
     this._logWindow.clear(true);
+    SceneManager._scene.hideStatsWindow();
     if (this.isBattleTest()) {
         AudioManager.stopBgm();
         SceneManager.exit();

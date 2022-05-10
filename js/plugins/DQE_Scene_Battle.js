@@ -71,6 +71,7 @@ Scene_Battle.prototype.createAllWindows = function () {
     // text windows 2
     this.createMessageWindow();
     this.createScrollTextWindow();
+    this.createStatsWindow();
 };
 
 //////////////////////////////
@@ -367,6 +368,14 @@ Scene_Battle.prototype.createMessageWindow = function () {
     this._messageWindow.subWindows().forEach(function (window) {
         this.addWindow(window);
     }, this);
+};
+
+Scene_Battle.prototype.createStatsWindow = function () {
+    const x = this._messageWindow.x;
+    this._statsWindow = new Window_Stats_LevelUp(x, 0, 648);
+    this._statsWindow.hide();
+    this._statsWindow.y = this._messageWindow.y - this._statsWindow.height;
+    this.addWindow(this._statsWindow);
 };
 
 //////////////////////////////
@@ -1050,6 +1059,15 @@ Scene_Battle.prototype.refreshAllStatusIndex = function () {
     this._statusWindow.forEach((statusWindow, index) => {
         statusWindow.setCategory(index, true);
     });
+};
+
+Scene_Battle.prototype.refreshAndShowStatsWindow = function (actorIndex) {
+    this._statsWindow.setCategory(actorIndex);
+    this._statsWindow.show();
+};
+
+Scene_Battle.prototype.hideStatsWindow = function () {
+    this._statsWindow.hide();
 };
 
 Scene_Battle.prototype.stop = function () {

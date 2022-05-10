@@ -196,8 +196,8 @@ Game_BattlerBase.prototype.paramMax = function (paramId) {
     return 999;
 };
 
-Game_BattlerBase.prototype.paramBase = function (paramId) {
-    return paramId === 2 || paramId === 3 ? this.uparam(paramId + 7) : this.paramDefault(paramId);
+Game_BattlerBase.prototype.paramBase = function (paramId, levelChange = 0) {
+    return paramId === 2 || paramId === 3 ? this.uparam(paramId + 7, levelChange) : this.paramDefault(paramId, levelChange);
 };
 
 /**
@@ -207,9 +207,9 @@ Game_BattlerBase.prototype.paramBase = function (paramId) {
  * 
  * @param {number} uparamId ID of the underlying stat
  */
-Game_BattlerBase.prototype.uparam = function (uparamId) {
+Game_BattlerBase.prototype.uparam = function (uparamId, levelChange = 0) {
     let paramId = uparamId - 7;
-    let value = this.paramDefault(paramId) + this.paramPlus(uparamId);
+    let value = this.paramDefault(paramId, levelChange) + this.paramPlus(uparamId);
     const maxValue = this.paramMax();
     const minValue = this.paramMin(paramId);
     return Math.round(value.clamp(minValue, maxValue));
@@ -219,8 +219,8 @@ Game_BattlerBase.prototype.paramEquips = function (paramId) {
     return 0;
 };
 
-Game_BattlerBase.prototype.param = function (paramId) {
-    let value = this.paramBase(paramId);
+Game_BattlerBase.prototype.param = function (paramId, levelChange = 0) {
+    let value = this.paramBase(paramId, levelChange);
     value += this.paramPlus(paramId) + this.paramEquips(paramId);
     value *= this.paramRate(paramId) * this.paramBuffRate(paramId);
     const maxValue = this.paramMax();
