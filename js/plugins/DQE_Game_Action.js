@@ -268,6 +268,7 @@ Game_Action.prototype.hasItemAnyValidEffects = function (target) {
 
 Game_Action.prototype.itemEva = function (target) {
     if (this.isPhysical()) {
+        // base evasion (agility related) * xparam evasion rate
         return (1 - ((1 - this.baseEva(target.param(7))) * (1 - target.eva))).toFixed(4);
     } else if (this.isMagical()) {
         return target.mev;
@@ -280,6 +281,9 @@ Game_Action.prototype.itemEva = function (target) {
  * formula: base evasion = ((1.0032^agility) + 0.5)/100;
  * 
  * base evasion returned where 1 = 100% chance of evading
+ * 
+ * This formula also currently applies to enemies
+ * TODO: Check if enemies should have a base evasion rate
  * 
  * @param {number} agility of evading target
  */

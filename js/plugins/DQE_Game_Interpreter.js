@@ -68,7 +68,7 @@ Game_Interpreter.prototype.giveItems_Bag = function (item, amount, actor, showIt
 
     $gameParty.gainItem(item, amount);
     // messages
-    if (!actor || actor.isDead()) actorName = $gameParty.movableMembers()[0].name();
+    if (!actor || actor.isDead()) actorName = $gameParty.firstAliveMemberName();
     return this.itemsGiven_Messages_Bag(itemName, amount, actorName, remaining);
 };
 
@@ -133,7 +133,7 @@ Game_Interpreter.prototype.goldGiven_Messages = function (amount, receive = true
     let actorName;
     let arr_partyAmount = 1;
     if ($gameParty.members().length <= 1) {
-        actorName = $gameParty.movableMembers()[0].name();
+        actorName = $gameParty.firstAliveMemberName();
         arr_partyAmount = 0;
     }
     const arr_receive = receive ? 'receive' : 'acquire';

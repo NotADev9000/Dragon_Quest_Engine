@@ -114,11 +114,33 @@ BattleManager.displayDefeatMessage = function () {
     $gameMessage.add(text);
 };
 
+/**
+ * No longer displays dropped items here
+ * That now happens after level up messages
+ */
+BattleManager.displayRewards = function () {
+    this.displayExp();
+    this.displayGold();
+};
+
 BattleManager.displayExp = function () {
     const exp = this._rewards.exp;
     if (exp > 0) {
         const text = TextManager.obtainExp.format(exp, TextManager.exp);
         $gameMessage.add(text);
+    }
+};
+
+BattleManager.displayDropItems = function () {
+    var items = this._rewards.items;
+    if (items.length > 0) {
+        $gameMessage.newPage();
+        $gameMessage.add(`\\FUNC[SceneManager,_scene,hideStatsWindow,]\\sfx[Chest]${TextManager.obtainItem.format()}`);
+        $gameMessage.newPage();
+        const actorName = $gameParty.firstAliveMemberName();
+        items.forEach(function (item) {
+            $gameMessage.add(Game_Interpreter.prototype.itemsGiven_Messages_Bag(item.name, 1, actorName));
+        });
     }
 };
 
@@ -185,6 +207,7 @@ BattleManager.endTurn = function () {
  * added new message page after victory message
  * added AudioManager.stopBgm
  * removed replayBgmAndBgs (now in updateBattleEnd)
+ * dropped items now displayed after rewards are earned
  */
 BattleManager.processVictory = function () {
     $gameParty.removeBattleStates();
@@ -196,6 +219,7 @@ BattleManager.processVictory = function () {
     $gameMessage.newPage();
     this.displayRewards();
     this.gainRewards();
+    this.displayDropItems();
     this.endBattle(0);
 };
 

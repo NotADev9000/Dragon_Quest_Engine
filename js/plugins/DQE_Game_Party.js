@@ -385,6 +385,10 @@ Game_Party.prototype.allAliveMembers = function () {
     });
 };
 
+Game_Party.prototype.firstAliveMemberName = function () {
+    return this.movableMembers()[0].name();
+};
+
 //////////////////////////////
 // Functions - restore point
 //////////////////////////////
