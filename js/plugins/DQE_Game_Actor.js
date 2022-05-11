@@ -70,8 +70,6 @@ Game_Actor.prototype.setup = function (actorId) {
 
 /**
  * Add equipment to held items
- * 
- * TODO: Read from Actor notetags to retrieve default items
  */
 Game_Actor.prototype.initItems = function () {
     this._items = this.initCarriedEquips();
