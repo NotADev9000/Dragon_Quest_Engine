@@ -248,7 +248,7 @@ Scene_Church.prototype.onChoiceYes = function () {
 };
 
 Scene_Church.prototype.onChoiceSave = function () {
-    SoundManager.playMeByName('Save');
+    SoundManager.playMeByName('DQ11_Save');
     this.displayMessage(this.startSaveMessage(), Scene_Church.prototype.startSave)
 };
 
@@ -486,7 +486,7 @@ Scene_Church.prototype.unaffectedMessageCallback = function () {
 Scene_Church.prototype.doTaskMessageCallback = function () {
     this._wait = 300;
     this._messageWindow.setInput(false);
-    SoundManager.playMeByName('Resurrection');
+    SoundManager.playMeByName('DQ11_Resurrection');
 };
 
 Scene_Church.prototype.backToMainMessageCallback = function () {

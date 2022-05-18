@@ -666,13 +666,13 @@ Game_Actor.prototype.levelUp = function () {
 };
 
 Game_Actor.prototype.displayLevelUp = function (newSkills, playSound, inBattle) {
-    const text = TextManager.levelUp.format(this._name, TextManager.level, this._level);
+    const text = TextManager.levelUp.format(this._name, TextManager.levelA, this._level);
     let statWindowCallback = '';
     if (inBattle) {
         const actorIndex = $gameParty.members().indexOf(this);
         statWindowCallback = `\\FUNC[SceneManager,_scene,refreshAndShowStatsWindow,${actorIndex}]`;
     }
-    const me = playSound ? '\\ME[Level_Up]' : '';
+    const me = playSound ? '\\ME[DQ11_Level_Up]' : '';
     const breaker = playSound ? ' \\|' : '';
     $gameMessage.newPage();
     $gameMessage.add(statWindowCallback + me + text + breaker);
