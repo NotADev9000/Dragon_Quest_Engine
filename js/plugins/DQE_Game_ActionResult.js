@@ -31,6 +31,10 @@ DQEng.Parameters.Game_ActionResult = {};
 // Game_ActionResult
 //-----------------------------------------------------------------------------
 
+Game_ActionResult.FAILURE_TYPE_NOTHING = 0;
+Game_ActionResult.FAILURE_TYPE_AFFECTED = 1;
+Game_ActionResult.FAILURE_TYPE_FULLHEALTH = 2;
+
 DQEng.Game_ActionResult.clear = Game_ActionResult.prototype.clear;
 Game_ActionResult.prototype.clear = function () {
     DQEng.Game_ActionResult.clear.call(this);
@@ -40,6 +44,7 @@ Game_ActionResult.prototype.clear = function () {
     this.grow = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // amount a stat grew by
     this.changedBuffs = [];
     this.buffDifferences = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.failureType = 0; // when an action is unsuccessful the message displayed depends on this type
 };
 
 Game_ActionResult.prototype.stackedStateObjects = function () {

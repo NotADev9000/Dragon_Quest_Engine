@@ -45,6 +45,14 @@ TextManager.skillPointText = function (pluralAmount = 0) {
 
 TextManager.terms = {};
 
+// Battle
+
+TextManager.terms.battleText = {};
+
+TextManager.terms.battleText.failure_nothing = `But nothing happens...`;
+TextManager.terms.battleText.failure_affected = `%1 isn't affected!`;
+TextManager.terms.battleText.failure_fullHealth = `%1 is already full of beans!`;
+
 // Skill Points
 
 TextManager.terms.obtainSkillPoint = `%1 receives %2!`;

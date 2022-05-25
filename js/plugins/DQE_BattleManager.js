@@ -50,6 +50,7 @@ BattleManager.initMembers = function () {
     DQEng.Battle_Manager.initMembers.call(this);
     this._preTurn = false;
     this._escapeRatio = 0.25;
+    this._consumedItem = false; // checks if a used item has already been consumed
 };
 
 BattleManager.allMembers = function () {
@@ -97,10 +98,33 @@ BattleManager.startAction = function () {
     this._phase = 'action';
     this._action = action;
     this._targets = targets;
-    subject.useItem(action.item(), action._modifiedItem, action._itemIndex);
+    subject.useSkill(action.item(), action._modifiedItem);
     this._action.applyGlobal();
     this.refreshStatus();
     this._logWindow.startAction(subject, action, targets);
+};
+
+BattleManager.updateAction = function () {
+    const target = this._targets.shift();
+    if (target) {
+        this.invokeAction(this._subject, target);
+        this.consumeItem(this._subject, target);
+    } else {
+        this.endAction();
+    }
+};
+
+BattleManager.consumeItem = function (subject, target) {
+    if (!this._consumedItem && target.result().success) {
+        const action = this._action;
+        subject.useItem(action.item(), action._itemIndex);
+    }
+};
+
+BattleManager.endAction = function () {
+    this._consumedItem = false;
+    this._logWindow.endAction(this._subject);
+    this._phase = 'turn';
 };
 
 DQEng.Battle_Manager.displayDefeatMessage = BattleManager.displayDefeatMessage;

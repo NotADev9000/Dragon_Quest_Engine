@@ -1,6 +1,6 @@
 //=============================================================================
 // Dragon Quest Engine - Game Action
-// DQE_Game_Action.js                                                             
+// DQE_Game_Action.js
 //=============================================================================
 
 /*:
@@ -9,9 +9,12 @@
 * @plugindesc The The game object class for an Action - V0.1
 *
 *
-* @param Nothing Happens Skill ID
-* @desc the skill ID for the items that do nothing. Default: 3.
+* @param Fail Skill ID
+* @desc the skill ID for the items/skills that do nothing. Default: 3.
 * @default 3
+*
+* @param Fail State ID
+* @desc the state ID for the fail skill to add.
 * 
 * @help
 * N/A
@@ -31,7 +34,8 @@ DQEng.Game_Action = DQEng.Game_Action || {};
 var parameters = PluginManager.parameters('DQE_Game_Action');
 DQEng.Parameters = DQEng.Parameters || {};
 DQEng.Parameters.Game_Action = {};
-DQEng.Parameters.Game_Action.nothingHappensSkillId = Number(parameters["Nothing Happens Skill ID"]) || 3;
+DQEng.Parameters.Game_Action.failSkillId = Number(parameters["Fail Skill ID"]) || 3;
+DQEng.Parameters.Game_Action.failStateId = Number(parameters["Fail State ID"]);
 DQEng.Parameters.Game_Action.confusedRestriction = Number(parameters["Confused Restriction Level"]) || 3.1;
 DQEng.Parameters.Game_Action.beguiledRestriction = Number(parameters["Beguiled Restriction Level"]) || 3.2;
 DQEng.Parameters.Game_Action.cursedRestriction = Number(parameters["Cursed Restriction Level"]) || 3.01;
@@ -41,6 +45,8 @@ DQEng.Parameters.Game_Action.cursedRestriction = Number(parameters["Cursed Restr
 //-----------------------------------------------------------------------------
 
 Game_Action.HITTYPE_BREATH = 3;
+Game_Action.ATTACK_STATE = 0;
+Game_Action.FAIL_STATE = DQEng.Parameters.Game_Action.failStateId;
 
 DQEng.Game_Action.clear = Game_Action.prototype.clear;
 Game_Action.prototype.clear = function () {
@@ -65,15 +71,16 @@ Game_Action.prototype.setSkill = function (skillId) {
  */
 Game_Action.prototype.setItem = function (item, itemIndex) {
     this.clearModifiedItem();
-    var invokedSkill;
+    let invokedSkill;
     if (item.meta.skillId) {
         invokedSkill = $dataSkills[item.meta.skillId];
         this._modifiedItem = Object.assign({}, invokedSkill);
         this._modifiedItem.mpCost = 0;
         this._modifiedItem.message1 = item.meta.message1;
         this._modifiedItem.stypeId = 0; // skill should NOT be set as skill/ability to prevent fizzle from blocking it
-    } else if (DataManager.isWeapon(item) || DataManager.isArmor(item) || item.scope === 0) {
-        invokedSkill = $dataSkills[DQEng.Parameters.Game_Action.nothingHappensSkillId];
+    } else if (DataManager.isWeapon(item) || DataManager.isArmor(item) || item.scope === 0 || item.occasion > 1) {
+        // 'nothing happens' skill is used if item is equipment piece or can't be used in battle
+        invokedSkill = $dataSkills[DQEng.Parameters.Game_Action.failSkillId];
         this._modifiedItem = Object.assign({}, invokedSkill);
         this._modifiedItem.name = item.name;
     } else {
@@ -365,7 +372,6 @@ Game_Action.prototype.apply = function (target) {
         this.metaEffects(this.item().meta).forEach(effect => {
             this.applyItemEffect(target, effect);
         }, this);
-        this.applyItemUserEffect(target);
     }
 };
 
@@ -389,7 +395,7 @@ Game_Action.prototype.metaEffects = function (meta) {
                 case 'RemB': // Remove Buff
                     code = Game_Action.EFFECT_REMOVE_BUFF;
                     break;
-                default: // Remove Debuff
+                default: // 'RemD' Remove Debuff
                     code = Game_Action.EFFECT_REMOVE_DEBUFF;
             }
             switch (properties[1]) {
@@ -468,9 +474,24 @@ Game_Action.prototype.makeDamageValue = function (target, critical) {
     value = this.applyVariance(value, vari);
     if (physical && !item.meta.noMetalSave) value += this.applyMetalSave();
     if (critical) value = this.applyCritical(value);
+    if (this.isRecover()) value = this.applyRecoverLimit(value, target);
     value = this.applyGuard(value, target);
     value = Math.floor(value);
     return value;
+};
+
+/**
+ * Limits the recovery value to how much HP has been lost
+ * e.g. If actor has lost 50 HP no healing move will heal above that
+ * 
+ * As the values are negative the HP is taken from the Max HP
+ * 
+ * @param {number} value amount to heal, passed as a negative value
+ * @param {Game_Battler} target target being healed
+ * @returns the limited healing value
+ */
+Game_Action.prototype.applyRecoverLimit = function (value, target) {
+    return Math.max(target.hp - target.mhp, value);
 };
 
 Game_Action.prototype.applyCritical = function (damage) {
@@ -500,7 +521,6 @@ Game_Action.prototype.applyCritical = function (damage) {
 };
 
 Game_Action.prototype.applyVariance = function (damage, vari) {
-    // vari = $gameSystem.randomNumMinMax(0, vari, 2);
     let v = damage * (vari/100);
     v *= Math.random() >= 0.5 ? 1 : -1;
     return damage + v;
@@ -511,4 +531,63 @@ Game_Action.prototype.applyVariance = function (damage, vari) {
  */
 Game_Action.prototype.applyMetalSave = function () {
     return Math.random() >= 0.5 ? 1 : 0;
+};
+
+Game_Action.prototype.executeHpDamage = function (target, value) {
+    if (this.isDrain()) value = Math.min(target.hp, value); // drain value cannot be higher than current HP
+    target.gainHp(-value);
+    if (value > 0) target.onDamage(value);
+    this.gainDrainedHp(value);
+
+    // action that restores HP fails if target has full health
+    this.isRecover() && value === 0 ? this.makeFailureType(target, Game_ActionResult.FAILURE_TYPE_FULLHEALTH) : this.makeSuccess(target);
+};
+
+Game_Action.prototype.itemEffectAddState = function (target, effect) {
+    switch (effect.dataId) {
+        case Game_Action.ATTACK_STATE:
+            this.itemEffectAddAttackState(target, effect);
+            break;
+        case Game_Action.FAIL_STATE:
+            this.makeFailureType(target, Game_ActionResult.FAILURE_TYPE_NOTHING);
+            break;
+        default:
+            this.itemEffectAddNormalState(target, effect);
+            break;
+    }
+};
+
+Game_Action.prototype.itemEffectAddAttackState = function (target, effect) {
+    this.subject().attackStates().forEach(function (stateId) {
+        var chance = effect.value1;
+        chance *= target.stateRate(stateId);
+        chance *= this.subject().attackStatesRate(stateId);
+        if (Math.random() < chance) {
+            target.addState(stateId);
+            this.makeSuccess(target);
+        }
+    }.bind(this), target);
+};
+
+Game_Action.prototype.itemEffectAddNormalState = function (target, effect) {
+    let chance = effect.value1;
+    let stateAdded = false;
+
+    if (!this.isCertainHit()) chance *= target.stateRate(effect.dataId);
+    if (Math.random() < chance) stateAdded = target.addState(effect.dataId);
+
+    stateAdded ? this.makeSuccess(target) : this.makeFailureType(target, Game_ActionResult.FAILURE_TYPE_AFFECTED);
+};
+
+Game_Action.prototype.itemEffectRemoveState = function (target, effect) {
+    const chance = effect.value1;
+    let stateRemoved = false;
+
+    if (Math.random() < chance) stateRemoved = target.removeState(effect.dataId);
+
+    stateRemoved ? this.makeSuccess(target) : this.makeFailureType(target, Game_ActionResult.FAILURE_TYPE_NOTHING);
+};
+
+Game_Action.prototype.makeFailureType = function (target, type) {
+    target.result().failureType = type;
 };

@@ -20,7 +20,7 @@ var $plugins =
 {"name":"DQE_Game_RestorePoint","status":true,"description":"the game object class for storing restore point data (where player is teleported to upon wipe out) - V0.1","parameters":{"Default Restore Point - Map ID":"2","Default Restore Point - Map Name":"Snowmourne - Barracks","Default Restore Point - X":"15","Default Restore Point - Y":"17","Default Restore Point - Direction":"8"}},
 {"name":"DQE_Game_System","status":true,"description":"The game object class for the system data - V0.1","parameters":{"Override Battle BGM Switch":"2","Allow Zoom Switch":"3","Start Zoom Switch":"4","Lock Camera Switch":"5","Seperate Followers Switch":"6"}},
 {"name":"DQE_Game_Item","status":true,"description":"The game object class for handling skills, items, weapons, and armor - V0.1","parameters":{}},
-{"name":"DQE_Game_Action","status":true,"description":"The The game object class for an Action - V0.1","parameters":{"Nothing Happens Skill ID":"3"}},
+{"name":"DQE_Game_Action","status":true,"description":"The The game object class for an Action - V0.1","parameters":{"Fail Skill ID":"3","Fail State ID":"17"}},
 {"name":"DQE_Game_ActionResult","status":true,"description":"The The game object class for an Action Result - V0.1","parameters":{}},
 {"name":"DQE_Game_CharacterBase","status":true,"description":"The game object class for CharacterBase - V0.1","parameters":{}},
 {"name":"DQE_Game_BattlerBase","status":true,"description":"The superclass of Game_Battler. It mainly contains parameters calculation. - V0.1","parameters":{"Self Stun Skill ID":"18","Stare Skill ID":"19","Whistle Skill ID":"20","Laugh Skill ID":"21","Grin Skill ID":"22","Cursed Stun Skill ID":"23","Cursed HP Skill ID":"24","Cursed MP Skill ID":"25","Cursed Death Skill ID":"26"}},

@@ -209,9 +209,14 @@ Window_BattleLog.prototype.displayActionResults = function (subject, target) {
         this.displayCritical(target);
         this.push('popupDamage', target);
         this.push('popupDamage', subject);
-        this.displayDamage(target);
-        this.displayAffectedStatus(target);
-        this.displayFailure(target);
+
+        if (target.result().success) {
+            this.displayDamage(target);
+            this.displayAffectedStatus(target);
+        } else {
+            this.displayFailure(target);
+        }
+
         this.push('waitForNewLine');
         this.push('popBaseLine');
     }
@@ -230,6 +235,25 @@ Window_BattleLog.prototype.displayCritical = function (target) {
     }
 };
 
+Window_BattleLog.prototype.displayFailure = function (target) {
+    const result = target.result();
+    if (result.isHit() && !result.success) {
+        let text = '';
+        switch (result.failureType) {
+            case Game_ActionResult.FAILURE_TYPE_AFFECTED:
+                text = TextManager.terms.battleText.failure_affected.format(target.name());
+                break;
+            case Game_ActionResult.FAILURE_TYPE_FULLHEALTH:
+                text = TextManager.terms.battleText.failure_fullHealth.format(target.name());
+                break;
+            default: // Game_ActionResult.FAILURE_TYPE_NOTHING
+                text = TextManager.terms.battleText.failure_nothing;
+                break;
+        }
+        this.push('addText', text);
+    }
+};
+
 Window_BattleLog.prototype.displayDamage = function (target) {
     if (target.result().missed) {
         this.displayMiss(target);
@@ -245,7 +269,7 @@ Window_BattleLog.prototype.displayDamage = function (target) {
 };
 
 Window_BattleLog.prototype.displayMiss = function (target) {
-    var fmt;
+    let fmt;
     if (target.result().physical) {
         fmt = target.isActor() ? TextManager.actorNoHit : TextManager.enemyNoHit;
     } else {
@@ -374,10 +398,10 @@ Window_BattleLog.prototype.displayChangedBuffs = function (target) {
 };
 
 Window_BattleLog.prototype.makeHpDamageText = function (target) {
-    var result = target.result();
-    var damage = result.hpDamage;
-    var isActor = target.isActor();
-    var fmt;
+    const result = target.result();
+    const damage = result.hpDamage;
+    const isActor = target.isActor();
+    let fmt;
     if (damage > 0 && result.drain) {
         fmt = isActor ? TextManager.actorDrain : TextManager.enemyDrain;
         return fmt.format(target.name(), TextManager.hp, damage);
@@ -387,8 +411,6 @@ Window_BattleLog.prototype.makeHpDamageText = function (target) {
     } else if (damage < 0) {
         fmt = isActor ? TextManager.actorRecovery : TextManager.enemyRecovery;
         return fmt.format(target.name(), TextManager.hp, -damage);
-    } else if (result.recover) {
-        return `${target.name()} is already full of beans!`;
     } else {
         fmt = isActor ? TextManager.actorNoDamage : TextManager.enemyNoDamage;
         return fmt.format(target.name());

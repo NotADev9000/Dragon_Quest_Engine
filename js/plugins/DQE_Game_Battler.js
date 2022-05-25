@@ -38,16 +38,16 @@ Game_Battler.prototype.addParam = function (paramId, value) {
     this.refresh();
 };
 
-Game_Battler.prototype.useItem = function (item, modifiedSkill, itemIndex = -1) {
+Game_Battler.prototype.useSkill = function (item, modifiedSkill) {
     if (DataManager.isSkill(item)) {
-        var skill = modifiedSkill ? modifiedSkill : item;
+        const skill = modifiedSkill ? modifiedSkill : item;
         this.paySkillCost(skill);
-    } else if (DataManager.isItem(item)) {
-        if (itemIndex >= 0) {
-            this.consumeActorItem(itemIndex);
-        } else {
-            this.consumeItem(item); // consume item from bag
-        }
+    }
+};
+
+Game_Battler.prototype.useItem = function (item, itemIndex = -1) {
+    if (DataManager.isItem(item)) {
+        itemIndex >= 0 ? this.consumeActorItem(itemIndex) : this.consumeItem(item);
     }
 };
 
@@ -62,11 +62,13 @@ Game_Battler.prototype.addState = function (stateId) {
             this._result.pushStackedState(stateId);
         }
         this.resetStateCounts(stateId);
+        return true;
     }
+    return false;
 };
 
 Game_Battler.prototype.isStateAddable = function (stateId) {
-    let state = $dataStates[stateId];
+    const state = $dataStates[stateId];
     return (this.isAlive() && state &&
         !this.isStateResist(stateId) &&
         !this._result.isStateRemoved(stateId) &&
@@ -82,7 +84,9 @@ Game_Battler.prototype.removeState = function (stateId) {
         this.isActor() && $gamePlayer.refresh();
         removeDeath && this.refresh();
         this._result.pushRemovedState(stateId);
+        return true;
     }
+    return false;
 };
 
 Game_Battler.prototype.removeStateAuto = function (timing, state) {
