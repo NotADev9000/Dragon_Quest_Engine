@@ -43,7 +43,7 @@ Window_Stats_LevelUp.prototype.initialize = function (x, y, width) {
 // Functions - window sizing
 //////////////////////////////
 
-Window_Stats.prototype.windowHeight = function () {
+Window_Stats_LevelUp.prototype.windowHeight = function () {
     return 355;
 };
 
