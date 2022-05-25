@@ -85,7 +85,7 @@ Scene_Battle.prototype.createStatusWindow = function () {
     var partyMembers = $gameParty.members();
 
     for (let i = 0; i < Math.min(partyMembers.length, 4); i++) {
-        this._statusWindow[i] = new Window_MenuStatus(144 + (Window_MenuStatus.prototype.windowWidth() * i), -12, partyMembers[i]);
+        this._statusWindow[i] = new Window_MenuStatus(144 + (Window_MenuStatus.prototype.windowWidth() * i), -12, partyMembers[i], true, true);
         this.addWindow(this._statusWindow[i]);
     }
 };
