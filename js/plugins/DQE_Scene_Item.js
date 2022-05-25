@@ -342,7 +342,7 @@ Scene_Item.prototype.startItemUse = function (forAll = false) {
     }
 
     if (this.isItemEffectsValid()) {
-        takeFrom.useItem(item, null, itemIndex);
+        takeFrom.useItem(item, itemIndex);
         $gameMessage.add(useByActor.itemUsedMessage(item));
         this.applyItem();
         this.displayItemResultMessages(Scene_Item.prototype);

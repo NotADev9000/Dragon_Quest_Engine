@@ -308,7 +308,7 @@ Scene_Skill.prototype.startItemUse = function (forAll = false) {
     const user = this.user();
 
     if (this.isItemEffectsValid()) {
-        user.useItem(item);
+        user.useSkill(item);
         $gameMessage.add(user.magicUsedMessage(item));
         this.applyItem();
         this.displayItemResultMessages(Scene_Skill.prototype);
