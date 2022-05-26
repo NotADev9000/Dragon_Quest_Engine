@@ -63,7 +63,7 @@ Scene_ItemBase.prototype.createItemStatWindow = function () {
  * Returns false if item is not useable in menu
  */
 Scene_ItemBase.prototype.canUse = function () {
-    var user = this.user();
+    const user = this.user();
     if (user) {
         return user.canUse(this.item());
     }
@@ -75,13 +75,13 @@ Scene_ItemBase.prototype.item = function () {
 };
 
 Scene_ItemBase.prototype.action = function () {
-    var action = new Game_Action(this.user());
+    const action = new Game_Action(this.user());
     action.setItemObject(this.item());
     return action;
 };
 
 Scene_ItemBase.prototype.itemTargetActors = function () {
-    var action = this.action();
+    const action = this.action();
     if (!action.isForFriend()) {
         return [];
     } else if (action.isForAll()) {
@@ -96,7 +96,7 @@ Scene_ItemBase.prototype.itemTargetActors = function () {
 //////////////////////////////
 
 Scene_ItemBase.prototype.addToMessage = function (text) {
-    let refresh = '\\FUNC[SceneManager,_scene,refreshItemStatWindows,]';
+    const refresh = '\\FUNC[SceneManager,_scene,refreshItemStatWindows,]';
     $gameMessage.add(refresh + text);
 };
 
@@ -113,13 +113,14 @@ Scene_ItemBase.prototype.displayItemResultMessages = function (scene) {
 Scene_ItemBase.prototype.getResultTexts = function (target) {
     if (!this.getRevived(target)) {
         this.getDamage(target);
+        this.getStatus(target);
     }
     this.getGrow(target);
 };
 
 Scene_ItemBase.prototype.getRevived = function (target) {
-    var result = target.result();
-    var revived = false;
+    const result = target.result();
+    let revived = false;
     result.removedStateObjects().forEach(function (state) {
         if (state.id === target.deathStateId()) {
             this.addToMessage('\\sfx[Revive]' + target.name() + state.message4);
@@ -130,17 +131,22 @@ Scene_ItemBase.prototype.getRevived = function (target) {
 };
 
 Scene_ItemBase.prototype.getDamage = function (target) {
-    var result = target.result();
-    if (result.missed) {
-        // this.displayMiss(target);
-    } else if (result.hpAffected) {
+    const result = target.result();
+    if (result.hpAffected) {
         this.addToMessage(this.getHpRecover(target));
     }
 };
 
 Scene_ItemBase.prototype.getHpRecover = function (target) {
-    var damage = target.result().hpDamage;
+    const damage = target.result().hpDamage;
     return '\\sysx[16]' + TextManager.actorRecovery.format(target.name(), TextManager.hp, -damage);
+};
+
+Scene_ItemBase.prototype.getStatus = function (target) {
+    const result = target.result();
+    result.removedStateObjects().forEach(state => {
+        this.addToMessage(target.name() + state.message4);
+    });
 };
 
 Scene_ItemBase.prototype.getGrow = function (target) {
