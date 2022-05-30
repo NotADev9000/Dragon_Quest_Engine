@@ -39,6 +39,7 @@ Window_SkillSets.prototype.initialize = function (x, y, width, height, selectabl
     Window_Pagination.prototype.initialize.call(this, x, y, width, height);
     // actor
     this._category = -1;
+    this._lastCategory = -1;
     this._actor = null;
     // skillset
     this._skillSetIndex = -1;
@@ -139,8 +140,9 @@ Window_SkillSets.prototype.setCategory = function (category) {
 };
 
 Window_SkillSets.prototype.setItem = function (index) {
-    if (this._skillSetIndex !== index) {
+    if (this._skillSetIndex !== index || this._lastCategory !== this._category) {
         this._skillSetIndex = index;
+        this._lastCategory = this._category;
         this._page = 1;
         this.makeItemList();
         this._itemsOnPage = this.itemsOnPage();
