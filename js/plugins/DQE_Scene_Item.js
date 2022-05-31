@@ -328,28 +328,33 @@ Scene_Item.prototype.onUseOnWhoOk = function () {
 };
 
 Scene_Item.prototype.startItemUse = function (forAll = false) {
-    var inBagInventory = this.inBag(this._commandWindow); // is the player looking in one of the three bag spaces?
+    const inBagInventory = this.inBag(this._commandWindow); // is the player looking in one of the three bag spaces?
+    let takeFrom;
+    let useByActor;
+    let itemIndex;
+    let item;
+
     if (inBagInventory) {
-        var takeFrom = this.user();
-        var useByActor = takeFrom;
-        var itemIndex = -1;
-        var item = this.item();
+        takeFrom = this.user();
+        useByActor = takeFrom;
+        itemIndex = -1;
+        item = this.item();
     } else {
-        var takeFrom = $gameParty.members()[this._commandWindow.currentSymbol()];
-        var useByActor = this.user();
-        var itemIndex = this._itemWindow.index();
-        var item = takeFrom.item(itemIndex);
+        takeFrom = $gameParty.members()[this._commandWindow.currentSymbol()];
+        useByActor = this.user();
+        itemIndex = this._itemWindow.index();
+        item = takeFrom.item(itemIndex);
     }
 
     if (this.isItemEffectsValid()) {
         takeFrom.useItem(item, itemIndex);
-        $gameMessage.add(useByActor.itemUsedMessage(item));
+        $gameMessage.add(TextManager.getUseItem(item, useByActor, this.itemTargetActors()));
         this.applyItem();
         this.displayItemResultMessages(Scene_Item.prototype);
     } else if (forAll) {
         this.displayMessage(useByActor.triedToUseAllMessage(item), Scene_Item.prototype.triedToUseAll_MessageCallback);
     } else {
-        let useOnActor = $gameParty.members()[this._useOnWhoWindow.currentSymbol()];
+        const useOnActor = $gameParty.members()[this._useOnWhoWindow.currentSymbol()];
         this.displayMessage(useByActor.triedToUseMessage(item, useOnActor), Scene_Item.prototype.triedToUse_MessageCallback);
     }
 };

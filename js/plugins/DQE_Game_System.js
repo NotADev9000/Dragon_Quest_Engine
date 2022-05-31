@@ -133,6 +133,10 @@ Game_System.prototype.findSkillSet = function (skillSetId) {
     return $DQE_dataSkillSets.find(skillSetData => skillSetData.id === skillSetId);
 };
 
+Game_System.prototype.findSkillSetName = function (id) {
+    return this.findSkillSet(id).name;
+};
+
 // unlocking skills
 
 Game_System.prototype.triggerNodeUnlocks = function (node, actor) {

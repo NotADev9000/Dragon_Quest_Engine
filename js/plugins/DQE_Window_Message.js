@@ -147,11 +147,11 @@ Window_Message.prototype.normalColor = function () {
  * 
  *       When calling a function within a message add a ',' to the end
  *       when the function has no parameters
- *       e.g. \\FUNC[SceneManager._scene.refreshItemStatWindows.]
+ *       e.g. \\FUNC[SceneManager,_scene,refreshItemStatWindows,]
  * 
  *       If the function has a parameter add a ',' to the end followed
  *       by the parameter
- *       e.g. \\FUNC[Scene_Battle.prototype.refreshAndShowStatsWindow.$gameParty.members()[0]]
+ *       e.g. \\FUNC[Scene_Battle,prototype,refreshAndShowStatsWindow,$gameParty.members()[0]]
  */
 DQEng.Window_Message = Window_Message.prototype.processEscapeCharacter;
 Window_Message.prototype.processEscapeCharacter = function (code, textState) {

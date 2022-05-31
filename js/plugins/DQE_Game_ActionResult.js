@@ -41,6 +41,7 @@ Game_ActionResult.prototype.clear = function () {
     this.stackedStates = [];
     this.recover = false;
     this.blocked = false;
+    this.learnedSkillSet = '';
     this.grow = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // amount a stat grew by
     this.changedBuffs = [];
     this.buffDifferences = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

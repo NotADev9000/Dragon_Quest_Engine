@@ -721,6 +721,10 @@ Game_Actor.prototype.numSkillSets = function () {
     return this._skillSets.length;
 };
 
+Game_Actor.prototype.hasSkillSetById = function (id) {
+    return this._skillSets.some(skillset => skillset.id === id);
+};
+
 //////////////////////////////
 // Functions - skill points
 //////////////////////////////

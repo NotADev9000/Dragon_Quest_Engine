@@ -378,6 +378,7 @@ BattleManager.updatePostTurn = function (turnNum) {
     }
 };
 
+// TODO: Change instances of 'instanceof' to use 'subject.isActor()'
 BattleManager.processPostTurn1 = function () {
     let subject = this._subject;
     let isActor = subject instanceof Game_Actor;

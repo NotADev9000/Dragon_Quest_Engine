@@ -172,15 +172,15 @@ Window_BattleLog.prototype.startAction = function (subject, action, targets) {
     this.push('waitForMovement');
     this.push('performAction', subject, action);
     this.push('showAnimation', subject, animTargets, animationId, skillType);
-    this.displayAction(subject, item, action._modifiedItem);
+    this.displayAction(subject, item, action._modifiedItem, targets);
 };
 
-Window_BattleLog.prototype.displayAction = function (subject, item, modifiedItem) {
-    var numMethods = this._methods.length;
+Window_BattleLog.prototype.displayAction = function (subject, item, modifiedItem, targets) {
+    const numMethods = this._methods.length;
     if (DataManager.isSkill(item)) {
-        var name = modifiedItem && modifiedItem.name ? modifiedItem.name : item.name;
-        var msg1 = modifiedItem && modifiedItem.message1 ? modifiedItem.message1 : item.message1;
-        var msg2 = modifiedItem && modifiedItem.message2 ? modifiedItem.message2 : item.message2;
+        const name = modifiedItem && modifiedItem.name ? modifiedItem.name : item.name;
+        const msg1 = modifiedItem && modifiedItem.message1 ? modifiedItem.message1 : item.message1;
+        const msg2 = modifiedItem && modifiedItem.message2 ? modifiedItem.message2 : item.message2;
         if (msg1) {
             this.push('addText', subject.name() + msg1.format(name));
         }
@@ -188,7 +188,7 @@ Window_BattleLog.prototype.displayAction = function (subject, item, modifiedItem
             this.push('addText', msg2.format(name));
         }
     } else {
-        this.push('addText', TextManager.useItem.format(subject.name(), item.name));
+        this.push('addText', TextManager.getUseItem(item, subject, targets));
     }
     if (this._methods.length === numMethods) {
         this.push('wait');

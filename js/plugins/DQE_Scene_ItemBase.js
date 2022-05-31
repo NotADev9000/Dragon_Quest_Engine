@@ -116,6 +116,7 @@ Scene_ItemBase.prototype.getResultTexts = function (target) {
         this.getStatus(target);
     }
     this.getGrow(target);
+    this.getLearnSkillSets(target);
 };
 
 Scene_ItemBase.prototype.getRevived = function (target) {
@@ -157,4 +158,9 @@ Scene_ItemBase.prototype.getGrow = function (target) {
             this.addToMessage(`${target.name()}'s ${stat} ${dir} by ${value}!`);
         }
     });
+};
+
+Scene_ItemBase.prototype.getLearnSkillSets = function (target) {
+    const skillset = target.result().learnedSkillSet;
+    if (skillset) this.addToMessage(`\\sfx[SkillSet_Unlock]${target.name()} learns ${skillset}!`);
 };

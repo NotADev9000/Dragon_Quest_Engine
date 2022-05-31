@@ -124,6 +124,28 @@ TextManager.terms.shopText.generic = [
     `*: Thank you for the items!\n Is there anything else I can help you with?`,                                // postSellMessage
 ];
 
+// Using Items
+
+/**
+ * returns the formatted message for using an item.
+ * The name used in the message (user/target) is decided by the items useTarget meta value.
+ * The style of messaging is decided by items meta message or a generic one.
+ * 
+ * @param {dataItem} item used
+ * @param {Game_Battler} user of this item
+ * @param {Game_Battler} targets for this item (only first is used in messaging)
+ * @returns formatted message with item and battler name
+ */
+TextManager.getUseItem = function (item, user, targets) {
+    const message = this.useMessage(item);
+    const name = item.meta.useTarget ? targets[0].name() : user.name();
+    return message.format(name, item.name);
+};
+
+TextManager.useMessage = function (item) {
+    return item.meta.useMessage ? item.meta.useMessage : TextManager.useItem;
+};
+
 // Obtained Items
 // %X is ordered as so: 1 - connector, 2 - item name, 3 - amount
 

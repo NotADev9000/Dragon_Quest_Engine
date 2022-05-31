@@ -44,6 +44,7 @@ DQEng.Parameters.Game_Action.cursedRestriction = Number(parameters["Cursed Restr
 // Game_Action
 //-----------------------------------------------------------------------------
 
+Game_Action.EFFECT_LEARN_SKILL_SET = 45;
 Game_Action.HITTYPE_BREATH = 3;
 Game_Action.ATTACK_STATE = 0;
 Game_Action.FAIL_STATE = DQEng.Parameters.Game_Action.failStateId;
@@ -273,6 +274,15 @@ Game_Action.prototype.hasItemAnyValidEffects = function (target) {
     }, this);
 };
 
+DQEng.Game_Action.testItemEffect = Game_Action.prototype.testItemEffect;
+Game_Action.prototype.testItemEffect = function (target, effect) {
+    switch (effect.code) {
+        case Game_Action.EFFECT_LEARN_SKILL_SET:
+            return target.isActor() && !target.hasSkillSetById(effect.dataId);
+    }
+    DQEng.Game_Action.testItemEffect.call(this, target, effect);
+};
+
 Game_Action.prototype.itemEva = function (target) {
     if (this.isPhysical()) {
         // base evasion (agility related) * xparam evasion rate
@@ -452,6 +462,18 @@ Game_Action.prototype.metaEffects = function (meta) {
             });
         });
     }
+    // skill sets
+    if (meta.effectSkills) {
+        let notes = meta.effectSkills.split('/');
+        notes.forEach(skillId => {
+            effects.push({
+                code: Game_Action.EFFECT_LEARN_SKILL_SET,
+                dataId: skillId,
+                value1: 1,
+                value2: 0
+            });
+        });
+    }
     return effects;
 };
 
@@ -543,6 +565,16 @@ Game_Action.prototype.executeHpDamage = function (target, value) {
     this.isRecover() && value === 0 ? this.makeFailureType(target, Game_ActionResult.FAILURE_TYPE_FULLHEALTH) : this.makeSuccess(target);
 };
 
+DQEng.Game_Action.applyItemEffect = Game_Action.prototype.applyItemEffect;
+Game_Action.prototype.applyItemEffect = function (target, effect) {
+    switch (effect.code) {
+        case Game_Action.EFFECT_LEARN_SKILL_SET:
+            this.itemEffectLearnSkillSet(target, effect);
+            break;
+    }
+    DQEng.Game_Action.applyItemEffect.call(this, target, effect);
+};
+
 Game_Action.prototype.itemEffectAddState = function (target, effect) {
     switch (effect.dataId) {
         case Game_Action.ATTACK_STATE:
@@ -586,6 +618,15 @@ Game_Action.prototype.itemEffectRemoveState = function (target, effect) {
     if (Math.random() < chance) stateRemoved = target.removeState(effect.dataId);
 
     stateRemoved ? this.makeSuccess(target) : this.makeFailureType(target, Game_ActionResult.FAILURE_TYPE_NOTHING);
+};
+
+Game_Action.prototype.itemEffectLearnSkillSet = function (target, effect) {
+    if (target.isActor()) {
+        const id = effect.dataId;
+        target.addSkillSet(id);
+        target.result().learnedSkillSet = $gameSystem.findSkillSetName(id);
+        this.makeSuccess(target);
+    }
 };
 
 Game_Action.prototype.makeFailureType = function (target, type) {
