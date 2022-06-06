@@ -1,0 +1,23 @@
+using item on unaffected:
+"But nothing happens! X puts the Y away."
+
+using skill on unaffected:
+"But nothing happens!"
+
+using skill that doesn't work:
+(snooze) "X doesn't fall asleep"
+(dazzle) "X isn't affected!"
+
+using skill (frizz, decelerate, whack, gigasmash) on metal:
+"X isn't affected!"
+
+
+DQE:
+
+- These only apply if the skill/item doesn't apply damage
+
+On failing to remove a state:
+"But nothing happens..."
+
+On failing to add a state:
+"X isn't affected!"

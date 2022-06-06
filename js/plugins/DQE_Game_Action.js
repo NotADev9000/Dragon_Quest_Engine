@@ -124,7 +124,7 @@ Game_Action.prototype.buffGrowCodes = function () {
             Game_Action.EFFECT_GROW];
 };
 
-Game_Action.prototype.isEffectBuffGrow = function (effect) {
+Game_Action.prototype.isEffect_BuffGrow = function (effect) {
     return this.buffGrowCodes().contains(effect.code);
 };
 
@@ -133,8 +133,12 @@ Game_Action.prototype.stateCodes = function () {
             Game_Action.EFFECT_REMOVE_STATE];
 };
 
-Game_Action.prototype.isEffectStat = function (effect) {
+Game_Action.prototype.isEffect_State = function (effect) {
     return this.stateCodes().contains(effect.code);
+};
+
+Game_Action.prototype.isEffect_LearnSkillSet = function (effect) {
+    return Game_Action.EFFECT_LEARN_SKILL_SET === effect.code;
 };
 
 Game_Action.prototype.isCertainHit = function () {
@@ -280,7 +284,7 @@ Game_Action.prototype.testItemEffect = function (target, effect) {
         case Game_Action.EFFECT_LEARN_SKILL_SET:
             return target.isActor() && !target.hasSkillSetById(effect.dataId);
     }
-    DQEng.Game_Action.testItemEffect.call(this, target, effect);
+    return DQEng.Game_Action.testItemEffect.call(this, target, effect);
 };
 
 Game_Action.prototype.itemEva = function (target) {

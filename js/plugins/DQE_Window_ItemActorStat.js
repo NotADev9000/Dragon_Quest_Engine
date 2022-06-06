@@ -32,25 +32,7 @@ function Window_ItemActorStat() {
     this.initialize.apply(this, arguments);
 }
 
-Window_ItemActorStat.STAT_HP = 0;
-Window_ItemActorStat.STAT_MP = 1;
-Window_ItemActorStat.STAT_ATTACK = 2;
-Window_ItemActorStat.STAT_DEFENCE = 3;
-Window_ItemActorStat.STAT_MMIGHT = 4;
-Window_ItemActorStat.STAT_MMEND = 5;
-Window_ItemActorStat.STAT_AGILITY = 6;
-Window_ItemActorStat.STAT_DEFTNESS = 7;
-Window_ItemActorStat.STAT_CHARM = 8;
-Window_ItemActorStat.STAT_STRENGTH = 9;
-Window_ItemActorStat.STAT_RESILIENCE = 10;
-Window_ItemActorStat.STAT_PHYRES = 11;
-Window_ItemActorStat.STAT_MAGRES = 12;
-Window_ItemActorStat.STAT_BRERES = 13;
-Window_ItemActorStat.STAT_MPCOST = 14;
-Window_ItemActorStat.STAT_EVASION = 15;
-Window_ItemActorStat.STAT_CRIT = 16;
-Window_ItemActorStat.STAT_BLOCK = 17;
-Window_ItemActorStat.STAT_CRITBLOCK = 18;
+Window_ItemActorStat.LEARN_SKILL_SET = 0;
 
 Window_ItemActorStat.prototype = Object.create(Window_Base.prototype);
 Window_ItemActorStat.prototype.constructor = Window_ItemActorStat;
@@ -111,12 +93,15 @@ Window_ItemActorStat.prototype.setStat = function (action) {
 
     // get types
     if (effect) {
-        if (action.isEffectStat(effect)) {
+        if (action.isEffect_State(effect)) {
             this._stat[0] = Game_BattlerBase.TRAIT_STATE_RATE;
             this._stat[1] = effect.dataId;
-        } else if (action.isEffectBuffGrow(effect)) {
+        } else if (action.isEffect_BuffGrow(effect)) {
             this._stat[0] = Game_BattlerBase.prototype.buffIdToParamType(effect.dataId);
             this._stat[1] = Game_BattlerBase.prototype.buffIdToParamId(effect.dataId);
+        } else if (action.isEffect_LearnSkillSet(effect)) {
+            this._stat[0] = Window_ItemActorStat.LEARN_SKILL_SET;
+            this._stat[1] = effect.dataId;
         }
     } else if (action.isHpEffect()) {
         this._stat[0] = Game_BattlerBase.TRAIT_PARAM;
@@ -133,7 +118,7 @@ Window_ItemActorStat.prototype.setStat = function (action) {
 
 Window_ItemActorStat.prototype.prepDrawItems = function () {
     // set values
-    let param = this._stat[1];
+    const param = this._stat[1];
     switch (this._stat[0]) {
         case Game_BattlerBase.TRAIT_PARAM:
             this._statName = param === 0 ? TextManager.basic(2) : param === 1 ? TextManager.basic(4) : TextManager.param(param);
@@ -154,6 +139,10 @@ Window_ItemActorStat.prototype.prepDrawItems = function () {
         case Game_BattlerBase.TRAIT_STATE_RATE:
             this._statName = $dataStates[param].name.toUpperCase();
             this._statValue = this._actor.isStateAffected(param) ? `Yes` : `No`;
+            break;
+        case Window_ItemActorStat.LEARN_SKILL_SET:
+            this._statName = `Can Learn?`;
+            this._statValue = this._actor.hasSkillSetById(param) ? `Learned` : `Yes`;
             break;
         default:
             this._statName = '';
