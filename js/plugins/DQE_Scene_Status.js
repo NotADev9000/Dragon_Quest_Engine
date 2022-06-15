@@ -29,7 +29,7 @@ DQEng.Scene_Status = DQEng.Scene_Status || {};
 
 Scene_Status.WinAttribute = 'Attribute';
 Scene_Status.WinMagic = 'Magic';
-Scene_Status.WinOtherAbilities = 'OtherAbilities';
+Scene_Status.WinAbilities = 'Abilities';
 Scene_Status.WinEffects = 'Effects';
 
 Scene_Status.prototype.initialize = function () {
@@ -48,7 +48,7 @@ Scene_Status.prototype.create = function () {
     this.createStatsWindow();
     this.createStatsAttributesWindow();
     this.createStatsMagicWindow();
-    this.createStatsOtherAbilitiesWindow();
+    this.createStatsAbilitiesWindow();
     this.createStatsEffectsWindow();
     // everyone windows
     this.createEveryoneInfoWindow();
@@ -120,16 +120,16 @@ Scene_Status.prototype.createStatsMagicWindow = function () {
     this._statsMagicWindow.setHandler('previous', this.previousActor.bind(this, this._statsMagicWindow));
     this._statsMagicWindow.setHandler('next', this.nextActor.bind(this, this._statsMagicWindow));
     this._statsMagicWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinAttribute));
-    this._statsMagicWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinOtherAbilities));
+    this._statsMagicWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinAbilities));
     this._statsMagicWindow.hide();
     this.addWindow(this._statsMagicWindow);
 };
 
-Scene_Status.prototype.createStatsOtherAbilitiesWindow = function () {
+Scene_Status.prototype.createStatsAbilitiesWindow = function () {
     let x = this._commandWindow.x;
     let y = this._commandWindow.y;
     this._statsAbilitiesWindow = new Window_StatsAbilities(x, y, 1344, 714);
-    this._statsAbilitiesWindow.setHandler('cancel', this.onStatsOtherAbilitiesCancel.bind(this));
+    this._statsAbilitiesWindow.setHandler('cancel', this.onStatsAbilitiesCancel.bind(this));
     this._statsAbilitiesWindow.setHandler('previous', this.previousActor.bind(this, this._statsAbilitiesWindow));
     this._statsAbilitiesWindow.setHandler('next', this.nextActor.bind(this, this._statsAbilitiesWindow));
     this._statsAbilitiesWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinMagic));
@@ -145,7 +145,7 @@ Scene_Status.prototype.createStatsEffectsWindow = function () {
     this._statsEffectsWindow.setHandler('cancel', this.onStatsEffectsCancel.bind(this));
     this._statsEffectsWindow.setHandler('previous', this.previousActor.bind(this, this._statsEffectsWindow));
     this._statsEffectsWindow.setHandler('next', this.nextActor.bind(this, this._statsEffectsWindow));
-    this._statsEffectsWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinOtherAbilities));
+    this._statsEffectsWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinAbilities));
     this._statsEffectsWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinAttribute));
     this._statsEffectsWindow.hide();
     this.addWindow(this._statsEffectsWindow);
@@ -203,7 +203,7 @@ Scene_Status.prototype.onStatsMagicCancel = function () {
     this.activateWindow(this._commandWindow);
 };
 
-Scene_Status.prototype.onStatsOtherAbilitiesCancel = function () {
+Scene_Status.prototype.onStatsAbilitiesCancel = function () {
     this.showCharacterWindows();
     this._statsAbilitiesWindow.setLastSelected(this._statsAbilitiesWindow.index());
     this._statsAbilitiesWindow.hide();
@@ -236,7 +236,7 @@ Scene_Status.prototype.onNextWindow = function (windowName) {
             this._statsMagicWindow.show();
             this.activateWindow(this._statsMagicWindow);
             break;
-        case Scene_Status.WinOtherAbilities:
+        case Scene_Status.WinAbilities:
             this._statsAbilitiesWindow.setCategory(this._commandWindow.currentSymbol());
             this._statsAbilitiesWindow.select(this._statsAbilitiesWindow._lastSelected)
             this._statsAbilitiesWindow.show();
