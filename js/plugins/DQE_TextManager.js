@@ -53,6 +53,8 @@ TextManager.terms.battleText.failure_nothing = `But nothing happens...`;
 TextManager.terms.battleText.failure_affected = `%1 isn't affected!`;
 TextManager.terms.battleText.failure_fullHealth = `%1 is already full of beans!`;
 
+TextManager.terms.battleText.learn_skillset = `%1 learns a new Skill Set: %2!`
+
 // Skill Points
 
 TextManager.terms.obtainSkillPoint = `%1 receives %2!`;

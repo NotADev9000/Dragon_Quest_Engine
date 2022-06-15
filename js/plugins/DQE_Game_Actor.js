@@ -704,7 +704,7 @@ Game_Actor.prototype.displayNewSkillSets = function (newSkillSets) {
     if (newSkillSets.length) {
         $gameMessage.newPage();
         newSkillSets.forEach(skillSet => {
-            $gameMessage.add(TextManager.obtainSkill.format(this._name, skillSet.name));
+            $gameMessage.add(TextManager.terms.battleText.learn_skillset.format(this._name, skillSet.name));
         }, this);
     }
 };
