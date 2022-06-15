@@ -330,15 +330,14 @@ Window_SkillSets.prototype.drawTitleBlock = function () {
     const title = this._data.name || 'No Skill Set';
     const lineGap = this.lineGap();
     const itemHeight = this.itemHeight() + lineGap;
-    const hasSkills = this._actor.numSkillSets() >= 1;
-    const hasMultipleSkills = hasSkills >= 2;
+    const numSkills = this._actor.numSkillSets();
     let y = this.extraPadding();
 
     // window title
     this.drawText(title, 0, y, this.contentsWidth(), 'center');
 
     // icons (switching pages)
-    if (hasMultipleSkills) {
+    if (numSkills >= 2) {
         // left icon
         let icon = this.getHandlerIcon('previous');
         this.drawTextEx(` \\i[${icon}]`, 0, y);
@@ -353,7 +352,7 @@ Window_SkillSets.prototype.drawTitleBlock = function () {
     this.drawHorzLine(0, y);
     y += 3 + lineGap;
 
-    if (hasSkills) {
+    if (numSkills >= 1) {
         const ep = this.extraPadding();
         const layer = this.layer();
         let layerText = `Layer ${this._page}`;
