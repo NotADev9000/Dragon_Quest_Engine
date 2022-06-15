@@ -87,7 +87,7 @@ var $plugins =
 {"name":"DQE_Window_StatsCommon","status":true,"description":"NOT A USEABLE WINDOW; holds common functions between the \"window_stats\" windows - V0.1","parameters":{}},
 {"name":"DQE_Window_StatsAttributes","status":true,"description":"A window breaking down an actors' attributes - V0.1","parameters":{}},
 {"name":"DQE_Window_StatsMagic","status":true,"description":"A window breaking down an actors' magic - V0.1","parameters":{}},
-{"name":"DQE_Window_StatsOtherAbilities","status":true,"description":"A window breaking down an actors' other abilities - V0.1","parameters":{}},
+{"name":"DQE_Window_StatsAbilities","status":true,"description":"A window breaking down an actors' abilities - V0.1","parameters":{}},
 {"name":"DQE_Window_StatsEffects","status":true,"description":"A window breaking down an actors' effects - V0.1","parameters":{}},
 {"name":"DQE_Window_Message","status":true,"description":"Message window for Dragon Quest Engine - V0.1","parameters":{}},
 {"name":"DQE_Window_BattleMessage","status":true,"description":"Battle message window for Dragon Quest Engine - V0.1","parameters":{}},

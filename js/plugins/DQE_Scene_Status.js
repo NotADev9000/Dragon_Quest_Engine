@@ -128,14 +128,14 @@ Scene_Status.prototype.createStatsMagicWindow = function () {
 Scene_Status.prototype.createStatsOtherAbilitiesWindow = function () {
     let x = this._commandWindow.x;
     let y = this._commandWindow.y;
-    this._statsOtherAbilitiesWindow = new Window_StatsOtherAbilities(x, y, 1344, 714);
-    this._statsOtherAbilitiesWindow.setHandler('cancel', this.onStatsOtherAbilitiesCancel.bind(this));
-    this._statsOtherAbilitiesWindow.setHandler('previous', this.previousActor.bind(this, this._statsOtherAbilitiesWindow));
-    this._statsOtherAbilitiesWindow.setHandler('next', this.nextActor.bind(this, this._statsOtherAbilitiesWindow));
-    this._statsOtherAbilitiesWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinMagic));
-    this._statsOtherAbilitiesWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinEffects));
-    this._statsOtherAbilitiesWindow.hide();
-    this.addWindow(this._statsOtherAbilitiesWindow);
+    this._statsAbilitiesWindow = new Window_StatsAbilities(x, y, 1344, 714);
+    this._statsAbilitiesWindow.setHandler('cancel', this.onStatsOtherAbilitiesCancel.bind(this));
+    this._statsAbilitiesWindow.setHandler('previous', this.previousActor.bind(this, this._statsAbilitiesWindow));
+    this._statsAbilitiesWindow.setHandler('next', this.nextActor.bind(this, this._statsAbilitiesWindow));
+    this._statsAbilitiesWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinMagic));
+    this._statsAbilitiesWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinEffects));
+    this._statsAbilitiesWindow.hide();
+    this.addWindow(this._statsAbilitiesWindow);
 };
 
 Scene_Status.prototype.createStatsEffectsWindow = function () {
@@ -205,8 +205,8 @@ Scene_Status.prototype.onStatsMagicCancel = function () {
 
 Scene_Status.prototype.onStatsOtherAbilitiesCancel = function () {
     this.showCharacterWindows();
-    this._statsOtherAbilitiesWindow.setLastSelected(this._statsOtherAbilitiesWindow.index());
-    this._statsOtherAbilitiesWindow.hide();
+    this._statsAbilitiesWindow.setLastSelected(this._statsAbilitiesWindow.index());
+    this._statsAbilitiesWindow.hide();
     this.activateWindow(this._commandWindow);
 };
 
@@ -237,10 +237,10 @@ Scene_Status.prototype.onNextWindow = function (windowName) {
             this.activateWindow(this._statsMagicWindow);
             break;
         case Scene_Status.WinOtherAbilities:
-            this._statsOtherAbilitiesWindow.setCategory(this._commandWindow.currentSymbol());
-            this._statsOtherAbilitiesWindow.select(this._statsOtherAbilitiesWindow._lastSelected)
-            this._statsOtherAbilitiesWindow.show();
-            this.activateWindow(this._statsOtherAbilitiesWindow);
+            this._statsAbilitiesWindow.setCategory(this._commandWindow.currentSymbol());
+            this._statsAbilitiesWindow.select(this._statsAbilitiesWindow._lastSelected)
+            this._statsAbilitiesWindow.show();
+            this.activateWindow(this._statsAbilitiesWindow);
             break;
         case Scene_Status.WinEffects:
             this._statsEffectsWindow.setCategory(this._commandWindow.currentSymbol());
@@ -300,11 +300,13 @@ Scene_Status.prototype.setCategory = function (category) {
 };
 
 Scene_Status.prototype.changeMode = function () {
-    if (Number.isInteger(this._category)) { // player mode
-        this.showCharacterWindows();
-        this._everyoneInfoWindow.hide();
-    } else { // everyone mode
-        this._everyoneInfoWindow.show();
-        this.hideCharacterWindows();
+    if (this._commandWindow.active) { // prevents character windows showing when in stat windows
+        if (Number.isInteger(this._category)) { // player mode
+            this.showCharacterWindows();
+            this._everyoneInfoWindow.hide();
+        } else { // everyone mode
+            this._everyoneInfoWindow.show();
+            this.hideCharacterWindows();
+        }
     }
 };
