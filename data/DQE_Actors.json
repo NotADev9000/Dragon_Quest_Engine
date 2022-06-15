@@ -103,6 +103,29 @@
             10,
             0,
             0
+        ],
+        "learnings_skillSets":[
+            {
+                "level": 2,
+                "skillSetId": "SWORDS"
+            },
+            {
+                "level": 2,
+                "skillSetId": "AXES"
+            },
+            {
+                "level": 3,
+                "skillSetId": "FRIZZ1"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "learnings_skillSets": [
+            {
+                "level": 1,
+                "skillSetId": "SWORDS"
+            }
         ]
     }
 ]

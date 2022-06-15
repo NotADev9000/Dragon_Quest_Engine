@@ -37,7 +37,7 @@ function Data_Items() {
 //////////////////////////////
 
 /**
- * sorts an actor's held items by type.
+ * sorts an actors' held items by type.
  * DOES NOT change equipped items
  * 
  * @param {Game_Actor} actor to have held items sorted

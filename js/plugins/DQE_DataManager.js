@@ -39,6 +39,7 @@ DataManager._databaseFiles = DataManager._databaseFiles.concat([
 DataManager.combineDataActors = function () {
     for (let i = 1; i < $dataActors.length; i++) {
         $dataActors[i].skillPoints = [];
+        $dataActors[i].learnings_skillSets = [];
         $dataActors[i] = { ...$dataActors[i], ...$DQE_dataActors[i]};
     }
 
@@ -58,7 +59,7 @@ DataManager.createGameObjects = function () {
 
 /**
  * Loops through each actor in $dataActors, reads the metadata between
- * the <skillsets></skillsets> tags and adds those skillsets to the
+ * the <skillsets></skillsets> tags and adds those skillSets to the
  * actors' skillsets array. 
  */
 DataManager.readDataSkillSets = function () {
@@ -67,7 +68,7 @@ DataManager.readDataSkillSets = function () {
     let inTag = false;
     $dataActors.forEach(actor => {
         if (actor) {
-            // init skillsets array
+            // init skillSets array
             actor.skillSets = [];
             // split the notes
             const notes = actor.note.split(/[\r\n]+/);
@@ -77,7 +78,7 @@ DataManager.readDataSkillSets = function () {
                 } else if (note.match(closeTag)) {
                     inTag = false;
                 } else if (inTag) {
-                    // if inside the skillsets notetags, add the skill ID to actor skillsets array
+                    // if inside the skillSets notetags, add the skill ID to actor skillSets array
                     actor.skillSets.push(note);
                 }
             });

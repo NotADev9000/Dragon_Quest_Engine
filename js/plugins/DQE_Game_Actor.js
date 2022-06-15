@@ -15,7 +15,7 @@
 * Items are stored the same as equipment, meaning they are stored
 * as Game_Item objects.
 *
-* Actor's equipment is always stored at the front of the item list.
+* Actors' equipment is always stored at the front of the item list.
 *
 */
 
@@ -60,7 +60,7 @@ Game_Actor.prototype.setup = function (actorId) {
     this.initItems();
     this.releaseUnequippableItems(true);
     this.refresh();
-    // skillsets
+    // skillSets
     this.initSkillSets();
 };
 
@@ -400,7 +400,7 @@ Game_Actor.prototype.equipItemFromInv = function (index, slot = undefined) {
  * inventory and re-added.
  * 
  * @param {number} index of item to unequip
- * @param {boolean} keep should the item be kept in the actors' inventory?
+ * @param {Boolean} keep should the item be kept in the actors' inventory?
  * @param {number} slot of the equipped item is in
  */
 Game_Actor.prototype.unequipItem = function (index, keep = true, slot = undefined) {
@@ -638,14 +638,15 @@ Game_Actor.prototype.currentClass = function (extra = false) {
 //////////////////////////////
 
 Game_Actor.prototype.gainExp = function (exp, playSound, inBattle) {
-    var newExp = this.currentExp() + Math.round(exp * this.finalExpRate());
+    const newExp = this.currentExp() + Math.round(exp * this.finalExpRate());
     this.changeExp(newExp, this.shouldDisplayLevelUp(), playSound, inBattle);
 };
 
 Game_Actor.prototype.changeExp = function (exp, show, playSound = false, inBattle = false) {
     this._exp[this._classId] = Math.max(exp, 0);
-    var lastLevel = this._level;
-    var lastSkills = this.skills();
+    const lastLevel = this._level;
+    const lastSkills = this.skills();
+    const lastSkillSets = [...this.skillSets()]; // spread to stop values changing in findNewSkillSets function
     while (!this.isMaxLevel() && this.currentExp() >= this.nextLevelExp()) {
         this.levelUp();
     }
@@ -653,7 +654,9 @@ Game_Actor.prototype.changeExp = function (exp, show, playSound = false, inBattl
         this.levelDown();
     }
     if (show && this._level > lastLevel) {
-        this.displayLevelUp(this.findNewSkills(lastSkills), playSound, inBattle);
+        this.displayLevelUp(playSound, inBattle);
+        this.displayNewSkills(this.findNewSkills(lastSkills));
+        this.displayNewSkillSets(this.findNewSkillSets(lastSkillSets));
         this.displayEarnedSkillPoints();
     }
     this.refresh();
@@ -663,9 +666,19 @@ DQEng.Game_Actor.levelUp = Game_Actor.prototype.levelUp;
 Game_Actor.prototype.levelUp = function () {
     DQEng.Game_Actor.levelUp.call(this);
     this.addSkillPoints(this.skillPointsThisLevel());
+    this.learnSkillSets(true);
 };
 
-Game_Actor.prototype.displayLevelUp = function (newSkills, playSound, inBattle) {
+Game_Actor.prototype.findNewSkillSets = function (lastSkillSets) {
+    const newSkillSets = [...this.skillSets()];
+    for (let i = 0; i < lastSkillSets.length; i++) {
+        let index = newSkillSets.indexOf(lastSkillSets[i]);
+        if (index >= 0) newSkillSets.splice(index, 1);
+    }
+    return newSkillSets;
+};
+
+Game_Actor.prototype.displayLevelUp = function (playSound, inBattle) {
     const text = TextManager.levelUp.format(this._name, TextManager.levelA, this._level);
     let statWindowCallback = '';
     if (inBattle) {
@@ -676,10 +689,22 @@ Game_Actor.prototype.displayLevelUp = function (newSkills, playSound, inBattle) 
     const breaker = playSound ? ' \\|' : '';
     $gameMessage.newPage();
     $gameMessage.add(statWindowCallback + me + text + breaker);
+};
+
+Game_Actor.prototype.displayNewSkills = function (newSkills) {
     if (newSkills.length) {
         $gameMessage.newPage();
-        newSkills.forEach(function (skill) {
+        newSkills.forEach(skill => {
             $gameMessage.add(TextManager.obtainSkill.format(this._name, skill.name));
+        }, this);
+    }
+};
+
+Game_Actor.prototype.displayNewSkillSets = function (newSkillSets) {
+    if (newSkillSets.length) {
+        $gameMessage.newPage();
+        newSkillSets.forEach(skillSet => {
+            $gameMessage.add(TextManager.obtainSkill.format(this._name, skillSet.name));
         }, this);
     }
 };
@@ -701,11 +726,14 @@ Game_Actor.prototype.skillSets = function () {
 };
 
 Game_Actor.prototype.initSkillSets = function () {
+    const actor = this.actor();
     this._skillSets = [];
-    // looping through the data actors' skill sets
-    this.actor().skillSets.forEach(skillSetId => {
+    // looping through data actors' initial skill sets
+    actor.skillSets.forEach(skillSetId => {
         this.addSkillSet(skillSetId);
     });
+    // learn all skill sets up to initial level
+    this.learnSkillSets(false);
 };
 
 Game_Actor.prototype.addSkillSet = function (skillSetId) {
@@ -723,6 +751,22 @@ Game_Actor.prototype.numSkillSets = function () {
 
 Game_Actor.prototype.hasSkillSetById = function (id) {
     return this._skillSets.some(skillset => skillset.id === id);
+};
+
+/**
+ * teaches actor the skill sets learned on level up
+ * skill set not added if already learned
+ * 
+ * @param {Boolean} onlyCurrentLevel if true: only learns skill sets at current level, if false: learns all skill sets at current level & below
+ */
+Game_Actor.prototype.learnSkillSets = function (onlyCurrentLevel) {
+    // looping through data actors' level up skill sets
+    this.actor().learnings_skillSets.forEach(skillSet => {
+        if ((onlyCurrentLevel ? skillSet.level === this._level : skillSet.level <= this._level)
+            && !this.hasSkillSetById(skillSet.skillSetId)) {
+            this.addSkillSet(skillSet.skillSetId);
+        }
+    });
 };
 
 //////////////////////////////

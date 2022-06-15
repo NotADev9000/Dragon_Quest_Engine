@@ -205,7 +205,7 @@ Window_SkillSets.prototype.updateHelp = function () {
         this.setHelpWindowItem($gameSystem.getNodeUnlockDescription(node));
         this._helpWindow[0].show();
     } else {
-        // if actor has no skillsets then hide description window
+        // if actor has no skillSets then hide description window
         this._helpWindow[0].hide();
     }
 };
@@ -274,7 +274,7 @@ Window_SkillSets.prototype.column = function () {
 //////////////////////////////
 
 Window_SkillSets.prototype.processOk = function () {
-    if (this.index() >= 0) { // check this actor has skillsets before processing anything
+    if (this.index() >= 0) { // check this actor has skillSets before processing anything
         if (this.layer().unlocked) {
             if (!this.item().unlocked) {
                 // this node hasn't been bought yet

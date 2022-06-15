@@ -142,5 +142,293 @@
         ],
         "nodesUnlocked": 0,
         "complete": false
+    },
+    {
+        "id": "AXES",
+        "name": "Axes",
+        "layers": [
+            {
+                "nodes": [
+                    {
+                        "name": "Falcon Slash",
+                        "description": "",
+                        "onUnlock": {
+                            "skills": [
+                                14
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 9
+                        },
+                        "unlocked": false
+                    },
+                    {
+                        "name": "Gust Slash",
+                        "description": "",
+                        "onUnlock": {
+                            "skills": [
+                                10
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 10
+                        },
+                        "unlocked": false
+                    }
+                ],
+                "unlockCost": 0,
+                "unlocked": true,
+                "nodesUnlocked": 0,
+                "complete": false
+            },
+            {
+                "nodes": [
+                    {
+                        "name": "Dragon Slash",
+                        "description": "",
+                        "onUnlock": {
+                            "skills": [
+                                27
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 12
+                        },
+                        "unlocked": false
+                    },
+                    {
+                        "name": "Metal Slash",
+                        "description": "",
+                        "onUnlock": {
+                            "skills": [
+                                28
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 7
+                        },
+                        "unlocked": false
+                    }
+                ],
+                "unlockCost": 2,
+                "unlocked": false,
+                "nodesUnlocked": 0,
+                "complete": false
+            }
+        ],
+        "nodesUnlocked": 0,
+        "complete": false
+    },
+    {
+        "id": "FRIZZ1",
+        "name": "Frizz I",
+        "layers": [
+            {
+                "nodes": [
+                    {
+                        "name": "Falcon Slash",
+                        "description": "",
+                        "onUnlock": {
+                            "skills": [
+                                14
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 9
+                        },
+                        "unlocked": false
+                    },
+                    {
+                        "name": "Gust Slash",
+                        "description": "",
+                        "onUnlock": {
+                            "skills": [
+                                10
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 10
+                        },
+                        "unlocked": false
+                    }
+                ],
+                "unlockCost": 0,
+                "unlocked": true,
+                "nodesUnlocked": 0,
+                "complete": false
+            },
+            {
+                "nodes": [
+                    {
+                        "name": "Dragon Slash",
+                        "description": "",
+                        "onUnlock": {
+                            "skills": [
+                                27
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 12
+                        },
+                        "unlocked": false
+                    },
+                    {
+                        "name": "Metal Slash",
+                        "description": "",
+                        "onUnlock": {
+                            "skills": [
+                                28
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 7
+                        },
+                        "unlocked": false
+                    }
+                ],
+                "unlockCost": 2,
+                "unlocked": false,
+                "nodesUnlocked": 0,
+                "complete": false
+            }
+        ],
+        "nodesUnlocked": 0,
+        "complete": false
     }
 ]
