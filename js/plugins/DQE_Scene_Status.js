@@ -30,6 +30,7 @@ DQEng.Scene_Status = DQEng.Scene_Status || {};
 Scene_Status.WinAttribute = 'Attribute';
 Scene_Status.WinMagic = 'Magic';
 Scene_Status.WinAbilities = 'Abilities';
+Scene_Status.WinEquips = 'Equips';
 Scene_Status.WinEffects = 'Effects';
 
 Scene_Status.prototype.initialize = function () {
@@ -49,6 +50,7 @@ Scene_Status.prototype.create = function () {
     this.createStatsAttributesWindow();
     this.createStatsMagicWindow();
     this.createStatsAbilitiesWindow();
+    this.createStatsEquipsWindow();
     this.createStatsEffectsWindow();
     // everyone windows
     this.createEveryoneInfoWindow();
@@ -76,34 +78,34 @@ Scene_Status.prototype.createCommandWindow = function () {
 // character windows
 
 Scene_Status.prototype.createStatusWindow = function () {
-    let x = this._commandWindow.x + this._commandWindow.width;
-    let y = this._commandWindow.y;
+    const x = this._commandWindow.x + this._commandWindow.width;
+    const y = this._commandWindow.y;
     this._statusWindow = new Window_Status(x, y, 504);
     this.addWindow(this._statusWindow);
     this._commandWindow.setHelpWindow(this._statusWindow);
 };
 
 Scene_Status.prototype.createEquipmentWindow = function () {
-    let x = this._statusWindow.x;
-    let y = this._statusWindow.y + this._statusWindow.height;
+    const x = this._statusWindow.x;
+    const y = this._statusWindow.y + this._statusWindow.height;
     this._equipmentWindow = new Window_SimpleEquipmentList(x, y, 504);
     this.addWindow(this._equipmentWindow);
     this._commandWindow.setHelpWindow(this._equipmentWindow);
 };
 
 Scene_Status.prototype.createStatsWindow = function () {
-    let x = this._statusWindow.x + this._statusWindow.width;
-    let y = this._statusWindow.y;
+    const x = this._statusWindow.x + this._statusWindow.width;
+    const y = this._statusWindow.y;
     this._statsWindow = new Window_Stats(x, y, 513);
     this.addWindow(this._statsWindow);
     this._commandWindow.setHelpWindow(this._statsWindow);
 };
 
 Scene_Status.prototype.createStatsAttributesWindow = function () {
-    let x = this._commandWindow.x;
-    let y = this._commandWindow.y;
+    const x = this._commandWindow.x;
+    const y = this._commandWindow.y;
     this._statsAttributesWindow = new Window_StatsAttributes(x, y, 1344, 591);
-    this._statsAttributesWindow.setHandler('cancel', this.onStatsAttributesCancel.bind(this));
+    this._statsAttributesWindow.setHandler('cancel', this.onStatsWindowCancel.bind(this, this._statsAttributesWindow));
     this._statsAttributesWindow.setHandler('previous', this.previousActor.bind(this, this._statsAttributesWindow));
     this._statsAttributesWindow.setHandler('next', this.nextActor.bind(this, this._statsAttributesWindow));
     this._statsAttributesWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinEffects));
@@ -113,10 +115,10 @@ Scene_Status.prototype.createStatsAttributesWindow = function () {
 };
 
 Scene_Status.prototype.createStatsMagicWindow = function () {
-    let x = this._commandWindow.x;
-    let y = this._commandWindow.y;
+    const x = this._commandWindow.x;
+    const y = this._commandWindow.y;
     this._statsMagicWindow = new Window_StatsMagic(x, y, 1344, 714);
-    this._statsMagicWindow.setHandler('cancel', this.onStatsMagicCancel.bind(this));
+    this._statsMagicWindow.setHandler('cancel', this.onStatsWindowCancel.bind(this, this._statsMagicWindow));
     this._statsMagicWindow.setHandler('previous', this.previousActor.bind(this, this._statsMagicWindow));
     this._statsMagicWindow.setHandler('next', this.nextActor.bind(this, this._statsMagicWindow));
     this._statsMagicWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinAttribute));
@@ -126,26 +128,39 @@ Scene_Status.prototype.createStatsMagicWindow = function () {
 };
 
 Scene_Status.prototype.createStatsAbilitiesWindow = function () {
-    let x = this._commandWindow.x;
-    let y = this._commandWindow.y;
+    const x = this._commandWindow.x;
+    const y = this._commandWindow.y;
     this._statsAbilitiesWindow = new Window_StatsAbilities(x, y, 1344, 714);
-    this._statsAbilitiesWindow.setHandler('cancel', this.onStatsAbilitiesCancel.bind(this));
+    this._statsAbilitiesWindow.setHandler('cancel', this.onStatsWindowCancel.bind(this, this._statsAbilitiesWindow));
     this._statsAbilitiesWindow.setHandler('previous', this.previousActor.bind(this, this._statsAbilitiesWindow));
     this._statsAbilitiesWindow.setHandler('next', this.nextActor.bind(this, this._statsAbilitiesWindow));
     this._statsAbilitiesWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinMagic));
-    this._statsAbilitiesWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinEffects));
+    this._statsAbilitiesWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinEquips));
     this._statsAbilitiesWindow.hide();
     this.addWindow(this._statsAbilitiesWindow);
 };
 
+Scene_Status.prototype.createStatsEquipsWindow = function () {
+    const x = this._commandWindow.x;
+    const y = this._commandWindow.y;
+    this._statsEquipsWindow = new Window_StatsEquips(x, y, 1344, 714);
+    this._statsEquipsWindow.setHandler('cancel', this.onStatsWindowCancel.bind(this, this._statsEquipsWindow));
+    this._statsEquipsWindow.setHandler('previous', this.previousActor.bind(this, this._statsEquipsWindow));
+    this._statsEquipsWindow.setHandler('next', this.nextActor.bind(this, this._statsEquipsWindow));
+    this._statsEquipsWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinAbilities));
+    this._statsEquipsWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinEffects));
+    this._statsEquipsWindow.hide();
+    this.addWindow(this._statsEquipsWindow);
+};
+
 Scene_Status.prototype.createStatsEffectsWindow = function () {
-    let x = this._commandWindow.x;
-    let y = this._commandWindow.y;
+    const x = this._commandWindow.x;
+    const y = this._commandWindow.y;
     this._statsEffectsWindow = new Window_StatsEffects(x, y, 1344, 714);
-    this._statsEffectsWindow.setHandler('cancel', this.onStatsEffectsCancel.bind(this));
+    this._statsEffectsWindow.setHandler('cancel', this.onStatsWindowCancel.bind(this, this._statsEffectsWindow));
     this._statsEffectsWindow.setHandler('previous', this.previousActor.bind(this, this._statsEffectsWindow));
     this._statsEffectsWindow.setHandler('next', this.nextActor.bind(this, this._statsEffectsWindow));
-    this._statsEffectsWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinAbilities));
+    this._statsEffectsWindow.setHandler('pagedown', this.onNextWindow.bind(this, Scene_Status.WinEquips));
     this._statsEffectsWindow.setHandler('pageup', this.onNextWindow.bind(this, Scene_Status.WinAttribute));
     this._statsEffectsWindow.hide();
     this.addWindow(this._statsEffectsWindow);
@@ -154,16 +169,16 @@ Scene_Status.prototype.createStatsEffectsWindow = function () {
 // everyone windows
 
 Scene_Status.prototype.createEveryoneInfoWindow = function () {
-    let x = this._statusWindow.x;
-    let y = this._statusWindow.y;
+    const x = this._statusWindow.x;
+    const y = this._statusWindow.y;
     this._everyoneInfoWindow = new Window_EveryoneInfo(x, y, 1017);
     this._everyoneInfoWindow.hide();
     this.addWindow(this._everyoneInfoWindow);
 };
 
 Scene_Status.prototype.createEveryoneStatsWindow = function () {
-    let x = this._commandWindow.x;
-    let y = this._commandWindow.y;
+    const x = this._commandWindow.x;
+    const y = this._commandWindow.y;
     this._everyoneStatsWindow = new Window_EveryoneStats(x, y, 0, 573);
     this._everyoneStatsWindow.setHandler('cancel', this.onEveryoneStatsCancel.bind(this));
     this._everyoneStatsWindow.hide();
@@ -190,30 +205,10 @@ Scene_Status.prototype.onCommandOk = function () {
     }
 };
 
-Scene_Status.prototype.onStatsAttributesCancel = function () {
+Scene_Status.prototype.onStatsWindowCancel = function (window) {
     this.showCharacterWindows();
-    this._statsAttributesWindow.hide();
-    this.activateWindow(this._commandWindow);
-};
-
-Scene_Status.prototype.onStatsMagicCancel = function () {
-    this.showCharacterWindows();
-    this._statsMagicWindow.setLastSelected(this._statsMagicWindow.index());
-    this._statsMagicWindow.hide();
-    this.activateWindow(this._commandWindow);
-};
-
-Scene_Status.prototype.onStatsAbilitiesCancel = function () {
-    this.showCharacterWindows();
-    this._statsAbilitiesWindow.setLastSelected(this._statsAbilitiesWindow.index());
-    this._statsAbilitiesWindow.hide();
-    this.activateWindow(this._commandWindow);
-};
-
-Scene_Status.prototype.onStatsEffectsCancel = function () {
-    this.showCharacterWindows();
-    this._statsEffectsWindow.setLastSelected(this._statsEffectsWindow.index());
-    this._statsEffectsWindow.hide();
+    window.setLastSelected && window.setLastSelected(window.index());
+    window.hide();
     this.activateWindow(this._commandWindow);
 };
 
@@ -241,6 +236,12 @@ Scene_Status.prototype.onNextWindow = function (windowName) {
             this._statsAbilitiesWindow.select(this._statsAbilitiesWindow._lastSelected)
             this._statsAbilitiesWindow.show();
             this.activateWindow(this._statsAbilitiesWindow);
+            break;
+        case Scene_Status.WinEquips:
+            this._statsEquipsWindow.setCategory(this._commandWindow.currentSymbol());
+            this._statsEquipsWindow.select(this._statsEquipsWindow._lastSelected)
+            this._statsEquipsWindow.show();
+            this.activateWindow(this._statsEquipsWindow);
             break;
         case Scene_Status.WinEffects:
             this._statsEffectsWindow.setCategory(this._commandWindow.currentSymbol());

@@ -444,6 +444,14 @@ Game_BattlerBase.prototype.canEquip = function (item) {
     return false;
 };
 
+Game_BattlerBase.prototype.equippableWeapons = function () {
+    return this.traitsSet(Game_BattlerBase.TRAIT_EQUIP_WTYPE);
+};
+
+Game_BattlerBase.prototype.equippableArmors = function () {
+    return this.traitsSet(Game_BattlerBase.TRAIT_EQUIP_ATYPE);
+};
+
 //////////////////////////////
 // Functions - items
 //////////////////////////////

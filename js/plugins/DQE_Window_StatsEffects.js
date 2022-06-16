@@ -48,10 +48,6 @@ Window_StatsEffects.prototype.initialize = function (x, y, width, height) {
 // Functions - window sizing
 //////////////////////////////
 
-Window_StatsEffects.prototype.descriptionBlockHeight = function () {
-    return 138;
-};
-
 Window_StatsEffects.prototype.itemWidth = function () {
     return 609;
 };

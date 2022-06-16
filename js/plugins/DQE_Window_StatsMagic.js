@@ -64,10 +64,6 @@ Window_StatsMagic.prototype.mpCostBlockHeight = function () {
     return 54;
 };
 
-Window_StatsMagic.prototype.descriptionBlockHeight = function () {
-    return 90;
-};
-
 //////////////////////////////
 // Functions - data
 //////////////////////////////
@@ -124,10 +120,10 @@ Window_StatsMagic.prototype.drawAllItems = function () {
 };
 
 Window_StatsMagic.prototype.drawItem = function (index) {
-    let item = this._data[index];
+    const item = this._data[index];
     if (item) {
-        let rect = this.itemRectForText(index);
-        let width = this.contentsWidth() - (this.extraPadding() * 2);
+        const rect = this.itemRectForText(index);
+        const width = this.contentsWidth() - (this.extraPadding() * 2);
         this.drawText(item.name, rect.x, rect.y, width);
     }
 };
@@ -157,7 +153,7 @@ Window_StatsMagic.prototype.drawDescriptionBlock = function (item) {
 };
 
 Window_StatsMagic.prototype.itemRect = function (index) {
-    var rect = Window_Pagination.prototype.itemRect.call(this, index);
+    const rect = Window_Pagination.prototype.itemRect.call(this, index);
     rect.y += this.titleBlockHeight();
     return rect;
 };
