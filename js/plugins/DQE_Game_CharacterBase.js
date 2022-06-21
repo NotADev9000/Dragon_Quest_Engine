@@ -39,4 +39,5 @@ Game_CharacterBase.prototype.prepareZoom = function () {
     this.setWalkAnime(false);
     this.setDirectionFix(true);
     this.setMoveSpeed(7);
+    this.setPriorityType(3);
 };
