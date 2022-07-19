@@ -1,0 +1,7 @@
+windows:
+
+linegap = 15 irrelevant as in window_base = 15
+
+pageblockheight = 54 irrelevant as in pagination = 54
+
+window zoom & window equipment list maxRows can be made similar
