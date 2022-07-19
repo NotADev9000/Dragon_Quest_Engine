@@ -1,0 +1,28 @@
+[
+    {
+        "id": 0,
+        "name": "Fight for me! Fight for me!",
+        "stages": [
+            {
+                "description": "A man has asked you to kill a single enemy. Easy right?",
+                "location": "Snowmourne - Church",
+                "objectives": [
+                    {
+                        "description": "Defeat a single enemy in battle",
+                        "flag": "BATTLE_DEFEAT_ONE"
+                    }
+                ]
+            },
+            {
+                "description": "You defeated an enemy for the man. Good job!",
+                "location": "Snowmourne - Church",
+                "objectives": []
+            }
+        ],
+        "rewards": [
+            "1500G",
+            "Medicinal Herb",
+            "Agate Of Evolution"
+        ]
+    }
+]

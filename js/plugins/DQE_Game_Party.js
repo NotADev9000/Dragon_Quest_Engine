@@ -46,6 +46,9 @@ Game_Party.SORT_BY_TYPE = 2;
 DQEng.Game_Party.initialize = Game_Party.prototype.initialize;
 Game_Party.prototype.initialize = function () {
     DQEng.Game_Party.initialize.call(this);
+    // quests
+    this._quests = [];          // active/completed quests
+    this._availableQuests = []; // quests not started but available to the player
     // bank
     this._bankGold = 0;         // gold in the bank
     // mini medals
@@ -209,6 +212,35 @@ Game_Party.prototype.giveItemToActorAndEquipMessage = function (item, actor) {
 
 Game_Party.prototype.giveMultipleItemsToActorMessage = function (item, actor, amount) {
     return `${actor._name} takes ${amount} ${item.name}s from the bag.`;
+};
+
+//////////////////////////////
+// Functions - quests
+//////////////////////////////
+
+Game_Party.prototype.quests = function () {
+    return this._quests;
+};
+
+Game_Party.prototype.isQuestActive = function (questId) {
+    return this._quests[questId];
+};
+
+Game_Party.prototype.activateQuest = function (questId) {
+    if (!this.isQuestActive(questId)) {
+        // remove quest from locator
+        this.removeAvailableQuest(questId);
+        // add new quest to active list (ordered by ID)
+        this._quests[questId] = new Game_Quest($DQE_dataQuests[questId]);
+    }
+};
+
+Game_Party.prototype.addAvailableQuest = function (questId) {
+    this._availableQuests[questId] = 1;
+};
+
+Game_Party.prototype.removeAvailableQuest = function (questId) {
+    this._availableQuests[questId] = 0;
 };
 
 //////////////////////////////

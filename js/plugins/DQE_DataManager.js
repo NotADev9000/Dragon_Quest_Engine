@@ -30,7 +30,8 @@ DQEng.Data_Manager = DQEng.Data_Manager || {};
 DataManager._databaseFiles = DataManager._databaseFiles.concat([
     { name: '$DQE_dataActors', src: 'DQE_Actors.json' },
     { name: '$DQE_dataClasses', src: 'DQE_Classes.json' },
-    { name: '$DQE_dataSkillSets', src: 'DQE_SkillSets.json' }
+    { name: '$DQE_dataSkillSets', src: 'DQE_SkillSets.json' },
+    { name: '$DQE_dataQuests', src: 'DQE_Quests.json' }
 ]);
 
 /**

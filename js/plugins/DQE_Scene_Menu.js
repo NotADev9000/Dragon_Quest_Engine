@@ -49,9 +49,9 @@ Scene_Menu.prototype.createCommandWindow = function () {
     this._commandWindow.setHandler('item', this.commandItem.bind(this));
     this._commandWindow.setHandler('skill', this.commandSkill.bind(this));
     this._commandWindow.setHandler('equip', this.commandEquip.bind(this));
-    this._commandWindow.setHandler('options', this.commandOptions.bind(this));
+    this._commandWindow.setHandler('quests', this.commandQuests.bind(this));
     this._commandWindow.setHandler('status', this.commandStatus.bind(this));
-    this._commandWindow.setHandler('save', this.commandSave.bind(this));
+    this._commandWindow.setHandler('misc', this.commandMisc.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));
     if (this._moreMembers) {
         this._commandWindow.setHandler('previous', this.changeStatusWindows.bind(this));
@@ -87,8 +87,8 @@ Scene_Menu.prototype.createIconWindows = function () {
     this.addWindow(this._iconWindowR);
 };
 
-Scene_Menu.prototype.commandOptions = function () {
-    SceneManager.push(Scene_Church);
+Scene_Menu.prototype.commandQuests = function () {
+    SceneManager.push(Scene_Quests);
 };
 
 Scene_Menu.prototype.commandSkill = function () {
@@ -103,7 +103,7 @@ Scene_Menu.prototype.commandStatus = function () {
     SceneManager.push(Scene_Status);
 };
 
-Scene_Menu.prototype.commandSave = function () {
+Scene_Menu.prototype.commandMisc = function () {
     SceneManager.push(Scene_Misc);
 };
 

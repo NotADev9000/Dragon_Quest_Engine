@@ -63,14 +63,14 @@ Window_MenuCommand.prototype.makeCommandList = function () {
     if (this.needsCommand('equip')) {
         this.addCommand(TextManager.equip, 'equip', enabled);
     }
-    if (this.needsCommand('options')) {
-        this.addCommand(TextManager.options, 'options', enabled);
+    if (this.needsCommand('options')) { // can't change (used to open QUESTS)
+        this.addCommand(TextManager.options, 'quests', enabled);
     }
     if (this.needsCommand('status')) {
         this.addCommand(TextManager.status, 'status', enabled);
     }
-    if (this.needsCommand('save')) {
-        this.addCommand(TextManager.save, 'save', this.isSaveEnabled());
+    if (this.needsCommand('save')) { // can't change (used to open MISC.)
+        this.addCommand(TextManager.save, 'misc', enabled);
     }
 };
 
