@@ -95,6 +95,13 @@ Window_QuestDetails.prototype.objectiveTextHeight = function () {
     return 90;
 };
 
+/**
+ * y co-ord of the objectives
+ */
+Window_QuestDetails.prototype.objectiveStartY = function () {
+    return this.nameBlockHeight() + this.descriptionBlockHeight() + this.objectivesBlockHeight() + this.extraPadding();
+};
+
 //////////////////////////////
 // Functions - data
 //////////////////////////////
@@ -140,7 +147,7 @@ Window_QuestDetails.prototype.combineObjectiveDetails = function (descriptions, 
 Window_QuestDetails.prototype.changeObjective = function (next) {
     if (this._totalObjectivePages > 1) {
         next ? this.goNextObjective() : this.goPreviousObjective();
-        this.refresh();
+        this.refreshObjectives();
     }
 };
 
@@ -193,10 +200,21 @@ Window_QuestDetails.prototype.drawLocation = function () {
 Window_QuestDetails.prototype.drawObjectivesTitle = function () {
     const text = `Objectives`;
     const ep = this.extraPadding();
+    const cw = this.contentsWidth();
     let y = this.nameBlockHeight() + this.descriptionBlockHeight();
     this.drawHorzLine(0, y);
     y += ep + 3;
-    this.drawText(text, ep, y, this.contentsWidth(), 'center');
+    // icons (switching pages)
+    if (this._totalObjectivePages > 1) {
+        // left icon
+        let icon = this.getHandlerIcon('previous');
+        this.drawTextEx(` \\i[${icon}]`, 0, y);
+        // right icon
+        const rightIconX = cw - Window_Base._iconWidth - this.textWidth(' ');
+        icon = this.getHandlerIcon('next');
+        this.drawTextEx(`\\i[${icon}] `, rightIconX, y);
+    }
+    this.drawText(text, ep, y, cw, 'center');
     y += ep + this.lineHeight();
     this.drawHorzLine(0, y);
 };
@@ -205,7 +223,7 @@ Window_QuestDetails.prototype.drawObjectives = function () {
     const objectives = this.getObjectives();
     const ep = this.extraPadding();
     const oth = this.objectiveTextHeight();
-    let y = this.nameBlockHeight() + this.descriptionBlockHeight() + this.objectivesBlockHeight() + ep;
+    let y = this.objectiveStartY();
     objectives.forEach(objective => {
         this.drawTextEx(objective, ep, y);
         y += oth;
@@ -215,6 +233,12 @@ Window_QuestDetails.prototype.drawObjectives = function () {
 //////////////////////////////
 // Functions - refresh
 //////////////////////////////
+
+Window_QuestDetails.prototype.refreshObjectives = function () {
+    const height = this.objectiveTextHeight() * this._objectivesPerPage;
+    this.contents.clearRect(0, this.objectiveStartY(), this.width, height);
+    this.drawObjectives();
+};
 
 Window_QuestDetails.prototype.refresh = function () {
     this.contents.clear();
