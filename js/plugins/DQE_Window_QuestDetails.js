@@ -1,0 +1,222 @@
+//=============================================================================
+// Dragon Quest Engine - Window Quest Details
+// DQE_Window_QuestDetails.js                                                             
+//=============================================================================
+
+/*:
+*
+* @author NotADev
+* @plugindesc Details of the selected quest - V0.1
+*
+*
+* @help
+* N/A
+* 
+*/
+
+//------
+// Imported and namespace
+//------
+
+var Imported = Imported || {};
+Imported.DQEng_Window_QuestDetails = true;
+
+var DQEng = DQEng || {};
+DQEng.Window_QuestDetails = DQEng.Window_QuestDetails || {};
+
+//-----------------------------------------------------------------------------
+// Window_QuestDetails
+//-----------------------------------------------------------------------------
+
+function Window_QuestDetails() {
+    this.initialize.apply(this, arguments);
+}
+
+Window_QuestDetails.prototype = Object.create(Window_Base.prototype);
+Window_QuestDetails.prototype.constructor = Window_QuestDetails;
+
+Window_QuestDetails.prototype.initialize = function (x, y, width, height) {
+    this._quest = {};
+    this._stage = 0; // index of stage displayed
+    this._objectivesPage = 0; // page of objectives displayed
+    this._totalObjectivePages = 1;
+    this._objectivesPerPage = 2;
+    Window_Base.prototype.initialize.call(this, x, y, width, height);
+};
+
+//////////////////////////////
+// Functions - window sizing
+//////////////////////////////
+
+Window_QuestDetails.prototype.lineGap = function () {
+    return 9;
+};
+
+Window_QuestDetails.prototype.standardPadding = function () {
+    return 9;
+};
+
+Window_QuestDetails.prototype.extraPadding = function () {
+    return 15;
+};
+
+/**
+ * height of the section the name is displayed in
+ */
+Window_QuestDetails.prototype.nameBlockHeight = function () {
+    return 54;
+};
+
+/**
+ * maximum height of the description/location section (not including any horizontal rules)
+ */
+Window_QuestDetails.prototype.descriptionBlockHeight = function () {
+    return 381;
+};
+
+/**
+ * maximum height of the description text
+ */
+Window_QuestDetails.prototype.descriptionTextHeight = function () {
+    return 300;
+};
+
+/**
+ * height of the section 'objectives' is displayed in
+ */
+Window_QuestDetails.prototype.objectivesBlockHeight = function () {
+    return 57;
+};
+
+/**
+ * maximum height of an objective text
+ */
+Window_QuestDetails.prototype.objectiveTextHeight = function () {
+    return 90;
+};
+
+//////////////////////////////
+// Functions - data
+//////////////////////////////
+
+Window_QuestDetails.prototype.setItem = function (quest) {
+    this._quest = quest;
+    this._stage = quest.currentStage();
+    this._objectivesPage = 0;
+    this._totalObjectivePages = this.totalObjectivePages();
+    this.refresh();
+};
+
+Window_QuestDetails.prototype.totalObjectivePages = function () {
+    return Math.ceil(this._quest.stageNumObjectives(this._stage) / this._objectivesPerPage);
+};
+
+/**
+ * gets the two objectives currently being displayed
+ * 
+ * @returns both objectives in an array - the icon for the state of the objective + the objective description
+ */
+Window_QuestDetails.prototype.getObjectives = function () {
+    const startIndex = this._objectivesPage * this._objectivesPerPage; // index of first objective needed
+    const endIndex = startIndex + this._objectivesPerPage; // index after last objective needed
+    const descriptions = this._quest.stageObjectiveDescriptions(this._stage, startIndex, endIndex);
+    const states = this._quest.stageObjectiveStates(this._stage, startIndex, endIndex);
+    return this.combineObjectiveDetails(descriptions, states);
+};
+
+Window_QuestDetails.prototype.combineObjectiveDetails = function (descriptions, states) {
+    const combined = [];
+    for (let i = 0; i < descriptions.length; i++) {
+        let state = states[i] ? '}' : '{';
+        combined.push(`${state} ${descriptions[i]}`);
+    }
+    return combined;
+};
+
+//////////////////////////////
+// Functions - objective pages
+//////////////////////////////
+
+Window_QuestDetails.prototype.changeObjective = function (next) {
+    if (this._totalObjectivePages > 1) {
+        next ? this.goNextObjective() : this.goPreviousObjective();
+        this.refresh();
+    }
+};
+
+Window_QuestDetails.prototype.goNextObjective = function () {
+    this._objectivesPage++;
+    if (this._objectivesPage >= this._totalObjectivePages) {
+        this._objectivesPage = 0;
+    }
+};
+
+Window_QuestDetails.prototype.goPreviousObjective = function () {
+    this._objectivesPage--;
+    if (this._objectivesPage <= -1) {
+        this._objectivesPage = this._totalObjectivePages - 1;
+    }
+};
+
+//////////////////////////////
+// Functions - draw items
+//////////////////////////////
+
+Window_QuestDetails.prototype.drawDetails = function () {
+    this.drawName();
+    this.drawDescription();
+    this.drawLocation();
+    this.drawObjectivesTitle();
+    this.drawObjectives();
+};
+
+Window_QuestDetails.prototype.drawName = function () {
+    const name = this._quest.name();
+    this.drawText(name, 0, this.extraPadding(), this.contentsWidth(), 'center');
+    this.drawHorzLine(0, this.nameBlockHeight() - 3);
+};
+
+Window_QuestDetails.prototype.drawDescription = function () {
+    const description = this._quest.stageDescription(this._stage);
+    const ep = this.extraPadding();
+    const y = ep + this.nameBlockHeight();
+    this.drawTextEx(description, ep, y);
+};
+
+Window_QuestDetails.prototype.drawLocation = function () {
+    const location = `-${this._quest.stageLocation(this._stage)}`;
+    const ep = this.extraPadding();
+    const y = ep + this.nameBlockHeight() + this.descriptionTextHeight();
+    this.drawTextEx(location, ep, y);
+};
+
+Window_QuestDetails.prototype.drawObjectivesTitle = function () {
+    const text = `Objectives`;
+    const ep = this.extraPadding();
+    let y = this.nameBlockHeight() + this.descriptionBlockHeight();
+    this.drawHorzLine(0, y);
+    y += ep + 3;
+    this.drawText(text, ep, y, this.contentsWidth(), 'center');
+    y += ep + this.lineHeight();
+    this.drawHorzLine(0, y);
+};
+
+Window_QuestDetails.prototype.drawObjectives = function () {
+    const objectives = this.getObjectives();
+    const ep = this.extraPadding();
+    const oth = this.objectiveTextHeight();
+    let y = this.nameBlockHeight() + this.descriptionBlockHeight() + this.objectivesBlockHeight() + ep;
+    objectives.forEach(objective => {
+        this.drawTextEx(objective, ep, y);
+        y += oth;
+    });
+};
+
+//////////////////////////////
+// Functions - refresh
+//////////////////////////////
+
+Window_QuestDetails.prototype.refresh = function () {
+    this.contents.clear();
+    this.drawDetails();
+};

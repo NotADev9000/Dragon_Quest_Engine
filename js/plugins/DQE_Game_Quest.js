@@ -62,6 +62,45 @@ Game_Quest.prototype.name = function () {
     return $DQE_dataQuests[this._id].name;
 };
 
+Game_Quest.prototype.stage = function (stageNum) {
+    return $DQE_dataQuests[this._id].stages[stageNum];
+};
+
+Game_Quest.prototype.stageDescription = function (stageNum) {
+    return this.stage(stageNum).description;
+};
+
+Game_Quest.prototype.stageLocation = function (stageNum) {
+    return this.stage(stageNum).location;
+};
+
+Game_Quest.prototype.stageAllObjectives = function (stageNum) {
+    return this.stage(stageNum).objectives;
+};
+
+Game_Quest.prototype.stageObjectiveDescriptions = function (stageNum, startIndex, endIndex) {
+    const selectedObjs = this.stageAllObjectives(stageNum).slice(startIndex, endIndex);
+    const objectives = [];
+    selectedObjs.forEach(obj => objectives.push(obj.description));
+    return objectives;
+};
+
+Game_Quest.prototype.stageAllObjectiveStates = function (stageNum) {
+    return this._stages[stageNum].objectives();
+};
+
+Game_Quest.prototype.stageObjectiveStates = function (stageNum, startIndex, endIndex) {
+    return this.stageAllObjectiveStates(stageNum).slice(startIndex, endIndex);
+};
+
+Game_Quest.prototype.stageNumObjectives = function (stageNum) {
+    return this.stageAllObjectiveStates(stageNum).length;
+};
+
+Game_Quest.prototype.currentStage = function () {
+    return this._currentStage;
+};
+
 Game_Quest.prototype.isComplete = function () {
     return this._completed;
 };

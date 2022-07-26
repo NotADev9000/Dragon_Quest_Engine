@@ -46,7 +46,6 @@ Window_TitledPartyCommand.prototype.constructor = Window_TitledPartyCommand;
 Window_TitledPartyCommand.prototype.initialize = function (x, y, windowWidth, menuTitle = '???', commands, selectCallback, excludeActors = [], commandType) {
     this._excludeActors = excludeActors;
     this._commandType = commandType;
-    this._associatedWindow = [];
     Window_TitledCommand.prototype.initialize.call(this, x, y, windowWidth, menuTitle, commands, selectCallback);
 };
 

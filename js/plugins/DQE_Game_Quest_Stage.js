@@ -44,3 +44,11 @@ Game_Quest_Stage.prototype.setupObjectives = function (numObjectives) {
 
     return objectives;
 };
+
+//////////////////////////////
+// Functions - getters
+//////////////////////////////
+
+Game_Quest_Stage.prototype.objectives = function () {
+    return this._objectives;
+};

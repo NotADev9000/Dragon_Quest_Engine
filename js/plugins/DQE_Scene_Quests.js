@@ -37,17 +37,34 @@ Scene_Quests.prototype.initialize = function () {
 
 Scene_Quests.prototype.create = function () {
     Scene_MenuBase.prototype.create.call(this);
-    this.createCommandWindow();
+    this.createQuestListWindow();
+    this.createQuestDetailsWindow();
 };
 
 //////////////////////////////
 // Functions - create windows
 //////////////////////////////
 
-Scene_Quests.prototype.createCommandWindow = function () {
+Scene_Quests.prototype.createQuestListWindow = function () {
     this._questListWindow = new Window_QuestList(48, 48, 642, 447);
+    this._questListWindow.setHandler('next', this.onCommandChangeObjectivesPage.bind(this, true));
+    this._questListWindow.setHandler('previous', this.onCommandChangeObjectivesPage.bind(this, false));
     this._questListWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._questListWindow);
 };
 
+Scene_Quests.prototype.createQuestDetailsWindow = function () {
+    const x = 48 + this._questListWindow.width;
+    this._questDetailsWindow = new Window_QuestDetails(x, 48, 702, 714);
+    this.addWindow(this._questDetailsWindow);
+    this._questListWindow.setHelpWindow(this._questDetailsWindow);
+};
 
+//////////////////////////////
+// Functions - on handlers
+//////////////////////////////
+
+Scene_Quests.prototype.onCommandChangeObjectivesPage = function (next) {
+    this._questDetailsWindow.changeObjective(next);
+    // this._questListWindow.activate();
+};

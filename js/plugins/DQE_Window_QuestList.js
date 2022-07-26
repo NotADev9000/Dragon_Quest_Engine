@@ -49,6 +49,10 @@ Window_QuestList.prototype.initialize = function (x, y, width, height) {
 // Functions - data
 //////////////////////////////
 
+Window_QuestList.prototype.item = function () {
+    return this._data[this.index()];
+};
+
 Window_QuestList.prototype.maxItems = function () {
     return this._data.length;
 };
@@ -56,6 +60,25 @@ Window_QuestList.prototype.maxItems = function () {
 Window_QuestList.prototype.makeItemList = function () {
     // use Boolean constructor to filter out falsey values: https://stackoverflow.com/questions/28607451/removing-undefined-values-from-array
     this._data = $gameParty.quests().filter(Boolean);
+};
+
+//////////////////////////////
+// Functions - help windows
+//////////////////////////////
+
+Window_QuestList.prototype.updateHelp = function () {
+    const quest = this.item();
+    if (quest) {
+        this.setHelpWindowItem(quest);
+        this._helpWindow[0].show();
+    } else {
+        // if no quests, hide details window
+        this._helpWindow[0].hide();
+    }
+};
+
+Window_QuestList.prototype.updateSingleHelp = function () {
+    this.updateHelp();
 };
 
 //////////////////////////////
