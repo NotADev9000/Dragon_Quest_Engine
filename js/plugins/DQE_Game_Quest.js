@@ -62,6 +62,10 @@ Game_Quest.prototype.name = function () {
     return $DQE_dataQuests[this._id].name;
 };
 
+Game_Quest.prototype.stages = function () {
+    return this._stages;
+};
+
 Game_Quest.prototype.stage = function (stageNum) {
     return $DQE_dataQuests[this._id].stages[stageNum];
 };

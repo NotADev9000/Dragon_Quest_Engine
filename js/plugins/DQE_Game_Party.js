@@ -243,6 +243,27 @@ Game_Party.prototype.removeAvailableQuest = function (questId) {
     this._availableQuests[questId] = 0;
 };
 
+/**
+ * compare the active quests to the data quests and udpate
+ * the active ones if they don't match
+ */
+Game_Party.prototype.updateQuests = function () {
+    this._quests.forEach(quest => {
+        if (quest) {
+            quest.stages().forEach((stage, index) => {
+                const gameObjs = stage.objectives();
+                const dataObjs = quest.stage(index).objectives;
+                if (gameObjs.length < dataObjs.length) {
+                    const diff = dataObjs.length - gameObjs.length;
+                    for (let i = 0; i < diff; i++) {
+                        gameObjs.push(0);
+                    }
+                }
+            });
+        }
+    });
+};
+
 //////////////////////////////
 // Functions - gold
 //////////////////////////////

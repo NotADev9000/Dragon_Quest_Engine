@@ -10,6 +10,14 @@
                     {
                         "description": "Defeat a single enemy in battle",
                         "flag": "BATTLE_DEFEAT_ONE"
+                    },
+                    {
+                        "description": "Don't die",
+                        "flag": ""
+                    },
+                    {
+                        "description": "Gain a level",
+                        "flag": ""
                     }
                 ]
             },

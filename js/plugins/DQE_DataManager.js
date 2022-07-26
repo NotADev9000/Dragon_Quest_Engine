@@ -107,3 +107,32 @@ DataManager.makeSavefileInfo = function () {
     info.time = new Date(info.timestamp).toLocaleTimeString("en-GB");
     return info;
 };
+
+//////////////////////////////
+// Functions - load
+//////////////////////////////
+
+DataManager.loadGameWithoutRescue = function (savefileId) {
+    if (this.isThisGameFile(savefileId)) {
+        var json = StorageManager.load(savefileId);
+        this.createGameObjects();
+        this.extractSaveContents(JsonEx.parse(json));
+        this.updateGameData();
+        this._lastAccessedId = savefileId;
+        return true;
+    } else {
+        return false;
+    }
+};
+
+/**
+ * updates any loaded game data that doesn't match the data files.
+ * 
+ * this may occur when the game is updated and the player loads their save
+ * on a new update for the first time.
+ * 
+ * TODO: only call this when savefile is loaded for first time since game is updated
+ */
+DataManager.updateGameData = function () {
+    $gameParty.updateQuests();
+};
