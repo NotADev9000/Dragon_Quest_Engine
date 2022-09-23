@@ -38,6 +38,7 @@ Window_QuestDetails.prototype.constructor = Window_QuestDetails;
 Window_QuestDetails.prototype.initialize = function (x, y, width, height) {
     this._quest = {};
     this._stage = 0; // index of stage displayed
+    this._latestStage = 0; // index of highest stage player has unlocked
     this._objectivesPage = 0; // page of objectives displayed
     this._totalObjectivePages = 1;
     this._objectivesPerPage = 2;
@@ -108,7 +109,7 @@ Window_QuestDetails.prototype.objectiveStartY = function () {
 
 Window_QuestDetails.prototype.setItem = function (quest) {
     this._quest = quest;
-    this._stage = quest.currentStage();
+    this._latestStage = this._stage = quest.currentStage();
     this._objectivesPage = 0;
     this._totalObjectivePages = this.totalObjectivePages();
     this.refresh();
@@ -179,7 +180,19 @@ Window_QuestDetails.prototype.drawDetails = function () {
 
 Window_QuestDetails.prototype.drawName = function () {
     const name = this._quest.name();
-    this.drawText(name, 0, this.extraPadding(), this.contentsWidth(), 'center');
+    const cw = this.contentsWidth();
+    const ep = this.extraPadding();
+    // icons (switching pages)
+    if (this._latestStage > 0) {
+        // left icon
+        let icon = this.getHandlerIcon('pagedown');
+        this.drawTextEx(` \\i[${icon}]`, 0, ep);
+        // right icon
+        const rightIconX = cw - Window_Base._iconWidth - this.textWidth(' ');
+        icon = this.getHandlerIcon('pageup');
+        this.drawTextEx(`\\i[${icon}] `, rightIconX, ep);
+    }
+    this.drawText(name, 0, this.extraPadding(), cw, 'center');
     this.drawHorzLine(0, this.nameBlockHeight() - 3);
 };
 
