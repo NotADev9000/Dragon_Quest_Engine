@@ -4,6 +4,8 @@ option in game to switch between keyboard & gamepad icons
 
 - windows:
 
+split DQE_Windows into individual files
+
 linegap = 15 irrelevant as in window_base = 15
 
 itemHeight func could be put into window_base?
