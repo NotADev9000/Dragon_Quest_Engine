@@ -70,10 +70,10 @@ Window_QuestList.prototype.updateHelp = function () {
     const quest = this.item();
     if (quest) {
         this.setHelpWindowItem(quest);
-        this._helpWindow[0].show();
+        this.showAllHelpWindows();
     } else {
-        // if no quests, hide details window
-        this._helpWindow[0].hide();
+        // if no quests, hide details/rewards window
+        this.hideAllHelpWindows();
     }
 };
 

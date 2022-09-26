@@ -28,9 +28,18 @@
             }
         ],
         "rewards": [
-            "1500G",
-            "Medicinal Herb",
-            "Agate Of Evolution"
+            {
+                "type": "gold",
+                "value": 1500
+            },
+            {
+                "type": "item",
+                "value": 1
+            },
+            {
+                "type": "weapon",
+                "value": 3
+            }
         ]
     }
 ]

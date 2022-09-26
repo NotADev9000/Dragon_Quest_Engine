@@ -109,6 +109,10 @@ Game_Quest.prototype.currentStage = function () {
     return this._currentStage;
 };
 
+Game_Quest.prototype.rewards = function () {
+    return $DQE_dataQuests[this._id].rewards;
+};
+
 Game_Quest.prototype.isComplete = function () {
     return this._completed;
 };

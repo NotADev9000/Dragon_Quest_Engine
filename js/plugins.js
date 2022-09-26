@@ -156,6 +156,7 @@ var $plugins =
 {"name":"DQE_Window_SkillSetDescription","status":true,"description":"Window displaying a description of the skills in a skillset;\r\n            this includes skills, stat boosts & effect boosts - V0.1","parameters":{}},
 {"name":"DQE_Window_QuestList","status":true,"description":"Lists the available quests - V0.1","parameters":{}},
 {"name":"DQE_Window_QuestDetails","status":true,"description":"Details of the selected quest - V0.1","parameters":{}},
+{"name":"DQE_Window_QuestRewards","status":true,"description":"Lists the rewards for the selected quest - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
 {"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}}
 ];

@@ -228,7 +228,7 @@ Window_QuestDetails.prototype.drawName = function () {
         icon = this.getHandlerIcon('pageup');
         this.drawTextEx(`\\i[${icon}] `, rightIconX, ep);
     }
-    this.drawText(name, 0, this.extraPadding(), cw, 'center');
+    this.drawText(name, 0, ep, cw, 'center');
     this.drawHorzLine(0, this.nameBlockHeight() - 3);
 };
 

@@ -39,6 +39,7 @@ Scene_Quests.prototype.create = function () {
     Scene_MenuBase.prototype.create.call(this);
     this.createQuestListWindow();
     this.createQuestDetailsWindow();
+    this.createQuestRewardsWindow();
 };
 
 //////////////////////////////
@@ -63,6 +64,14 @@ Scene_Quests.prototype.createQuestDetailsWindow = function () {
     this._questDetailsWindow = new Window_QuestDetails(x, 48, 702, 714);
     this.addWindow(this._questDetailsWindow);
     this._questListWindow.setHelpWindow(this._questDetailsWindow);
+};
+
+Scene_Quests.prototype.createQuestRewardsWindow = function () {
+    const y = 48 + this._questListWindow.height;
+    const width = this._questListWindow.width;
+    this._questRewardsWindow = new Window_QuestRewards(48, y, width, 192);
+    this.addWindow(this._questRewardsWindow);
+    this._questListWindow.setHelpWindow(this._questRewardsWindow);
 };
 
 //////////////////////////////
