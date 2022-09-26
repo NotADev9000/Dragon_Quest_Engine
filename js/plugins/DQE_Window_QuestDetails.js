@@ -108,11 +108,12 @@ Window_QuestDetails.prototype.objectiveStartY = function () {
 //////////////////////////////
 
 Window_QuestDetails.prototype.setItem = function (quest) {
-    this._quest = quest;
-    this._latestStage = this._stage = quest.currentStage();
-    this._objectivesPage = 0;
-    this._totalObjectivePages = this.totalObjectivePages();
-    this.refresh();
+    if (this._quest !== quest) {
+        this._quest = quest;
+        this._latestStage = this._stage = quest.currentStage();
+        this.resetObjectives();
+        this.refresh();
+    }
 };
 
 Window_QuestDetails.prototype.totalObjectivePages = function () {
@@ -120,7 +121,7 @@ Window_QuestDetails.prototype.totalObjectivePages = function () {
 };
 
 /**
- * gets the two objectives currently being displayed
+ * Gets the two objectives currently being displayed
  * 
  * @returns both objectives in an array - the icon for the state of the objective + the objective description
  */
@@ -139,6 +140,32 @@ Window_QuestDetails.prototype.combineObjectiveDetails = function (descriptions, 
         combined.push(`${state} ${descriptions[i]}`);
     }
     return combined;
+};
+
+//////////////////////////////
+// Functions - stage pages
+//////////////////////////////
+
+Window_QuestDetails.prototype.changeStage = function (next) {
+    if (this._latestStage > 0) {
+        next ? this.goNextStage() : this.goPreviousStage();
+        this.resetObjectives();
+        this.refresh();
+    }
+};
+
+Window_QuestDetails.prototype.goNextStage = function () {
+    this._stage++;
+    if (this._stage > this._latestStage) {
+        this._stage = 0;
+    }
+};
+
+Window_QuestDetails.prototype.goPreviousStage = function () {
+    this._stage--;
+    if (this._stage < 0) {
+        this._stage = this._latestStage;
+    }
 };
 
 //////////////////////////////
@@ -164,6 +191,15 @@ Window_QuestDetails.prototype.goPreviousObjective = function () {
     if (this._objectivesPage <= -1) {
         this._objectivesPage = this._totalObjectivePages - 1;
     }
+};
+
+/**
+ * Called when the stage is changed.
+ * Resets the objective page shown & recalculates objective page amount
+ */
+Window_QuestDetails.prototype.resetObjectives = function () {
+    this._objectivesPage = 0;
+    this._totalObjectivePages = this.totalObjectivePages();
 };
 
 //////////////////////////////

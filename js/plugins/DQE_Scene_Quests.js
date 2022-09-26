@@ -47,8 +47,13 @@ Scene_Quests.prototype.create = function () {
 
 Scene_Quests.prototype.createQuestListWindow = function () {
     this._questListWindow = new Window_QuestList(48, 48, 642, 447);
+    // change stage
+    this._questListWindow.setHandler('pageup', this.onCommandChangeStagePage.bind(this, true));
+    this._questListWindow.setHandler('pagedown', this.onCommandChangeStagePage.bind(this, false));
+    // change objectives
     this._questListWindow.setHandler('next', this.onCommandChangeObjectivesPage.bind(this, true));
     this._questListWindow.setHandler('previous', this.onCommandChangeObjectivesPage.bind(this, false));
+    // misc
     this._questListWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._questListWindow);
 };
@@ -64,7 +69,11 @@ Scene_Quests.prototype.createQuestDetailsWindow = function () {
 // Functions - on handlers
 //////////////////////////////
 
+Scene_Quests.prototype.onCommandChangeStagePage = function (next) {
+    this._questDetailsWindow.changeStage(next);
+    this._questListWindow.activate();
+};
+
 Scene_Quests.prototype.onCommandChangeObjectivesPage = function (next) {
     this._questDetailsWindow.changeObjective(next);
-    // this._questListWindow.activate();
 };

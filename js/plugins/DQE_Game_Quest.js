@@ -66,6 +66,10 @@ Game_Quest.prototype.stages = function () {
     return this._stages;
 };
 
+Game_Quest.prototype.numStages = function () {
+    return this._stages.length;
+};
+
 Game_Quest.prototype.stage = function (stageNum) {
     return $DQE_dataQuests[this._id].stages[stageNum];
 };
@@ -107,4 +111,19 @@ Game_Quest.prototype.currentStage = function () {
 
 Game_Quest.prototype.isComplete = function () {
     return this._completed;
+};
+
+//////////////////////////////
+// Functions - setters
+//////////////////////////////
+
+Game_Quest.prototype.setCurrentStage = function (stage) {
+    const numStages = this.numStages();
+    // limit to last stage
+    if (stage >= numStages) stage = numStages; 
+    return this._currentStage = stage;
+};
+
+Game_Quest.prototype.nextStage = function () {
+    this.setCurrentStage(this._currentStage+1);
 };
