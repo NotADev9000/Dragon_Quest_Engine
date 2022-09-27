@@ -240,7 +240,7 @@ Window_QuestDetails.prototype.drawDescription = function () {
 };
 
 Window_QuestDetails.prototype.drawLocation = function () {
-    const location = `-${this._quest.stageLocation(this._stage)}`;
+    const location = `~${this._quest.stageLocation(this._stage)}`;
     const ep = this.extraPadding();
     const y = ep + this.nameBlockHeight() + this.descriptionTextHeight();
     this.drawTextEx(location, ep, y);

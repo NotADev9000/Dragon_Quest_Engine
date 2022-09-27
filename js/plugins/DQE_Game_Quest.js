@@ -31,6 +31,13 @@ function Game_Quest() {
     this.initialize.apply(this, arguments);
 }
 
+// Reward types
+Game_Quest.REWARDS_GOLD = 'gold';
+Game_Quest.REWARDS_ITEM = 'item';
+Game_Quest.REWARDS_WEAPON = 'weapon';
+Game_Quest.REWARDS_ARMOR = 'armor';
+Game_Quest.REWARDS_MISC = 'misc';
+
 Game_Quest.prototype.initialize = function (quest) {
     this._id = quest.id;
     // details

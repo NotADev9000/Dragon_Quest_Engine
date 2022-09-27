@@ -72,6 +72,21 @@ Window_QuestRewards.prototype.setItem = function (quest) {
     }
 };
 
+Window_QuestRewards.prototype.getRewardName = function (reward) {
+    switch (reward.type) {
+        case Game_Quest.REWARDS_GOLD:
+            return `${reward.value}\\c[6]${TextManager.currencyUnit}\\c[1]`;
+        case Game_Quest.REWARDS_ITEM:
+            return $dataItems[reward.value].name;
+        case Game_Quest.REWARDS_WEAPON:
+            return $dataWeapons[reward.value].name;
+        case Game_Quest.REWARDS_ARMOR:
+            return $dataArmors[reward.value].name;
+        default:
+            return reward.value;
+    }
+};
+
 //////////////////////////////
 // Functions - draw items
 //////////////////////////////
@@ -87,10 +102,9 @@ Window_QuestRewards.prototype.drawRewards = function () {
     const ep = this.extraPadding();
     const ih = this.itemHeight();
     let y = ep + this.titleBlockHeight();
-    this._rewards.forEach((reward, index) => {
-        // get reward name here
-        let text = `-Reward: ${index+1}`;
-        this.drawText(text, ep, y);
+    this._rewards.forEach(reward => {
+        let text = `~${this.getRewardName(reward)}`;
+        this.drawTextEx(text, ep, y);
         y += ih;
     });
 };
