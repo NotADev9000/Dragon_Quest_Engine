@@ -108,6 +108,9 @@ Game_Quest.prototype.stageObjectiveStates = function (stageNum, startIndex, endI
     return this.stageAllObjectiveStates(stageNum).slice(startIndex, endIndex);
 };
 
+/**
+ * Number of objectives for a stage
+ */
 Game_Quest.prototype.stageNumObjectives = function (stageNum) {
     return this.stageAllObjectiveStates(stageNum).length;
 };

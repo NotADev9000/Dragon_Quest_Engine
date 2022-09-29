@@ -35,19 +35,24 @@ function Window_QuestDetails() {
 Window_QuestDetails.prototype = Object.create(Window_Base.prototype);
 Window_QuestDetails.prototype.constructor = Window_QuestDetails;
 
-Window_QuestDetails.prototype.initialize = function (x, y, width, height) {
+Window_QuestDetails.prototype.initialize = function (x, y, width) {
     this._quest = {};
     this._stage = 0; // index of stage displayed
     this._latestStage = 0; // index of highest stage player has unlocked
     this._objectivesPage = 0; // page of objectives displayed
+    this._objectivesThisStage = 0; // how many objectives for current shown stage
     this._totalObjectivePages = 1;
     this._objectivesPerPage = 2;
-    Window_Base.prototype.initialize.call(this, x, y, width, height);
+    Window_Base.prototype.initialize.call(this, x, y, width, this.windowHeight());
 };
 
 //////////////////////////////
 // Functions - window sizing
 //////////////////////////////
+
+Window_QuestDetails.prototype.windowHeight = function () {
+    return this._objectivesThisStage > 0 ? 714 : 453;
+};
 
 Window_QuestDetails.prototype.lineGap = function () {
     return 9;
@@ -111,13 +116,13 @@ Window_QuestDetails.prototype.setItem = function (quest) {
     if (this._quest !== quest) {
         this._quest = quest;
         this._latestStage = this._stage = quest.currentStage();
-        this.resetObjectives();
+        this.refreshObjectives();
         this.refresh();
     }
 };
 
 Window_QuestDetails.prototype.totalObjectivePages = function () {
-    return Math.ceil(this._quest.stageNumObjectives(this._stage) / this._objectivesPerPage);
+    return Math.ceil(this._objectivesThisStage / this._objectivesPerPage);
 };
 
 /**
@@ -149,7 +154,7 @@ Window_QuestDetails.prototype.combineObjectiveDetails = function (descriptions, 
 Window_QuestDetails.prototype.changeStage = function (next) {
     if (this._latestStage > 0) {
         next ? this.goNextStage() : this.goPreviousStage();
-        this.resetObjectives();
+        this.refreshObjectives();
         this.refresh();
     }
 };
@@ -175,7 +180,7 @@ Window_QuestDetails.prototype.goPreviousStage = function () {
 Window_QuestDetails.prototype.changeObjective = function (next) {
     if (this._totalObjectivePages > 1) {
         next ? this.goNextObjective() : this.goPreviousObjective();
-        this.refreshObjectives();
+        this.redrawObjectives();
     }
 };
 
@@ -194,12 +199,15 @@ Window_QuestDetails.prototype.goPreviousObjective = function () {
 };
 
 /**
- * Called when the stage is changed.
- * Resets the objective page shown & recalculates objective page amount
+ * Called whenever the stage is changed (e.g. changing quests, moving stage)
+ * Calculates & resets objectives
+ * Changes window size depending on number of objectives
  */
-Window_QuestDetails.prototype.resetObjectives = function () {
+Window_QuestDetails.prototype.refreshObjectives = function () {
     this._objectivesPage = 0;
+    this._objectivesThisStage = this._quest.stageNumObjectives(this._stage);
     this._totalObjectivePages = this.totalObjectivePages();
+    this.height = this.windowHeight();
 };
 
 //////////////////////////////
@@ -210,8 +218,6 @@ Window_QuestDetails.prototype.drawDetails = function () {
     this.drawName();
     this.drawDescription();
     this.drawLocation();
-    this.drawObjectivesTitle();
-    this.drawObjectives();
 };
 
 Window_QuestDetails.prototype.drawName = function () {
@@ -244,6 +250,11 @@ Window_QuestDetails.prototype.drawLocation = function () {
     const ep = this.extraPadding();
     const y = ep + this.nameBlockHeight() + this.descriptionTextHeight();
     this.drawTextEx(location, ep, y);
+};
+
+Window_QuestDetails.prototype.drawObjectivesSection = function () {
+    this.drawObjectivesTitle();
+    this.drawObjectives();
 };
 
 Window_QuestDetails.prototype.drawObjectivesTitle = function () {
@@ -279,17 +290,21 @@ Window_QuestDetails.prototype.drawObjectives = function () {
     });
 };
 
-//////////////////////////////
-// Functions - refresh
-//////////////////////////////
-
-Window_QuestDetails.prototype.refreshObjectives = function () {
+/**
+ * Redraws the objectives section of the window only
+ */
+Window_QuestDetails.prototype.redrawObjectives = function () {
     const height = this.objectiveTextHeight() * this._objectivesPerPage;
     this.contents.clearRect(0, this.objectiveStartY(), this.width, height);
     this.drawObjectives();
 };
 
+//////////////////////////////
+// Functions - refresh
+//////////////////////////////
+
 Window_QuestDetails.prototype.refresh = function () {
-    this.contents.clear();
+    this.createContents();
     this.drawDetails();
+    if (this._objectivesThisStage > 0) this.drawObjectivesSection();
 };

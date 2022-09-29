@@ -61,7 +61,7 @@ Scene_Quests.prototype.createQuestListWindow = function () {
 
 Scene_Quests.prototype.createQuestDetailsWindow = function () {
     const x = 48 + this._questListWindow.width;
-    this._questDetailsWindow = new Window_QuestDetails(x, 48, 702, 714);
+    this._questDetailsWindow = new Window_QuestDetails(x, 48, 702);
     this.addWindow(this._questDetailsWindow);
     this._questListWindow.setHelpWindow(this._questDetailsWindow);
 };
