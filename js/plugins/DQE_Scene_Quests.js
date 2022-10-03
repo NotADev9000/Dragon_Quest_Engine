@@ -44,7 +44,7 @@ Scene_Quests.prototype.create = function () {
     this.createQuestLocatorIconWindow();
     // available quest windows
     this.createQuestListAvailableWindow();
-    // questDetailsAvailable
+    this.createQuestDetailsAvailableWindow();
     this.createQuestActiveIconWindow();
 };
 
@@ -101,6 +101,14 @@ Scene_Quests.prototype.createQuestListAvailableWindow = function () {
     this.addWindow(this._questListAvailableWindow);
 };
 
+Scene_Quests.prototype.createQuestDetailsAvailableWindow = function () {
+    const x = 48 + this._questListAvailableWindow.width;
+    this._questDetailsAvailableWindow = new Window_QuestDetails_Available(x, 48, 702);
+    this._questDetailsAvailableWindow.hide();
+    this.addWindow(this._questDetailsAvailableWindow);
+    this._questListAvailableWindow.setHelpWindow(this._questDetailsAvailableWindow);
+};
+
 Scene_Quests.prototype.createQuestActiveIconWindow = function () {
     const y = this._questListAvailableWindow.y + this._questListAvailableWindow.height;
     this._questActiveIconWindow = new Window_IconHelp(48, y, 423, 75, ['help'], ['Active Quests']);
@@ -132,17 +140,19 @@ Scene_Quests.prototype.onCommandOpenLocator = function () {
     this._questListAvailableWindow.activate();
     // show windows
     this._questListAvailableWindow.show();
-    // questDetailsAvailable
+    if (this._questListAvailableWindow.maxItems()) {
+        this._questDetailsAvailableWindow.show();
+    }
     this._questActiveIconWindow.show();
 };
 
 Scene_Quests.prototype.onCommandOpenActive = function () {
     // hide windows
     this._questListAvailableWindow.hide();
-    // questDetailsAvailable
+    this._questDetailsAvailableWindow.hide();
     this._questActiveIconWindow.hide();
     // select & activate
-    this._questListWindow.select(this._questListAvailableWindow._lastSelected);
+    this._questListWindow.select(this._questListWindow._lastSelected);
     this._questListWindow.activate();
     // show windows
     this._questListWindow.show();

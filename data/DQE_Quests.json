@@ -40,6 +40,57 @@
                 "type": "weapon",
                 "value": 3
             }
-        ]
+        ],
+        "locator": {
+            "description": "A man somewhere wants an enemy killed.",
+            "location": "Snowmourne - Shop"
+        }
+    },
+    {
+        "id": 1,
+        "name": "QUEST #2",
+        "stages": [
+            {
+                "description": "jbfhbhsbdashdjhbd",
+                "location": "Snowmourne - Church",
+                "objectives": [
+                    {
+                        "description": "Defeat a single enemy in battle",
+                        "flag": "BATTLE_DEFEAT_ONE"
+                    },
+                    {
+                        "description": "Don't die",
+                        "flag": ""
+                    },
+                    {
+                        "description": "Gain a level",
+                        "flag": ""
+                    }
+                ]
+            },
+            {
+                "description": "1111123232323",
+                "location": "Snowmourne - Church",
+                "objectives": []
+            }
+        ],
+        "rewards": [
+            {
+                "type": "gold",
+                "value": 15000
+            },
+            {
+                "type": "item",
+                "value": 2
+            },
+            {
+                "type": "weapon",
+                "value": 2
+            }
+        ],
+        "locator": {
+            "description": "A man, a plan, a canal, panama",
+            "location": "Snowmourne - Panama"
+        }
     }
 ]

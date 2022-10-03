@@ -43,9 +43,28 @@ Window_QuestList_Available.prototype.initialize = function (x, y, width, height)
 // Functions - data
 //////////////////////////////
 
+Window_QuestList_Available.prototype.item = function (index = this.index()) {
+    return $DQE_dataQuests[this._data[index]];
+};
+
 Window_QuestList_Available.prototype.makeItemList = function () {
     // use Boolean constructor to filter out falsey values: https://stackoverflow.com/questions/28607451/removing-undefined-values-from-array
-    this._data = $gameParty.availableQuests().filter(Boolean);
+    this._data = $gameParty.availableQuests().filter(n => n > -1);
+};
+
+//////////////////////////////
+// Functions - help windows
+//////////////////////////////
+
+Window_QuestList_Available.prototype.updateHelp = function () {
+    const quest = this.item();
+    if (quest) {
+        this._helpWindow[0].setItem(quest.name, quest.locator);
+        this.showAllHelpWindows();
+    } else {
+        // if no quests, hide details window
+        this.hideAllHelpWindows();
+    }
 };
 
 //////////////////////////////
@@ -53,7 +72,7 @@ Window_QuestList_Available.prototype.makeItemList = function () {
 //////////////////////////////
 
 Window_QuestList_Available.prototype.drawItem = function (index) {
-    const name = $DQE_dataQuests[this._data[index]].name;
+    const name = this.item(index).name;
     if (name) {
         const rect = this.itemRectForText(index);
         // truncate name if too long for window
