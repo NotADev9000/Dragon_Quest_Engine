@@ -37,14 +37,22 @@ Scene_Quests.prototype.initialize = function () {
 
 Scene_Quests.prototype.create = function () {
     Scene_MenuBase.prototype.create.call(this);
+    // active quest windows
     this.createQuestListWindow();
     this.createQuestDetailsWindow();
     this.createQuestRewardsWindow();
+    this.createQuestLocatorIconWindow();
+    // available quest windows
+    this.createQuestListAvailableWindow();
+    // questDetailsAvailable
+    this.createQuestActiveIconWindow();
 };
 
 //////////////////////////////
 // Functions - create windows
 //////////////////////////////
+
+// active quest windows
 
 Scene_Quests.prototype.createQuestListWindow = function () {
     this._questListWindow = new Window_QuestList(48, 48, 642, 447);
@@ -55,6 +63,7 @@ Scene_Quests.prototype.createQuestListWindow = function () {
     this._questListWindow.setHandler('next', this.onCommandChangeObjectivesPage.bind(this, true));
     this._questListWindow.setHandler('previous', this.onCommandChangeObjectivesPage.bind(this, false));
     // misc
+    this._questListWindow.setHandler('help', this.onCommandOpenLocator.bind(this));
     this._questListWindow.setHandler('cancel', this.popScene.bind(this));
     this.addWindow(this._questListWindow);
 };
@@ -74,6 +83,31 @@ Scene_Quests.prototype.createQuestRewardsWindow = function () {
     this._questListWindow.setHelpWindow(this._questRewardsWindow);
 };
 
+Scene_Quests.prototype.createQuestLocatorIconWindow = function () {
+    const y = this._questListWindow.maxItems() ? 
+                this._questRewardsWindow.y + this._questRewardsWindow.height : 
+                this._questListWindow.y + this._questListWindow.height;
+    this._questLocatorIconWindow = new Window_IconHelp(48, y, 423, 75, ['help'], ['Quest Locator']);
+    this.addWindow(this._questLocatorIconWindow);
+};
+
+// available quest windows
+
+Scene_Quests.prototype.createQuestListAvailableWindow = function () {
+    this._questListAvailableWindow = new Window_QuestList_Available(48, 48, 642, 447);
+    this._questListAvailableWindow.hide();
+    this._questListAvailableWindow.setHandler('help', this.onCommandOpenActive.bind(this));
+    this._questListAvailableWindow.setHandler('cancel', this.popScene.bind(this));
+    this.addWindow(this._questListAvailableWindow);
+};
+
+Scene_Quests.prototype.createQuestActiveIconWindow = function () {
+    const y = this._questListAvailableWindow.y + this._questListAvailableWindow.height;
+    this._questActiveIconWindow = new Window_IconHelp(48, y, 423, 75, ['help'], ['Active Quests']);
+    this._questActiveIconWindow.hide();
+    this.addWindow(this._questActiveIconWindow);
+};
+
 //////////////////////////////
 // Functions - on handlers
 //////////////////////////////
@@ -85,4 +119,36 @@ Scene_Quests.prototype.onCommandChangeStagePage = function (next) {
 
 Scene_Quests.prototype.onCommandChangeObjectivesPage = function (next) {
     this._questDetailsWindow.changeObjective(next);
+};
+
+Scene_Quests.prototype.onCommandOpenLocator = function () {
+    // hide windows
+    this._questListWindow.hide();
+    this._questDetailsWindow.hide();
+    this._questRewardsWindow.hide();
+    this._questLocatorIconWindow.hide();
+    // select & activate
+    this._questListAvailableWindow.select(this._questListAvailableWindow._lastSelected);
+    this._questListAvailableWindow.activate();
+    // show windows
+    this._questListAvailableWindow.show();
+    // questDetailsAvailable
+    this._questActiveIconWindow.show();
+};
+
+Scene_Quests.prototype.onCommandOpenActive = function () {
+    // hide windows
+    this._questListAvailableWindow.hide();
+    // questDetailsAvailable
+    this._questActiveIconWindow.hide();
+    // select & activate
+    this._questListWindow.select(this._questListAvailableWindow._lastSelected);
+    this._questListWindow.activate();
+    // show windows
+    this._questListWindow.show();
+    if (this._questListWindow.maxItems()) {
+        this._questDetailsWindow.show();
+        this._questRewardsWindow.show();
+    }
+    this._questLocatorIconWindow.show();
 };

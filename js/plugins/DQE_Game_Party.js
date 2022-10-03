@@ -222,6 +222,10 @@ Game_Party.prototype.quests = function () {
     return this._quests;
 };
 
+Game_Party.prototype.availableQuests = function () {
+    return this._availableQuests;
+};
+
 Game_Party.prototype.isQuestActive = function (questId) {
     return this._quests[questId];
 };
@@ -236,11 +240,11 @@ Game_Party.prototype.activateQuest = function (questId) {
 };
 
 Game_Party.prototype.addAvailableQuest = function (questId) {
-    this._availableQuests[questId] = 1;
+    this._availableQuests[questId] = questId;
 };
 
 Game_Party.prototype.removeAvailableQuest = function (questId) {
-    this._availableQuests[questId] = 0;
+    this._availableQuests[questId] = undefined;
 };
 
 /**

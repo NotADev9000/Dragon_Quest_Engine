@@ -6,7 +6,7 @@
 /*:
 *
 * @author NotADev
-* @plugindesc Lists the available quests - V0.1
+* @plugindesc Lists the active quests - V0.1
 *
 *
 * @help
@@ -35,14 +35,13 @@ function Window_QuestList() {
 Window_QuestList.prototype = Object.create(Window_Pagination.prototype);
 Window_QuestList.prototype.constructor = Window_QuestList;
 
-Window_QuestList.prototype.initialize = function (x, y, width, height) {
+Window_QuestList.prototype.initialize = function (x, y, width, height, activate = true, noData = 'No active Quests!') {
     this._data = [];
-    this._noData = 'No Quests!';
+    this._noData = noData;
     Window_Pagination.prototype.initialize.call(this, x, y, width, height);
     this.refresh();
-    // activate window
     this.select(0);
-    this.activate();
+    if (activate) this.activate();
 };
 
 //////////////////////////////
@@ -86,7 +85,7 @@ Window_QuestList.prototype.updateSingleHelp = function () {
 //////////////////////////////
 
 Window_QuestList.prototype.drawAllItems = function () {
-    if (this.maxItems() < 1) { // no active quests
+    if (!this.maxItems()) { // no active quests
         this.drawText(this._noData, 0, this.extraPadding(), this.contentsWidth(), 'center');
     } else {
         Window_Pagination.prototype.drawAllItems.call(this);
