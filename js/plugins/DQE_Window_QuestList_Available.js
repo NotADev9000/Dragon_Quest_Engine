@@ -48,8 +48,7 @@ Window_QuestList_Available.prototype.item = function (index = this.index()) {
 };
 
 Window_QuestList_Available.prototype.makeItemList = function () {
-    // use Boolean constructor to filter out falsey values: https://stackoverflow.com/questions/28607451/removing-undefined-values-from-array
-    this._data = $gameParty.availableQuests().filter(n => n > -1);
+    this._data = $gameParty.availableQuests().filter(n => Number.isInteger(n));
 };
 
 //////////////////////////////
