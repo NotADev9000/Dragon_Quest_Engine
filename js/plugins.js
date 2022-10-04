@@ -160,5 +160,6 @@ var $plugins =
 {"name":"DQE_Window_QuestDetails_Available","status":true,"description":"Details of the selected available quest - V0.1","parameters":{}},
 {"name":"DQE_Window_QuestRewards","status":true,"description":"Lists the rewards for the selected quest - V0.1","parameters":{}},
 {"name":"-----------------","status":false,"description":"","parameters":{}},
-{"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}}
+{"name":"DQE_Plugin_Commands","status":true,"description":"Plugin Commands for DQEngine - V0.1","parameters":{}},
+{"name":"DQE_Debug_Tools","status":true,"description":"Various debug tools for DQEngine - V0.1","parameters":{}}
 ];
