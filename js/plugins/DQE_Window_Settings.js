@@ -78,8 +78,8 @@ Window_Settings.COMMAND_TYPE_ICON = 4;
 Window_Settings.prototype.addCommand = function (name, symbol, type, enabled = true, ext = null) {
     this._list.push({ 
         name: name, 
-        symbol: symbol, enabled: 
-        enabled, 
+        symbol: symbol,
+        enabled: enabled, 
         ext: ext 
     });
     this._cmdType.push(type);

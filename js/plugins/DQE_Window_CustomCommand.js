@@ -62,8 +62,22 @@ Window_CustomCommand.prototype.lineGap = function () {
 // Functions - data
 //////////////////////////////
 
+/**
+ * Commands can either be:
+ * - A string which represents name & symbol
+ * - An object holding all elements of the command
+ */
 Window_CustomCommand.prototype.makeCommandList = function () {
-    this._commands.forEach(command => this.addCommand(command, command));
+    this._commands.forEach(command => this.addCommand(command.name || command, command.symbol, command.enabled, command.ext));
+};
+
+Window_CustomCommand.prototype.addCommand = function (name, symbol = name, enabled = true, ext = null) {
+    this._list.push({
+        name: name,
+        symbol: symbol,
+        enabled: enabled,
+        ext: ext
+    });
 };
 
 Window_CustomCommand.prototype.open = function () {
