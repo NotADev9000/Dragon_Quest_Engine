@@ -17,3 +17,5 @@ pageblockheight = 54 irrelevant as in pagination = 54
 window zoom & window equipment list maxRows can be made similar
 
 drawing prev/next page icons logic into common function
+
+window_command overwrite windowwidth method to use this._width

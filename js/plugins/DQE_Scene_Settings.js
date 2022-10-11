@@ -70,7 +70,7 @@ Scene_Settings.prototype.createCommandWindow = function () {
 Scene_Settings.prototype.createAudioWindow = function () {
     let x = this._commandWindow.x + this._commandWindow.width;
     let y = this._commandWindow.y;
-    this._audioWindow = new Window_SettingsAudio(x, y, 840);
+    this._audioWindow = new Window_Settings_Audio(x, y, 840);
     this._audioWindow.setHandler('cancel', this.onAudioCancel.bind(this));
     this._audioWindow.deselect();
     this._audioWindow.deactivate();
@@ -80,7 +80,7 @@ Scene_Settings.prototype.createAudioWindow = function () {
 Scene_Settings.prototype.createTextWindow = function () {
     let x = this._commandWindow.x + this._commandWindow.width;
     let y = this._commandWindow.y;
-    this._textWindow = new Window_SettingsText(x, y, 840);
+    this._textWindow = new Window_Settings_Text(x, y, 840);
     this._textWindow.setHandler('cancel', this.onTextCancel.bind(this));
     this._textWindow.hide();
     this._textWindow.deselect();
@@ -91,7 +91,7 @@ Scene_Settings.prototype.createTextWindow = function () {
 Scene_Settings.prototype.createWindowWindow = function () {
     let x = this._commandWindow.x + this._commandWindow.width;
     let y = this._commandWindow.y;
-    this._windowWindow = new Window_SettingsWindow(x, y, 840);
+    this._windowWindow = new Window_Settings_Window(x, y, 840);
     this._windowWindow.setHandler('cancel', this.onWindowCancel.bind(this));
     this._windowWindow.hide();
     this._windowWindow.deselect();

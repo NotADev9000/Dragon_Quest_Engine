@@ -334,7 +334,7 @@ Scene_Battle.prototype.createLineUpGroupConfirmWindow = function () {
 
 Scene_Battle.prototype.createMiscWindow = function () {
     const x = this._partyCommandWindow.x + this._partyCommandWindow.width;
-    this._miscWindow = new Window_SettingsBattle(x, 0, this._enemyWindow.width);
+    this._miscWindow = new Window_Settings_Battle(x, 0, this._enemyWindow.width);
     this._miscWindow.y = Graphics.boxHeight - 12 - this._miscWindow.height;
     this._miscWindow.setHandler('cancel', this.onMiscCancel.bind(this));
     this.setAilmentsBuffsHandler(this._miscWindow);

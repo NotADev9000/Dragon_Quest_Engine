@@ -48,7 +48,7 @@ Scene_ConfigGamepad.prototype.create = function () {
 //////////////////////////////
 
 Scene_ConfigGamepad.prototype.createCommandWindow = function () {
-    this._commandWindow = new Window_SettingsControls(48, 48, 1344, 1);
+    this._commandWindow = new Window_Settings_Controls(48, 48, 1344, 1);
     this._commandWindow.setHandler('config', this.commandConfig.bind(this));
     this._commandWindow.setHandler('reset', this.commandReset.bind(this));
     this._commandWindow.setHandler('cancel', this.popScene.bind(this));

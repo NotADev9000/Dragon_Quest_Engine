@@ -1,6 +1,6 @@
 //=============================================================================
 // Dragon Quest Engine - Window Settings - Controls
-// DQE_Window_SettingsControls.js                                                             
+// DQE_Window_Settings_Controls.js                                                             
 //=============================================================================
 
 /*:
@@ -19,23 +19,23 @@
 //------
 
 var Imported = Imported || {};
-Imported.DQEng_Window_SettingsControls = true;
+Imported.DQEng_Window_Settings_Controls = true;
 
 var DQEng = DQEng || {};
-DQEng.Window_SettingsControls = DQEng.Window_SettingsControls || {};
+DQEng.Window_Settings_Controls = DQEng.Window_Settings_Controls || {};
 
 //-----------------------------------------------------------------------------
-// Window_SettingsControls
+// Window_Settings_Controls
 //-----------------------------------------------------------------------------
 
-function Window_SettingsControls() {
+function Window_Settings_Controls() {
     this.initialize.apply(this, arguments);
 }
 
-Window_SettingsControls.prototype = Object.create(Window_Settings.prototype);
-Window_SettingsControls.prototype.constructor = Window_SettingsControls;
+Window_Settings_Controls.prototype = Object.create(Window_Settings.prototype);
+Window_Settings_Controls.prototype.constructor = Window_Settings_Controls;
 
-Window_SettingsControls.prototype.initialize = function (x, y, width, mode) {
+Window_Settings_Controls.prototype.initialize = function (x, y, width, mode) {
     this._mode = mode; // 0 = keyboard, 1 = gamepad
     Window_Settings.prototype.initialize.call(this, x, y, width);
 };
@@ -44,7 +44,7 @@ Window_SettingsControls.prototype.initialize = function (x, y, width, mode) {
 // Functions - commands
 //////////////////////////////
 
-Window_SettingsControls.prototype.makeCommandList = function () {
+Window_Settings_Controls.prototype.makeCommandList = function () {
     this.addCommand('Change Configuration', 'config');
     if (this._mode === 1) this.addCommand('Icon Type', 'iconType', Window_Settings.COMMAND_TYPE_ICON);
     this.addCommand('Reset to Default', 'reset');
@@ -54,14 +54,14 @@ Window_SettingsControls.prototype.makeCommandList = function () {
 // Functions - data
 //////////////////////////////
 
-Window_SettingsControls.prototype.statusText = function (index) {
+Window_Settings_Controls.prototype.statusText = function (index) {
     let symbol = this.commandSymbol(index);
     let value = this.getConfigValue(symbol);
     value = this.iconText(value);
     return `< ${value} >`;
 };
 
-Window_SettingsControls.prototype.iconText = function (value) {
+Window_Settings_Controls.prototype.iconText = function (value) {
     switch (value) {
         case Input.ICON_XBOX:
             return Input.GAMEPAD_NAME_XBOX;
@@ -78,12 +78,12 @@ Window_SettingsControls.prototype.iconText = function (value) {
 // Functions - cursor movement
 //////////////////////////////
 
-Window_SettingsControls.prototype.processOk = function () {
+Window_Settings_Controls.prototype.processOk = function () {
     let index = this.index();
     this._cmdType[index] ? this.cursorRight() : Window_Selectable.prototype.processOk.call(this);
 };
 
-Window_SettingsControls.prototype.cursorRight = function () {
+Window_Settings_Controls.prototype.cursorRight = function () {
     let index = this.index();
     if (this._cmdType[index]) {
         let symbol = this.commandSymbol(index);
@@ -93,7 +93,7 @@ Window_SettingsControls.prototype.cursorRight = function () {
     }
 };
 
-Window_SettingsControls.prototype.cursorLeft = function () {
+Window_Settings_Controls.prototype.cursorLeft = function () {
     let index = this.index();
     if (this._cmdType[index]) {
         let symbol = this.commandSymbol(index);
@@ -103,7 +103,7 @@ Window_SettingsControls.prototype.cursorLeft = function () {
     }
 };
 
-Window_SettingsControls.prototype.changeValue = function (symbol, value) {
+Window_Settings_Controls.prototype.changeValue = function (symbol, value) {
     Window_Settings.prototype.changeValue.call(this, symbol, value);
     let scene = SceneManager._scene;
     scene.refreshControlsWindow.call(scene);
@@ -113,7 +113,7 @@ Window_SettingsControls.prototype.changeValue = function (symbol, value) {
 // Functions - draw items
 //////////////////////////////
 
-Window_SettingsControls.prototype.drawItem = function (index) {
+Window_Settings_Controls.prototype.drawItem = function (index) {
     let rect = this.itemRectForText(index);
     let textWidth = this.contentsWidth() - this.textPadding();
     this.drawText(this.commandName(index), rect.x, rect.y);
@@ -124,7 +124,7 @@ Window_SettingsControls.prototype.drawItem = function (index) {
 // Functions - help windows
 //////////////////////////////
 
-Window_SettingsControls.prototype.updateHelp = function () {
+Window_Settings_Controls.prototype.updateHelp = function () {
     const index = this.index();
     let text = '';
     switch (index) {
@@ -143,6 +143,6 @@ Window_SettingsControls.prototype.updateHelp = function () {
     this.setHelpWindowItem(text);
 };
 
-Window_SettingsControls.prototype.updateSingleHelp = function () {
+Window_Settings_Controls.prototype.updateSingleHelp = function () {
     this.updateHelp();
 };

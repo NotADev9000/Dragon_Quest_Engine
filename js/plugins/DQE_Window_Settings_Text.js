@@ -1,6 +1,6 @@
 //=============================================================================
 // Dragon Quest Engine - Window Settings - Text
-// DQE_Window_SettingsText.js                                                             
+// DQE_Window_Settings_Text.js                                                             
 //=============================================================================
 
 /*:
@@ -19,26 +19,26 @@
 //------
 
 var Imported = Imported || {};
-Imported.DQEng_Window_SettingsText = true;
+Imported.DQEng_Window_Settings_Text = true;
 
 var DQEng = DQEng || {};
-DQEng.Window_SettingsText = DQEng.Window_SettingsText || {};
+DQEng.Window_Settings_Text = DQEng.Window_Settings_Text || {};
 
 //-----------------------------------------------------------------------------
-// Window_SettingsText
+// Window_Settings_Text
 //-----------------------------------------------------------------------------
 
-function Window_SettingsText() {
+function Window_Settings_Text() {
     this.initialize.apply(this, arguments);
 }
 
-Window_SettingsText.prototype = Object.create(Window_Settings.prototype);
-Window_SettingsText.prototype.constructor = Window_SettingsText;
+Window_Settings_Text.prototype = Object.create(Window_Settings.prototype);
+Window_Settings_Text.prototype.constructor = Window_Settings_Text;
 
 //////////////////////////////
 // Functions - commands
 //////////////////////////////
 
-Window_SettingsText.prototype.makeCommandList = function () {
+Window_Settings_Text.prototype.makeCommandList = function () {
     this.addCommand('Battle Text Speed', 'battleTextSpeed', Window_Settings.COMMAND_TYPE_TEXT_SPEED);
 };

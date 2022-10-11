@@ -29,12 +29,12 @@ function Window_MiscBattleMusic() {
     this.initialize.apply(this, arguments);
 }
 
-Window_MiscBattleMusic.prototype = Object.create(Window_SettingsWindow.prototype);
+Window_MiscBattleMusic.prototype = Object.create(Window_Settings_Window.prototype);
 Window_MiscBattleMusic.prototype.constructor = Window_MiscBattleMusic;
 
 Window_MiscBattleMusic.prototype.initialize = function (x, y, width) {
     this.resetId();
-    Window_SettingsWindow.prototype.initialize.call(this, x, y, width);
+    Window_Settings_Window.prototype.initialize.call(this, x, y, width);
 };
 
 //////////////////////////////

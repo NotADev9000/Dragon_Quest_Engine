@@ -1,6 +1,6 @@
 //=============================================================================
 // Dragon Quest Engine - Window Settings - Window
-// DQE_Window_SettingsWindow.js                                                             
+// DQE_Window_Settings_Window.js                                                             
 //=============================================================================
 
 /*:
@@ -19,40 +19,40 @@
 //------
 
 var Imported = Imported || {};
-Imported.DQEng_Window_SettingsWindow = true;
+Imported.DQEng_Window_Settings_Window = true;
 
 var DQEng = DQEng || {};
-DQEng.Window_SettingsWindow = DQEng.Window_SettingsWindow || {};
+DQEng.Window_Settings_Window = DQEng.Window_Settings_Window || {};
 
 //-----------------------------------------------------------------------------
-// Window_SettingsWindow
+// Window_Settings_Window
 //-----------------------------------------------------------------------------
 
-function Window_SettingsWindow() {
+function Window_Settings_Window() {
     this.initialize.apply(this, arguments);
 }
 
-Window_SettingsWindow.prototype = Object.create(Window_Settings.prototype);
-Window_SettingsWindow.prototype.constructor = Window_SettingsWindow;
+Window_Settings_Window.prototype = Object.create(Window_Settings.prototype);
+Window_Settings_Window.prototype.constructor = Window_Settings_Window;
 
 //////////////////////////////
 // Functions - window sizing
 //////////////////////////////
 
-Window_SettingsWindow.prototype.standardPadding = function () {
+Window_Settings_Window.prototype.standardPadding = function () {
     return 9;
 };
 
-Window_SettingsWindow.prototype.extraPadding = function () {
+Window_Settings_Window.prototype.extraPadding = function () {
     return 15;
 };
 
 // height of the description block (including horizontal rule)
-Window_SettingsWindow.prototype.titleBlockHeight = function () {
+Window_Settings_Window.prototype.titleBlockHeight = function () {
     return 126;
 };
 
-Window_SettingsWindow.prototype.fittingHeight = function (numLines) {
+Window_Settings_Window.prototype.fittingHeight = function (numLines) {
     return Window_Base.prototype.fittingHeightTitleBlock.call(this, numLines);
 };
 
@@ -60,7 +60,7 @@ Window_SettingsWindow.prototype.fittingHeight = function (numLines) {
 // Functions - commands
 //////////////////////////////
 
-Window_SettingsWindow.prototype.makeCommandList = function () {
+Window_Settings_Window.prototype.makeCommandList = function () {
     this.addCommand('Window Scale', 'windowScale', Window_Settings.COMMAND_TYPE_SCALE, !ConfigManager.fullscreen);
     this.addCommand('Fullscreen', 'fullscreen', Window_Settings.COMMAND_TYPE_BOOL_ONOFF);
 };
@@ -69,26 +69,26 @@ Window_SettingsWindow.prototype.makeCommandList = function () {
 // Functions - cursor movement
 //////////////////////////////
 
-Window_SettingsWindow.prototype.select = function (index) {
+Window_Settings_Window.prototype.select = function (index) {
     Window_Settings.prototype.select.call(this, index);
     this.refresh();
 };
 
-Window_SettingsWindow.prototype.cursorRight = function () {
+Window_Settings_Window.prototype.cursorRight = function () {
     let index = this.index();
     if (this.isCommandEnabled(index)) {
         Window_Settings.prototype.cursorRight.call(this);
     }
 };
 
-Window_SettingsWindow.prototype.cursorLeft = function () {
+Window_Settings_Window.prototype.cursorLeft = function () {
     let index = this.index();
     if (this.isCommandEnabled(index)) {
         Window_Settings.prototype.cursorLeft.call(this);
     }
 };
 
-Window_SettingsWindow.prototype.changeValue = function (symbol, value) {
+Window_Settings_Window.prototype.changeValue = function (symbol, value) {
     let lastValue = this.getConfigValue(symbol);
     if (lastValue !== value) {
         this.setConfigValue(symbol, value);
@@ -100,7 +100,7 @@ Window_SettingsWindow.prototype.changeValue = function (symbol, value) {
 // Functions - draw items
 //////////////////////////////
 
-Window_SettingsWindow.prototype.drawItem = function (index) {
+Window_Settings_Window.prototype.drawItem = function (index) {
     let rect = this.itemRectForText(index);
     let textWidth = this.contentsWidth() - this.textPadding() - (this.extraPadding()*2);
     if (!this.isCommandEnabled(index)) this.changeTextColor(this.disabledColor());
@@ -109,7 +109,7 @@ Window_SettingsWindow.prototype.drawItem = function (index) {
     this.resetTextColor();
 };
 
-Window_SettingsWindow.prototype.drawDescription = function () {
+Window_Settings_Window.prototype.drawDescription = function () {
     // horizontal rule
     let ep = this.extraPadding();
     let y = this.contentsHeight() - this.titleBlockHeight();
@@ -129,7 +129,7 @@ Window_SettingsWindow.prototype.drawDescription = function () {
     this.drawTextEx(text, ep, y);
 };
 
-Window_SettingsWindow.prototype.itemRect = function (index) {
+Window_Settings_Window.prototype.itemRect = function (index) {
     let rect = Window_Selectable.prototype.itemRect.call(this, index);
     rect.x += this.extraPadding();
     rect.y += this.extraPadding();
@@ -140,7 +140,7 @@ Window_SettingsWindow.prototype.itemRect = function (index) {
 // Functions - refresh
 //////////////////////////////
 
-Window_SettingsWindow.prototype.refresh = function () {
+Window_Settings_Window.prototype.refresh = function () {
     Window_Settings.prototype.refresh.call(this);
     this.drawDescription();
 };
