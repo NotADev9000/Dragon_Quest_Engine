@@ -18,4 +18,8 @@ window zoom & window equipment list maxRows can be made similar
 
 drawing prev/next page icons logic into common function
 
-window_command overwrite windowwidth method to use this._width
+window_command overwrite windowWidth method to use this._width
+
+make window_settings an abstract class
+
+itemRect function in selectable should have +extraPadding for x & y

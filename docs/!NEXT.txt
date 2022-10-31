@@ -1,0 +1,2 @@
+NEXT:
+- window_settings__description -> description disappears when deselected

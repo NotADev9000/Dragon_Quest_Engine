@@ -1,0 +1,14 @@
+Base Resolution:
+* This is the base resolution of the art but not the rendered game
+W: 480
+H: 270
+
+(x2)
+W: 960
+H: 540
+
+(x3)
+* This is the resolution the game is actually rendered at.
+* Meaning subpixel offsets are possible (scaled art may not align properly)
+H: 810
+W: 1440
