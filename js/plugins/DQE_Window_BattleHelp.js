@@ -45,10 +45,10 @@ Window_BattleHelp.prototype.initialize = function (x, y, width, numLines, titleB
 //////////////////////////////
 
 Window_BattleHelp.prototype.fittingHeight = function (numLines) {
-    return Window_Base.prototype.fittingHeightTitleBlock.call(this, numLines);
+    return Window_Base.prototype.fittingHeightExtraBlock.call(this, numLines);
 };
 
-Window_BattleHelp.prototype.titleBlockHeight = function () {
+Window_BattleHelp.prototype.extraBlockHeight = function () {
     return this._titleBlock ? 48 : 0;
 };
 

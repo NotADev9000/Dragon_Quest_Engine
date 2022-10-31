@@ -94,7 +94,7 @@ Window_MiscBattleMusic.prototype.drawItem = function (index) {
 Window_MiscBattleMusic.prototype.drawDescription = function () {
     // horizontal rule
     let ep = this.extraPadding();
-    let y = this.contentsHeight() - this.titleBlockHeight();
+    let y = this.contentsHeight() - this.extraBlockHeight();
     this.drawHorzLine(0, y);
     y += 3 + ep;
     // description text

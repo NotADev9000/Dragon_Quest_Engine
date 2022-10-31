@@ -151,59 +151,67 @@ Window_Settings.prototype.processOk = function () {
 
 Window_Settings.prototype.cursorRight = function () {
     let index = this.index();
-    let symbol = this.commandSymbol(index);
-    let value = this.getConfigValue(symbol);
-    let type = this._cmdType[index];
-    switch (type) {
-        case Window_Settings.COMMAND_TYPE_VOLUME:
-            value >= 100 ? value = 0 : value += this.volumeOffset();
-            value = value.clamp(0, 100);
-            break;
-        case Window_Settings.COMMAND_TYPE_BOOL_ONOFF:
-            value = value ? 0 : 1;
-            break;
-        case Window_Settings.COMMAND_TYPE_TEXT_SPEED:
-        case Window_Settings.COMMAND_TYPE_SCALE:
-            value >= 5 ? value = 1 : value++;
-            value = value.clamp(1, 5);
-            break;
-        default:
-            return '';
+    if (this.isCommandEnabled(index)) {
+        let symbol = this.commandSymbol(index);
+        let value = this.getConfigValue(symbol);
+        let type = this._cmdType[index];
+        switch (type) {
+            case Window_Settings.COMMAND_TYPE_VOLUME:
+                value >= 100 ? value = 0 : value += this.volumeOffset();
+                value = value.clamp(0, 100);
+                break;
+            case Window_Settings.COMMAND_TYPE_BOOL_ONOFF:
+                value = value ? 0 : 1;
+                break;
+            case Window_Settings.COMMAND_TYPE_TEXT_SPEED:
+            case Window_Settings.COMMAND_TYPE_SCALE:
+                value >= 5 ? value = 1 : value++;
+                value = value.clamp(1, 5);
+                break;
+            default:
+                return '';
+        }
+        this.changeValue(symbol, value);
     }
-    this.changeValue(symbol, value);
 };
 
 Window_Settings.prototype.cursorLeft = function () {
     let index = this.index();
-    let symbol = this.commandSymbol(index);
-    let value = this.getConfigValue(symbol);
-    let type = this._cmdType[index];
-    switch (type) {
-        case Window_Settings.COMMAND_TYPE_VOLUME:
-            value <= 0 ? value = 100 : value -= this.volumeOffset();
-            value = value.clamp(0, 100);
-            break;
-        case Window_Settings.COMMAND_TYPE_BOOL_ONOFF:
-            value = value ? 0 : 1;
-            break;
-        case Window_Settings.COMMAND_TYPE_TEXT_SPEED:
-        case Window_Settings.COMMAND_TYPE_SCALE:
-            value <= 1 ? value = 5 : value--;
-            value = value.clamp(1, 5);
-            break;
-        default:
-            return '';
+    if (this.isCommandEnabled(index)) {
+        let symbol = this.commandSymbol(index);
+        let value = this.getConfigValue(symbol);
+        let type = this._cmdType[index];
+        switch (type) {
+            case Window_Settings.COMMAND_TYPE_VOLUME:
+                value <= 0 ? value = 100 : value -= this.volumeOffset();
+                value = value.clamp(0, 100);
+                break;
+            case Window_Settings.COMMAND_TYPE_BOOL_ONOFF:
+                value = value ? 0 : 1;
+                break;
+            case Window_Settings.COMMAND_TYPE_TEXT_SPEED:
+            case Window_Settings.COMMAND_TYPE_SCALE:
+                value <= 1 ? value = 5 : value--;
+                value = value.clamp(1, 5);
+                break;
+            default:
+                return '';
+        }
+        this.changeValue(symbol, value);
     }
-    this.changeValue(symbol, value);
 };
 
 Window_Settings.prototype.changeValue = function (symbol, value) {
     let lastValue = this.getConfigValue(symbol);
     if (lastValue !== value) {
         this.setConfigValue(symbol, value);
-        this.redrawItem(this.findSymbol(symbol));
+        this.valueChanged(symbol);
     }
     if (symbol === 'seVolume') this.playOkSound(); // play sfx when changing sound effect volume
+};
+
+Window_Settings.prototype.valueChanged = function (symbol) {
+    this.redrawItem(this.findSymbol(symbol));
 };
 
 //////////////////////////////
@@ -211,8 +219,13 @@ Window_Settings.prototype.changeValue = function (symbol, value) {
 //////////////////////////////
 
 Window_Settings.prototype.drawItem = function (index) {
-    let rect = this.itemRectForText(index);
-    let textWidth = this.contentsWidth() - this.textPadding();
+    const rect = this.itemRectForText(index);
+    const textWidth = this.contentsWidth() - this.textPadding() - (this.extraPadding() * 2);
+    // disabled color
+    if (!this.isCommandEnabled(index)) this.changeTextColor(this.disabledColor());
+    // draw items
     this.drawText(this.commandName(index), rect.x, rect.y);
     this.drawText(this.statusText(index), rect.x, rect.y, textWidth, 'right');
+    // reset text color
+    this.resetTextColor();
 };

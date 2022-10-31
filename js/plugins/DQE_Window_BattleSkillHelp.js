@@ -70,7 +70,7 @@ Window_BattleSkillHelp.prototype.setItem = function (skill, actor) {
  * Draws the bottom section of the window to display MP cost
  */
 Window_BattleSkillHelp.prototype.drawTitleBlock = function () {
-    var blockY = this.height - this.titleBlockHeight() - (this.padding + this.extraPadding()) + 6;
+    var blockY = this.height - this.extraBlockHeight() - (this.padding + this.extraPadding()) + 6;
     var mpCost = this._mpCost.padStart(3, ' ');
     var text = `${mpCost}/${this._mpTotal}`;
     var textWidth = this.width - (this.standardPadding() + this.extraPadding()) * 2;

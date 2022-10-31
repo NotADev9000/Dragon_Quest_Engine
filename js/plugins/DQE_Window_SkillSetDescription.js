@@ -48,7 +48,7 @@ Window_SkillSetDescription.prototype.initialize = function (x, y, width, numLine
 // Functions - window sizing
 //////////////////////////////
 
-Window_SkillSetDescription.prototype.titleBlockHeight = function () {
+Window_SkillSetDescription.prototype.extraBlockHeight = function () {
     return 54;
 };
 
@@ -94,6 +94,6 @@ Window_SkillSetDescription.prototype.refresh = function () {
     this.contents.clear();
     this.drawTitleBlock();
     const ep = this.extraPadding();
-    const y = this.titleBlockHeight() + ep;
+    const y = this.extraBlockHeight() + ep;
     this.drawTextEx(this._description, ep, y);
 };

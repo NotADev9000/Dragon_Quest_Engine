@@ -70,13 +70,13 @@ Window_TitledCommand.prototype.windowHeight = function () {
  * @param {number} numLines the number of commands
  */
 Window_TitledCommand.prototype.fittingHeight = function (numLines) {
-    return Window_Base.prototype.fittingHeightTitleBlock.call(this, numLines);
+    return Window_Base.prototype.fittingHeightExtraBlock.call(this, numLines);
 };
 
 /**
  * The height of the windows title block (from standard padding to horizontal line)
  */
-Window_TitledCommand.prototype.titleBlockHeight = function () {
+Window_TitledCommand.prototype.extraBlockHeight = function () {
     return 54;
 };
 
@@ -132,12 +132,12 @@ Window_TitledCommand.prototype.drawTitleBlock = function () {
 
 /**
  * extraPadding is added to properly adjust commands
- * titleblockHeight is added to y position to place commands below the title block
+ * extraBlockHeight is added to y position to place commands below the title block
  */
 Window_TitledCommand.prototype.itemRect = function (index) {
     var rect = Window_Selectable.prototype.itemRect.call(this, index);
     rect.x += this.extraPadding();
-    rect.y += this.extraPadding() + this.titleBlockHeight();
+    rect.y += this.extraPadding() + this.extraBlockHeight();
     return rect;
 };
 

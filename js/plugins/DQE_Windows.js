@@ -171,13 +171,13 @@ Window_Base.prototype.fittingHeight = function (numLines) {
 
 /**
  * This method is used for calculating the height of windows
- * with a title block (a horizontal rule with a seperate section.)
+ * with an extra block (a horizontal rule with a seperate section e.g. descriptions)
+ * 
+ * ~ Doesn't call 'fittingHeight' with 'this.fittingHeight' as that function is overwritten
+ *   in inherited windows
  */
-Window_Base.prototype.fittingHeightTitleBlock = function (numLines) {
-    return numLines * this.lineHeight()
-        + (this.standardPadding() + this.extraPadding()) * 2
-        + (this.lineGap() * Math.max(numLines - 1, 0))
-        + this.titleBlockHeight();
+Window_Base.prototype.fittingHeightExtraBlock = function (numLines) {
+    return Window_Base.prototype.fittingHeight.call(this, numLines) + this.extraBlockHeight();
 };
 
 /**

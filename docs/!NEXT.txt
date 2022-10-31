@@ -1,2 +1,2 @@
-NEXT:
-- window_settings__description -> description disappears when deselected
+What to look at next/What I was last working on:
+- window_settings_audio should override 'changeValue' and play 'Ok' sound

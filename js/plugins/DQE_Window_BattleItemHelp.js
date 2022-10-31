@@ -61,7 +61,7 @@ Window_BattleItemHelp.prototype.setItem = function (item) {
  * Draws the bottom section of the window to useage
  */
 Window_BattleItemHelp.prototype.drawTitleBlock = function () {
-    var blockY = this.height - this.titleBlockHeight() - (this.padding + this.extraPadding()) + 6;
+    var blockY = this.height - this.extraBlockHeight() - (this.padding + this.extraPadding()) + 6;
     var textWidth = this.width - (this.standardPadding() + this.extraPadding()) * 2;
     var text = '';
     switch (this._useage) {
