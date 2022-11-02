@@ -1,12 +1,12 @@
 //=============================================================================
 // Dragon Quest Engine - Window Misc - Battle Music
-// DQE_Window_MiscBattleMusic.js                                                             
+// DQE_Window_Misc_Music.js                                                             
 //=============================================================================
 
 /*:
 *
 * @author NotADev
-* @plugindesc A window for changing the battle music - V0.1
+* @plugindesc A window for changing the music in game - V0.1
 *
 *
 * @help
@@ -19,20 +19,20 @@
 //------
 
 var DQEng = DQEng || {};
-DQEng.Window_MiscBattleMusic = DQEng.Window_MiscBattleMusic || {};
+DQEng.Window_Misc_Music = DQEng.Window_Misc_Music || {};
 
 //-----------------------------------------------------------------------------
-// Window_MiscBattleMusic
+// Window_Misc_Music
 //-----------------------------------------------------------------------------
 
-function Window_MiscBattleMusic() {
+function Window_Misc_Music() {
     this.initialize.apply(this, arguments);
 }
 
-Window_MiscBattleMusic.prototype = Object.create(Window_Settings__Description.prototype);
-Window_MiscBattleMusic.prototype.constructor = Window_MiscBattleMusic;
+Window_Misc_Music.prototype = Object.create(Window_Settings__Description.prototype);
+Window_Misc_Music.prototype.constructor = Window_Misc_Music;
 
-Window_MiscBattleMusic.prototype.initialize = function (x, y, width) {
+Window_Misc_Music.prototype.initialize = function (x, y, width) {
     this.resetId();
     this._minValue = 1;
     this._maxValue = 11;
@@ -43,11 +43,11 @@ Window_MiscBattleMusic.prototype.initialize = function (x, y, width) {
 // Functions - commands
 //////////////////////////////
 
-Window_MiscBattleMusic.prototype.makeCommandList = function () {
+Window_Misc_Music.prototype.makeCommandList = function () {
     this.addCommand('Standard Battle', 'standardBattle');
 };
 
-Window_MiscBattleMusic.prototype.makeDescriptions = function () {
+Window_Misc_Music.prototype.makeDescriptions = function () {
     this._descriptions = [
         `Change the standard battle music.<BR>Does not change bosses or certain events.`,   // STANDARD BATTLE
     ];
@@ -57,11 +57,11 @@ Window_MiscBattleMusic.prototype.makeDescriptions = function () {
 // Functions - data
 //////////////////////////////
 
-Window_MiscBattleMusic.prototype.resetId = function () {
+Window_Misc_Music.prototype.resetId = function () {
     this._id = $gameSystem.battleBgmId();
 };
 
-Window_MiscBattleMusic.prototype.statusText = function () {
+Window_Misc_Music.prototype.statusText = function () {
     let value = 'DQ' + this._id;
     return `< ${value} >`;
 };
@@ -70,15 +70,15 @@ Window_MiscBattleMusic.prototype.statusText = function () {
 // Functions - cursor movement
 //////////////////////////////
 
-Window_MiscBattleMusic.prototype.cursorRight = function () {
+Window_Misc_Music.prototype.cursorRight = function () {
     this.cursorChange(1);
 };
 
-Window_MiscBattleMusic.prototype.cursorLeft = function () {
+Window_Misc_Music.prototype.cursorLeft = function () {
     this.cursorChange(-1);
 };
 
-Window_MiscBattleMusic.prototype.cursorChange = function (change) {
+Window_Misc_Music.prototype.cursorChange = function (change) {
     let value = this._id;
 
     value += change;
@@ -90,7 +90,7 @@ Window_MiscBattleMusic.prototype.cursorChange = function (change) {
     this.changeValue(value);
 };
 
-Window_MiscBattleMusic.prototype.changeValue = function (value) {
+Window_Misc_Music.prototype.changeValue = function (value) {
     $gameSystem.changeDefaultBattleBgm(value);
     this.resetId();
     this.redrawItem(0);

@@ -147,7 +147,7 @@ var $plugins =
 {"name":"DQE_Window_Settings_Text","status":true,"description":"A window for changing text settings - V0.1","parameters":{}},
 {"name":"DQE_Window_Settings_Window","status":true,"description":"A window for changing window settings - V0.1","parameters":{}},
 {"name":"DQE_Window_Settings_Controls","status":true,"description":"A command window for accessing control config changes - V0.1","parameters":{}},
-{"name":"DQE_Window_MiscBattleMusic","status":true,"description":"A window for changing the battle music - V0.1","parameters":{}},
+{"name":"DQE_Window_Misc_Music","status":true,"description":"A window for changing the music in game - V0.1","parameters":{}},
 {"name":"DQE_Window_Controls","status":true,"description":"The window for changing the controls for game actions - V0.1","parameters":{}},
 {"name":"DQE_Window_ControlsPress","status":true,"description":"Displays information about changing buttons - V0.1","parameters":{}},
 {"name":"DQE_Window_Icon","status":true,"description":"Displays an icon in a window - V0.1","parameters":{}},

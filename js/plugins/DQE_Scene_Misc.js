@@ -128,7 +128,7 @@ Scene_Misc.prototype.createLineUpConfirmWindow = function () {
 
 Scene_Misc.prototype.createBattleMusicWindow = function () {
     let x = this._commandWindow.x + this._commandWindow.width;
-    this._battleMusicWindow = new Window_MiscBattleMusic(x, 48, 840);
+    this._battleMusicWindow = new Window_Misc_Music(x, 48, 840);
     this._battleMusicWindow.setHandler('cancel', this.onBattleMusicCancel.bind(this));
     this._battleMusicWindow.deactivate();
     this._battleMusicWindow.deselect();
