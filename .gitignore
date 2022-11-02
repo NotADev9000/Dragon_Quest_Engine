@@ -48,3 +48,10 @@ testem.log
 .DS_Store
 Thumbs.db
 img/SHEETS/TEMP.txt
+
+# RPG Maker Files
+.rpgsave
+.rpgsave.bak
+
+# Documentation Files
+docs/!NEXT.txt
