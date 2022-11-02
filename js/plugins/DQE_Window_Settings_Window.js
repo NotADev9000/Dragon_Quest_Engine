@@ -36,7 +36,7 @@ Window_Settings_Window.prototype = Object.create(Window_Settings__Description.pr
 Window_Settings_Window.prototype.constructor = Window_Settings_Window;
 
 //////////////////////////////
-// Functions - data
+// Functions - commands
 //////////////////////////////
 
 Window_Settings_Window.prototype.makeCommandList = function () {
