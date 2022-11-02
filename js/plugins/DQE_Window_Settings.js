@@ -207,7 +207,6 @@ Window_Settings.prototype.changeValue = function (symbol, value) {
         this.setConfigValue(symbol, value);
         this.valueChanged(symbol);
     }
-    if (symbol === 'seVolume') this.playOkSound(); // play sfx when changing sound effect volume
 };
 
 Window_Settings.prototype.valueChanged = function (symbol) {

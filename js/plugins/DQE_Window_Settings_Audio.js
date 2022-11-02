@@ -45,3 +45,9 @@ Window_Settings_Audio.prototype.makeCommandList = function () {
     this.addCommand(TextManager.seVolume, 'seVolume', Window_Settings.COMMAND_TYPE_VOLUME);
     this.addCommand(TextManager.settings_cursorBeep, 'cursorBeep', Window_Settings.COMMAND_TYPE_BOOL_ONOFF);
 };
+
+DQEng.Window_Settings_Audio = Window_Settings_Audio.prototype.changeValue;
+Window_Settings_Audio.prototype.changeValue = function (symbol, value) {
+    DQEng.Window_Settings_Audio.call(this, symbol, value);
+    if (symbol === 'seVolume') this.playOkSound(); // play sfx when changing sound effect volume
+};
