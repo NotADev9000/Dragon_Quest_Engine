@@ -10,7 +10,7 @@
 *
 *
 * @help
-* N/A
+* must inherit from Window_Settings_Audio for the 'changeValue' function
 *
 */
 
@@ -32,7 +32,7 @@ function Window_Settings_Battle() {
     this.initialize.apply(this, arguments);
 }
 
-Window_Settings_Battle.prototype = Object.create(Window_Settings.prototype);
+Window_Settings_Battle.prototype = Object.create(Window_Settings_Audio.prototype);
 Window_Settings_Battle.prototype.constructor = Window_Settings_Battle;
 
 //////////////////////////////
@@ -40,9 +40,6 @@ Window_Settings_Battle.prototype.constructor = Window_Settings_Battle;
 //////////////////////////////
 
 Window_Settings_Battle.prototype.makeCommandList = function () {
-    this.addCommand(TextManager.bgmVolume, 'bgmVolume', Window_Settings.COMMAND_TYPE_VOLUME);
-    this.addCommand(TextManager.bgsVolume, 'bgsVolume', Window_Settings.COMMAND_TYPE_VOLUME);
-    this.addCommand(TextManager.seVolume, 'seVolume', Window_Settings.COMMAND_TYPE_VOLUME);
-    this.addCommand(TextManager.settings_cursorBeep, 'cursorBeep', Window_Settings.COMMAND_TYPE_BOOL_ONOFF);
-    this.addCommand('Battle Text Speed', 'battleTextSpeed', Window_Settings.COMMAND_TYPE_TEXT_SPEED);
+    Window_Settings_Audio.prototype.makeCommandList.call(this);
+    Window_Settings_Text.prototype.makeCommandList.call(this);
 };
