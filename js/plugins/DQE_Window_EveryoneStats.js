@@ -44,10 +44,6 @@ Window_EveryoneStats.prototype.initialize = function (x, y, width, height) {
 // Functions - window sizing
 //////////////////////////////
 
-Window_EveryoneStats.prototype.lineGap = function () {
-    return 15;
-};
-
 /**
  * height of the vertical row at the top of the window
  * includes the actor name, actor level, vertical line and

@@ -47,10 +47,6 @@ Window_BattleSkill.prototype.initialize = function (x, y, width, height) {
 // Functions - window sizing
 //////////////////////////////
 
-Window_BattleSkill.prototype.lineGap = function () {
-    return 15;
-};
-
 Window_BattleSkill.prototype.pageBlockHeight = function () {
     return 48;
 }

@@ -54,10 +54,6 @@ Window_BattleItem.prototype.extraPadding = function () {
     return 0;
 };
 
-Window_BattleItem.prototype.lineGap = function () {
-    return 15;
-};
-
 Window_BattleItem.prototype.pageBlockHeight = function () {
     return 0;
 };

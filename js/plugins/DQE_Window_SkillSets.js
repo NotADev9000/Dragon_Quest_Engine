@@ -58,10 +58,6 @@ Window_SkillSets.prototype.initialize = function (x, y, width, height, selectabl
 // Functions - window sizing
 //////////////////////////////
 
-Window_SkillSets.prototype.lineGap = function () {
-    return 15;
-};
-
 Window_SkillSets.prototype.titleBlockHeight = function () {
     return 108;
 };

@@ -42,10 +42,6 @@ Window_PartyCommand.prototype.standardPadding = function () {
     return 24;
 };
 
-Window_PartyCommand.prototype.lineGap = function () {
-    return 15;
-};
-
 //////////////////////////////
 // Functions - commands
 //////////////////////////////

@@ -42,10 +42,6 @@ Window_ItemListBase.prototype.initialize = function (x, y, width, height, sortIt
     this._data = [];
 };
 
-Window_ItemListBase.prototype.lineGap = function () {
-    return 15;
-};
-
 Window_ItemListBase.prototype.maxCols = function () {
     return 1;
 };

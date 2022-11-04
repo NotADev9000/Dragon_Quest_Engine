@@ -64,10 +64,6 @@ Window_StatsAttributes.prototype.extraPadding = function () {
     return 15;
 };
 
-Window_StatsAttributes.prototype.lineGap = function () {
-    return 15;
-};
-
 Window_StatsAttributes.prototype.itemHeight = function () {
     return this.lineHeight() + this.lineGap();
 };

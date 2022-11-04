@@ -54,10 +54,6 @@ Window_CustomCommand.prototype.standardPadding = function () {
     return 24;
 };
 
-Window_CustomCommand.prototype.lineGap = function () {
-    return 15;
-};
-
 //////////////////////////////
 // Functions - data
 //////////////////////////////

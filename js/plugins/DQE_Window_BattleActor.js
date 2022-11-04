@@ -55,10 +55,6 @@ Window_BattleActor.prototype.standardPadding = function () {
     return 24;
 };
 
-Window_BattleActor.prototype.lineGap = function () {
-    return 15;
-};
-
 Window_BattleActor.prototype.numVisibleRows = function () {
     return this.maxItems();
 };

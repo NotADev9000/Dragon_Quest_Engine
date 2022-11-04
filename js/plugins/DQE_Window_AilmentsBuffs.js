@@ -54,10 +54,6 @@ Window_AilmentsBuffs.prototype.extraPadding = function () {
     return 15;
 };
 
-Window_AilmentsBuffs.prototype.lineGap = function () {
-    return 15;
-};
-
 Window_AilmentsBuffs.prototype.itemHeight = function () {
     return this.lineHeight() + this.lineGap();
 };

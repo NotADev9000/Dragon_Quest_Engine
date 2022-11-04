@@ -48,10 +48,6 @@ Window_StatsMagic.prototype.initialize = function (x, y, width, height) {
 // Functions - window sizing
 //////////////////////////////
 
-Window_StatsMagic.prototype.lineGap = function () {
-    return 15;
-};
-
 Window_StatsMagic.prototype.titleBlockHeight = function () {
     return 108;
 };

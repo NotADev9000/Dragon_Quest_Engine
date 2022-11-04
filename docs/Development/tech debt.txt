@@ -1,8 +1,6 @@
 - windows:
 
-{*} linegap = 15 irrelevant as in window_base = 15
-
-standardpadding = 24 irrelevant as in window_base = 24 (for most windows, NOT all!)
+{*} standardpadding = 24 irrelevant as in window_base = 24 (for most windows, NOT all!)
 
 itemHeight func could be put into window_base?
 
