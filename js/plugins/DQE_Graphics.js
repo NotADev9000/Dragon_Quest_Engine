@@ -6,7 +6,7 @@
 /*:
 *
 * @author NotADev
-* @plugindesc SThe static class that carries out graphics processing - V0.1
+* @plugindesc The static class that carries out graphics processing - V0.1
 *
 * @help
 * N/A

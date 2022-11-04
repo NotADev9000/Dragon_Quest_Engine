@@ -1,5 +1,5 @@
 //=============================================================================
-// Dragon Quest Engine - Window Settings - Window
+// Dragon Quest Engine - Window Settings -- Description
 // DQE_Window_Settings__Description.js                                                             
 //=============================================================================
 
