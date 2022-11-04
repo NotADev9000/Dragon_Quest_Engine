@@ -49,10 +49,6 @@ Window_Settings.prototype.windowWidth = function () {
     return this._width;
 };
 
-Window_Settings.prototype.standardPadding = function () {
-    return 24;
-};
-
 //////////////////////////////
 // Functions - config data
 //////////////////////////////

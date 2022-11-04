@@ -43,10 +43,6 @@ Window_BattleMessage.prototype.lineGap = function () {
     return 3;
 };
 
-Window_BattleMessage.prototype.standardPadding = function () {
-    return 24;
-};
-
 Window_BattleMessage.prototype.numVisibleRows = function () {
     return 5;
 };

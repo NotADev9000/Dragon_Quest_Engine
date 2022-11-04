@@ -47,6 +47,9 @@ Window_BattleActorStat.prototype.windowHeight = function () {
     return this.fittingHeight(this.numVisibleRows());
 };
 
+/**
+ * ItemActorStat overrides Base so this function is needed
+ */
 Window_BattleActorStat.prototype.standardPadding = function () {
     return 24;
 };

@@ -46,6 +46,9 @@ Window_BattleItem.prototype.initialize = function (x, y, width, height) {
 // Functions - window sizing
 //////////////////////////////
 
+/**
+ * Pagination overrides Base so this function is needed
+ */
 Window_BattleItem.prototype.standardPadding = function () {
     return 24;
 };

@@ -50,10 +50,6 @@ Window_CustomCommand.prototype.windowWidth = function () {
     return this._width;
 };
 
-Window_CustomCommand.prototype.standardPadding = function () {
-    return 24;
-};
-
 //////////////////////////////
 // Functions - data
 //////////////////////////////

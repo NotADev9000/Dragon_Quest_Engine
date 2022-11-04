@@ -44,10 +44,6 @@ Window_BattleEnemy.prototype.windowWidth = function () {
     return 840;
 };
 
-Window_BattleEnemy.prototype.standardPadding = function () {
-    return 24;
-};
-
 Window_BattleEnemy.prototype.maxCols = function () {
     switch (this._state) {
         case 2:

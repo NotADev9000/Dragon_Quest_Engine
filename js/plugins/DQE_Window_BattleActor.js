@@ -51,10 +51,6 @@ Window_BattleActor.prototype.windowHeight = function () {
     return this.fittingHeight(this.numVisibleRows());
 };
 
-Window_BattleActor.prototype.standardPadding = function () {
-    return 24;
-};
-
 Window_BattleActor.prototype.numVisibleRows = function () {
     return this.maxItems();
 };

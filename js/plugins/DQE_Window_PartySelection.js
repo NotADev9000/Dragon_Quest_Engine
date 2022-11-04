@@ -54,10 +54,6 @@ Window_PartySelection.prototype.windowHeight = function () {
     return this.fittingHeight(this.numVisibleRows());
 };
 
-Window_PartySelection.prototype.standardPadding = function () {
-    return 24;
-};
-
 //////////////////////////////
 // Functions - commands
 //////////////////////////////

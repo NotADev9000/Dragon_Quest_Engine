@@ -42,10 +42,6 @@ Window_Help.prototype.lineGap = function () {
     return 9;
 };
 
-Window_Help.prototype.standardPadding = function () {
-    return 24;
-};
-
 //////////////////////////////
 // Functions - data
 //////////////////////////////

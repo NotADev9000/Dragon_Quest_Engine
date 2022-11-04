@@ -38,10 +38,6 @@ Window_PartyCommand.prototype.windowWidth = function () {
     return 228;
 };
 
-Window_PartyCommand.prototype.standardPadding = function () {
-    return 24;
-};
-
 //////////////////////////////
 // Functions - commands
 //////////////////////////////

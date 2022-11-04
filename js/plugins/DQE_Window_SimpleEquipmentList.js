@@ -43,6 +43,9 @@ Window_SimpleEquipmentList.prototype.initialize = function (x, y, width) {
 // Functions - window sizing
 //////////////////////////////
 
+/**
+ * Window_Status overrides Base so this function is needed
+ */
 Window_SimpleEquipmentList.prototype.standardPadding = function () {
     return 24;
 };
