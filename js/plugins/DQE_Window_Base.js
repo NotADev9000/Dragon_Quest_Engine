@@ -113,11 +113,9 @@ Window_Base.prototype.lineHeight = function () {
 
 /**
  * The height of the gap between each line of text
- * 
- * @gameMatch custom
  */
 Window_Base.prototype.lineGap = function () {
-    return DQEng.Parameters.Windows.Base_LineGap;
+    return 15;
 };
 
 Window_Base.prototype.fittingHeight = function (numLines) {

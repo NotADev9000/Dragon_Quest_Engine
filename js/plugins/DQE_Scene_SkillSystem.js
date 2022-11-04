@@ -192,7 +192,7 @@ Scene_SkillSystem.prototype.createMessageWindow = function () {
     this._messageWindow = new Window_MessageInputToggle();
     this._messageWindow.setInput(true);
     this._choiceWindow.x = (this._messageWindow.x + this._messageWindow.width) - this._choiceWindow.width;
-    this._choiceWindow.y = this._messageWindow.y - this._choiceWindow.height - DQEng.Parameters.Windows.ChoiceList_ChoiceYOffset;
+    this._choiceWindow.y = this._messageWindow.y - this._choiceWindow.height - Window_ChoiceList.ChoiceYOffset;
     this.addWindow(this._messageWindow);
 };
 
