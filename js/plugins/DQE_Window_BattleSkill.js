@@ -64,7 +64,6 @@ Window_BattleSkill.prototype.setStypeId = function (stypeId) {
     if (this._stypeId !== stypeId) {
         this._stypeId = stypeId;
         this.refresh();
-        this.resetScroll();
     }
 };
 

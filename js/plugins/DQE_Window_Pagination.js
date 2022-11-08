@@ -345,7 +345,7 @@ Window_Pagination.prototype.itemRect = function (index) {
     let ep = this.extraPadding();
 
     rect.width = this.itemWidth();
-    rect.height = isBottomRow ? this.itemHeight() : this.itemHeight() + lineGap;
+    rect.height = isBottomRow ? this.lineHeight() : this.lineHeight() + lineGap;
 
     rect.x = (index % maxCols * (rect.width + this.spacing()) - this._scrollX) + ep;
     let rectHeightOffset = isBottomRow ? rect.height + lineGap : rect.height;

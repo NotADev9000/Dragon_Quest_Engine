@@ -54,7 +54,6 @@ Window_Stats_LevelUp.prototype.windowHeight = function () {
 Window_Stats_LevelUp.prototype.drawStats = function () {
     const ep = this.extraPadding();
     const cw = this.contentsWidth() - (ep * 2);
-    const itemHeight = this.lineHeight() + this.lineGap();
     let y = ep;
     let text, prevValue, newValue;
 
@@ -81,6 +80,6 @@ Window_Stats_LevelUp.prototype.drawStats = function () {
         this.resetTextColor();
         // previous stat value
         this.drawText(`${prevValue} > `, ep, y, cw - this.contents.measureTextWidth(newValue), 'right');
-        y += itemHeight;
+        y += this.itemHeight();
     }
 };

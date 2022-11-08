@@ -324,8 +324,7 @@ Window_SkillSets.prototype.gotoNextPage = function (next = 1) {
 
 Window_SkillSets.prototype.drawTitleBlock = function () {
     const title = this._data.name || 'No Skill Set';
-    const lineGap = this.lineGap();
-    const itemHeight = this.itemHeight() + lineGap;
+    const itemHeight = this.itemHeight();
     const numSkills = this._actor.numSkillSets();
     let y = this.extraPadding();
 
@@ -346,7 +345,7 @@ Window_SkillSets.prototype.drawTitleBlock = function () {
     y += itemHeight;
     // horizontal rule
     this.drawHorzLine(0, y);
-    y += 3 + lineGap;
+    y += 3 + this.lineGap();
 
     if (numSkills >= 1) {
         const ep = this.extraPadding();

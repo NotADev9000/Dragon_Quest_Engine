@@ -169,7 +169,7 @@ Window_EquipmentList.prototype.drawSlot = function () {
     let slotName = $dataSystem.equipTypes[this._slot+1];
     let textWidth = this.contents.measureTextWidth(slotName);
     let x = this.extraPadding() + this.textPadding() + 24;
-    let y = this.extraPadding() + this.itemHeight() + this.lineGap();
+    let y = this.extraPadding() + this.itemHeight();
 
     this.drawHorzLine(0, y + 9, x - 3);
     this.changeTextColor(this.deathColor());

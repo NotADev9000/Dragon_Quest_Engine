@@ -65,7 +65,7 @@ Window_Zoom.prototype.maxItems = function () {
 Window_Zoom.prototype.maxRows = function () {
     if (this._maxRows != -1) return this._maxRows;
     const pageHeight = this.height - ((this.padding + this.extraPadding()) * 2) - this.pageBlockHeight() - this.titleBlockHeight();
-    return Math.floor(pageHeight / (this.itemHeight() + this.lineGap()));
+    return Math.floor(pageHeight / this.itemHeight());
 };
 
 //////////////////////////////

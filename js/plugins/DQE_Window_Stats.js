@@ -56,8 +56,7 @@ Window_Stats.prototype.windowHeight = function () {
 Window_Stats.prototype.drawStats = function () {
     const ep = this.extraPadding();
     const cw = this.contentsWidth() - (ep * 2);
-    const lineGap = this.lineGap();
-    const itemHeight = this.lineHeight() + lineGap;
+    const ih = this.itemHeight();
     let y = ep;
     let text, value;
 
@@ -76,9 +75,9 @@ Window_Stats.prototype.drawStats = function () {
             this.drawTextEx(`\\i[${icon}] `, rightIconX, y);
         }
 
-        y += itemHeight;
+        y += ih;
         this.drawHorzLine(0, y);
-        y += 3 + lineGap;
+        y += 3 + this.lineGap();
     }
 
     // stats
@@ -92,7 +91,7 @@ Window_Stats.prototype.drawStats = function () {
         }
         this.drawText(text, ep, y);
         this.drawText(value, ep, y, cw, 'right');
-        y += itemHeight;
+        y += ih;
     }
 };
 

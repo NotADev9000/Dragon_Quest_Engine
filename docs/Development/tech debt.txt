@@ -1,8 +1,12 @@
 - windows:
 
-{*} standardpadding = 24 irrelevant as in window_base = 24 (for most windows, NOT all!)
-
-itemHeight func could be put into window_base?
+{*} itemHeight func could be put into window_base?
+	{**} itemRect rewrite: win_pagination, win_controls (same as selectable?), win_equipSlot
+		{**} search itemRect funcs to see what needs rewriting
+	{**} lineGap check if needed everywhere
+	{**} statsCommon: use itemHeight() in drawNameTitle func 
+	
+pagination row functions clean-up
 
 pageblockheight = 54 irrelevant as in pagination = 54
 
@@ -13,3 +17,5 @@ drawing prev/next page icons logic into common function
 window_command overwrite windowWidth method to use this._width
 
 itemRect function in selectable should have +extraPadding for x & y
+
+refactor pagination itemRect function (rect height is weird?)

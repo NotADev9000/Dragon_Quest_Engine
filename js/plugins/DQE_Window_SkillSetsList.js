@@ -151,7 +151,6 @@ Window_SkillSetsList.prototype.drawPageBlock = function () {
 
 Window_SkillSetsList.prototype.drawTitleBlock = function () {
     const title = 'Skill Sets';
-    const itemHeight = this.itemHeight() + this.lineGap();
     let y = this.extraPadding();
 
     // window title
@@ -166,7 +165,7 @@ Window_SkillSetsList.prototype.drawTitleBlock = function () {
         icon = this.getHandlerIcon('pageup');
         this.drawTextEx(`\\i[${icon}] `, rightIconX, y);
     }
-    y += itemHeight;
+    y += this.itemHeight();
     // horizontal rule
     this.drawHorzLine(0, y);
 };

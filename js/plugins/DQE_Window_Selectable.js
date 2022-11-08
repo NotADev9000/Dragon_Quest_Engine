@@ -25,37 +25,39 @@ Imported.DQEng_Window_Selectable = true;
 // Window_Selectable
 //-----------------------------------------------------------------------------
 
+Window_Selectable.prototype.select = function (index) {
+    this._index = index;
+    this._stayCount = 0;
+    this.updateCursor();
+    this.callUpdateHelp();
+};
+
 Window_Selectable.prototype.column = function () {
     return this.index() - (this.maxCols() * this.row());
 };
 
-Window_Selectable.prototype.maxPageRows = function () {
-    let pageHeight = this.height
-        - (this.padding + this.extraPadding()) * 2
-        - ((this.maxRows() - 1) * this.lineGap());
-    return Math.floor(pageHeight / this.lineHeight());
+/**
+ * default RM Window_Selectable overrides Base so this function is needed
+ */
+Window_Selectable.prototype.itemHeight = function () {
+    return Window_Base.prototype.itemHeight.call(this);
 };
 
 Window_Selectable.prototype.itemRect = function (index) {
-    var rect = new Rectangle();
-    var maxCols = this.maxCols();
-    var isBottomRow = index === this.bottomRow();
-    var lineGap = this.lineGap();
+    const rect = new Rectangle();
+    const maxCols = this.maxCols();
 
     rect.width = this.itemWidth();
-    rect.height = isBottomRow ? this.itemHeight() : this.itemHeight() + lineGap;
+    rect.height = this.itemHeight();
 
-    rect.x = index % maxCols * (rect.width + this.spacing()) - this._scrollX;
-    var rectHeightOffset = isBottomRow ? rect.height + lineGap : rect.height;
-    rect.y = Math.floor(index / maxCols) * rectHeightOffset - this._scrollY;
+    rect.x = index % maxCols * (rect.width + this.spacing());
+    rect.y = Math.floor(index / maxCols) * rect.height;
+
     return rect;
 };
 
-/**
- * width only subtracts textPadding once now
- */
 Window_Selectable.prototype.itemRectForText = function (index) {
-    var rect = this.itemRect(index);
+    const rect = this.itemRect(index);
     rect.x += this.textPadding();
     rect.width -= this.textPadding();
     return rect;
@@ -72,16 +74,18 @@ Window_Selectable.prototype.cursorDown = function () {
 };
 
 Window_Selectable.prototype.cursorUp = function () {
-    let index = this.index();
+    const index = this.index();
     let nextIndex = index - this.maxCols();
     if (nextIndex > -1) { // cursor can move up
         this.select(nextIndex);
     } else { // cursor must loop to bottom of list
-        let cols = this.maxCols();
-        let items = this.maxItems();
-        let bottomRow = Math.ceil(items / cols) - 1;
-        nextIndex = (bottomRow * cols) + this.column(); // get index of item on bottom row (using current column)
-        this.select(nextIndex < items ? nextIndex : nextIndex - cols); // if index is too far down list, go back up one
+        const cols = this.maxCols();
+        nextIndex = (this.maxRows() * cols) + this.column(); // get index of item on bottom row (using current column)
+        this.select(nextIndex < this.maxItems() ? nextIndex : nextIndex - cols); // if index is in empty slot, go back up one
+        // e.g.
+        // 1 2
+        // 3 x
+        // where nextIndex = 4 so number of columns is subtracted to move up one space (in this example to 2)
     }
 };
 
@@ -115,6 +119,27 @@ Window_Selectable.prototype.cursorLeft = function () {
 
 Window_Selectable.prototype.isOkTriggered = function () {
     return Input.isTriggered('ok');
+};
+
+Window_Selectable.prototype.processCursorMove = function () {
+    if (this.isCursorMovable()) {
+        const lastIndex = this.index();
+        if (Input.isRepeated('down')) {
+            this.cursorDown(Input.isTriggered('down'));
+        }
+        if (Input.isRepeated('up')) {
+            this.cursorUp(Input.isTriggered('up'));
+        }
+        if (Input.isRepeated('right')) {
+            this.cursorRight(Input.isTriggered('right'));
+        }
+        if (Input.isRepeated('left')) {
+            this.cursorLeft(Input.isTriggered('left'));
+        }
+        if (this.index() !== lastIndex) {
+            SoundManager.playCursor();
+        }
+    }
 };
 
 Window_Selectable.prototype.processHandling = function () {
@@ -157,16 +182,47 @@ Window_Selectable.prototype.processHandler = function (handler, deactivate) {
 
 /**
  * Updates where the cursor should be positioned
- * Cursor is now always the same height/width
  */
 Window_Selectable.prototype.updateCursor = function () {
-    if (this._cursorAll) {
-        this.setCursorRect(0, 0, 18, 21);
-        this.setTopRow(0);
-    } else if (this.isCursorVisible()) {
-        var rect = this.itemRect(this.index());
+    if (this.isCursorVisible()) {
+        const rect = this.itemRect(this.index());
         this.setCursorRect(rect.x, rect.y, 18, 21);
     } else {
         this.setCursorRect(0, 0, 0, 0);
     }
+};
+
+Window_Selectable.prototype.isCursorVisible = function () {
+    const row = this.row();
+    return row >= 0 && row <= this.maxRows();
+};
+
+Window_Selectable.prototype.drawAllItems = function () {
+    for (let i = 0; i < this.maxItems(); i++) {
+        this.drawItem(i);
+    }
+};
+
+Window_Selectable.prototype.update = function () {
+    Window_Base.prototype.update.call(this);
+    this.processCursorMove();
+    this.processHandling();
+    this.processTouch();
+    this._stayCount++;
+};
+
+Window_Selectable.prototype.hitTest = function (x, y) {
+    if (this.isContentsArea(x, y)) {
+        const cx = x - this.padding;
+        const cy = y - this.padding;
+        for (let i = 0; i < this.maxItems(); i++) {
+            const rect = this.itemRect(i);
+            const right = rect.x + rect.width;
+            const bottom = rect.y + rect.height;
+            if (cx >= rect.x && cy >= rect.y && cx < right && cy < bottom) {
+                return i;
+            }
+        }
+    }
+    return -1;
 };
