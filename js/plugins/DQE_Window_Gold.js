@@ -21,25 +21,6 @@ var DQEng = DQEng || {};
 DQEng.Window_Gold = DQEng.Window_Gold || {};
 
 //-----------------------------------------------------------------------------
-// Window_Base
-//-----------------------------------------------------------------------------
-
-/**
- * Format Gold amount when displayed in a window
- * e.g. 10000 becomes 10,000
- */
-Window_Base.prototype.drawCurrencyValue = function (value, unit, x, y, width) {
-    let unitWidth = 24;
-    let currencyUnitX = width - unitWidth;
-
-    if (value > 9999) value = value.toLocaleString();
-    this.drawText(value, x, y, currencyUnitX - 24, 'right');
-    this.changeTextColor(this.currencyColor(unit));
-    this.drawText(unit, currencyUnitX, y, unitWidth, 'right');
-    this.resetTextColor();
-};
-
-//-----------------------------------------------------------------------------
 // Window_Gold
 //-----------------------------------------------------------------------------
 
@@ -91,6 +72,6 @@ Window_Gold.prototype.refresh = function () {
     this.contents.clear();
     this.drawCurrencyValue(this.value(), this.currencyUnit(), 0, 0, this.contents.width);
     if (this._hasMedal) {
-        this.drawCurrencyValue(this.value(1), this.currencyUnit(1), 0, this.lineHeight() + this.lineGap(), this.contents.width);
+        this.drawCurrencyValue(this.value(1), this.currencyUnit(1), 0, this.itemHeight(), this.contents.width);
     }
 };

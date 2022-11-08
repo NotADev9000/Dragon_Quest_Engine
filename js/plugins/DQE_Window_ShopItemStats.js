@@ -40,10 +40,6 @@ Window_ShopItemStats.prototype.initialize = function (x, y, width, height) {
 // Functions - window sizing
 //////////////////////////////
 
-Window_ShopItemStats.prototype.itemHeight = function () {
-    return this.lineHeight() + this.lineGap();
-};
-
 Window_ShopItemStats.prototype.numberOfItems = function () {
     return 8;
 };

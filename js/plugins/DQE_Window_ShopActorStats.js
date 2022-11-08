@@ -59,10 +59,6 @@ Window_ShopActorStats.prototype.titleBlockHeight = function () {
     return 54;
 };
 
-Window_ShopActorStats.prototype.itemHeight = function () {
-    return this.lineHeight() + this.lineGap();
-};
-
 //////////////////////////////
 // Functions - data
 //////////////////////////////

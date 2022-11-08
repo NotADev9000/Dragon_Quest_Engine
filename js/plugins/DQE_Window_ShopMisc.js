@@ -38,14 +38,6 @@ Window_ShopMisc.prototype.initialize = function (x, y, width, height) {
 };
 
 //////////////////////////////
-// Functions - window sizing
-//////////////////////////////
-
-Window_ShopMisc.prototype.itemHeight = function () {
-    return this.lineHeight() + this.lineGap();
-};
-
-//////////////////////////////
 // Functions - data
 //////////////////////////////
 

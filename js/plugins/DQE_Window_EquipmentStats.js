@@ -64,10 +64,6 @@ Window_EquipmentStats.prototype.numberOfItems = function () {
     return Math.floor((this.contentsHeight() - this.titleBlockHeight()) / (this.itemHeight() * 2));
 };
 
-Window_EquipmentStats.prototype.itemHeight = function () {
-    return this.lineHeight() + this.lineGap();
-};
-
 //////////////////////////////
 // Functions - data
 //////////////////////////////

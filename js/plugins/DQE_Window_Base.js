@@ -42,6 +42,21 @@ Window_Base.prototype.standardBackOpacity = function () {
     return 255;
 };
 
+/**
+ * Format Gold amount when displayed in a window
+ * e.g. 10000 becomes 10,000
+ */
+Window_Base.prototype.drawCurrencyValue = function (value, unit, x, y, width) {
+    const unitWidth = 24;
+    const currencyUnitX = width - unitWidth;
+
+    if (value > 9999) value = value.toLocaleString();
+    this.drawText(value, x, y, currencyUnitX - 24, 'right');
+    this.changeTextColor(this.currencyColor(unit));
+    this.drawText(unit, currencyUnitX, y, unitWidth, 'right');
+    this.resetTextColor();
+};
+
 Window_Base.prototype.currencyColor = function (unit) {
     switch (unit) {
         case TextManager.medalUnit:
@@ -171,7 +186,7 @@ Window_Base.prototype.updateClose = function () {
  * Text height calculated with lineHeight + lineGap
  */
 Window_Base.prototype.calcTextHeight = function () {
-    return this.lineHeight() + this.lineGap();
+    return this.itemHeight();
 };
 
 /**

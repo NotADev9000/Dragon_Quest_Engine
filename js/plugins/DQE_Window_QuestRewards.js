@@ -56,10 +56,6 @@ Window_QuestRewards.prototype.titleBlockHeight = function () {
     return 54;
 };
 
-Window_QuestRewards.prototype.itemHeight = function () {
-    return this.lineHeight() + this.lineGap();
-};
-
 //////////////////////////////
 // Functions - data
 //////////////////////////////

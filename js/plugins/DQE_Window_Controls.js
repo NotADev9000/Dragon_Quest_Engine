@@ -66,10 +66,6 @@ Window_Controls.prototype.itemWidth = function () {
     return 519;
 };
 
-Window_Controls.prototype.itemHeight = function () {
-    return this.lineHeight() + this.lineGap();
-};
-
 Window_Controls.prototype.maxCols = function () {
     return 2;
 };

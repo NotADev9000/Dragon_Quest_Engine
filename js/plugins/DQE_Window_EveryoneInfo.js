@@ -58,10 +58,6 @@ Window_EveryoneInfo.prototype.itemWidth = function () {
     return this.contentsWidth() - this.extraPadding();
 };
 
-Window_EveryoneInfo.prototype.itemHeight = function () {
-    return this.lineHeight() + this.lineGap();
-};
-
 Window_EveryoneInfo.prototype.ruleHeight = function () {
     return this.lineGap() + 3;
 };

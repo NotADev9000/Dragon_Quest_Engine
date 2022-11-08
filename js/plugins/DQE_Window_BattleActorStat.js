@@ -58,10 +58,6 @@ Window_BattleActorStat.prototype.extraPadding = function () {
     return 0;
 };
 
-Window_BattleActorStat.prototype.itemHeight = function () {
-    return this.lineHeight() + this.lineGap();
-};
-
 Window_BattleActorStat.prototype.numVisibleRows = function () {
     return this.maxItems();
 };

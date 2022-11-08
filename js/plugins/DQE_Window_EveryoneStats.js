@@ -65,10 +65,6 @@ Window_EveryoneStats.prototype.maxPlayerBlocks = function () {
     return 3;
 };
 
-Window_EveryoneStats.prototype.itemHeight = function () {
-    return this.lineHeight() + this.lineGap();
-};
-
 //////////////////////////////
 // Functions - row
 //////////////////////////////

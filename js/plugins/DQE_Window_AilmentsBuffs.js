@@ -54,10 +54,6 @@ Window_AilmentsBuffs.prototype.extraPadding = function () {
     return 15;
 };
 
-Window_AilmentsBuffs.prototype.itemHeight = function () {
-    return this.lineHeight() + this.lineGap();
-};
-
 Window_AilmentsBuffs.prototype.itemWidth = function () {
     return 528;
 };
@@ -123,11 +119,11 @@ Window_AilmentsBuffs.prototype.updateCursor = function () {
 
 Window_AilmentsBuffs.prototype.drawNameTitle = function () {
     let text = 'Buffs and Ailments';
-    let rightIconX = this.contentsWidth() - Window_Base._iconWidth - this.textWidth(' ');
+    const rightIconX = this.contentsWidth() - Window_Base._iconWidth - this.textWidth(' ');
     let y = this.extraPadding();
-    let itemHeight = this.itemHeight();
+    const ih = this.itemHeight();
     this.drawText(text, 0, y, this.contentsWidth(), 'center');
-    y += itemHeight;
+    y += ih;
     this.drawHorzLine(0, y);
     y += this.lineGap() + 3;
     // icons (switching battler)
@@ -139,7 +135,7 @@ Window_AilmentsBuffs.prototype.drawNameTitle = function () {
     text = this._battler.name();
     this.drawText(text, 0, y, this.contentsWidth(), 'center');
     // horizontal rule
-    y += itemHeight;
+    y += ih;
     this.drawHorzLine(0, y);
 };
 

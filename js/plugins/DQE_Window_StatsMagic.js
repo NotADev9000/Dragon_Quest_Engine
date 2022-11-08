@@ -96,7 +96,7 @@ Window_StatsMagic.prototype.makeItemList = function () {
 
 Window_StatsMagic.prototype.maxRows = function () {
     if (this._maxRows != -1) return this._maxRows;
-    return Math.floor((this.itemBlockHeight() - (this.standardPadding() * 2)) / (this.lineHeight() + this.lineGap()));
+    return Math.floor((this.itemBlockHeight() - (this.standardPadding() * 2)) / this.itemHeight());
 };
 
 Window_StatsMagic.prototype.maxCols = function () {

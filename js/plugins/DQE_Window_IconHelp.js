@@ -80,6 +80,6 @@ Window_IconHelp.prototype.drawInfo = function () {
         text = `\\i[${icon}] ${text}`;
         this.drawTextEx(text, 6, y, false, false);
         // adjust draw y
-        y += this.lineHeight() + this.lineGap();
+        y += this.itemHeight();
     });
 };

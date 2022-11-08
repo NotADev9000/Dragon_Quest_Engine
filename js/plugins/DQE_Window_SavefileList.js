@@ -48,6 +48,13 @@ Window_SavefileList.prototype.itemHeight = function () {
     return 126;
 };
 
+/**
+ * height of a single line of text + the gap below it
+ */
+Window_SavefileList.prototype.textRowHeight = function () {
+    return this.lineHeight() + this.lineGap();
+};
+
 Window_SavefileList.prototype.titleBlockHeight = function () {
     return 54;
 };
@@ -85,16 +92,16 @@ Window_SavefileList.prototype.drawTitle = function () {
     const x = ep;
     let y = ep;
     this.drawText(title, x, y);
-    y += this.lineHeight() + this.lineGap();
+    y += this.textRowHeight();
     this.drawHorzLine(0, y);
 };
 
 Window_SavefileList.prototype.drawItem = function (index) {
-    let id = index + 1;
-    let valid = DataManager.isThisGameFile(id);
-    let info = DataManager.loadSavefileInfo(id);
-    let rect = this.itemRectForText(index);
-    let rowHeight = this.lineHeight() + this.lineGap();
+    const id = index + 1;
+    const valid = DataManager.isThisGameFile(id);
+    const info = DataManager.loadSavefileInfo(id);
+    const rect = this.itemRectForText(index);
+    const rowHeight = this.textRowHeight();
     // row 1
     // ID + Level
     let text = `${id}: `;

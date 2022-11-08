@@ -58,10 +58,6 @@ Window_NumberInput.prototype.itemWidth = function () {
     return 24;
 };
 
-Window_NumberInput.prototype.itemHeight = function () {
-    return this.lineHeight() + this.lineGap();
-};
-
 Window_NumberInput.prototype.maxCols = function () {
     return this.maxItems();
 };
@@ -178,7 +174,7 @@ Window_NumberInput.prototype._refreshCursor = function () {
     // down arrow
     this._windowCursor2Sprite.bitmap = this._windowskin;
     this._windowCursor2Sprite.setFrame(132, 60, this._cursorRect.width, this._cursorRect.height);
-    let downArrowY = this._cursorRect.y + (this.lineHeight() * 2) + (this.lineGap() * 2);
+    let downArrowY = this._cursorRect.y + (this.itemHeight() * 2);
     this._windowCursor2Sprite.move(this._cursorRect.x + pad, downArrowY + pad);
 };
 

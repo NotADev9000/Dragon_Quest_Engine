@@ -1,10 +1,7 @@
 - windows:
 
-{*} itemHeight func could be put into window_base?
-	{**} itemRect rewrite: win_pagination, win_controls (same as selectable?), win_equipSlot
-		{**} search itemRect funcs to see what needs rewriting
-	{**} lineGap check if needed everywhere
-	{**} statsCommon: use itemHeight() in drawNameTitle func 
+itemRect functions could be rewritten to include page/title/extra blocks
+ - start with selectable
 	
 pagination row functions clean-up
 

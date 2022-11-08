@@ -52,10 +52,6 @@ Window_ShopCarry.prototype.titleBlockHeight = function () {
     return 54;
 };
 
-Window_ShopCarry.prototype.itemHeight = function () {
-    return this.lineHeight() + this.lineGap();
-};
-
 Window_ShopCarry.prototype.itemWidth = function () {
     return 576;
 };

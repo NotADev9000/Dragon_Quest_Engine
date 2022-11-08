@@ -41,11 +41,11 @@ Window_ControlsPress.prototype.initialize = function (x, y, width, height) {
 };
 
 Window_ControlsPress.prototype.drawInfo = function () {
-    let width = this.contentsWidth();
+    const width = this.contentsWidth();
     let text = 'Press new button';
     let y = 0;
     this.drawText(text, 0, y, width, 'center');
-    y += this.lineHeight() + this.lineGap();
+    y += this.itemHeight();
     text = 'Press Esc to cancel';
     this.drawText(text, 0, y, width, 'center');
 };

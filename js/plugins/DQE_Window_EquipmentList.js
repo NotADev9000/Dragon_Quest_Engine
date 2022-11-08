@@ -63,9 +63,8 @@ Window_EquipmentList.prototype.itemWidth = function () {
 Window_EquipmentList.prototype.maxRows = function () {
     if (this._maxRows != -1) return this._maxRows;
 
-    var pageHeight = this.height - ((this.padding + this.extraPadding()) * 2) - this.pageBlockHeight() - this.titleHeight();
-    var itemHeight = this.lineHeight() + this.lineGap();
-    return Math.floor((pageHeight / itemHeight) + 1);
+    const pageHeight = this.height - ((this.padding + this.extraPadding()) * 2) - this.pageBlockHeight() - this.titleHeight();
+    return Math.floor((pageHeight / this.itemHeight()) + 1);
 };
 
 Window_EquipmentList.prototype.setCategory = function (category) {
