@@ -120,7 +120,10 @@ Window_Pagination.prototype.page = function () {
  * The number of pages in the window
  */
 Window_Pagination.prototype.numPages = function () {
-    return Math.max(1, Math.ceil((this.maxItems() / this.maxRows()) / this.maxCols()));
+    return Math.max(1, 
+                    Math.ceil(
+                        this.maxItems() / this.maxItemsOnPage()
+                    ));
 };
 
 /**
@@ -201,9 +204,6 @@ Window_Pagination.prototype.maxRows = function () {
 
     const pageHeight = this.height - ((this.padding + this.extraPadding()) * 2) - this.pageBlockHeight();
     return Math.floor((pageHeight / this.itemHeight()) + 1);
-};
-Window_Pagination.prototype.maxPageRows = function () {
-    return this.maxRows();
 };
 
 //////////////////////////////
