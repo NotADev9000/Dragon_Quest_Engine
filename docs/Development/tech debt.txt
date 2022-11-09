@@ -1,12 +1,13 @@
 - windows:
 
-itemRect functions could be rewritten to include page/title/extra blocks
+drawing prev/next page icons logic into common function
+
+itemRect functions could be rewritten to include page/title/extra blocks:
  - start with selectable
  - itemRect function in selectable should have +extraPadding for x & y
  - refactor pagination itemRect function (rect height is weird?)
 
-window zoom & window equipment list maxRows can be made similar
-
-drawing prev/next page icons logic into common function
-
-window_command overwrite windowWidth method to use this._width
+window_command:
+ - overhaul so width is different for each instance (passed in on init)
+ - updateWindowDisplay can probs be removed
+	- will need adjustments in used scenes
