@@ -48,11 +48,7 @@ Window_SkillSetsList.prototype.initialize = function (x, y, width, height) {
 //////////////////////////////
 
 Window_SkillSetsList.prototype.titleBlockHeight = function () {
-    return 54;
-};
-
-Window_SkillSetsList.prototype.pageBlockHeight = function () {
-    return this.titleBlockHeight();
+    return this.pageBlockHeight();
 };
 
 //////////////////////////////

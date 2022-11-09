@@ -44,12 +44,8 @@ Window_EquipmentList.prototype.initialize = function (x, y, width, height, sortI
 // Functions - window sizing
 //////////////////////////////
 
-Window_EquipmentList.prototype.titleHeight = function () {
+Window_EquipmentList.prototype.titleBlockHeight = function () {
     return 78;
-};
-
-Window_EquipmentList.prototype.pageBlockHeight = function () {
-    return 54;
 };
 
 Window_EquipmentList.prototype.itemWidth = function () {
@@ -62,9 +58,8 @@ Window_EquipmentList.prototype.itemWidth = function () {
 
 Window_EquipmentList.prototype.maxRows = function () {
     if (this._maxRows != -1) return this._maxRows;
-
-    const pageHeight = this.height - ((this.padding + this.extraPadding()) * 2) - this.pageBlockHeight() - this.titleHeight();
-    return Math.floor((pageHeight / this.itemHeight()) + 1);
+    const pageHeight = this.height - (this.padding * 2) - this.pageBlockHeight() - this.titleBlockHeight();
+    return Math.floor(pageHeight / this.itemHeight());
 };
 
 Window_EquipmentList.prototype.setCategory = function (category) {
@@ -213,7 +208,7 @@ Window_EquipmentList.prototype.setHelpWindowItem = function (data) {
 
 Window_EquipmentList.prototype.itemRect = function (index) {
     var rect = Window_ItemListBase.prototype.itemRect.call(this, index);
-    rect.y += this.titleHeight();
+    rect.y += this.titleBlockHeight();
     return rect;
 };
 

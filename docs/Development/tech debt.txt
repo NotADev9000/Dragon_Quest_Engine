@@ -4,10 +4,6 @@ itemRect functions could be rewritten to include page/title/extra blocks
  - start with selectable
  - itemRect function in selectable should have +extraPadding for x & y
  - refactor pagination itemRect function (rect height is weird?)
-	
-pagination row functions clean-up
-
-pageblockheight = 54 irrelevant as in pagination = 54
 
 window zoom & window equipment list maxRows can be made similar
 
