@@ -225,15 +225,8 @@ Window_QuestDetails.prototype.drawName = function () {
     const cw = this.contentsWidth();
     const ep = this.extraPadding();
     // icons (switching pages)
-    if (this._latestStage > 0) {
-        // left icon
-        let icon = this.getHandlerIcon('pagedown');
-        this.drawTextEx(` \\i[${icon}]`, 0, ep);
-        // right icon
-        const rightIconX = cw - Window_Base._iconWidth - this.textWidth(' ');
-        icon = this.getHandlerIcon('pageup');
-        this.drawTextEx(`\\i[${icon}] `, rightIconX, ep);
-    }
+    if (this._latestStage > 0) this.drawPageUpDownAtEdges(ep);
+    // name
     this.drawText(name, 0, ep, cw, 'center');
     this.drawHorzLine(0, this.nameBlockHeight() - 3);
 };
@@ -265,15 +258,8 @@ Window_QuestDetails.prototype.drawObjectivesTitle = function () {
     this.drawHorzLine(0, y);
     y += ep + 3;
     // icons (switching pages)
-    if (this._totalObjectivePages > 1) {
-        // left icon
-        let icon = this.getHandlerIcon('previous');
-        this.drawTextEx(` \\i[${icon}]`, 0, y);
-        // right icon
-        const rightIconX = cw - Window_Base._iconWidth - this.textWidth(' ');
-        icon = this.getHandlerIcon('next');
-        this.drawTextEx(`\\i[${icon}] `, rightIconX, y);
-    }
+    if (this._totalObjectivePages > 1) this.drawPreviousNextAtEdges(y);
+    // title
     this.drawText(text, ep, y, cw, 'center');
     y += ep + this.lineHeight();
     this.drawHorzLine(0, y);

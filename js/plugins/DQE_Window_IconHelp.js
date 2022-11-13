@@ -74,12 +74,9 @@ Window_IconHelp.prototype.lineGap = function () {
 
 Window_IconHelp.prototype.drawInfo = function () {
     const ep = this.extraPadding();
-    let icon, y = ep;
+    let y = ep;
     this._texts.forEach((text, i) => {
-        icon = this.getHandlerIcon(this._handlers[i]);
-        text = `\\i[${icon}] ${text}`;
-        this.drawTextEx(text, 6, y, false, false);
-        // adjust draw y
+        this.drawHandlerAsIcon(this._handlers[i], 6, y, '', ' ' + text, false, false);
         y += this.itemHeight();
     });
 };

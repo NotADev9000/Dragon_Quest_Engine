@@ -152,15 +152,7 @@ Window_SkillSetsList.prototype.drawTitleBlock = function () {
     // window title
     this.drawText(title, 0, y, this.contentsWidth(), 'center');
     // icons (switching pages)
-    if (this._numPages > 1) {
-        // left icon
-        let icon = this.getHandlerIcon('pagedown');
-        this.drawTextEx(` \\i[${icon}]`, 0, y);
-        // right icon
-        const rightIconX = this.contentsWidth() - Window_Base._iconWidth - this.textWidth(' ');
-        icon = this.getHandlerIcon('pageup');
-        this.drawTextEx(`\\i[${icon}] `, rightIconX, y);
-    }
+    if (this._numPages > 1) this.drawPageUpDownAtEdges(y);
     y += this.itemHeight();
     // horizontal rule
     this.drawHorzLine(0, y);

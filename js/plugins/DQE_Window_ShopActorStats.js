@@ -162,13 +162,7 @@ Window_ShopActorStats.prototype.drawTitle = function () {
     this.drawText(name, 0, ep, cw, 'center');
     this.drawHorzLine(0, this.titleBlockHeight() - 3);
     // draw icons
-    if (this.numStats() > 1) {
-        let icon = this.getHandlerIcon('previous');
-        this.drawTextEx(` \\i[${icon}]`, 0, ep);
-        icon = this.getHandlerIcon('next');
-        let x = cw - Window_Base._iconWidth - this.textWidth(' ');
-        this.drawTextEx(`\\i[${icon}] `, x, ep);
-    }
+    if (this.numStats() > 1) this.drawPreviousNextAtEdges(ep);
 };
 
 Window_ShopActorStats.prototype.drawStats = function () {

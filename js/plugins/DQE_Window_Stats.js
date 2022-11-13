@@ -65,15 +65,7 @@ Window_Stats.prototype.drawStats = function () {
         this.drawText(this._actor.name(), ep, y, cw, 'center');
 
         // icons
-        if (this._drawIcons) {
-            // left icon
-            let icon = this.getHandlerIcon('pagedown');
-            this.drawTextEx(` \\i[${icon}]`, 0, y);
-            // right icon
-            const rightIconX = this.contentsWidth() - Window_Base._iconWidth - this.textWidth(' ');
-            icon = this.getHandlerIcon('pageup');
-            this.drawTextEx(`\\i[${icon}] `, rightIconX, y);
-        }
+        if (this._drawIcons) this.drawPageUpDownAtEdges(y);
 
         y += ih;
         this.drawHorzLine(0, y);

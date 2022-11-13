@@ -35,13 +35,9 @@ Window_StatsCommon.prototype.drawNameTitle = function (title) {
     const actorLv = this._actor.level;
     const text = `${actorName} Lv.${actorLv}`;
     const ih = this.itemHeight();
-    const rightIconX = this.contentsWidth() - Window_Base._iconWidth - this.textWidth(' ');
     let y = this.extraPadding();
     // icons (switching windows)
-    let icon = this.getHandlerIcon('pagedown');
-    this.drawTextEx(` \\i[${icon}]`, 0, y);
-    icon = this.getHandlerIcon('pageup');
-    this.drawTextEx(`\\i[${icon}] `, rightIconX, y);
+    this.drawPageUpDownAtEdges(y);
     // window name
     this.drawText(title, 0, y, this.contentsWidth(), 'center');
     y += ih;
@@ -49,10 +45,7 @@ Window_StatsCommon.prototype.drawNameTitle = function (title) {
     this.drawHorzLine(0, y);
     y += this.lineGap() + 3;
     // icons (switching actors)
-    icon = this.getHandlerIcon('previous');
-    this.drawTextEx(` \\i[${icon}]`, 0, y);
-    icon = this.getHandlerIcon('next');
-    this.drawTextEx(`\\i[${icon}] `, rightIconX, y);
+    this.drawPreviousNextAtEdges(y);
     // actor name & level
     this.drawText(text, 0, y, this.contentsWidth(), 'center');
     y += ih;

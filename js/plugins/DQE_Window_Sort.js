@@ -67,10 +67,8 @@ Window_Sort.prototype.textWidth = function () {
 
 Window_Sort.prototype.drawTitle = function () {
     const ep = this.extraPadding();
-    let icon = this.getHandlerIcon('sort');
-    icon = `\\i[${icon}]`;
     const text = `Sort`;
-    this.drawTextEx(icon, ep, ep);
+    this.drawHandlerAsIcon('sort', ep, ep);
     this.drawText(text, ep, ep, this.textWidth(), 'center');
 };
 

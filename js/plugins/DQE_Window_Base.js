@@ -233,6 +233,41 @@ Window_Base.prototype.getHandlerIcon = function (handle) {
 };
 
 /**
+ * draws icon of provided handle
+ * can also draw text before & after icon
+ */
+Window_Base.prototype.drawHandlerAsIcon = function (handle, x, y, preText = '', postText = '', extraConvert = true, autoWrap = true) {
+    const icon = this.getHandlerIcon(handle);
+    const text = `${preText}\\i[${icon}]${postText}`;
+    this.drawTextEx(text, x, y, extraConvert, autoWrap);
+};
+
+/**
+ * draws two icons at the left & right edge of the window
+ * 
+ * @param {Array} handles the array of String handles to draw as icons
+ * @param {number} y the y position of the icons when drawn
+ */
+Window_Base.prototype.drawIconsAtEdges = function (handles, y) {
+    // LEFT ICON
+    let x = this.extraPadding();
+    this.drawHandlerAsIcon(handles[0], x, y);
+    // RIGHT ICON
+    x = this.contentsWidth() - Window_Base._iconWidth - x;
+    this.drawHandlerAsIcon(handles[1], x, y);
+};
+
+Window_Base.prototype.drawPreviousNextAtEdges = function (y) {
+    const handles = ["previous", "next"];
+    this.drawIconsAtEdges(handles, y);
+};
+
+Window_Base.prototype.drawPageUpDownAtEdges = function (y) {
+    const handles = ["pagedown", "pageup"];
+    this.drawIconsAtEdges(handles, y);
+};
+
+/**
  * Stats are drawn the same so this method can be called to draw any of them
  */
 Window_Base.prototype.drawActorStat = function (statValue, x, y, width, align) {

@@ -42,7 +42,5 @@ Window_Icon.prototype.standardPadding = function () {
 };
 
 Window_Icon.prototype.drawInfo = function (handler) {
-    let icon = this.getHandlerIcon(handler);
-    let text = `\\i[${icon}]`;
-    this.drawTextEx(text, 0, 12);
+    this.drawHandlerAsIcon(handler, 0, 12);
 };

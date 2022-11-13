@@ -332,15 +332,7 @@ Window_SkillSets.prototype.drawTitleBlock = function () {
     this.drawText(title, 0, y, this.contentsWidth(), 'center');
 
     // icons (switching pages)
-    if (numSkills >= 2) {
-        // left icon
-        let icon = this.getHandlerIcon('previous');
-        this.drawTextEx(` \\i[${icon}]`, 0, y);
-        // right icon
-        const rightIconX = this.contentsWidth() - Window_Base._iconWidth - this.textWidth(' ');
-        icon = this.getHandlerIcon('next');
-        this.drawTextEx(`\\i[${icon}] `, rightIconX, y);
-    }
+    if (numSkills >= 2) this.drawPreviousNextAtEdges(y);
 
     y += itemHeight;
     // horizontal rule

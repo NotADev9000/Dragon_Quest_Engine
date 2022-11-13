@@ -119,7 +119,6 @@ Window_AilmentsBuffs.prototype.updateCursor = function () {
 
 Window_AilmentsBuffs.prototype.drawNameTitle = function () {
     let text = 'Buffs and Ailments';
-    const rightIconX = this.contentsWidth() - Window_Base._iconWidth - this.textWidth(' ');
     let y = this.extraPadding();
     const ih = this.itemHeight();
     this.drawText(text, 0, y, this.contentsWidth(), 'center');
@@ -127,10 +126,7 @@ Window_AilmentsBuffs.prototype.drawNameTitle = function () {
     this.drawHorzLine(0, y);
     y += this.lineGap() + 3;
     // icons (switching battler)
-    let icon = this.getHandlerIcon('previous');
-    this.drawTextEx(` \\i[${icon}]`, 0, y);
-    icon = this.getHandlerIcon('next');
-    this.drawTextEx(`\\i[${icon}] `, rightIconX, y);
+    this.drawPreviousNextAtEdges(y);
     // battler name
     text = this._battler.name();
     this.drawText(text, 0, y, this.contentsWidth(), 'center');
