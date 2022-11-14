@@ -34,7 +34,8 @@ Scene_Item.prototype.create = function () {
     this.createItemWindow();
     this.createEquipStatsWindow();
     this.createItemSortWindow();
-    this.createItemOrganiseWindow();
+    this.createOrganiseIconWindow();
+    this.createOrganiseWindow();
     this.createSendToBagWindow();
     this.createDoWhatWindow();
     this.createUseOnWhoWindow();
@@ -65,20 +66,19 @@ Scene_Item.prototype.createCommandWindow = function () {
 };
 
 Scene_Item.prototype.createItemWindow = function () {
-    var wx = this._commandWindow.x + this._commandWindow.windowWidth();
+    const wx = this._commandWindow.x + this._commandWindow.windowWidth();
     this._itemWindow = new Window_ItemList_EquipStat(wx, 48, 594, 591, true);
     this._itemWindow.setHelpWindow(this._helpWindow);
     this._itemWindow.setHandler('ok', this.onItemOk.bind(this));
     this._itemWindow.setHandler('cancel', this.onItemCancel.bind(this));
     this._itemWindow.setHandler('sort', this.onSort.bind(this));
-    this._itemWindow.setHandler('filter', this.onFilter.bind(this));
     this.addWindow(this._itemWindow);
     this._commandWindow.setHelpWindow(this._itemWindow);
 };
 
 Scene_Item.prototype.createEquipStatsWindow = function () {
-    let x = this._itemWindow.x + this._itemWindow.width;
-    let y = this._itemWindow.y;
+    const x = this._itemWindow.x + this._itemWindow.width;
+    const y = this._itemWindow.y;
     this._equipStatsWindow = new Window_EquipmentStats(x, y, 396, 468);
     this._equipStatsWindow.hide();
     this.addWindow(this._equipStatsWindow);
@@ -94,12 +94,22 @@ Scene_Item.prototype.createItemSortWindow = function () {
     this.addWindow(this._itemSortWindow);
 };
 
-Scene_Item.prototype.createItemOrganiseWindow = function () {
+Scene_Item.prototype.createOrganiseIconWindow = function () {
     const x = this._equipStatsWindow.x;
     const y = this._equipStatsWindow.y + this._equipStatsWindow.height;
-    this._itemOrganiseWindow = new Window_IconHelp(x, y, 396, 123, ['sort', 'filter'], ['Organise', 'Send to Bag'], 9, 18, 27);
-    this._itemOrganiseWindow.hide();
-    this.addWindow(this._itemOrganiseWindow);
+    this._organiseIconWindow = new Window_IconHelp(x, y, 396, 75, ['sort'], ['Organise']);
+    this._organiseIconWindow.hide();
+    this.addWindow(this._organiseIconWindow);
+};
+
+Scene_Item.prototype.createOrganiseWindow = function () {
+    this._organiseWindow = new Window_TitledCommand(48, 48, 450, 'Organise', ['Organise by type', 'Send to Bag', 'Cancel']);
+    this._organiseWindow.setHandler('Organise by type', this.onOrganiseByType.bind(this));
+    this._organiseWindow.setHandler('Send to Bag', this.onOrganiseSendToBag.bind(this));
+    this._organiseWindow.setHandler('cancel', this.onOrganiseCancel.bind(this));
+    this._organiseWindow.setHandler('Cancel', this.onOrganiseCancel.bind(this));
+    this._organiseWindow.hide();
+    this.addWindow(this._organiseWindow);
 };
 
 Scene_Item.prototype.createSendToBagWindow = function () {
@@ -174,6 +184,8 @@ Scene_Item.prototype.createMessageWindow = function () {
 // Functions - on handlers
 //////////////////////////////
 
+// command window
+
 Scene_Item.prototype.onCommandOk = function () {
     this._commandWindow.showBackgroundDimmer();
     this._itemWindow.activate();
@@ -182,15 +194,15 @@ Scene_Item.prototype.onCommandOk = function () {
     this.showSortWindows();
 };
 
+// item window
+
 Scene_Item.prototype.onItemOk = function () {
     this.manageDoWhatCommands();
     this._doWhatWindow.clearCommandList();
     this._doWhatWindow.makeCommandList();
     this._doWhatWindow.updateWindowDisplay();
     this.manageDoWhatPosition();
-    this._itemWindow.showBackgroundDimmer();
-    this._itemWindow.showAllHelpWindowBackgroundDimmers();
-    this.showSortWindowBackgroundDimmers();
+    this.dimItemWindows();
     this._doWhatWindow.select(0);
     this._doWhatWindow.show();
     this._doWhatWindow.activate();
@@ -207,29 +219,34 @@ Scene_Item.prototype.onItemCancel = function () {
 Scene_Item.prototype.onSort = function () {
     if (this.inBag(this._commandWindow)) {
         // sort bag items
-        $gameParty.nextSortMethod();
+        this.sortBagItems();
         this._itemSortWindow.refresh();
+        this.refreshItemWindow();
     } else {
-        // organise actor items
-        const actor = $gameParty.members()[this._commandWindow.currentSymbol()];
-        Data_Items.sortActorItems(actor);
+        // open organise window
+        this._itemWindow.deactivate();
+        this.dimItemWindows();
+        this.openOrganiseWindow();
     }
-    this._itemWindow.refresh();
-    this._itemWindow.callUpdateHelp();
 };
 
-Scene_Item.prototype.onFilter = function () {
-    if (!this.inBag(this._commandWindow)) {
-        this._itemWindow.deactivate();
-        this._itemWindow.showBackgroundDimmer();
-        this._itemWindow.showAllHelpWindowBackgroundDimmers();
-        this.showSortWindowBackgroundDimmers();
-        // open filter choice window
-        this._sendToBagWindow.select(0);
-        this._sendToBagWindow.show();
-        this._sendToBagWindow.activate();
-    }
+// organise window
+
+Scene_Item.prototype.onOrganiseByType = function () {
+    this.sortActorItems();
+    this.refreshItemWindow();
+    this.closeOrganiseWindow();
 };
+
+Scene_Item.prototype.onOrganiseSendToBag = function () {
+    this._organiseWindow.activate(); // TEMP TEMP TEMP
+};
+
+Scene_Item.prototype.onOrganiseCancel = function () {
+    this.closeOrganiseWindow();
+};
+
+// send to bag window
 
 Scene_Item.prototype.onSendToBagOk = function () {
     const actor = $gameParty.members()[this._commandWindow.currentSymbol()];
@@ -254,12 +271,10 @@ Scene_Item.prototype.onSendToBagOk = function () {
 };
 
 Scene_Item.prototype.onSendToBagCancel = function () {
-    this._itemWindow.hideBackgroundDimmer();
-    this._itemWindow.hideAllHelpWindowBackgroundDimmers();
-    this.hideSortWindowBackgroundDimmers();
-    this._sendToBagWindow.hide();
-    this._itemWindow.activate();
+    
 };
+
+// do what window
 
 Scene_Item.prototype.onDoWhatUse = function () {
     if (!this.canUse()) {
@@ -316,12 +331,12 @@ Scene_Item.prototype.onDoWhatUnequip = function () {
 };
 
 Scene_Item.prototype.onDoWhatCancel = function () {
-    this._itemWindow.hideBackgroundDimmer();
-    this._itemWindow.hideAllHelpWindowBackgroundDimmers();
-    this.hideSortWindowBackgroundDimmers();
+    this.undimItemWindows();
     this._doWhatWindow.hide();
     this._itemWindow.activate();
 };
+
+// use on who window
 
 Scene_Item.prototype.onUseOnWhoOk = function () {
     this.startItemUse();
@@ -366,6 +381,8 @@ Scene_Item.prototype.onUseOnWhoCancel = function () {
     this._itemStatWindow.hide();
     this._doWhatWindow.activate();
 };
+
+// transfer window
 
 /**
  * On confirmation of transferring an item
@@ -434,6 +451,8 @@ Scene_Item.prototype.onTransferItemCancel = function () {
     this._transferToWhoWindow.activate();
 };
 
+// how many window
+
 Scene_Item.prototype.onHowManyOk = function () {
     var actor = $gameParty.members()[this._transferToWhoWindow.currentSymbol()];
     var amount = this._howManyWindow._number;
@@ -453,8 +472,8 @@ Scene_Item.prototype.onHowManyCancel = function () {
 //////////////////////////////
 
 Scene_Item.prototype.manageDoWhatCommands = function () {
-    var inBag = this.inBag(this._commandWindow); // is the player looking in the bag space?
-    var isEquipment = DataManager.isWeapon(this.item()) || DataManager.isArmor(this.item());
+    const inBag = this.inBag(this._commandWindow); // is the player looking in the bag space?
+    const isEquipment = DataManager.isWeapon(this.item()) || DataManager.isArmor(this.item());
 
     this._doWhatWindow._commands = ['Use', 'Transfer', 'Cancel'];
     if (isEquipment && !inBag) {
@@ -493,9 +512,7 @@ Scene_Item.prototype.doWhatUseMessage = function () {
 
 Scene_Item.prototype.doWhatEquipMessage = function () {
     this._doWhatWindow.hide();
-    this._itemWindow.hideBackgroundDimmer();
-    this._itemWindow.hideAllHelpWindowBackgroundDimmers();
-    this.hideSortWindowBackgroundDimmers();
+    this.undimItemWindows();
     this._itemWindow.refresh();
     this._itemWindow.activate();
 };
@@ -506,9 +523,7 @@ Scene_Item.prototype.actionResolved_MessageCallback = function () {
     this._useOnWhoWindow.hide();
     this._itemStatusWindow.hide();
     this._itemStatWindow.hide();
-    this._itemWindow.hideBackgroundDimmer();
-    this._itemWindow.hideAllHelpWindowBackgroundDimmers();
-    this.hideSortWindowBackgroundDimmers();
+    this.undimItemWindows();
     this._doWhatWindow.hideBackgroundDimmer();
     this._doWhatWindow.hide();
     this._itemWindow.refresh();
@@ -543,9 +558,7 @@ Scene_Item.prototype.transferredMessage = function () {
     this._transferToWhoWindow.hideBackgroundDimmer();
     this._doWhatWindow.hide();
     this._doWhatWindow.hideBackgroundDimmer();
-    this._itemWindow.hideBackgroundDimmer();
-    this._itemWindow.hideAllHelpWindowBackgroundDimmers();
-    this.hideSortWindowBackgroundDimmers();
+    this.undimItemWindows();
     this._itemWindow.refresh();
     if (this._commandWindow.isCurrentItemEnabled()) {
         this._itemWindow.activate();
@@ -569,21 +582,29 @@ Scene_Item.prototype.sentToBagMessage = function () {
 };
 
 //////////////////////////////
-// Functions - misc.
+// Functions - data
 //////////////////////////////
 
 Scene_Item.prototype.user = function () {
     if (this.inBag(this._commandWindow)) {
         return $gameParty.movableMembers()[0];
     } else {
-        let itemUser = $gameParty.members()[this._commandWindow.currentSymbol()];
+        const itemUser = $gameParty.members()[this._commandWindow.currentSymbol()];
         return itemUser.canMove() ? itemUser : $gameParty.movableMembers()[0];
     }
 };
 
+Scene_Item.prototype.sortActorItems = function () {
+    const actor = $gameParty.members()[this._commandWindow.currentSymbol()];
+    Data_Items.sortActorItems(actor);
+};
+
+Scene_Item.prototype.sortBagItems = function () {
+    $gameParty.nextSortMethod();
+};
+
 /**
- * Returns true if player is selecting
- * an option that's in the bag
+ * Returns true if player is selecting from bag
  * 
  * @param {Window} selectionWindow checks if the current selection of this window is choosing the bag
  */
@@ -591,23 +612,70 @@ Scene_Item.prototype.inBag = function (selectionWindow) {
     return !Number.isInteger(selectionWindow.commandSymbol(selectionWindow.index()));
 };
 
+//////////////////////////////
+// Functions - windows
+//////////////////////////////
+
+// refresh
+
+Scene_Item.prototype.refreshItemWindow = function () {
+    this._itemWindow.refresh();
+    this._itemWindow.callUpdateHelp();
+};
+
 Scene_Item.prototype.refreshItemStatWindows = function () {
     this._itemStatusWindow.refresh();
     this._itemStatWindow.refresh();
 };
 
+// open/close - logic should cover before & after when show/hiding windows
+
+Scene_Item.prototype.openOrganiseWindow = function () {
+    this._organiseWindow.select(0);
+    this._organiseWindow.show();
+    this._organiseWindow.activate();
+};
+
+Scene_Item.prototype.closeOrganiseWindow = function () {
+    this.undimItemWindows();
+    this._organiseWindow.hide();
+    this._itemWindow.activate();
+};
+
+Scene_Item.prototype.openSendToBagWindow = function () {
+    this._sendToBagWindow.select(0);
+    this._sendToBagWindow.show();
+    this._sendToBagWindow.activate();
+};
+
+// show/hide
+
 Scene_Item.prototype.showSortWindows = function () {
-    this.inBag(this._commandWindow) ? this._itemSortWindow.show() : this._itemOrganiseWindow.show();
+    this.inBag(this._commandWindow) ? this._itemSortWindow.show() : this._organiseIconWindow.show();
 };
 
 Scene_Item.prototype.hideSortWindows = function () {
-    this.inBag(this._commandWindow) ? this._itemSortWindow.hide() : this._itemOrganiseWindow.hide();
+    this.inBag(this._commandWindow) ? this._itemSortWindow.hide() : this._organiseIconWindow.hide();
+};
+
+// dimming windows
+
+Scene_Item.prototype.dimItemWindows = function () {
+    this._itemWindow.showBackgroundDimmer();
+    this._itemWindow.showAllHelpWindowBackgroundDimmers();
+    this.showSortWindowBackgroundDimmers();
+};
+
+Scene_Item.prototype.undimItemWindows = function () {
+    this._itemWindow.hideBackgroundDimmer();
+    this._itemWindow.hideAllHelpWindowBackgroundDimmers();
+    this.hideSortWindowBackgroundDimmers();
 };
 
 Scene_Item.prototype.showSortWindowBackgroundDimmers = function () {
-    this.inBag(this._commandWindow) ? this._itemSortWindow.showBackgroundDimmer() : this._itemOrganiseWindow.showBackgroundDimmer();
+    this.inBag(this._commandWindow) ? this._itemSortWindow.showBackgroundDimmer() : this._organiseIconWindow.showBackgroundDimmer();
 };
 
 Scene_Item.prototype.hideSortWindowBackgroundDimmers = function () {
-    this.inBag(this._commandWindow) ? this._itemSortWindow.hideBackgroundDimmer() : this._itemOrganiseWindow.hideBackgroundDimmer();
+    this.inBag(this._commandWindow) ? this._itemSortWindow.hideBackgroundDimmer() : this._organiseIconWindow.hideBackgroundDimmer();
 };
