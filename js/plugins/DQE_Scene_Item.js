@@ -239,7 +239,8 @@ Scene_Item.prototype.onOrganiseByType = function () {
 };
 
 Scene_Item.prototype.onOrganiseSendToBag = function () {
-    this._organiseWindow.activate(); // TEMP TEMP TEMP
+    this._organiseWindow.showBackgroundDimmer();
+    this.openSendToBagWindow();
 };
 
 Scene_Item.prototype.onOrganiseCancel = function () {
@@ -267,11 +268,12 @@ Scene_Item.prototype.onSendToBagOk = function () {
             break;
     }
     this._itemWindow.refresh();
-    this.displayMessage(message, Scene_Item.prototype.sentToBagMessage);
+    this.displayMessage(message, Scene_Item.prototype.sentToBag_MessageCallback);
 };
 
 Scene_Item.prototype.onSendToBagCancel = function () {
-    
+    this._sendToBagWindow.hide();
+    this.reactivateOrganiseWindow();
 };
 
 // do what window
@@ -577,8 +579,9 @@ Scene_Item.prototype.transferFullMessage = function () {
     this._transferItemWindow.select(this._transferItemWindow._lastSelected);
 };
 
-Scene_Item.prototype.sentToBagMessage = function () {
-    this.onSendToBagCancel();
+Scene_Item.prototype.sentToBag_MessageCallback = function () {
+    this._sendToBagWindow.hide();
+    this.closeOrganiseWindow();
 };
 
 //////////////////////////////
@@ -639,6 +642,7 @@ Scene_Item.prototype.openOrganiseWindow = function () {
 Scene_Item.prototype.closeOrganiseWindow = function () {
     this.undimItemWindows();
     this._organiseWindow.hide();
+    this._organiseWindow.hideBackgroundDimmer();
     this._itemWindow.activate();
 };
 
@@ -646,6 +650,13 @@ Scene_Item.prototype.openSendToBagWindow = function () {
     this._sendToBagWindow.select(0);
     this._sendToBagWindow.show();
     this._sendToBagWindow.activate();
+};
+
+// reactivate
+
+Scene_Item.prototype.reactivateOrganiseWindow = function () {
+    this._organiseWindow.hideBackgroundDimmer();
+    this._organiseWindow.activate();
 };
 
 // show/hide
