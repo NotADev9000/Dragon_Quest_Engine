@@ -80,9 +80,9 @@ Scene_Menu.prototype.createStatusWindow = function () {
 Scene_Menu.prototype.createIconWindows = function () {
     let x = 144 - 75; // at start of status windows
     let y = 570;
-    this._iconWindowL = new Window_Icon(x, y, 75, 75, 'previous');
+    this._iconWindowL = new Window_Icon_Help(x, y, 75, ['previous']);
     x = this._statusWindow[3].x + this._statusWindow[0].width; // at end of status windows
-    this._iconWindowR = new Window_Icon(x, y, 75, 75, 'next');
+    this._iconWindowR = new Window_Icon_Help(x, y, 75, ['next']);
     this.addWindow(this._iconWindowL);
     this.addWindow(this._iconWindowR);
 };

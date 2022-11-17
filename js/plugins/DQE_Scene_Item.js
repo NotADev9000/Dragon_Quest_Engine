@@ -97,7 +97,7 @@ Scene_Item.prototype.createItemSortWindow = function () {
 Scene_Item.prototype.createOrganiseIconWindow = function () {
     const x = this._equipStatsWindow.x;
     const y = this._equipStatsWindow.y + this._equipStatsWindow.height;
-    this._organiseIconWindow = new Window_IconHelp(x, y, 396, 75, ['sort'], ['Organise']);
+    this._organiseIconWindow = new Window_Icon_Help(x, y, 396, ['sort'], ['Organise']);
     this._organiseIconWindow.hide();
     this.addWindow(this._organiseIconWindow);
 };

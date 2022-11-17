@@ -1,10 +1,5 @@
 - windows:
 
-merge win_icon & win_iconHelp
-
-make organise/send to bag window into just organise which then lets player choose
-whether to organise or send to bag
-
 itemRect functions could be rewritten to include page/title/extra blocks:
  - start with selectable
  - itemRect function in selectable should have +extraPadding for x & y

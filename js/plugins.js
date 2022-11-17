@@ -155,6 +155,7 @@ var $plugins =
 {"name":"DQE_Window_ControlsPress","status":true,"description":"Displays information about changing buttons - V0.1","parameters":{}},
 {"name":"DQE_Window_Icon","status":true,"description":"Displays an icon in a window - V0.1","parameters":{}},
 {"name":"DQE_Window_IconHelp","status":true,"description":"Displays an icon and some text - V0.1","parameters":{}},
+{"name":"DQE_Window_Icon_Help","status":true,"description":"Displays rows of icons with adjacent (optional) text - V0.1","parameters":{}},
 {"name":"DQE_Window_SavefileList","status":true,"description":"The savefile list window - V0.1","parameters":{}},
 {"name":"DQE_Window_Zoom","status":true,"description":"A window showing Zoom locations - V0.1","parameters":{}},
 {"name":"DQE_Window_SkillSetDescription","status":true,"description":"Window displaying a description of the skills in a skillset;\r\n            this includes skills, stat boosts & effect boosts - V0.1","parameters":{}},

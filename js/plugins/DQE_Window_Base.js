@@ -236,7 +236,7 @@ Window_Base.prototype.getHandlerIcon = function (handle) {
  * draws icon of provided handle
  * can also draw text before & after icon
  */
-Window_Base.prototype.drawHandlerAsIcon = function (handle, x, y, preText = '', postText = '', extraConvert = true, autoWrap = true) {
+Window_Base.prototype.drawHandlerAsIcon = function (handle, x, y, preText = '', postText = '', extraConvert = false, autoWrap = false) {
     const icon = this.getHandlerIcon(handle);
     const text = `${preText}\\i[${icon}]${postText}`;
     this.drawTextEx(text, x, y, extraConvert, autoWrap);

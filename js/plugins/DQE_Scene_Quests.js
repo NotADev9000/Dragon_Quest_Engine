@@ -87,7 +87,7 @@ Scene_Quests.prototype.createQuestLocatorIconWindow = function () {
     const y = this._questListWindow.maxItems() ? 
                 this._questRewardsWindow.y + this._questRewardsWindow.height : 
                 this._questListWindow.y + this._questListWindow.height;
-    this._questLocatorIconWindow = new Window_IconHelp(48, y, 423, 75, ['help'], ['Quest Locator']);
+    this._questLocatorIconWindow = new Window_Icon_Help(48, y, 423, ['help'], ['Quest Locator']);
     this.addWindow(this._questLocatorIconWindow);
 };
 
@@ -111,7 +111,7 @@ Scene_Quests.prototype.createQuestDetailsAvailableWindow = function () {
 
 Scene_Quests.prototype.createQuestActiveIconWindow = function () {
     const y = this._questListAvailableWindow.y + this._questListAvailableWindow.height;
-    this._questActiveIconWindow = new Window_IconHelp(48, y, 423, 75, ['help'], ['Active Quests']);
+    this._questActiveIconWindow = new Window_Icon_Help(48, y, 423, ['help'], ['Active Quests']);
     this._questActiveIconWindow.hide();
     this.addWindow(this._questActiveIconWindow);
 };
