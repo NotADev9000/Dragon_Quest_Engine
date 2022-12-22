@@ -154,10 +154,12 @@ Window_TitledCommand.prototype.select = function (index) {
 // Functions - refresh
 //////////////////////////////
 
-Window_TitledCommand.prototype.refresh = function () {
+Window_TitledCommand.prototype.refresh = function (makeCommands = true) {
     // set up commands
-    this.clearCommandList();
-    this.makeCommandList();
+    if (makeCommands) {
+        this.clearCommandList();
+        this.makeCommandList();
+    }
     // set up window content
     this.createContents();
     this.contents.clear();

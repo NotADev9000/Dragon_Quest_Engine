@@ -28,5 +28,5 @@ Imported.DQEng_Window_Command = true;
 Window_Command.prototype.updateWindowDisplay = function () {
     this.height = this.windowHeight();
     this.width = this.windowWidth();
-    this.refresh();
+    this.refresh(false);
 };

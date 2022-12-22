@@ -4,8 +4,3 @@ itemRect functions could be rewritten to include page/title/extra blocks:
  - start with selectable
  - itemRect function in selectable should have +extraPadding for x & y
  - refactor pagination itemRect function (rect height is weird?)
-
-window_command:
- - overhaul so width is different for each instance (passed in on init)
- - updateWindowDisplay can probs be removed
-	- will need adjustments in used scenes
