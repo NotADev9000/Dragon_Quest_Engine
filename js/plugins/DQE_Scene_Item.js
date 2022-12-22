@@ -104,6 +104,7 @@ Scene_Item.prototype.createOrganiseIconWindow = function () {
 
 Scene_Item.prototype.createOrganiseWindow = function () {
     this._organiseWindow = new Window_TitledCommand(48, 48, 450, 'Organise', ['Organise by type', 'Send to Bag', 'Cancel']);
+    this._organiseWindow.deactivate();
     this._organiseWindow.setHandler('Organise by type', this.onOrganiseByType.bind(this));
     this._organiseWindow.setHandler('Send to Bag', this.onOrganiseSendToBag.bind(this));
     this._organiseWindow.setHandler('cancel', this.onOrganiseCancel.bind(this));
