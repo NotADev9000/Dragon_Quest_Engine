@@ -28,11 +28,11 @@ function Window_ShopCarry() {
     this.initialize.apply(this, arguments);
 }
 
-Window_ShopCarry.prototype = Object.create(Window_Base.prototype);
+Window_ShopCarry.prototype = Object.create(Window_Selectable.prototype);
 Window_ShopCarry.prototype.constructor = Window_ShopCarry;
 
 Window_ShopCarry.prototype.initialize = function (x, y, width, height) {
-    Window_Base.prototype.initialize.call(this, x, y, width, height);
+    Window_Selectable.prototype.initialize.call(this, x, y, width, height);
     this._item = null;
 };
 
@@ -58,6 +58,10 @@ Window_ShopCarry.prototype.itemWidth = function () {
 
 Window_ShopCarry.prototype.spacing = function () {
     return 144;
+};
+
+Window_ShopCarry.prototype.maxCols = function () {
+    return 2;
 };
 
 //////////////////////////////
@@ -100,16 +104,6 @@ Window_ShopCarry.prototype.drawAll = function () {
     // value
     amount = $gameParty.numItems(this._item);
     this.drawText(amount, rect.x, rect.y, iw, 'right');
-};
-
-Window_ShopCarry.prototype.itemRect = function (index) {
-    const ep = this.extraPadding();
-    let rect = new Rectangle();
-    rect.width = this.itemWidth();
-    rect.height = this.itemHeight();
-    rect.x = ep + (index % 2 * (rect.width + this.spacing()));
-    rect.y = this.titleBlockHeight() + ep + (Math.floor(index / 2) * rect.height);
-    return rect;
 };
 
 //////////////////////////////

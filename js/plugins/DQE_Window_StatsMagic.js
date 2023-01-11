@@ -148,12 +148,6 @@ Window_StatsMagic.prototype.drawDescriptionBlock = function (item) {
     this.drawTextEx(desc, this.extraPadding(), y);
 };
 
-Window_StatsMagic.prototype.itemRect = function (index) {
-    const rect = Window_Pagination.prototype.itemRect.call(this, index);
-    rect.y += this.titleBlockHeight();
-    return rect;
-};
-
 //////////////////////////////
 // Functions - refresh
 //////////////////////////////

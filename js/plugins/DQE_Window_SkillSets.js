@@ -396,12 +396,6 @@ Window_SkillSets.prototype.drawItem = function (index) {
     }
 };
 
-Window_SkillSets.prototype.itemRect = function (index) {
-    let rect = Window_Pagination.prototype.itemRect.call(this, index);
-    rect.y += this.titleBlockHeight();
-    return rect;
-};
-
 //////////////////////////////
 // Functions - refresh
 //////////////////////////////

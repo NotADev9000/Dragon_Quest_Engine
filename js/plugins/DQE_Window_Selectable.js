@@ -36,6 +36,15 @@ Window_Selectable.prototype.column = function () {
     return this.index() - (this.maxCols() * this.row());
 };
 
+Window_Selectable.prototype.itemWidth = function () {
+    const cols = this.maxCols();
+    const spaces = this.spacing() * (cols - 1); // width of all spaces in between items
+    const drawWidth = this.contentsWidth() - (this.extraPadding() * 2); // width of all space in between padding/border
+    const itemWidth = (drawWidth - spaces) / cols;
+
+    return Math.floor(itemWidth);
+};
+
 /**
  * default RM Window_Selectable overrides Base so this function is needed
  */
@@ -45,13 +54,20 @@ Window_Selectable.prototype.itemHeight = function () {
 
 Window_Selectable.prototype.itemRect = function (index) {
     const rect = new Rectangle();
-    const maxCols = this.maxCols();
+    // extra padding adjusts x/y position of items for windows with horizontal/vertical lines 
+    const ep = this.extraPadding();
+    // height of title displayed before items (if window has title)
+    const tbh = this.titleBlockHeight();
+    // index of row & column item is on (starts at 0)
+    const row = Math.floor(index / this.maxCols());
+    const column = index % this.maxCols();
 
     rect.width = this.itemWidth();
     rect.height = this.itemHeight();
 
-    rect.x = index % maxCols * (rect.width + this.spacing());
-    rect.y = Math.floor(index / maxCols) * rect.height;
+    const columnWidth = rect.width + this.spacing(); 
+    rect.x = ep + (column * columnWidth);
+    rect.y = ep + tbh + (row * rect.height);
 
     return rect;
 };

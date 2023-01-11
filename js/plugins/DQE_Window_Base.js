@@ -137,6 +137,10 @@ Window_Base.prototype.itemHeight = function () {
     return this.lineHeight() + this.lineGap();
 };
 
+Window_Base.prototype.titleBlockHeight = function () {
+    return 0;
+};
+
 Window_Base.prototype.fittingHeight = function (numLines) {
     return numLines * this.lineHeight()
         + (this.standardPadding() + this.extraPadding()) * 2

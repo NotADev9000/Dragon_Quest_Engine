@@ -85,12 +85,6 @@ Window_Zoom.prototype.drawItem = function (index) {
     }
 };
 
-Window_Zoom.prototype.itemRect = function (index) {
-    let rect = Window_Pagination.prototype.itemRect.call(this, index);
-    rect.y += this.titleBlockHeight();
-    return rect;
-};
-
 //////////////////////////////
 // Functions - refresh
 //////////////////////////////

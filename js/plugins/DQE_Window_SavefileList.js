@@ -126,18 +126,6 @@ Window_SavefileList.prototype.drawItem = function (index) {
     this.drawHorzLine(0, rect.y);
 };
 
-Window_SavefileList.prototype.itemRect = function (index) {
-    let ep = this.extraPadding();
-    let iw = this.itemWidth();
-    let ih = this.itemHeight();
-    let rect = new Rectangle();
-    rect.width = iw;
-    rect.height = ih;
-    rect.x = ep;
-    rect.y = this.titleBlockHeight() + ep + (index * ih);
-    return rect;
-};
-
 //////////////////////////////
 // Functions - refresh
 //////////////////////////////

@@ -336,19 +336,6 @@ Window_Pagination.prototype.refresh = function (resetLastSelected = true) {
 };
 
 Window_Pagination.prototype.itemRect = function (index) {
-    let rect = new Rectangle();
-    let maxCols = this.maxCols();
-    let row = this.row();
-    let isBottomRow = row === this.bottomRow();
-    let lineGap = this.lineGap();
-    let ep = this.extraPadding();
-
-    rect.width = this.itemWidth();
-    rect.height = isBottomRow ? this.lineHeight() : this.lineHeight() + lineGap;
-
-    rect.x = (index % maxCols * (rect.width + this.spacing()) - this._scrollX) + ep;
-    let rectHeightOffset = isBottomRow ? rect.height + lineGap : rect.height;
-    rect.y = (Math.floor(this.trueIndex(index) / maxCols) * rectHeightOffset - this._scrollY) + ep;
-    rect.width -= (ep*2);
-    return rect;
+    index = this.trueIndex(index);
+    return Window_Selectable.prototype.itemRect.call(this, index);
 };

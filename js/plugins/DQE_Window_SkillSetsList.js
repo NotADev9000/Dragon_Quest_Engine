@@ -182,12 +182,6 @@ Window_SkillSetsList.prototype.drawItem = function (index) {
     }
 };
 
-Window_SkillSetsList.prototype.itemRect = function (index) {
-    let rect = Window_Pagination.prototype.itemRect.call(this, index);
-    rect.y += this.titleBlockHeight();
-    return rect;
-};
-
 //////////////////////////////
 // Functions - cursor
 //////////////////////////////

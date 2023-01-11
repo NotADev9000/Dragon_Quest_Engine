@@ -112,13 +112,6 @@ Window_Settings__Description.prototype.drawDescription = function () {
     this.drawTextEx(this._descriptions[descIndex], this.extraPadding(), this._descriptionStartY);
 };
 
-Window_Settings__Description.prototype.itemRect = function (index) {
-    let rect = Window_Selectable.prototype.itemRect.call(this, index);
-    rect.x += this.extraPadding();
-    rect.y += this.extraPadding();
-    return rect;
-};
-
 //////////////////////////////
 // Functions - refresh
 //////////////////////////////

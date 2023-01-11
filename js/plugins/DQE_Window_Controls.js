@@ -132,21 +132,6 @@ Window_Controls.prototype.clearIcon = function (index) {
     this.drawItem(index, false);
 };
 
-Window_Controls.prototype.itemRect = function (index) {
-    let ep = this.extraPadding();
-    let iw = this.itemWidth();
-    let ih = this.itemHeight();
-    let spc = this.spacing();
-    let maxCols = this.maxCols();
-    let bottomRow = index === this.bottomRow();
-    let rect = new Rectangle();
-    rect.width = iw;
-    rect.height = bottomRow ? this.lineHeight() : ih;
-    rect.x = ep + ((index % maxCols) * (iw + spc));
-    rect.y = ep + (Math.floor(index / maxCols) * ih);
-    return rect;
-};
-
 //////////////////////////////
 // Functions - help windows
 //////////////////////////////

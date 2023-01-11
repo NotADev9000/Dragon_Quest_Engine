@@ -39,6 +39,8 @@ Window_EquipSlot.prototype.initialize = function (x, y, width, height) {
 // Functions - window sizing
 //////////////////////////////
 
+// window padding
+
 Window_EquipSlot.prototype.standardPadding = function () {
     return 9;
 };
@@ -47,16 +49,50 @@ Window_EquipSlot.prototype.extraPadding = function () {
     return 15;
 };
 
+// title sizes
+
+Window_EquipSlot.prototype.titleBlockHeight = function () {
+    return 36;
+};
+
+// category sizes
+
+/**
+ * y co-ord where the first category is drawn
+ */
+Window_EquipSlot.prototype.categoryStart = function () {
+    return this.extraPadding() + this.titleBlockHeight();
+};
+
+Window_EquipSlot.prototype.categoryLineHeight = function () {
+    return 21;
+};
+
+Window_EquipSlot.prototype.categoryBlockHeight = function () {
+    return this.lineGap() + this.categoryLineHeight();
+};
+
+// item sizes
+
+/**
+ * y co-ord where the first item is drawn
+ */
+Window_EquipSlot.prototype.itemStart = function () {
+    return this.categoryStart() + this.categoryBlockHeight();
+};
+
+Window_EquipSlot.prototype.itemWidth = function () {
+    return this.width - (this.standardPadding() + this.extraPadding()) * 2;
+};
+
+// item+category sizes
+
 Window_EquipSlot.prototype.lineGap = function () {
     return 21;
 };
 
-Window_EquipSlot.prototype.titleHeight = function () {
-    return 36;
-};
-
-Window_EquipSlot.prototype.itemWidth = function () {
-    return this._width - (this.standardPadding() + this.extraPadding()) * 2;
+Window_EquipSlot.prototype.itemAndCategoryHeight = function () {
+    return this.itemHeight() + this.categoryBlockHeight();
 };
 
 //////////////////////////////
@@ -138,8 +174,8 @@ Window_EquipSlot.prototype.drawSlots = function () {
 
     for (let i = 0; i < this.maxItems(); i++) {
         const textWidth = this.contents.measureTextWidth(slots[i+1]);
-        let y = this.extraPadding() + this.titleHeight();
-        y += this.itemHeight() * 2 * i; // extra spacing between slots for the item to fit into
+        let y = this.categoryStart() + (this.itemAndCategoryHeight() * i);
+
         this.drawHorzLine(0, y + 9, x - 3);
         this.changeTextColor(this.deathColor());
         this.drawText(slots[i+1], x, y, textWidth);
@@ -149,15 +185,16 @@ Window_EquipSlot.prototype.drawSlots = function () {
 };
 
 Window_EquipSlot.prototype.drawAllItems = function () {
-    for (var i = 0; i < this.maxItems(); i++) {
+    for (let i = 0; i < this.maxItems(); i++) {
         this.drawItem(i);
     }
 };
 
 Window_EquipSlot.prototype.drawItem = function (index) {
-    var rect = this.itemRectForText(index);
-    var equip = this._data[index];
-    var text = '';
+    const rect = this.itemRectForText(index);
+    const equip = this._data[index];
+    let text = '';
+
     if (equip) {
         if (equip.cloned >= 0) this.changeTextColor(this.disabledColor());
         text = equip.name;
@@ -174,12 +211,16 @@ Window_EquipSlot.prototype.drawItem = function (index) {
 //////////////////////////////
 
 Window_EquipSlot.prototype.itemRect = function (index) {
-    var rect = new Rectangle();
+    const rect = new Rectangle();
+    // extra padding adjusts x/y position of items for windows with horizontal/vertical lines 
+    const ep = this.extraPadding();
+
     rect.width = this.itemWidth();
     rect.height = this.itemHeight();
-    rect.x = this.extraPadding();
-    rect.y = this.extraPadding() + this.titleHeight() + this.itemHeight();
-    rect.y += this.itemHeight() * 2 * index; 
+
+    rect.x = ep;
+    rect.y = this.itemStart() + (this.itemAndCategoryHeight() * index);
+
     return rect;
 };
 

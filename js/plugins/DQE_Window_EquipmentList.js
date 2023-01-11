@@ -206,12 +206,6 @@ Window_EquipmentList.prototype.setHelpWindowItem = function (data) {
 // Functions - refresh
 //////////////////////////////
 
-Window_EquipmentList.prototype.itemRect = function (index) {
-    var rect = Window_ItemListBase.prototype.itemRect.call(this, index);
-    rect.y += this.titleBlockHeight();
-    return rect;
-};
-
 Window_EquipmentList.prototype.refresh = function () {
     if (this._slot >= 0) {
         this.makeItemList();
