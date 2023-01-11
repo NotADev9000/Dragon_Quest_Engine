@@ -1,13 +1,13 @@
 //=============================================================================
 // Dragon Quest Engine - Misc changes
-// DQE_Misc.js                                                             
+// DQE_Misc.js
 //=============================================================================
 
 /*:
 *
 * @author NotADev
 * @plugindesc Misc changes for Dragon Quest Engine - V0.1
-* TODO: Move changes here into a more suitable file
+* TECH DEBT: Move changes here into a more suitable file
 *
 * @help
 * N/A

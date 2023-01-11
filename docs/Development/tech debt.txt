@@ -4,3 +4,6 @@ itemRect functions could be rewritten to include page/title/extra blocks:
  - start with selectable
  - itemRect function in selectable should have +extraPadding for x & y
  - refactor pagination itemRect function (rect height is weird?)
+
+look into tidying up page/title/extra functions
+ - should be consistent what each one is used for

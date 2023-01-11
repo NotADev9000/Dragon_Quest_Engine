@@ -279,7 +279,7 @@ Window_BattleLog.prototype.displayMiss = function (target) {
     this.push('addText', fmt.format(target.name()));
 };
 
-// TODO: Play blocking sfx/animation when attack is blocked
+// TECH DEBT: Play blocking sfx/animation when attack is blocked
 Window_BattleLog.prototype.displayBlock = function (target) {
     this.push('performMiss', target);
     this.push('addText', `${target.name()} blocks the attack!`);
