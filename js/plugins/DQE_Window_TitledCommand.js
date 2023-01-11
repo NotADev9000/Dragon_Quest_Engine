@@ -76,6 +76,7 @@ Window_TitledCommand.prototype.fittingHeight = function (numLines) {
 /**
  * The height of the windows title block (from standard padding to horizontal line)
  */
+// TECH DEBT: Check fittingHeightExtraBlock uses and change it so this function can be renamed to titleBlockHeight
 Window_TitledCommand.prototype.extraBlockHeight = function () {
     return 54;
 };
