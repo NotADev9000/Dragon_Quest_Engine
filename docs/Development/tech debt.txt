@@ -1,7 +1,5 @@
 - windows:
 
 itemRect functions could be rewritten to include page/title/extra blocks:
- - refactor pagination itemRect function (rect height is weird?)
- - look at "TECH DEBT" markers related to itemRect refactoring
- - look into tidying up page/title/extra functions
-	* should be consistent what each one is used for
+ - win_titledCommand needs cleaning up in terms of extraBlockHeight
+	* look into tidying up page/title/extra functions when doing ^

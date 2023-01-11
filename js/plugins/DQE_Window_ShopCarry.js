@@ -23,7 +23,7 @@ DQEng.Window_ShopCarry = DQEng.Window_ShopCarry || {};
 //-----------------------------------------------------------------------------
 // Window_ShopCarry
 //-----------------------------------------------------------------------------
-// TECH DEBT: change this window to inherit from window_selectable and change functions to not display selection arrow
+
 function Window_ShopCarry() {
     this.initialize.apply(this, arguments);
 }
