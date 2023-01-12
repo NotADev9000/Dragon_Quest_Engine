@@ -58,40 +58,18 @@ Window_TitledCommand.prototype.windowWidth = function () {
     return this._width;
 };
 
-Window_TitledCommand.prototype.windowHeight = function () {
-    return this.fittingHeight(this.numVisibleRows());
-};
-
-/**
- * Fitting height calculated by adding the height of each command,
- * the gaps between commands, the padding on both sides
- * and the title block
- * 
- * @param {number} numLines the number of commands
- */
 Window_TitledCommand.prototype.fittingHeight = function (numLines) {
     return Window_Base.prototype.fittingHeightExtraBlock.call(this, numLines);
 };
 
-/**
- * The height of the windows title block (from standard padding to horizontal line)
- */
-// TECH DEBT: Check fittingHeightExtraBlock uses and change it so this function can be renamed to titleBlockHeight
-Window_TitledCommand.prototype.extraBlockHeight = function () {
+Window_TitledCommand.prototype.titleBlockHeight = function () {
     return 54;
 };
 
-/**
- * Padding is 9 so horizontal rule covers the whole window
- */
 Window_TitledCommand.prototype.standardPadding = function () {
     return 9;
 };
 
-/**
- * Extra padding added to correctly position text.
- * The horizontal line ignores this padding
- */
 Window_TitledCommand.prototype.extraPadding = function () {
     return 15;
 };
@@ -129,17 +107,6 @@ Window_TitledCommand.prototype.drawTitleBlock = function () {
 
     this.drawText(this._menuTitle, this.extraPadding(), this.extraPadding(), titleWidth, 'center');
     this.drawHorzLine(0, 51);
-};
-
-/**
- * extraPadding is added to properly adjust commands
- * extraBlockHeight is added to y position to place commands below the title block
- */
-Window_TitledCommand.prototype.itemRect = function (index) {
-    var rect = Window_Selectable.prototype.itemRect.call(this, index);
-    rect.x += this.extraPadding();
-    rect.y += this.extraPadding() + this.extraBlockHeight();
-    return rect;
 };
 
 //////////////////////////////

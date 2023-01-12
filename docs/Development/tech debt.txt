@@ -1,5 +1,3 @@
 - windows:
 
-itemRect functions could be rewritten to include page/title/extra blocks:
- - win_titledCommand needs cleaning up in terms of extraBlockHeight
-	* look into tidying up page/title/extra functions when doing ^
+look into tidying up page/title/extra functions

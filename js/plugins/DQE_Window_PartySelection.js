@@ -50,10 +50,6 @@ Window_PartySelection.prototype.windowWidth = function () {
     return this._windowWidth;
 };
 
-Window_PartySelection.prototype.windowHeight = function () {
-    return this.fittingHeight(this.numVisibleRows());
-};
-
 //////////////////////////////
 // Functions - commands
 //////////////////////////////

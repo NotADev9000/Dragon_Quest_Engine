@@ -141,6 +141,14 @@ Window_Base.prototype.titleBlockHeight = function () {
     return 0;
 };
 
+Window_Base.prototype.extraBlockHeight = function () {
+    return 0;
+};
+
+Window_Base.prototype.pageBlockHeight = function () {
+    return 0;
+};
+
 Window_Base.prototype.fittingHeight = function (numLines) {
     return numLines * this.lineHeight()
         + (this.standardPadding() + this.extraPadding()) * 2
@@ -149,13 +157,14 @@ Window_Base.prototype.fittingHeight = function (numLines) {
 
 /**
  * This method is used for calculating the height of windows
- * with an extra block (a horizontal rule with a seperate section e.g. descriptions)
+ * with extra blocks (a horizontal rule with a seperate section e.g. titles, descriptions & pagination)
  * 
  * ~ Doesn't call 'fittingHeight' with 'this.fittingHeight' as that function is overwritten
  *   in inherited windows
  */
 Window_Base.prototype.fittingHeightExtraBlock = function (numLines) {
-    return Window_Base.prototype.fittingHeight.call(this, numLines) + this.extraBlockHeight();
+    const blocks = this.titleBlockHeight() + this.extraBlockHeight() + this.pageBlockHeight();
+    return Window_Base.prototype.fittingHeight.call(this, numLines) + blocks;
 };
 
 /**
