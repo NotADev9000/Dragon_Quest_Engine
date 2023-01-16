@@ -1,12 +1,16 @@
-Objective has FLAG
+- Objectives can have FLAGs
+* no flag = objective set to 1 is done manually at some point
+	(e.g. "Talk to the man by the bridge")
+* 'XXX' flag = objective set to 1 is done in functions after certain events
+	(e.g. battles, levelling, unlocking skills, etc.)
+===========
 
-no flag = _completed bool is set manually at some point
-(e.g. "Talk to the man by the bridge")
-
-'XXX' flag = _completed bool set in a function that is passed,
-			 as params, which flags to check. If flags matched,
-			 it is removed and _completed is set to TRUE
-
+1. Events look for keywords in flags
+	(e.g. battles look through AQF for flags with "BATTLE" prefix)
+2. Event checks if that flag has been done
+	(e.g. at end of battle, have 3 enemies been defeated?)
+3. If so, loop through that flags slot in AQF and complete objectives listed in array
+===========
 
 $gameParty -> quests:
 all active/completed quests
@@ -15,9 +19,22 @@ $gameParty -> availableQuests:
 all quests that haven't been started but can be accessed
 
 $gameParty -> activeQuestFlags:
-this is an ARRAY of objective flags that are currently active.
-When a new quest is activated OR a new stage of a quest is reached,
-the objectives of that stage have their flags pushed to activeQuestFlags.
-
-After certain in game events a function is run to check if active flags
-need to be completed. (e.g. after a battle where an enemy was killed, the function should run with a param 'XXX' flag (the flag for defeating an enemy) & if that flag is found in activeQuestFlags then the objective should be updated)
+* array of flags looking to be completed
+* each flag is array containing:
+	- FLAG_NAME: always at index 0
+	- array containing Quest ID, Stage Index & Obj Index
+		> this shows which objectives should be completed when this flag is achieved
+* upon new quest, quest info added to correct if flag is already in AQF array
+* element in array should be deleted once objective completed
+e.g.
+[
+	[
+		"BATTLE_DEFEAT_ONE",
+		[Quest ID, Stage Index, Objective Index], 
+		[Quest ID, Stage Index, Objective Index]
+	],
+	[
+		"BATTLE_DEFEAT_TWO",
+		[Quest ID, Stage Index, Objective Index]
+	]
+]
