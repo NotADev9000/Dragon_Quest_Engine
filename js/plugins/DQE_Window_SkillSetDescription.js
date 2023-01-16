@@ -71,7 +71,7 @@ Window_SkillSetDescription.prototype.setItem = function (isSkill, mpCost, descri
 /**
  * Draws the MP cost and requirements section
  */
-Window_SkillSetDescription.prototype.drawTitleBlock = function () {
+Window_SkillSetDescription.prototype.drawExtraBlock = function () {
     const ep = this.extraPadding();
     let y = ep;
 
@@ -92,7 +92,7 @@ Window_SkillSetDescription.prototype.drawTitleBlock = function () {
 
 Window_SkillSetDescription.prototype.refresh = function () {
     this.contents.clear();
-    this.drawTitleBlock();
+    this.drawExtraBlock();
     const ep = this.extraPadding();
     const y = this.extraBlockHeight() + ep;
     this.drawTextEx(this._description, ep, y);

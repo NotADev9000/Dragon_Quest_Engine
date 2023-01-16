@@ -35,8 +35,7 @@ function Window_BattleHelp() {
 Window_BattleHelp.prototype = Object.create(Window_Help.prototype);
 Window_BattleHelp.prototype.constructor = Window_BattleHelp;
 
-Window_BattleHelp.prototype.initialize = function (x, y, width, numLines, titleBlock = true) {
-    this._titleBlock = titleBlock;
+Window_BattleHelp.prototype.initialize = function (x, y, width, numLines) {
     Window_Help.prototype.initialize.call(this, x, y, width, numLines);
 };
 
@@ -46,10 +45,6 @@ Window_BattleHelp.prototype.initialize = function (x, y, width, numLines, titleB
 
 Window_BattleHelp.prototype.fittingHeight = function (numLines) {
     return Window_Base.prototype.fittingHeightExtraBlock.call(this, numLines);
-};
-
-Window_BattleHelp.prototype.extraBlockHeight = function () {
-    return this._titleBlock ? 48 : 0;
 };
 
 Window_BattleHelp.prototype.standardPadding = function () {
@@ -64,7 +59,8 @@ Window_BattleHelp.prototype.extraPadding = function () {
 // Functions - draw items
 //////////////////////////////
 
-Window_BattleHelp.prototype.drawTitleBlock = function () {
+Window_BattleHelp.prototype.drawExtraBlock = function () {
+    console.warn(`function: drawExtraBlock hasn't been overridden!`);
 };
 
 //////////////////////////////
@@ -75,5 +71,5 @@ Window_BattleHelp.prototype.refresh = function () {
     this.contents.clear();
     const pos = this.extraPadding();
     this.drawTextEx(this._text, pos, pos);
-    this.drawTitleBlock();
+    this.drawExtraBlock();
 };

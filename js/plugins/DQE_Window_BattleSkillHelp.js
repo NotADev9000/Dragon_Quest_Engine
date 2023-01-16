@@ -42,6 +42,14 @@ Window_BattleSkillHelp.prototype.initialize = function (x, y, width, numLines = 
 };
 
 //////////////////////////////
+// Functions - window sizing
+//////////////////////////////
+
+Window_BattleSkillHelp.prototype.extraBlockHeight = function () {
+    return 48;
+};
+
+//////////////////////////////
 // Functions - data
 //////////////////////////////
 
@@ -69,7 +77,7 @@ Window_BattleSkillHelp.prototype.setItem = function (skill, actor) {
 /**
  * Draws the bottom section of the window to display MP cost
  */
-Window_BattleSkillHelp.prototype.drawTitleBlock = function () {
+Window_BattleSkillHelp.prototype.drawExtraBlock = function () {
     var blockY = this.height - this.extraBlockHeight() - (this.padding + this.extraPadding()) + 6;
     var mpCost = this._mpCost.padStart(3, ' ');
     var text = `${mpCost}/${this._mpTotal}`;

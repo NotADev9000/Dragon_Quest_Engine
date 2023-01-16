@@ -37,9 +37,14 @@ function Window_BattleItemHelp() {
 Window_BattleItemHelp.prototype = Object.create(Window_BattleHelp.prototype);
 Window_BattleItemHelp.prototype.constructor = Window_BattleSkillHelp;
 
-Window_BattleItemHelp.prototype.initialize = function (x, y, width, numLines = 4, titleBlock = true) {
-    Window_BattleHelp.prototype.initialize.call(this, x, y, width, numLines, titleBlock);
+Window_BattleItemHelp.prototype.initialize = function (x, y, width, numLines = 4, extraBlock = true) {
+    this._extraBlock = extraBlock;
+    Window_BattleHelp.prototype.initialize.call(this, x, y, width, numLines);
     this._useage = 0;
+};
+
+Window_BattleItemHelp.prototype.extraBlockHeight = function () {
+    return this._extraBlock ? 48 : 0;
 };
 
 Window_BattleItemHelp.prototype.setText = function (desc, useage) {
@@ -60,7 +65,7 @@ Window_BattleItemHelp.prototype.setItem = function (item) {
 /**
  * Draws the bottom section of the window to useage
  */
-Window_BattleItemHelp.prototype.drawTitleBlock = function () {
+Window_BattleItemHelp.prototype.drawExtraBlock = function () {
     var blockY = this.height - this.extraBlockHeight() - (this.padding + this.extraPadding()) + 6;
     var textWidth = this.width - (this.standardPadding() + this.extraPadding()) * 2;
     var text = '';
