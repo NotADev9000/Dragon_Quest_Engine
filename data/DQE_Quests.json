@@ -1,10 +1,10 @@
 [
     {
         "id": 0,
-        "name": "Fight for me! Fight f",
+        "name": "Fight for me!",
         "stages": [
             {
-                "description": "A man has asked you to kill a single enemy. Easy right?",
+                "description": "A man has asked you to kill a single enemy. Easy right? This screen shows quests that are currently active/complete",
                 "location": "Snowmourne - Church",
                 "objectives": [
                     {
@@ -48,23 +48,15 @@
     },
     {
         "id": 1,
-        "name": "QUEST #2",
+        "name": "QUEST #2 EXAMPLE",
         "stages": [
             {
-                "description": "jbfhbhsbdashdjhbd",
+                "description": "Quest 2 now active",
                 "location": "Snowmourne - Church",
                 "objectives": [
                     {
-                        "description": "Defeat a single enemy in battle",
+                        "description": "Defeat 999 enemies in battle",
                         "flag": "BATTLE_DEFEAT_ONE"
-                    },
-                    {
-                        "description": "Don't die",
-                        "flag": ""
-                    },
-                    {
-                        "description": "Gain a level",
-                        "flag": ""
                     }
                 ]
             },
@@ -77,7 +69,7 @@
         "rewards": [
             {
                 "type": "gold",
-                "value": 15000
+                "value": 50
             },
             {
                 "type": "item",
@@ -89,7 +81,7 @@
             }
         ],
         "locator": {
-            "description": "A man, a plan, a canal, panama",
+            "description": "This screen is shown for quests that are available somewhere in the world!",
             "location": "Snowmourne - Panama"
         }
     }
