@@ -31,12 +31,12 @@
                         "cost": {
                             "gold": 0,
                             "miniMedals": 0,
-                            "skillPoints": 9
+                            "skillPoints": 8
                         },
                         "unlocked": false
                     },
                     {
-                        "name": "Gust Slash",
+                        "name": "Zap",
                         "description": "",
                         "onUnlock": {
                             "skills": [
@@ -64,6 +64,36 @@
                             "skillPoints": 10
                         },
                         "unlocked": false
+                    },
+                    {
+                        "name": "Woosh",
+                        "description": "",
+                        "onUnlock": {
+                            "skills": [
+                                13
+                            ],
+                            "parameters": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "traits": [],
+                            "switches": []
+                        },
+                        "cost": {
+                            "gold": 0,
+                            "miniMedals": 0,
+                            "skillPoints": 1
+                        },
+                        "unlocked": false
                     }
                 ],
                 "unlockCost": 0,
@@ -74,7 +104,7 @@
             {
                 "nodes": [
                     {
-                        "name": "Dragon Slash",
+                        "name": "Zam",
                         "description": "",
                         "onUnlock": {
                             "skills": [
@@ -99,16 +129,16 @@
                         "cost": {
                             "gold": 0,
                             "miniMedals": 0,
-                            "skillPoints": 12
+                            "skillPoints": 7
                         },
                         "unlocked": false
                     },
                     {
-                        "name": "Metal Slash",
+                        "name": "Omniheal",
                         "description": "",
                         "onUnlock": {
                             "skills": [
-                                28
+                                17
                             ],
                             "parameters": [
                                 0,
@@ -129,7 +159,7 @@
                         "cost": {
                             "gold": 0,
                             "miniMedals": 0,
-                            "skillPoints": 7
+                            "skillPoints": 12
                         },
                         "unlocked": false
                     }
@@ -150,7 +180,7 @@
             {
                 "nodes": [
                     {
-                        "name": "Falcon Slash",
+                        "name": "Metal Slash",
                         "description": "",
                         "onUnlock": {
                             "skills": [
@@ -248,7 +278,7 @@
                         "unlocked": false
                     },
                     {
-                        "name": "Metal Slash",
+                        "name": "Duplex Slash",
                         "description": "",
                         "onUnlock": {
                             "skills": [
